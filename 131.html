@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: #4fc3f7;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .correct {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .option-content {
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-left: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 131</h3>
+        <p>You develop a gateway solution for a public facing news API. The news API back end is implemented as a RESTful service and uses an OpenAPI specification.</p>
+        <p>You need to ensure that you can access the news API by using an Azure API Management service instance.</p>
+        <p>Which Azure PowerShell command should you run?</p>
+    </div>
+
+    <div class="options">
+        <label class="option">
+            <input type="radio" name="answer" value="A">
+            <span class="option-content">Import-AzureRmApiManagementApi –Context $ApiMgmtContext –SpecificationFormat "Swagger" -SpecificationPath $SwaggerPath –Path $Path</span>
+        </label>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="B">
+            <span class="option-content">New-AzureRmApiManagementBackend -Context $ApiMgmtContext -Url $Url -Protocol http</span>
+        </label>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="C">
+            <span class="option-content">New-AzureRmApiManagement –ResourceGroupName $ResourceGroup –Name $Name –Location $Location –Organization $Org –AdminEmail $AdminEmail</span>
+        </label>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="D">
+            <span class="option-content">New-AzureRmApiManagementBackendProxy –Url $ApiUrl</span>
+        </label>
+    </div>
+
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案：</strong></p>
+        <p class="correct">A. Import-AzureRmApiManagementApi –Context $ApiMgmtContext –SpecificationFormat "Swagger" -SpecificationPath $SwaggerPath –Path $Path</p>
+        
+        <div class="explanation">
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li><strong>选项A正确</strong>：
+                    <ul>
+                        <li>题目要求通过API Management访问使用OpenAPI规范的RESTful服务</li>
+                        <li><code>Import-AzureRmApiManagementApi</code>命令专门用于导入API定义</li>
+                        <li>"Swagger"是OpenAPI规范的前身，两者兼容</li>
+                        <li>此命令会创建API Management中的API代理，使前端可以通过API Management访问后端服务</li>
+                    </ul>
+                </li>
+                <li><strong>其他选项分析</strong>：
+                    <ul>
+                        <li><strong>选项B</strong>：<code>New-AzureRmApiManagementBackend</code>用于创建后端服务配置，但不会建立API代理</li>
+                        <li><strong>选项C</strong>：<code>New-AzureRmApiManagement</code>用于创建API Management服务实例，不是题目要求的操作</li>
+                        <li><strong>选项D</strong>：<code>New-AzureRmApiManagementBackendProxy</code>不是有效的PowerShell命令</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>题目核心要求是"access the news API by using an API Management service"，即建立API Management与后端API的连接，这正是<code>Import-AzureRmApiManagementApi</code>命令的功能。</p>
+        </div>
+    </div>
+
+    <script>
+        // Highlight selected option
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                if (this.checked) {
+                    this.parentElement.classList.add('selected');
+                }
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Select the correct answer
+            document.querySelector('input[value="A"]').checked = true;
+            document.querySelector('input[value="A"]').parentElement.classList.add('selected');
+            // Scroll to answer
+            document.getElementById('answer').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

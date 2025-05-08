@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Telemetry Optimization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .feature-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .feature-comparison th, .feature-comparison td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .feature-comparison th {
+            background-color: #f2f2f2;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 418</h2>
+        
+        <p>You develop an ASP. Net Core application by integrating the Application Insights SDK into your
+        solution.</p>
+        
+        <p>The application sends a very high rate of telemetry in a short time interval. You observe a reduced
+        number of events, traces, and metrics being recorded and increased error rates for telemetry
+        ingestion. Telemetry data must synchronize the client and server information to allow HTTP
+        request and response correlation.</p>
+        
+        <p>You need to reduce telemetry traffic, data costs, and storage costs while preserving a statistically
+        correct analysis of application telemetry data.</p>
+        
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Set a daily cap on the Log Analytics workspace. Create an Activity log alert rule</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. Verify adaptive sampling is enabled Set the maxTelemetryItemsPerSecond value.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. Set retention and archive policies by table in the Log Analytics workspace. Purge retained data beyond 30 days.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Modify the pricing tier for the Log Analytics workspace.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>B. Verify adaptive sampling is enabled Set the maxTelemetryItemsPerSecond value.</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择B的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">自适应采样(Adaptive Sampling)</span>是Application Insights专门设计的解决方案：
+                    <ul>
+                        <li>自动调整采样率以保持流量在maxTelemetryItemsPerSecond限制内</li>
+                        <li>保留关键诊断数据（如错误、异常）</li>
+                        <li>保持HTTP请求/响应关联性</li>
+                    </ul>
+                </li>
+                <li>题目明确要求<span class="highlight">减少流量同时保持统计准确性</span>，这正是采样的核心功能</li>
+                <li>其他选项的问题：
+                    <ul>
+                        <li>A/D：仅控制成本不解决数据过载问题</li>
+                        <li>C：只影响存储不影响实时数据流</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <div class="policy-details">
+                <p><strong>技术实现细节:</strong></p>
+                <pre>// 在Startup.cs中配置自适应采样
+services.AddApplicationInsightsTelemetry(options => {
+    options.EnableAdaptiveSampling = true;
+    options.AdaptiveSamplingOptions.MaxTelemetryItemsPerSecond = 20; // 默认5
+});</pre>
+                
+                <table class="feature-comparison">
+                    <tr>
+                        <th>选项</th>
+                        <th>优点</th>
+                        <th>缺点</th>
+                    </tr>
+                    <tr>
+                        <td>B. 自适应采样</td>
+                        <td>
+                            <ul>
+                                <li>动态调整采样率</li>
+                                <li>保留关键诊断数据</li>
+                                <li>保持请求关联性</li>
+                            </ul>
+                        </td>
+                        <td>需要合理设置maxTelemetryItemsPerSecond</td>
+                    </tr>
+                    <tr>
+                        <td>A. 每日上限</td>
+                        <td>控制每日成本</td>
+                        <td>可能导致重要数据丢失</td>
+                    </tr>
+                    <tr>
+                        <td>C. 保留策略</td>
+                        <td>减少长期存储成本</td>
+                        <td>不影响实时数据处理</td>
+                    </tr>
+                    <tr>
+                        <td>D. 定价层</td>
+                        <td>调整成本结构</td>
+                        <td>不解决数据过载问题</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p><strong>验证依据:</strong></p>
+            <ul>
+                <li>Microsoft官方文档推荐采样作为<span class="highlight">减少遥测流量的主要方法</span></li>
+                <li>自适应采样专门设计用于<span class="highlight">高流量场景</span>，同时保持诊断准确性</li>
+                <li>采样是唯一能同时满足题目所有要求的解决方案</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

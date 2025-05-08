@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure API Management Policy Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .policy-types {
+            width: 30%;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 5px;
+        }
+        .requirements {
+            width: 70%;
+            padding: 10px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+        .policy-type {
+            background-color: white;
+            border: 2px solid #0078d4;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px;
+            cursor: move;
+            text-align: center;
+        }
+        .requirement {
+            min-height: 60px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            margin: 10px 0;
+            padding: 10px;
+            position: relative;
+        }
+        .requirement:before {
+            content: attr(data-requirement);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: white;
+            padding: 0 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .policy-match {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 152 DRAG DROP</h2>
+        <p>You have an application that provides weather forecasting data to external partners. You use Azure API Management to publish APIs.</p>
+        <p>You must change the behavior of the API to meet the following requirements:</p>
+        <ul>
+            <li>Support alternative input parameters.</li>
+            <li>Remove formatting text from responses.</li>
+            <li>Provide additional context to back-end services.</li>
+        </ul>
+        <p>Which types of policies should you implement? To answer, drag the policy types to the correct scenarios. Each policy type may be used once, more than once, or not at all.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="drag-container">
+            <div class="policy-types" id="policyTypes">
+                <h3>Policy types</h3>
+                <div class="policy-type" draggable="true" id="inbound">Inbound</div>
+                <div class="policy-type" draggable="true" id="outbound">Outbound</div>
+                <div class="policy-type" draggable="true" id="backend">Backend</div>
+            </div>
+            
+            <div class="requirements">
+                <h3>Requirements</h3>
+                <div class="requirement" data-requirement="Requirement 1" id="req1">
+                    Rewrite the request URL to match to the format expected by the web service
+                </div>
+                <div class="requirement" data-requirement="Requirement 2" id="req2">
+                    Remove formatting text from responses.
+                </div>
+                <div class="requirement" data-requirement="Requirement 3" id="req3">
+                    Forward the user ID that is associated with the subscription key for the original request to the back-end service
+                </div>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><span class="correct">正确答案:</span></p>
+            <div class="policy-match">
+                <p><strong>Rewrite the request URL to match to the format expected by the web service:</strong> Inbound policy</p>
+                <p><strong>Remove formatting text from responses:</strong> Outbound policy</p>
+                <p><strong>Forward the user ID to the back-end service:</strong> Backend policy</p>
+            </div>
+            <p><strong>说明:</strong></p>
+            <p>在Azure API管理中，不同类型的策略适用于不同的场景：</p>
+            <ul>
+                <li><strong>入站(Inbound)策略：</strong>用于修改传入请求，如URL重写、参数转换等。因此适用于"重写请求URL"的要求。</li>
+                <li><strong>出站(Outbound)策略：</strong>用于修改返回给客户端的响应，如移除格式文本、修改响应头等。因此适用于"移除响应中的格式文本"的要求。</li>
+                <li><strong>后端(Backend)策略：</strong>用于修改发送给后端服务的请求，如添加用户上下文信息等。因此适用于"转发用户ID到后端服务"的要求。</li>
+            </ul>
+            <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-policies" target="_blank">Azure API管理策略文档</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        const policyTypes = document.querySelectorAll('.policy-type');
+        const requirements = document.querySelectorAll('.requirement');
+        
+        policyTypes.forEach(policy => {
+            policy.addEventListener('dragstart', () => {
+                policy.classList.add('dragging');
+            });
+            
+            policy.addEventListener('dragend', () => {
+                policy.classList.remove('dragging');
+            });
+        });
+        
+        requirements.forEach(req => {
+            req.addEventListener('dragover', e => {
+                e.preventDefault();
+                req.classList.add('hover');
+            });
+            
+            req.addEventListener('dragleave', () => {
+                req.classList.remove('hover');
+            });
+            
+            req.addEventListener('drop', e => {
+                e.preventDefault();
+                req.classList.remove('hover');
+                
+                const policy = document.querySelector('.dragging');
+                if (policy) {
+                    // Remove any existing policy in this requirement
+                    const existingPolicy = req.querySelector('.policy-type');
+                    if (existingPolicy) {
+                        document.getElementById('policyTypes').appendChild(existingPolicy);
+                    }
+                    
+                    // Add the new policy
+                    const clone = policy.cloneNode(true);
+                    clone.setAttribute('draggable', 'false');
+                    req.appendChild(clone);
+                }
+            });
+        });
+        
+        // Show answer button
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = answerSection.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

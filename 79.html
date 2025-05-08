@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Access to Inventory Items API</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .option { margin: 10px 0; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 79</h3>
+        <p>You need to securely access inventory items when developing the Inventory Items API.</p>
+        <p>What are three possible ways to achieve this goal? Each correct answer presents a complete solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA">
+                <label for="optionA"><strong>A.</strong> Create a custom Microsoft Entra role. Assign the custom role to the Azure Cosmos DB account. Update the function app to use certificate-based authentication.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB">
+                <label for="optionB"><strong>B.</strong> Create a SQL role definition under the Azure Cosmos DB account. Create a user-assigned managed identity and assign the identity to the function app. Assign the user-assigned managed identity the SQL role definition. Update the function app code to implement the DefaultAzureCredential class and reference the user-assigned managed identity.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC">
+                <label for="optionC"><strong>C.</strong> Create a system-assigned managed identity for the function app with read access to secrets in Azure Key Vault. Store the Azure Cosmos DB primary key and URI in Azure Key Vault as secrets. Use function app settings to reference the secret values.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD">
+                <label for="optionD"><strong>D.</strong> Create a custom Microsoft Entra role. Assign the custom role to Azure Key Vault. Assign the custom role to the function app. Reference the custom role in the function app code when accessing Azure Key Vault values.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE">
+                <label for="optionE"><strong>E.</strong> Create a SQL role definition under the Azure Cosmos DB account. Assign the role to the function app's system-assigned managed identity. Programmatically access the Azure Cosmos DB keys from the function app.</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <ul>
+                <li><span class="correct">B</span> - 使用Cosmos DB SQL角色定义和用户分配托管身份</li>
+                <li><span class="correct">C</span> - 使用系统分配托管身份访问Key Vault中的密钥</li>
+                <li><span class="correct">E</span> - 使用Cosmos DB SQL角色定义和系统分配托管身份</li>
+            </ul>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>选项B</strong>：
+                    <ul>
+                        <li>正确实现了Cosmos DB基于角色的访问控制(RBAC)</li>
+                        <li>使用用户分配托管身份和DefaultAzureCredential是最佳实践</li>
+                        <li>完全符合最小权限原则</li>
+                    </ul>
+                </li>
+                
+                <li><strong>选项C</strong>：
+                    <ul>
+                        <li>通过Key Vault安全存储敏感信息</li>
+                        <li>使用系统分配托管身份避免硬编码凭据</li>
+                        <li>应用设置引用密钥值实现安全访问</li>
+                    </ul>
+                </li>
+                
+                <li><strong>选项E</strong>：
+                    <ul>
+                        <li>直接使用Cosmos DB内置的RBAC系统</li>
+                        <li>系统分配托管身份简化了身份管理</li>
+                        <li>无需处理密钥存储问题</li>
+                    </ul>
+                </li>
+                
+                <li><strong>错误选项分析</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">A</td>
+                            <td>证书认证不必要且复杂，题目未要求</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">D</td>
+                            <td>自定义Entra角色对Key Vault过度复杂，有更简单方案</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>代码实现示例</strong>：
+                    <pre>// 选项B的实现示例
+var credential = new DefaultAzureCredential(
+    new DefaultAzureCredentialOptions { 
+        ManagedIdentityClientId = "user-assigned-identity-client-id" 
+    });
+var client = new CosmosClient(accountEndpoint, credential);</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>Azure Cosmos DB的<a href="https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-setup-rbac" target="_blank">基于角色的访问控制文档</a>和<a href="https://learn.microsoft.com/en-us/azure/key-vault/general/managed-identity" target="_blank">托管身份文档</a>详细说明了这些安全模式</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOptions = [];
+            if (document.getElementById('optionA').checked) selectedOptions.push('A');
+            if (document.getElementById('optionB').checked) selectedOptions.push('B');
+            if (document.getElementById('optionC').checked) selectedOptions.push('C');
+            if (document.getElementById('optionD').checked) selectedOptions.push('D');
+            if (document.getElementById('optionE').checked) selectedOptions.push('E');
+            
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <p><strong>您的选择：</strong> ${selectedOptions.length > 0 ? selectedOptions.join(', ') : '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

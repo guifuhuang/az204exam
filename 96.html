@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic Monitoring System - Event Hub Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .configuration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .configuration-table th, .configuration-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .configuration-table th {
+            background-color: #f3f2f1;
+        }
+        select {
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct {
+            font-weight: bold;
+            color: #107c10;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 96 HOTSPOT</h2>
+        <p>You are building a traffic monitoring system that monitors traffic along six highways. The system produces time series analysis-based reports for each highway. Data from traffic sensors are stored in Azure Event Hub.</p>
+        <p>Traffic data is consumed by four departments. Each department has an Azure Web App that displays the time-series-based reports and contains a WebJob that processes the incoming data from Event Hub. All Web Apps run on App Service Plans with three instances.</p>
+        <p>Data throughput must be maximized. Latency must be minimized.</p>
+        <p>You need to implement the Azure Event Hub.</p>
+        <p>Which settings should you use? To answer, select the appropriate options in the answer area.</p>
+    </div>
+    
+    <table class="configuration-table">
+        <thead>
+            <tr>
+                <th>Setting</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Number of partitions</td>
+                <td>
+                    <select id="partitions">
+                        <option value="">-- Select --</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="12">12</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Partition Key</td>
+                <td>
+                    <select id="partitionKey">
+                        <option value="">-- Select --</option>
+                        <option value="Highway">Highway</option>
+                        <option value="Department">Department</option>
+                        <option value="Timestamp">Timestamp</option>
+                        <option value="VM name">VM name</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案:</strong></p>
+        <ul>
+            <li><strong>Number of partitions:</strong> <span class="correct">6</span></li>
+            <li><strong>Partition Key:</strong> <span class="correct">Highway</span></li>
+        </ul>
+        
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>分区数量选择6的原因:</strong>
+                <ul>
+                    <li>系统监控6条高速公路，每条公路的数据应该独立处理</li>
+                    <li>分区数应至少等于消费者数量（4个部门）或数据源数量（6条公路）中的较大值</li>
+                    <li>6个分区可以确保每条公路的数据被均匀分布，最大化吞吐量</li>
+                    <li>分区数一旦设置无法更改，需要预留扩展空间</li>
+                </ul>
+            </li>
+            
+            <li><strong>选择Highway作为分区键的原因:</strong>
+                <ul>
+                    <li>确保同一条公路的数据始终进入同一分区，保持时间序列完整性</li>
+                    <li>部门（4个）比公路数量（6条）少，不适合作为分区键</li>
+                    <li>时间戳会导致数据过于分散，增加处理延迟</li>
+                    <li>VM name与业务无关，不适合作为分区依据</li>
+                </ul>
+            </li>
+            
+            <li><strong>性能优化:</strong>
+                <ul>
+                    <li>这种配置可以确保：
+                        <ul>
+                            <li>每条公路的数据处理可以并行进行（6个分区）</li>
+                            <li>每个部门的应用可以独立扩展（3个实例）</li>
+                            <li>相同公路的数据保持顺序处理（低延迟分析）</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+            // Auto-select the correct answers
+            document.getElementById("partitions").value = "6";
+            document.getElementById("partitionKey").value = "Highway";
+        }
+    </script>
+</body>
+</html>

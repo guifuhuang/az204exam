@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure MFA Implementation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .question { margin-bottom: 20px; }
+        .options { margin-left: 20px; }
+        button { margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #answer { display: none; margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 102</h3>
+        <p>You are developing an internal website for employees to view sensitive data. The website uses Azure Active Directory (AAD) for authentication. You need to implement multifactor authentication for the website.</p>
+        <p><strong>What should you do?</strong> Each correct answer presents part of the solution.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+    <div class="options">
+        <form>
+            <label><input type="checkbox" name="option" value="A"> A. In Azure AD, create a new conditional access policy.</label><br>
+            <label><input type="checkbox" name="option" value="B"> B. In Azure AD, enable application proxy.</label><br>
+            <label><input type="checkbox" name="option" value="C"> C. Configure the website to use Azure AD B2C.</label><br>
+            <label><input type="checkbox" name="option" value="D"> D. In Azure AD conditional access, enable the baseline policy.</label><br>
+            <label><input type="checkbox" name="option" value="E"> E. Upgrade to Azure AD Premium.</label><br>
+        </form>
+    </div>
+    <button onclick="showAnswer()">查看答案</button>
+    <div id="answer">
+        <p><strong>答案：A、D、E</strong></p>
+        <p><strong>说明：</strong></p>
+        <ul>
+            <li><strong>A/D</strong>：条件访问策略（自定义或基线）是强制MFA的核心手段。</li>
+            <li><strong>E</strong>：Azure AD Premium是启用条件访问的必要前提。</li>
+            <li><strong>排除B/C</strong>：应用代理与B2C均不适用于此内部MFA场景。</li>
+        </ul>
+    </div>
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Table Storage Code Completion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .dropdown-container {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            align-items: center;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            min-width: 150px;
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 124 HOTSPOT</h2>
+        <p>You are developing a data storage solution for a social networking app. The solution requires a mobile app that stores user information using Azure Table Storage.</p>
+        <p>You need to develop code that can insert multiple sets of user information.</p>
+        <p>How should you complete the code? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="code-block">
+CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+    CloudConfigurationManager.GetSetting("StorageConnectionString"));
+CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+CloudTable table = tableClient.GetTableReference("clients");
+
+table.<select id="dropdown1">
+    <option value="">Select</option>
+    <option value="Create">Create</option>
+    <option value="CreateIfNotExists">CreateIfNotExists</option>
+    <option value="CreateTable">CreateTable</option>
+    <option value="CreateTableIfNotExists">CreateTableIfNotExists</option>
+</select>();
+
+<select id="dropdown2">
+    <option value="">Select</option>
+    <option value="TableOperation">TableOperation</option>
+    <option value="TableEntity">TableEntity</option>
+    <option value="TableQuery">TableQuery</option>
+    <option value="TableBatchOperation">TableBatchOperation</option>
+</select> op = new <select id="dropdown3">
+    <option value="">Select</option>
+    <option value="TableOperation">TableOperation</option>
+    <option value="TableEntity">TableEntity</option>
+    <option value="TableQuery">TableQuery</option>
+    <option value="TableBatchOperation">TableBatchOperation</option>
+</select>();
+...
+table.<select id="dropdown5">
+    <option value="">Select</option>
+    <option value="ExecuteBatch">ExecuteBatch</option>
+    <option value="Execute">Execute</option>
+    <option value="ExecuteQuerySegmented">Insert</option>
+    <option value="ExecuteQuery">InsertOrmerge</option>
+</select>(op);
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">dropdown1: CreateIfNotExists</p>
+        <p class="correct-answer">dropdown2: TableBatchOperation</p>
+        <p class="correct-answer">dropdown3: TableBatchOperation</p>
+        <p class="correct-answer">dropdown5: ExecuteBatch</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            
+            <p><strong>为什么选择dropdown1: CreateIfNotExists:</strong></p>
+            <ul>
+                <li>CreateIfNotExists方法会检查表是否存在，不存在则创建</li>
+                <li>比单纯的Create更安全，避免重复创建错误</li>
+                <li>CreateTable和CreateTableIfNotExists不是CloudTable的有效方法</li>
+            </ul>
+            
+            <p><strong>为什么选择dropdown2和dropdown3: TableBatchOperation:</strong></p>
+            <ul>
+                <li>题目要求插入多组用户信息，需要批量操作</li>
+                <li>TableBatchOperation专门用于批量表操作</li>
+                <li>变量声明(dropdown2)和实例化(dropdown3)都需要使用TableBatchOperation</li>
+                <li>TableOperation只适用于单条记录操作</li>
+            </ul>
+            
+            <p><strong>为什么选择dropdown5: ExecuteBatch:</strong></p>
+            <ul>
+                <li>ExecuteBatch是专门用于执行批量操作的方法</li>
+                <li>与TableBatchOperation配合使用</li>
+                <li>Execute只执行单个操作</li>
+                <li>ExecuteQuery系列方法用于查询而非插入操作</li>
+                <li>注意：dropdown5中的错误选项(Insert/InsertOrmerge)明显不正确</li>
+            </ul>
+            
+            <p><strong>完整代码示例:</strong></p>
+            <div class="code-block">
+// 创建表（如果不存在）
+table.CreateIfNotExists();
+
+// 创建批量操作对象
+TableBatchOperation batchOp = new TableBatchOperation();
+
+// 添加多个插入操作（示例）
+batchOp.Insert(new UserEntity { /* 用户1数据 */ });
+batchOp.Insert(new UserEntity { /* 用户2数据 */ });
+batchOp.Insert(new UserEntity { /* 用户3数据 */ });
+
+// 执行批量操作（最多100个操作）
+table.ExecuteBatch(batchOp);
+            </div>
+            
+            <p><strong>关键点总结:</strong></p>
+            <ol>
+                <li>使用<strong>CreateIfNotExists</strong>确保表存在</li>
+                <li>声明和实例化都要使用<strong>TableBatchOperation</strong>类型</li>
+                <li>使用<strong>ExecuteBatch</strong>提交批量操作</li>
+                <li>批量操作最多支持100个操作一次提交</li>
+                <li>对于单条记录操作才使用TableOperation/Execute组合</li>
+            </ol>
+            
+            <p><strong>Azure Table Storage批量操作限制:</strong></p>
+            <ul>
+                <li>单个批次最多包含100个操作</li>
+                <li>所有操作必须针对同一个分区键</li>
+                <li>单个实体大小不超过1MB</li>
+                <li>整个批次请求不超过4MB</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('dropdown1').value = 'CreateIfNotExists';
+            document.getElementById('dropdown2').value = 'TableBatchOperation';
+            document.getElementById('dropdown3').value = 'TableBatchOperation';
+            document.getElementById('dropdown5').value = 'ExecuteBatch';
+        }
+    </script>
+</body>
+</html>

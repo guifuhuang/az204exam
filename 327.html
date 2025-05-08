@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Configuration Integration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .code { background: #333; color: white; padding: 15px; border-radius: 5px; margin: 15px 0; font-family: monospace; }
+        select { padding: 5px; margin: 0 5px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 327 HOTSPOT</h3>
+        <p>You are a developer building a web site using a web app. The web site stores configuration data in Azure App Configuration. Access to Azure App Configuration has been configured to use the identity of the web app for authentication. Security requirements specify that no other authentication systems must be used.</p>
+        <p>You need to load configuration data from Azure App Configuration.</p>
+        <p>How should you complete the code? To answer, select the appropriate options in the answer area.</p>
+        
+        <div class="code">
+            <pre>
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+       .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                var settings = config.Build();
+                config.<select id="box1">
+                    <option value="">-- Select --</option>
+                    <option value="AddAzureKeyVault">AddAzureKeyVault</option>
+                    <option value="DefaultAzureCredential">DefaultAzureCredential</option>
+                    <option value="ChainedTokenCredential">ChainedTokenCredential</option>
+                    <option value="ManagedIdentityCredential">ManagedIdentityCredential</option>
+                    <option value="AddAzureAppConfiguration">AddAzureAppConfiguration</option>
+                </select>(options => 
+                options.Connect(new Uri(settings["AppConfigEndpoint"]),
+                    new <select id="box2">
+                        <option value="">-- Select --</option>
+                        <option value="AddAzureKeyVault">AddAzureKeyVault</option>
+                        <option value="DefaultAzureCredential">DefaultAzureCredential</option>
+                        <option value="ChainedTokenCredential">ChainedTokenCredential</option>
+                        <option value="ManagedIdentityCredential">ManagedIdentityCredential</option>
+                        <option value="AddAzureAppConfiguration">AddAzureAppConfiguration</option>
+                    </select>));
+            });
+        });</pre>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <ul>
+                <li>Box 1: <span class="correct">AddAzureAppConfiguration</span></li>
+                <li>Box 2: <span class="correct">DefaultAzureCredential</span></li>
+            </ul>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>Box 1 分析</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>适用性</th>
+                        </tr>
+                        <tr>
+                            <td class="correct">AddAzureAppConfiguration</td>
+                            <td>正确 - 专门用于加载Azure应用配置</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">AddAzureKeyVault</td>
+                            <td>错误 - 用于密钥保管库而非应用配置</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">DefaultAzureCredential</td>
+                            <td>错误 - 这是认证方式，不是配置方法</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">ChainedTokenCredential</td>
+                            <td>错误 - 这是认证链实现，不是配置方法</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">ManagedIdentityCredential</td>
+                            <td>错误 - 这是托管身份认证，不是配置方法</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>Box 2 分析</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>适用性</th>
+                        </tr>
+                        <tr>
+                            <td class="correct">DefaultAzureCredential</td>
+                            <td>正确 - 自动选择最适合的认证方式</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">AddAzureKeyVault</td>
+                            <td>错误 - 不是认证方式</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">ChainedTokenCredential</td>
+                            <td>错误 - 需要显式配置认证链</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">ManagedIdentityCredential</td>
+                            <td>错误 - 仅支持托管身份</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">AddAzureAppConfiguration</td>
+                            <td>错误 - 不是认证方式</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>代码工作原理</strong>：
+                    <pre>// 完整正确实现
+config.AddAzureAppConfiguration(options => 
+    options.Connect(
+        new Uri(settings["AppConfigEndpoint"]),
+        new DefaultAzureCredential()
+    )
+);</pre>
+                    <ul>
+                        <li><code>AddAzureAppConfiguration</code>添加配置提供程序</li>
+                        <li><code>DefaultAzureCredential</code>自动使用Web App的托管身份</li>
+                        <li>完全符合题目安全要求</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>Azure App Configuration的<a href="https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-integrate-azure-managed-service-identity" target="_blank">托管身份集成文档</a>明确推荐此模式</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const box1Value = document.getElementById('box1').value;
+            const box2Value = document.getElementById('box2').value;
+            
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <p><strong>您的选择：</strong></p>
+                <ul>
+                    <li>Box 1: ${box1Value || '未选择'}</li>
+                    <li>Box 2: ${box2Value || '未选择'}</li>
+                </ul>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

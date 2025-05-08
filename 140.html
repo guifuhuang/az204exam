@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Web App Client Certificate Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .property-table th, .property-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .property-table th {
+            background-color: #f2f2f2;
+            width: 30%;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            background-color: #e7f7e7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure Web App Client Certificate Validation</h1>
+    
+    <div class="question">
+        <p><strong>QUESTION NO: 140 HOTSPOT</strong></p>
+        <p>You are developing an Azure Web App. You configure TLS mutual authentication for the web app.</p>
+        <p>You need to validate the client certificate in the web app. To answer, select the appropriate options in the answer area.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+        
+        <table class="property-table">
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Client certificate location</td>
+                <td>
+                    <select id="location-select">
+                        <option value="">-- Select an option --</option>
+                        <option value="HTTP request header">HTTP request header</option>
+                        <option value="Client cookie">Client cookie</option>
+                        <option value="HTTP message body">HTTP message body</option>
+                        <option value="URL query string">URL query string</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Encoding type</td>
+                <td>
+                    <select id="encoding-select">
+                        <option value="">-- Select an option --</option>
+                        <option value="HTML">HTML</option>
+                        <option value="URL">URL</option>
+                        <option value="Unicode">Unicode</option>
+                        <option value="Base64">Base64</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p>正确的配置应该是：</p>
+        <table class="property-table">
+            <tr>
+                <th>Property</th>
+                <th>Correct Value</th>
+            </tr>
+            <tr>
+                <td>Client certificate location</td>
+                <td class="correct-answer">HTTP request header</td>
+            </tr>
+            <tr>
+                <td>Encoding type</td>
+                <td class="correct-answer">Base64</td>
+            </tr>
+        </table>
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>HTTP request header</strong>: 在Azure Web App中，客户端证书通常通过HTTP请求头(X-ARR-ClientCert)传递。这是Azure应用服务处理相互TLS认证的标准方式。</li>
+            <li><strong>Base64</strong>: 客户端证书需要以Base64编码格式传输，这是处理二进制证书数据的标准编码方法，可以确保证书在HTTP传输过程中不会损坏。</li>
+            <li>其他选项如Client cookie或URL query string不适合传输敏感的安全证书数据，而HTML/URL/Unicode编码也不适用于证书数据的编码要求。</li>
+        </ol>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+            
+            // Highlight the correct answers in the dropdowns
+            document.getElementById('location-select').value = 'HTTP request header';
+            document.getElementById('encoding-select').value = 'Base64';
+        }
+    </script>
+</body>
+</html>

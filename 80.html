@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Cache for Redis Test Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; padding: 8px; background: #fff; border-radius: 4px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 80</h3>
+        <p>You need to mitigate the Azure Cache for Redis issue.</p>
+        <p>What are two possible ways to achieve this goal? Each correct answer presents part of the solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Increase the maxmemory-reserved and maxfragmentationmemory-reserved values</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Modify the maxmemory policy to evict the least frequently used keys out of all keys.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Configure client connections to retry commands with exponential backoff.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Test application code by purging the cache in the test environment.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="answer" value="E">
+                <label for="optionE">E. Test application code by rebooting all nodes in the test environment.</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">A 和 C</span></strong></p>
+            
+            <p><strong>说明：</strong></p>
+            <ol>
+                <li><span class="correct">A选项</span>：
+                    <ul>
+                        <li>增加<code>maxmemory-reserved</code>和<code>maxfragmentationmemory-reserved</code>值可以改善写入密集型工作负载下的性能</li>
+                        <li>这些设置预留内存用于非缓存操作，确保在负载变化时更一致的Redis服务器体验</li>
+                        <li>对于存储大于100KB的值特别重要</li>
+                    </ul>
+                </li>
+                <li><span class="correct">C选项</span>：
+                    <ul>
+                        <li>配置客户端连接使用指数退避重试命令可以缓解临时性网络问题导致的错误</li>
+                        <li>这是处理Redis超时和延迟问题的推荐客户端策略</li>
+                        <li>特别适用于流量激增情况下的连接问题</li>
+                    </ul>
+                </li>
+                <li>其他选项分析：
+                    <ul>
+                        <li>B选项：修改逐出策略不能直接解决性能问题，且可能影响应用逻辑</li>
+                        <li>D选项：测试环境清除缓存不能解决生产环境问题</li>
+                        <li>E选项：重启节点是极端措施，不能作为常规缓解方案</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>实现建议：</strong></p>
+            <ol>
+                <li>通过Azure Portal调整内存预留：
+                    <ol type="a">
+                        <li>导航到Redis资源 → 高级设置</li>
+                        <li>将<code>maxmemory-reserved</code>设置为总内存的20-30%</li>
+                        <li>将<code>maxfragmentationmemory-reserved</code>设置为10-20%</li>
+                    </ol>
+                </li>
+                <li>客户端代码配置示例（C#）：
+<pre>
+var configurationOptions = new ConfigurationOptions
+{
+    EndPoints = { "yourcache.redis.cache.windows.net" },
+    Password = "yourpassword",
+    ConnectTimeout = 5000,
+    SyncTimeout = 5000,
+    // 指数退避配置
+    ReconnectRetryPolicy = new ExponentialRetry(1000),
+    ConnectRetry = 3
+};
+</pre>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

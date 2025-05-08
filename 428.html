@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Application Insights PowerShell Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            border: 1px solid #bbdefb;
+        }
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+        .code {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 428</h2>
+        
+        <p>You manage an Azure subscription that contains 100 Azure App Service web apps. Each web app is associated with an individual Application Insights instance.</p>
+        
+        <p>You plan to remove Classic availability tests from all Application Insights instances that have this functionality configured.</p>
+        
+        <p>You have the following PowerShell statement:</p>
+        
+        <div class="code">
+            Get-AzApplicationInsightsWebTest | Where-Object {$condition}
+        </div>
+        
+        <p>You need to set the value of the $condition variable.</p>
+        
+        <p>Which value should you use?</p>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="A">
+                A. $_.Type -eq "standard"
+            </label>
+        </div>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="B">
+                B. $_.Type -eq "ping"
+            </label>
+        </div>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="C">
+                C. $_.WebTestKind -eq "ping"
+            </label>
+        </div>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="D">
+                D. $_.WebTestKind -eq "standard"
+            </label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <p><strong>C. $_.WebTestKind -eq "ping"</strong></p>
+            
+            <div class="explanation">
+                <h4>技术说明:</h4>
+                
+                <div class="note">
+                    <p><strong>关键配置原则:</strong></p>
+                    <ul>
+                        <li>Classic availability tests 在 PowerShell 中通过 <code>WebTestKind</code> 属性标识为 "ping"</li>
+                        <li>Standard tests 则使用 <code>WebTestKind</code> 属性值为 "standard"</li>
+                        <li><code>Type</code> 属性不是用于区分测试类型的正确属性</li>
+                    </ul>
+                </div>
+                
+                <h4>PowerShell 命令完整示例:</h4>
+                <div class="code">
+                    # 获取所有 Classic availability tests<br>
+                    $classicTests = Get-AzApplicationInsightsWebTest | Where-Object {$_.WebTestKind -eq "ping"}<br><br>
+                    
+                    # 删除所有 Classic availability tests<br>
+                    $classicTests | Remove-AzApplicationInsightsWebTest
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h4>Azure Application Insights 测试类型对比:</h4>
+                <table>
+                    <tr>
+                        <th>测试类型</th>
+                        <th>WebTestKind 值</th>
+                        <th>描述</th>
+                    </tr>
+                    <tr>
+                        <td>Classic availability test</td>
+                        <td>"ping"</td>
+                        <td>旧版测试，基于 URL ping 测试</td>
+                    </tr>
+                    <tr>
+                        <td>Standard test</td>
+                        <td>"standard"</td>
+                        <td>新版测试，提供更多功能和配置选项</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 自动选择正确答案
+            document.querySelector('input[value="C"]').checked = true;
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

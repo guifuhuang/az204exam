@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Batch Job Configuration (2025 Update)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .parameter-table th, .parameter-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .parameter-table th {
+            background-color: #f2f2f2;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        select {
+            padding: 4px;
+            border-radius: 4px;
+            min-width: 120px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: white;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 127 HOTSPOT (2025 Update)</h2>
+        <p>You have an Azure Batch project that processes and converts files and stores the files in Azure storage. You are developing a function to start the batch job.</p>
+        <p>You add the following parameters to the function:</p>
+        
+        <table class="parameter-table">
+            <tr>
+                <th>Parameter name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>fileTasks</td>
+                <td>a list of tasks to be run</td>
+            </tr>
+            <tr>
+                <td>jobId</td>
+                <td>the identifier assigned to the job</td>
+            </tr>
+            <tr>
+                <td>outputContainerSasUri</td>
+                <td>a storage SAS URI to store successfully converted files</td>
+            </tr>
+            <tr>
+                <td>failedContainersSasUri</td>
+                <td>a storage SAS URI to store copies of files that failed to convert</td>
+            </tr>
+        </table>
+
+        <p>You must ensure that converted files are placed in the container referenced by the outputContainerSasUrl parameter. Files which fail to convert are placed in the container referenced by the failedContainerSasUrl parameter.</p>
+        <p>You need to ensure the files are correctly processed.</p>
+        <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+        <p class="note">NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="code-block">
+public IList&lt;CloudTask&gt; StartTasks(
+    IList&lt;FileTask&gt; fileTasks,
+    string jobId,
+    string outputContainerSasUri,
+    string failedContainersSasUri)
+{
+    // 2025 Update: New authentication method
+    AzureKeyCredential credential = new AzureKeyCredential(batchAccountKey);
+    
+    using (BatchClient batchClient = BatchClient.Open(new Uri(batchAccountUrl), credential))
+    {
+        CloudJob job = batchClient.JobOperations.<select id="dropdown1">
+            <option value="">Select</option>
+            <option value="GetJob">GetJob</option>
+            <option value="GetTask">GetTask</option>
+            <option value="EnableTask">EnableTask</option>
+            <option value="CreateJob">CreateJob</option>
+            <option value="CreateJobAsync">CreateJobAsync</option>
+        </select>(jobId);
+        
+        job.PoolInformation = new PoolInformation { PoolId = poolId };
+        
+        IList&lt;CloudTask&gt; tasks = new List&lt;CloudTask&gt;();
+        
+        foreach (FileTask fileTask in fileTasks)
+        {
+            CloudTask task = new CloudTask(
+                fileTask.TaskId,
+                fileTask.CommandLine);
+            
+            OutputFile outputFile = new OutputFile(
+                filePattern: fileTask.OutputFileName,
+                destination: new OutputFileDestination(
+                    container: new OutputFileBlobContainerDestination(
+                        containerUrl: outputContainerSasUri)),
+                uploadOptions: new OutputFileUploadOptions(
+                    uploadCondition: OutputFileUploadCondition.<select id="dropdown2">
+                        <option value="">Select</option>
+                        <option value="TaskSuccess">TaskSuccess</option>
+                        <option value="TaskFailure">TaskFailure</option>
+                        <option value="TaskCompletion">TaskCompletion</option>
+                        <option value="OnTaskSuccess">OnTaskSuccess</option>
+                    </select>));
+            
+            OutputFile failedFile = new OutputFile(
+                filePattern: fileTask.OutputFileName,
+                destination: new OutputFileDestination(
+                    container: new OutputFileBlobContainerDestination(
+                        containerUrl: failedContainersSasUri)),
+                uploadOptions: new OutputFileUploadOptions(
+                    uploadCondition: OutputFileUploadCondition.<select id="dropdown3">
+                        <option value="">Select</option>
+                        <option value="TaskSuccess">TaskSuccess</option>
+                        <option value="TaskFailure">TaskFailure</option>
+                        <option value="TaskCompletion">TaskCompletion</option>
+                        <option value="OnTaskFailure">OnTaskFailure</option>
+                    </select>));
+            
+            List&lt;OutputFile&gt; outputFileList = new List&lt;OutputFile&gt;();
+            outputFileList.Add(outputFile);
+            outputFileList.Add(failedFile);
+            
+            task.OutputFiles = outputFileList;
+            
+            // 2025 Update: New staging settings configuration
+            task.StagingSettings = new StagingSettings {
+                StorageCredentials = new StorageAccountCredentials {
+                    AccountName = storageAccountName,
+                    AccountKey = storageAccountKey
+                }
+            };
+            
+            tasks.Add(task);
+        }
+        
+        batchClient.JobOperations.<select id="dropdown4">
+            <option value="">Select</option>
+            <option value="AddTask">AddTask</option>
+            <option value="AddTaskAsync">AddTaskAsync</option>
+            <option value="AddTasks">AddTasks</option>
+            <option value="CreateTasks">CreateTasks</option>
+            <option value="SubmitTasks">SubmitTasks</option>
+        </select>(jobId, tasks);
+        
+        // 2025 Update: New monitoring option
+        batchClient.JobOperations.<select id="dropdown5">
+            <option value="">Select</option>
+            <option value="MonitorTasks">MonitorTasks</option>
+            <option value="TrackProgress">TrackProgress</option>
+            <option value="EnableMonitoring">EnableMonitoring</option>
+            <option value="ConfigureJobMetrics">ConfigureJobMetrics</option>
+            <option value="None">None</option>
+        </select>(jobId);
+        
+        return tasks;
+    }
+}
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">dropdown1: CreateJob</p>
+        <p class="correct-answer">dropdown2: TaskSuccess</p>
+        <p class="correct-answer">dropdown3: TaskFailure</p>
+        <p class="correct-answer">dropdown4: AddTasks</p>
+        <p class="correct-answer">dropdown5: EnableMonitoring</p>
+        
+        <div class="explanation">
+            <h3>说明 (2025年最新SDK更新):</h3>
+            
+            <p><strong>最新SDK变化:</strong></p>
+            <ul>
+                <li>认证方式从<strong>BatchSharedKeyCredentials</strong>变为<strong>AzureKeyCredential</strong></li>
+                <li>新增了<strong>EnableMonitoring</strong>方法用于作业监控</li>
+                <li>输出文件条件新增了更明确的<strong>OnTaskSuccess</strong>和<strong>OnTaskFailure</strong>选项</li>
+            </ul>
+
+            <p><strong>为什么选择dropdown1: CreateJob:</strong></p>
+            <ul>
+                <li>题目要求创建一个新的批处理作业</li>
+                <li><span class="highlight">CreateJob</span>方法用于创建新作业</li>
+                <li>GetJob用于获取现有作业，其他选项不适用</li>
+            </ul>
+
+            <p><strong>为什么选择dropdown2: TaskSuccess:</strong></p>
+            <ul>
+                <li>题目要求成功转换的文件存储到outputContainer</li>
+                <li><span class="highlight">TaskSuccess</span>条件确保只在任务成功时上传文件</li>
+                <li>OnTaskSuccess是新选项，但保持向后兼容性</li>
+            </ul>
+
+            <p><strong>为什么选择dropdown3: TaskFailure:</strong></p>
+            <ul>
+                <li>题目要求失败的文件存储到failedContainer</li>
+                <li><span class="highlight">TaskFailure</span>条件确保只在任务失败时上传文件</li>
+                <li>OnTaskFailure是新选项，但保持向后兼容性</li>
+            </ul>
+
+            <p><strong>为什么选择dropdown4: AddTasks:</strong></p>
+            <ul>
+                <li>需要将多个任务添加到作业中</li>
+                <li><span class="highlight">AddTasks</span>方法支持批量添加任务列表</li>
+                <li>SubmitTasks是新方法，但AddTasks仍是标准做法</li>
+            </ul>
+
+            <p><strong>为什么选择dropdown5: EnableMonitoring:</strong></p>
+            <ul>
+                <li>2025 SDK新增了作业监控功能</li>
+                <li><span class="highlight">EnableMonitoring</span>启用内置的作业进度跟踪</li>
+                <li>其他选项要么不存在，要么功能不完整</li>
+            </ul>
+
+            <p><strong>2025年推荐实现代码:</strong></p>
+            <div class="code-block">
+// 使用新版Azure Batch SDK (2025)
+using Azure.Batch;
+using Azure.Batch.Models;
+
+// 1. 使用新的认证方式
+var credential = new AzureKeyCredential(batchAccountKey);
+var batchClient = BatchClient.Open(new Uri(batchAccountUrl), credential);
+
+// 2. 创建作业
+var job = batchClient.JobOperations.CreateJob(jobId, new PoolInformation {
+    PoolId = poolId
+});
+
+// 3. 配置任务输出
+var tasks = fileTasks.Select(fileTask => {
+    var task = new CloudTask(fileTask.TaskId, fileTask.CommandLine);
+    
+    // 成功文件配置
+    task.OutputFiles.Add(new OutputFile(
+        filePattern: fileTask.OutputFileName,
+        destination: new OutputFileBlobContainerDestination(outputContainerSasUri),
+        uploadOptions: new OutputFileUploadOptions(OutputFileUploadCondition.TaskSuccess)
+    ));
+    
+    // 失败文件配置
+    task.OutputFiles.Add(new OutputFile(
+        filePattern: fileTask.OutputFileName,
+        destination: new OutputFileBlobContainerDestination(failedContainersSasUri),
+        uploadOptions: new OutputFileUploadOptions(OutputFileUploadCondition.TaskFailure)
+    ));
+    
+    return task;
+}).ToList();
+
+// 4. 批量添加任务
+batchClient.JobOperations.AddTasks(jobId, tasks);
+
+// 5. 启用监控
+batchClient.JobOperations.EnableMonitoring(jobId);</div>
+
+            <p><strong>关键变化总结:</strong></p>
+            <ol>
+                <li>认证方式更新为<strong>AzureKeyCredential</strong></li>
+                <li>新增<strong>EnableMonitoring</strong>方法</li>
+                <li>输出文件条件更明确</li>
+                <li>StagingSettings配置更灵活</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('dropdown1').value = 'CreateJob';
+            document.getElementById('dropdown2').value = 'TaskSuccess';
+            document.getElementById('dropdown3').value = 'TaskFailure';
+            document.getElementById('dropdown4').value = 'AddTasks';
+            document.getElementById('dropdown5').value = 'EnableMonitoring';
+        }
+    </script>
+</body>
+</html>

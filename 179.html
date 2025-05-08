@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Search 测试题</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 179</h3>
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question
+        in the series contains a unique solution that might meet the stated goals. Some question sets
+        might have more than one correct solution, while others might not have a correct solution.
+        After you answer a question in this question, you will NOT be able to return to it. As a result, these
+        questions will not appear in the review screen.</p>
+        <p>Margie's Travel is an international travel and bookings management service. The company is
+        expanding into restaurant bookings. You are tasked with implementing Azure Search for the
+        restaurants listed in their solution.</p>
+        <p>You create the index in Azure Search.</p>
+        <p>You need to import the restaurant data into the Azure Search service by using the Azure Search
+        .NET SDK.</p>
+        <p>Solution:</p>
+        <ol>
+            <li>Create a SearchServiceClient object to connect to the search index.</li>
+            <li>Create a DataContainer that contains the documents which must be added.</li>
+            <li>Create a DataSource instance and set its Container property to the DataContainer.</li>
+            <li>Set the DataSources property of the SearchServiceClient.</li>
+        </ol>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：B. No</strong></p>
+            <p><strong>说明：</strong></p>
+            <p>根据Azure Search的.NET SDK使用方式，正确的步骤应该是：</p>
+            <ol>
+                <li>创建SearchIndexClient或SearchClient来连接搜索索引</li>
+                <li>准备要索引的文档数据</li>
+                <li>使用Documents.Index或IndexAsync方法导入数据</li>
+            </ol>
+            <p>Use the following method:</p>
+            <ol>
+                <li>- Create a SearchIndexClient object to connect to the search index</li>
+                <li>- Create an IndexBatch that contains the documents which must be added.</li>
+                <li>- Call the Documents.Index method of the SearchIndexClient and pass the IndexBatch</li>
+            </ol>
+            <p>题目中提到的解决方案有几个问题：</p>
+            <ul>
+                <li>SearchServiceClient是旧版SDK中的类，新版使用SearchIndexClient/SearchClient</li>
+                <li>数据导入应该使用Documents属性上的操作方法，而不是通过DataSource设置</li>
+                <li>DataContainer和DataSource概念在数据导入流程中不适用</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

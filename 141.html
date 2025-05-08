@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure CLI Commands Drag-Drop Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .columns { display: flex; gap: 20px; }
+        .command-list { flex: 1; border: 1px dashed #ccc; padding: 15px; min-height: 300px; }
+        .answer-area { flex: 1; border: 1px dashed #ccc; padding: 15px; min-height: 300px; background: #f9f9f9; }
+        .command { background: #333; color: white; padding: 10px; margin: 8px 0; border-radius: 4px; cursor: move; }
+        .bash { background: #333; color: white; padding: 10px; margin: 8px 0; border-radius: 4px; font-family: monospace; }
+        h3 { margin-top: 0; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .section-title { font-weight: bold; margin-bottom: 10px; }
+        .dragging { opacity: 0.5; }
+        .command-copy { background: #555; } /* 答案区域命令的样式 */
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 141 DRAG DROP</h3>
+        <p>Fourth Coffee has an ASP.NET Core web app that runs in Docker. The app is mapped to the www.fourthcoffee.com domain.</p>
+        <p>Fourth Coffee is migrating this application to Azure.</p>
+        <p>You need to provision an App Service Web App to host this docker image and map the custom domain to the App Service web app.</p>
+        <p>A resource group named FourthCoffeePublicWebResourceGroup has been created in the WestUS region that contains an App Service Plan named AppServiceLinuxDockerPlan.</p>
+        <p>Which order should the CLI commands be used to develop the solution? To answer, move all of the Azure CLI command from the list of commands to the answer area and arrange them in the correct order.</p>
+        
+        <div class="columns">
+            <div class="command-list" id="commandList">
+                <div class="section-title">Azure CLI commands</div>
+                <div class="bash" draggable="true" id="bashVars">
+                    #bash<br>
+                    appName="FourthCoffeePublicWebRandom"<br>
+                    location="WestUS"<br>
+                    fqdn="http://www.fourthcoffee.com/www.fourthcoffee.com"
+                </div>
+                <div class="command" draggable="true" id="cmd1">
+                    az webapp create --name $appName --plan AppServiceLinuxDockerPlan --resource-group FourthCoffeePublicWebResourceGroup
+                </div>
+                <div class="command" draggable="true" id="cmd2">
+                    az webapp config container set --name $appName --docker-custom-image-name $dockerHubContainer --resource-group FourthCoffeePublicWebResourceGroup
+                </div>
+                <div class="command" draggable="true" id="cmd3">
+                    az webapp config hostname add --webapp-name $appName --resource-group FourthCoffeePublicWebResourceGroup --hostname $fqdn
+                </div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <div class="section-title">Answer area</div>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确顺序：</strong></p>
+            <ol>
+                <li>
+                    <div class="bash">
+                        #bash<br>
+                        appName="FourthCoffeePublicWebRandom"<br>
+                        location="WestUS"<br>
+                        fqdn="http://www.fourthcoffee.com/www.fourthcoffee.com"
+                    </div>
+                    <p><em>首先定义必要的变量</em></p>
+                </li>
+                <li>
+                    <div class="command">
+                        az webapp create --name $appName --plan AppServiceLinuxDockerPlan --resource-group FourthCoffeePublicWebResourceGroup
+                    </div>
+                    <p><em>创建Web应用基础资源</em></p>
+                </li>
+                <li>
+                    <div class="command">
+                        az webapp config container set --name $appName --docker-custom-image-name $dockerHubContainer --resource-group FourthCoffeePublicWebResourceGroup
+                    </div>
+                    <p><em>配置Docker容器设置</em></p>
+                </li>
+                <li>
+                    <div class="command">
+                        az webapp config hostname add --webapp-name $appName --resource-group FourthCoffeePublicWebResourceGroup --hostname $fqdn
+                    </div>
+                    <p><em>最后添加自定义域名</em></p>
+                </li>
+            </ol>
+            
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li>必须先定义变量再使用它们</li>
+                <li>创建Web应用必须在配置容器之前</li>
+                <li>域名配置必须在应用完全部署后进行</li>
+                <li>所有命令都使用相同的资源组和位置</li>
+            </ul>
+            
+            <p><strong>完整脚本示例：</strong></p>
+            <div class="bash">
+                #!/bin/bash<br>
+                appName="FourthCoffeePublicWebRandom"<br>
+                location="WestUS"<br>
+                fqdn="www.fourthcoffee.com"<br>
+                dockerHubContainer="fourthcoffee/webapp:latest"<br><br>
+                
+                # 1. 创建Web应用<br>
+                az webapp create --name $appName \<br>
+                    --plan AppServiceLinuxDockerPlan \<br>
+                    --resource-group FourthCoffeePublicWebResourceGroup<br><br>
+                
+                # 2. 配置Docker容器<br>
+                az webapp config container set --name $appName \<br>
+                    --docker-custom-image-name $dockerHubContainer \<br>
+                    --resource-group FourthCoffeePublicWebResourceGroup<br><br>
+                
+                # 3. 添加自定义域名<br>
+                az webapp config hostname add --webapp-name $appName \<br>
+                    --resource-group FourthCoffeePublicWebResourceGroup \<br>
+                    --hostname $fqdn
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const commandList = document.getElementById('commandList');
+            const answerArea = document.getElementById('answerArea');
+            
+            // 为所有可拖拽元素添加事件监听器
+            document.querySelectorAll('[draggable="true"]').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.id);
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+            
+            // 放置区域事件
+            answerArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            answerArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const originalItem = document.getElementById(id);
+                
+                // 检查是否已存在副本
+                const existingCopy = document.getElementById(id + '-copy');
+                if (existingCopy) {
+                    // 如果已存在，则移动现有副本而不是创建新副本
+                    answerArea.appendChild(existingCopy);
+                } else {
+                    // 创建新副本
+                    const clone = originalItem.cloneNode(true);
+                    clone.id = id + '-copy';
+                    clone.classList.add('command-copy');
+                    clone.addEventListener('dragstart', function(e) {
+                        e.dataTransfer.setData('text/plain', this.id);
+                        this.classList.add('dragging');
+                    });
+                    answerArea.appendChild(clone);
+                }
+                
+                // 移除拖拽样式
+                originalItem.classList.remove('dragging');
+            });
+            
+            // 允许在答案区域内重新排序
+            answerArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(answerArea, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                if (draggable && draggable.id.includes('-copy')) {
+                    if (afterElement == null) {
+                        answerArea.appendChild(draggable);
+                    } else {
+                        answerArea.insertBefore(draggable, afterElement);
+                    }
+                }
+            });
+            
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('[draggable="true"]:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

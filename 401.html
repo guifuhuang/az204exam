@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions Hosting Plan Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .requirements {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .answer-area {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .answer-area th, .answer-area td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-area th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 401 HOTSPOT</h2>
+        
+        <p>You plan to develop an Azure Functions app with an Azure Blob Storage trigger. The app will be used infrequently, with a limited duration of individual executions. The app must meet the following requirements:</p>
+        
+        <div class="requirements">
+            <ul>
+                <li>Event-driven scaling</li>
+                <li>Support for deployment slots</li>
+                <li>Minimize costs</li>
+            </ul>
+        </div>
+        
+        <p>You need to identify the hosting plan and the maximum duration when executing the app.</p>
+        
+<p>Which configuration setting values should you use? To answer, select the appropriate values in the answer area.</p>
+<p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        <table class="answer-area">
+            <thead>
+                <tr>
+                    <th>Configuration setting</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hosting plan</td>
+                    <td>
+                        <select id="hosting-plan">
+                            <option value="">Select an option</option>
+                            <option value="Premium">Premium</option>
+                            <option value="Consumption">Consumption</option>
+                            <option value="Dedicated">Dedicated</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Maximum execution time</td>
+                    <td>
+                        <select id="execution-time">
+                            <option value="">Select an option</option>
+                            <option value="230">230 seconds</option>
+                            <option value="600">10 minutes</option>
+                            <option value="unlimited">unlimited</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>Hosting plan:</strong> Premium</p>
+        <p><strong>Maximum execution time:</strong> 10 minutes</p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择Premium计划的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">部署槽支持</span>：Premium是唯一同时满足事件驱动扩展和部署槽需求的方案</li>
+                <li><span class="highlight">成本优化</span>：相比Dedicated计划，Premium采用预付费+弹性扩展更经济</li>
+                <li><span class="highlight">事件驱动扩展</span>：与Consumption计划相同的自动扩展机制</li>
+            </ol>
+            
+            <p><strong>选择10分钟执行时间的原因:</strong></p>
+            <ul>
+                <li>Blob触发器处理需要比HTTP触发器更长的超时时间</li>
+                <li>Premium计划允许配置10分钟超时（Consumption计划上限）</li>
+                <li>230秒仅适用于HTTP触发器的默认值</li>
+            </ul>
+            
+            <p><strong>配置示例:</strong></p>
+            <pre>
+// host.json 配置
+{
+  "version": "2.0",
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[3.*, 4.0.0)"
+  },
+  "functionTimeout": "00:10:00",  // 10分钟超时
+  "extensions": {
+    "blobs": {
+      "maxDegreeOfParallelism": 4  // 并行处理设置
+    }
+  }
+}</pre>
+            
+            <p><strong>各计划对比:</strong></p>
+            <table border="1" style="width:100%; border-collapse: collapse;">
+                <tr>
+                    <th>特性</th>
+                    <th>Consumption</th>
+                    <th>Premium</th>
+                    <th>Dedicated</th>
+                </tr>
+                <tr>
+                    <td>部署槽支持</td>
+                    <td>×</td>
+                    <td>✓ (最多3个槽)</td>
+                    <td>✓ (最多20个槽)</td>
+                </tr>
+                <tr>
+                    <td>最大执行时间</td>
+                    <td>10分钟</td>
+                    <td>30分钟</td>
+                    <td>unlimited</td>
+                </tr>
+                <tr>
+                    <td>冷启动概率</td>
+                    <td>高</td>
+                    <td>低（可预热）</td>
+                    <td>无</td>
+                </tr>
+                <tr>
+                    <td>适合场景</td>
+                    <td>突发流量</td>
+                    <td>生产环境</td>
+                    <td>长期运行</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

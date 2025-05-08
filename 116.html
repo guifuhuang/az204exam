@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Messaging Services Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: #4fc3f7;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .correct {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 116</h3>
+        <p>You are developing a solution that will use Azure messaging services.</p>
+        <p>You need to ensure that the solution uses a publish-subscribe model and eliminates the need for constant polling.</p>
+        <p>What are two possible ways to achieve the goal? Each correct answer presents a complete solution.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <div class="options">
+        <div class="option" data-option="A">A. Service Bus</div>
+        <div class="option" data-option="B">B. Event Hub</div>
+        <div class="option" data-option="C">C. Event Grid</div>
+        <div class="option" data-option="D">D. Queue</div>
+    </div>
+
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案：</strong></p>
+        <p class="correct">A. Service Bus</p>
+        <p class="correct">C. Event Grid</p>
+        
+        <div class="explanation">
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li><strong>Service Bus (A)</strong>：Azure Service Bus 支持发布-订阅模型（通过主题和订阅），并采用推送机制而非轮询，完全符合题目要求。</li>
+                <li><strong>Event Grid (C)</strong>：Azure Event Grid 是专门的事件路由服务，采用发布-订阅模型，并基于推送机制，无需轮询。</li>
+                <li><strong>排除选项 B (Event Hub)</strong>：虽然 Event Hub 可以处理大量事件，但它主要是数据摄取服务，不是典型的发布-订阅模型。</li>
+                <li><strong>排除选项 D (Queue)</strong>：队列是点对点通信模型，不支持发布-订阅模式。</li>
+            </ul>
+            <p>题目要求同时满足两个条件：1) 发布-订阅模型；2) 消除轮询。只有 Service Bus 和 Event Grid 同时满足这两个要求。</p>
+        </div>
+    </div>
+
+    <script>
+        // Handle option selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Scroll to answer
+            document.getElementById('answer').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

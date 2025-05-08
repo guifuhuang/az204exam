@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure APIM Rate Limiting Policy</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            padding: 10px;
+            margin: 8px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #0078D4;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .code {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 422</h2>
+        
+        <p>You have an Azure API Management (APIM) Standard tier instance named APIM1 that uses a managed gateway.</p>
+        <p>You plan to use APIM1 to publish an API named API1 that uses a backend database that supports only a limited volume of requests per minute. You also need a policy for API1 that will minimize the possibility that the number of requests to the backend database from an individual IP address you specify exceeds the supported limit.</p>
+        <p>You need to identify a policy for API1 that will meet the requirements.</p>
+        <p>Which policy should you use?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">A. quota-by-key</div>
+            <div class="option" onclick="selectOption(this)">B. rate-limit</div>
+            <div class="option" onclick="selectOption(this)">C. ip-filter</div>
+            <div class="option" onclick="selectOption(this)">D. rate-limit-by-key</div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案: D. rate-limit-by-key</h3>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            <p>在Azure API Management中限制单个IP地址的请求速率时：</p>
+            
+            <table>
+                <tr>
+                    <th>策略</th>
+                    <th>用途</th>
+                    <th>适用场景</th>
+                </tr>
+                <tr>
+                    <td><strong>rate-limit-by-key</strong></td>
+                    <td>基于自定义键值限制调用速率</td>
+                    <td>
+                        <ul>
+                            <li>按IP限制请求速率</li>
+                            <li>按用户ID限制访问</li>
+                            <li>任何自定义维度限流</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>quota-by-key</td>
+                    <td>设置时间段内的总调用量配额</td>
+                    <td>每月/每日API调用总量限制</td>
+                </tr>
+                <tr>
+                    <td>rate-limit</td>
+                    <td>全局速率限制(已弃用)</td>
+                    <td>不推荐使用</td>
+                </tr>
+                <tr>
+                    <td>ip-filter</td>
+                    <td>IP黑白名单过滤</td>
+                    <td>完全阻止或允许特定IP</td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p><strong>关键区别：</strong></p>
+                <ul>
+                    <li><code>rate-limit-by-key</code>可以基于IP地址(<code>context.Request.IpAddress</code>)进行细粒度限流</li>
+                    <li><code>quota-by-key</code>适用于总量配额而非实时速率限制</li>
+                    <li>题目明确要求"per minute"限流，<code>rate-limit-by-key</code>最符合</li>
+                </ul>
+            </div>
+            
+            <p><strong>实现代码示例：</strong></p>
+            <div class="code">
+                <pre>
+&lt;policies&gt;
+    &lt;inbound&gt;
+        &lt;base /&gt;
+        &lt;rate-limit-by-key calls="10" 
+                          renewal-period="60" 
+                          counter-key="@(context.Request.IpAddress)" 
+                          increment-condition="@(context.Response.StatusCode == 200)" /&gt;
+    &lt;/inbound&gt;
+    &lt;backend&gt;
+        &lt;base /&gt;
+    &lt;/backend&gt;
+    &lt;outbound&gt;
+        &lt;base /&gt;
+    &lt;/outbound&gt;
+&lt;/policies&gt;</pre>
+            </div>
+            
+            <h4>策略参数说明：</h4>
+            <ul>
+                <li><strong>calls</strong>: 每个周期允许的最大调用数(示例中为10次)</li>
+                <li><strong>renewal-period</strong>: 重置周期(秒)，示例60秒=1分钟</li>
+                <li><strong>counter-key</strong>: 限流维度，使用IP地址作为键值</li>
+                <li><strong>increment-condition</strong>: 可选，指定何时计数(示例仅统计成功响应)</li>
+            </ul>
+            
+            <div class="note">
+                <p><strong>生产环境建议：</strong></p>
+                <ol>
+                    <li>结合<code>retry-after</code>头返回合理的重试时间</li>
+                    <li>在策略前添加<code>cache-lookup</code>减少后端压力</li>
+                    <li>使用<code>set-header</code>在响应中添加速率限制状态信息</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function selectOption(element) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Question 93</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .select-option {
+            margin: 10px 0;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .answer-button {
+            padding: 8px 16px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 4px;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 93 HOTSPOT</h2>
+        <p>You are developing a ticket reservation system for an airline.</p>
+        <p>The storage solution for the application must meet the following requirements:</p>
+        <ul>
+            <li>Ensure at least 99.99% availability and provide low latency.</li>
+            <li>Accept reservations even when localized network outages or other unforeseen failures occur.</li>
+            <li>Process reservations in the exact sequence as reservations are submitted to minimize overbooking or selling the same seat to multiple travelers.</li>
+            <li>Allow simultaneous and out-of-order reservations with a maximum five-second tolerance window.</li>
+        </ul>
+        <p>You provision a resource group named airlineResourceGroup in the Azure South-Central US region.</p>
+        <p>You need to provision a SQL API Cosmos DB account to support the app.</p>
+        <p>How should you complete the Azure CLI commands? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="code-block">
+resourceGroupName='airlineResourceGroup'
+name='docdb-airline-reservations'
+databaseName='docdb-tickets-database'
+collectionName='docdb-tickets-collection'
+consistencyLevel=
+        <div class="select-option">
+            <select id="consistencyLevel">
+                <option value="">Select consistency level</option>
+                <option value="Strong">Strong</option>
+                <option value="Eventual">Eventual</option>
+                <option value="ConsistentPrefix">ConsistentPrefix</option>
+                <option value="BoundedStaleness">BoundedStaleness</option>
+            </select>
+        </div>
+
+az cosmosdb create \
+--name $name \
+        <div class="select-option">
+            <select id="kind">
+                <option value="">Select kind</option>
+                <option value="--enable-virtual-network true \">--enable-virtual-network true \</option>
+                <option value="--enable-automatic-failover true \">--enable-automatic-failover true \</option>
+                <option value="--kind GlobalDocumentDB">--kind GlobalDocumentDB</option>
+                <option value="--kind MongoDB">--kind MongoDB</option>
+            </select>
+        </div>
+--resource-group $resourceGroupName \
+--max-interval 5 \
+--locations
+        <div class="select-option">
+            <select id="locations">
+                <option value="">Select locations</option>
+                <option value="'southcentralus'">southcentralus</option>
+                <option value="'eastus'">eastus</option>
+                <option value="'southcentralus=0 eastus=1 westus=2'">southcentralus=0 eastus=1 westus=2</option>
+                <option value="'southcentralus=0'">southcentralus=0</option>
+            </select>
+        </div>
+--default-consistency-level $consistencyLevel
+        </div>
+
+        <button class="answer-button" id="showAnswer">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <h3>正确答案:</h3>
+            <ul>
+                <li><span class="correct">Consistency Level: BoundedStaleness</span></li>
+                <li><span class="correct">Kind: GlobalDocumentDB</span></li>
+                <li><span class="correct">Locations: 'southcentralus=0 eastus=1 westus=2'</span></li>
+            </ul>
+            <h3>说明:</h3>
+            <p>1. <strong>BoundedStaleness</strong> 一致性级别最适合此场景，因为它：</p>
+            <ul>
+                <li>保证顺序处理（满足精确顺序要求）</li>
+                <li>允许最多5秒的延迟窗口（满足5秒容差要求）</li>
+                <li>提供强一致性但有一定灵活性</li>
+            </ul>
+            <p>2. <strong> --enable-automatic-failover true</strong> 启用 Cosmos DB 账户的自动故障转移功能。当设置为 true 时</p>
+            <p>3. 需要选择<strong>多个区域部署</strong>（southcentralus=0 eastus=1 westus=2）以满足：</p>
+            <ul>
+                <li>99.99%可用性要求</li>
+                <li>在本地网络中断时仍能接受预订</li>
+                <li>自动故障转移能力</li>
+            </ul>
+            <p>这些配置共同满足了题目中所有的业务需求和技术要求。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerDiv.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+        });
+    </script>
+</body>
+</html>

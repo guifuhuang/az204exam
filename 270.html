@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Monitor Logs Setup for Logic App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .container { display: flex; margin: 20px 0; }
+        .actions { width: 50%; padding: 10px; background: #e9e9e9; border-radius: 5px; margin-right: 10px; }
+        .answer-area { width: 50%; padding: 10px; background: #333; color: white; border-radius: 5px; min-height: 200px; }
+        .action-item, .answer-slot { padding: 10px; margin: 5px; background: #fff; border-radius: 4px; cursor: move; color: black; }
+        .answer-slot { background: #555; color: white; border: 1px dashed #999; min-height: 20px; }
+        .action-item.dragging { opacity: 0.5; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+        .hint { font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 270 DRAG DROP</h3>
+        <p>You develop and deploy an Azure Logic App that calls an Azure Function app. The Azure Function App includes an OpenAPI (Swagger) definition and uses an Azure Blob storage account. All resources are secured by using Azure Active Directory (Azure AD).</p>
+        <p>The Logic App must use Azure Monitor logs to record and store information about runtime data and events. The logs must be stored in the Azure Blob storage account.</p>
+        <p>You need to set up Azure Monitor logs and collect diagnostics data for the Azure Logic App.</p>
+        <p>Which three actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+        
+        <div class="container">
+            <div class="actions" id="actions">
+                <div class="action-item" draggable="true" data-value="1">Create action groups and alert rules.</div>
+                <div class="action-item" draggable="true" data-value="2">Create a Log Analytics workspace.</div>
+                <div class="action-item" draggable="true" data-value="3">Install the Logic Apps Management solution.</div>
+                <div class="action-item" draggable="true" data-value="4">Add a diagnostic setting to the Azure Function App.</div>
+                <div class="action-item" draggable="true" data-value="5">Create an Azure storage account.</div>
+                <div class="action-item" draggable="true" data-value="6">Add a diagnostic setting to the Azure Logic App.</div>
+            </div>
+            
+            <div class="answer-area" id="answer-area">
+                <div class="hint">Drag and drop 3 actions here in correct order</div>
+                <div class="answer-slot" data-slot="1"></div>
+                <div class="answer-slot" data-slot="2"></div>
+                <div class="answer-slot" data-slot="3"></div>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案顺序：</strong></p>
+            <ol>
+                <li class="correct">Create a Log Analytics workspace.</li>
+                <li class="correct">Install the Logic Apps Management solution.</li>
+                <li class="correct">Add a diagnostic setting to the Azure Logic App.</li>
+            </ol>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>创建Log Analytics工作区</strong>：
+                    <ul>
+                        <li>这是设置Azure Monitor日志的第一步</li>
+                        <li>Log Analytics工作区是存储和分析日志数据的中央位置</li>
+                        <li>题目要求使用Azure Monitor日志，必须先创建工作区</li>
+                    </ul>
+                </li>
+                
+                <li><strong>安装Logic Apps管理解决方案</strong>：
+                    <ul>
+                        <li>在Log Analytics工作区中安装特定于Logic Apps的解决方案</li>
+                        <li>这提供了预构建的仪表板和查询，专门用于监控Logic Apps</li>
+                        <li>解决方案添加了Logic Apps特定的日志架构和视图</li>
+                    </ul>
+                </li>
+                
+                <li><strong>向Azure Logic App添加诊断设置</strong>：
+                    <ul>
+                        <li>最后配置Logic App将日志发送到Log Analytics工作区</li>
+                        <li>诊断设置定义了要收集的日志类别和指标</li>
+                        <li>确保运行时数据和事件被正确记录</li>
+                    </ul>
+                </li>
+                
+                <li><strong>为什么其他选项不正确</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>原因</th>
+                        </tr>
+                        <tr>
+                            <td>创建操作组和警报规则</td>
+                            <td>这是监控设置后的步骤，不是初始配置</td>
+                        </tr>
+                        <tr>
+                            <td>向Azure函数应用添加诊断设置</td>
+                            <td>题目要求的是Logic App的日志，不是函数应用</td>
+                        </tr>
+                        <tr>
+                            <td>创建Azure存储帐户</td>
+                            <td>题目说明已经使用现有的Blob存储帐户</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>配置示例</strong>：
+                    <pre>// Azure CLI命令示例
+# 1. 创建Log Analytics工作区
+az monitor log-analytics workspace create \
+    --resource-group myResourceGroup \
+    --workspace-name myLogAnalyticsWorkspace
+
+# 2. 安装Logic Apps解决方案
+az monitor log-analytics solution create \
+    --resource-group myResourceGroup \
+    --workspace-name myLogAnalyticsWorkspace \
+    --solution-type LogicAppsManagement
+
+# 3. 配置Logic App诊断设置
+az monitor diagnostic-settings create \
+    --resource /subscriptions/{sub-id}/resourceGroups/myResourceGroup/providers/Microsoft.Logic/workflows/myLogicApp \
+    --name myDiagnosticSetting \
+    --workspace myLogAnalyticsWorkspace \
+    --logs '[{"category": "WorkflowRuntime", "enabled": true}]' \
+    --metrics '[{"category": "AllMetrics", "enabled": true}]'</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>Azure Monitor的<a href="https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace" target="_blank">Log Analytics工作区文档</a>和<a href="https://learn.microsoft.com/en-us/azure/logic-apps/monitor-logic-apps-log-analytics" target="_blank">Logic Apps监控文档</a>详细说明了此配置</p>
+        </div>
+    </div>
+
+    <script>
+        let draggedItem = null;
+        
+        // 设置拖拽事件
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => this.classList.add('dragging'), 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+        
+        document.querySelectorAll('.answer-slot').forEach(slot => {
+            slot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            slot.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#777';
+            });
+            
+            slot.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '#555';
+            });
+            
+            slot.addEventListener('drop', function() {
+                this.style.backgroundColor = '#555';
+                if (draggedItem && this.children.length === 0) {
+                    const clone = draggedItem.cloneNode(true);
+                    clone.classList.remove('action-item');
+                    clone.classList.add('dropped-item');
+                    clone.draggable = false;
+                    this.innerHTML = '';
+                    this.appendChild(clone);
+                }
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const userSelections = [];
+            document.querySelectorAll('.answer-slot').forEach(slot => {
+                if (slot.children.length > 0) {
+                    userSelections.push(slot.children[0].textContent);
+                }
+            });
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <p><strong>您的选择顺序：</strong></p>
+                <ol>
+                    ${userSelections.map(item => `<li>${item}</li>`).join('') || '<li>未选择完整序列</li>'}
+                </ol>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

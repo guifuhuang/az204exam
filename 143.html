@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile App Offline Sync Implementation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .requirements {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid #0078d4;
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .reference {
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 143</h2>
+        <p>You are developing a mobile instant messaging app for a company.</p>
+        
+        <div class="requirements">
+            <p>The mobile app must meet the following requirements:</p>
+            <ul>
+                <li>Support offline data sync.</li>
+                <li>Update the latest messages during normal sync cycles.</li>
+            </ul>
+        </div>
+        
+        <p>You need to implement Offline Data Sync.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        <p class="note">NOTE: Each correct selection is worth one point.</p>
+        
+        <div id="options">
+            <div class="option" onclick="toggleOption('A')">
+                <input type="checkbox" id="optionA"> 
+                <label for="optionA">A. Retrieve records from Offline Data Sync on every call to the PullAsync method.</label>
+            </div>
+            
+            <div class="option" onclick="toggleOption('B')">
+                <input type="checkbox" id="optionB"> 
+                <label for="optionB">B. Retrieve records from Offline Data Sync using an Incremental Sync.</label>
+            </div>
+            
+            <div class="option" onclick="toggleOption('C')">
+                <input type="checkbox" id="optionC"> 
+                <label for="optionC">C. Push records to Offline Data Sync using an Incremental Sync.</label>
+            </div>
+            
+            <div class="option" onclick="toggleOption('D')">
+                <input type="checkbox" id="optionD"> 
+                <label for="optionD">D. Return the updatedAt column from the Mobile Service Backend and implement sorting by using the column.</label>
+            </div>
+            
+            <div class="option" onclick="toggleOption('E')">
+                <input type="checkbox" id="optionE"> 
+                <label for="optionE">E. Return the updatedAt column from the Mobile Service Backend and implement sorting by the message id.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">B. Retrieve records from Offline Data Sync using an Incremental Sync.</p>
+        <p class="correct-answer">E. Return the updatedAt column from the Mobile Service Backend and implement sorting by the message id.</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            
+            <p><strong>为什么选择B: Incremental Sync</strong></p>
+            <ul>
+                <li><span class="highlight">增量同步(Incremental Sync)</span>是Azure移动SDK的核心功能</li>
+                <li>当PullAsync方法的第一个参数使用非空查询名称时，SDK会自动执行增量同步</li>
+                <li>SDK会在本地系统表中存储每次同步的最新updatedAt时间戳</li>
+                <li>后续同步操作只会获取该时间戳之后的记录，大幅提高效率</li>
+            </ul>
+            
+            <p><strong>为什么选择E: updatedAt列和按message id排序</strong></p>
+            <ul>
+                <li>服务端必须返回有意义的<span class="highlight">updatedAt</span>值</li>
+                <li>虽然需要支持按updatedAt字段排序，但<span class="highlight">SDK会自动添加自己的排序</span></li>
+                <li>不能使用包含自定义orderBy子句的pull查询(因此不选D)</li>
+                <li>按message id排序可以确保消息的正确顺序，同时SDK会处理增量同步的时间戳</li>
+            </ul>
+            
+            <p><strong>为什么不选择其他选项:</strong></p>
+            <ul>
+                <li><strong>A选项</strong>: 每次拉取所有记录会降低性能，不符合增量同步原则</li>
+                <li><strong>C选项</strong>: 推送操作通常不需要增量处理，客户端应推送所有本地更改</li>
+                <li><strong>D选项</strong>: 虽然需要updatedAt列，但不应手动实现排序，因为SDK会处理排序</li>
+            </ul>
+            
+            <p><strong>增量同步的关键实现要点:</strong></p>
+            <ol>
+                <li>服务端表必须包含updatedAt时间戳列</li>
+                <li>客户端使用非空查询名称初始化PullAsync操作</li>
+                <li>SDK自动管理同步状态和时间戳</li>
+                <li>不要手动添加orderBy子句，让SDK处理排序</li>
+                <li>确保服务端支持按updatedAt字段过滤</li>
+            </ol>
+            
+            <p><strong>代码示例:</strong></p>
+            <pre>
+// 客户端增量同步实现
+await mobileService.SyncContext.InitializeAsync(store);
+var messageTable = mobileService.GetSyncTable<Message>();
+
+// 使用查询名称"latestMessages"启用增量同步
+// SDK会自动处理updatedAt时间戳和排序
+await messageTable.PullAsync(
+    "latestMessages",  // 非空查询名称启用增量同步
+    messageTable.CreateQuery()
+        .Where(m => m.UpdatedAt > lastSyncTime)  // SDK会自动添加此条件
+);</pre>
+            
+            <div class="reference">
+                <strong>参考文档:</strong> 
+                <a href="https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-offline-data-sync" target="_blank">
+                    Azure Mobile Apps Offline Data Sync
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedOptions = [];
+        const maxSelections = 2;
+        
+        function toggleOption(option) {
+            const optionElement = document.querySelector(`#option${option}`);
+            const optionDiv = optionElement.parentElement;
+            
+            if (optionElement.checked) {
+                optionElement.checked = false;
+                optionDiv.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(o => o !== option);
+            } else {
+                if (selectedOptions.length >= maxSelections) {
+                    alert(`最多只能选择 ${maxSelections} 个选项`);
+                    return;
+                }
+                optionElement.checked = true;
+                optionDiv.classList.add('selected');
+                selectedOptions.push(option);
+            }
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

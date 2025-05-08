@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Storage Migration Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .option { margin: 10px 0; padding: 10px; background: #eee; border-radius: 5px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 292</h3>
+        <p>You develop and deploy a web application to Azure App Service. The application accesses data stored in an Azure Storage account. The account contains several containers with several blobs with large amounts of data. You deploy all Azure resources to a single region.</p>
+        <p>You need to move the Azure Storage account to the new region. You must copy all data to the new region.</p>
+        <p>What should you do first?</p>
+        
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Export the Azure Storage account Azure Resource Manager template</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. Initiate a storage account failover</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="answer" value="C">
+            <label for="optionC">C. Configure object replication for all blobs</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="answer" value="D">
+            <label for="optionD">D. Use the AzCopy command line tool</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionE" name="answer" value="E">
+            <label for="optionE">E. Create a new Azure Storage account in the current region</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionF" name="answer" value="F">
+            <label for="optionF">F. Create a new subscription in the current region</label>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">E. Create a new Azure Storage account in the current region</span></p>
+            
+            <h3>详细解析：</h3>
+            <ol>
+                <li><strong>迁移流程</strong>
+                    <ul>
+                        <li>首先需要在<strong>目标区域创建新存储账户</strong>（选项E）</li>
+                        <li>然后使用AzCopy或对象复制传输数据</li>
+                        <li>最后更新应用配置指向新账户</li>
+                    </ul>
+                </li>
+                
+                <li><strong>排除其他选项的原因</strong>
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td>A. ARM模板</td>
+                            <td>模板导出不能跨区域部署</td>
+                        </tr>
+                        <tr>
+                            <td>B. 故障转移</td>
+                            <td>仅用于灾难恢复，不改变区域</td>
+                        </tr>
+                        <tr>
+                            <td>C. 对象复制</td>
+                            <td>需要先在目标区域有账户</td>
+                        </tr>
+                        <tr>
+                            <td>D. AzCopy</td>
+                            <td>需要先有目标存储账户</td>
+                        </tr>
+                        <tr>
+                            <td>F. 新订阅</td>
+                            <td>与区域迁移无关</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>推荐操作步骤</strong>
+                    <pre># 1. 创建目标存储账户（必须首先完成）
+az storage account create \
+  --name newstorage \
+  --resource-group myRG \
+  --location eastus2 \
+  --sku Standard_ZRS
+
+# 2. 使用AzCopy同步数据
+azcopy copy 'https://source.blob.core.windows.net/*' 'https://dest.blob.core.windows.net' --recursive
+
+# 3. 更新应用配置
+az webapp config appsettings set \
+  --name myApp \
+  --resource-group myRG \
+  --settings AzureStorageConnectionString="新连接字符串"</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-move" target="_blank">存储账户迁移指南</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy" target="_blank">跨区域复制选项</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                const userSelectionDiv = document.createElement('div');
+                userSelectionDiv.innerHTML = `<p><strong>您的选择：</strong> ${selectedOption.value}</p>`;
+                document.getElementById('answer').prepend(userSelectionDiv);
+            }
+        }
+    </script>
+</body>
+</html>

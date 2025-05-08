@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Storage Configuration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .policy { background: #f8f9fa; padding: 15px; border-left: 4px solid #0078d4; margin: 15px 0; font-family: monospace; }
+        .config-option { margin: 15px 0; }
+        select { padding: 5px; margin-left: 10px; min-width: 200px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 413 HOTSPOT</h3>
+        <p>You have the following data lifecycle management policy:</p>
+        
+        <div class="policy">
+            {<br>
+            &nbsp;&nbsp;"rules": [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"enabled": true,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Policy1",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type": "Lifecycle",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"definition": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"actions": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"baseBlob": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"tierToArchive": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"daysAfterModificationGreaterThan": 0<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"filters": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"blobIndexMatch": [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Customer",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"op": "=",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value": "Adatum"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;]<br>
+            }
+        </div>
+        
+        <p>You plan to implement an Azure Blob Storage account and apply to it Policy 1. The solution should maximize resiliency and performance.</p>
+        <p>You need to configure the account to support the policy.</p>
+        <p>Which redundancy option and storage account type should you use? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="config-option">
+            <label><strong>Redundancy:</strong></label>
+            <select id="redundancyOption">
+                <option value="">-- Select an option --</option>
+                <option value="LRS">Locally redundant storage (LRS)</option>
+                <option value="ZRS">Zone-redundant storage (ZRS)</option>
+                <option value="GRS">Geo-redundant storage (GRS)</option>
+                <option value="RA-GRS">Read-access geo-redundant storage (RA-GRS)</option>
+                <option value="GZRS">Geo-zone-redundant storage (GZRS)</option>
+                <option value="RA-GZRS">Read-access geo-zone-redundant storage (RA-GZRS)</option>
+            </select>
+        </div>
+        
+        <div class="config-option">
+            <label><strong>Account type:</strong></label>
+            <select id="accountTypeOption">
+                <option value="">-- Select an option --</option>
+                <option value="v1">General-purpose v1</option>
+                <option value="v2">General-purpose v2</option>
+                <option value="premiumBlock">Premium block blobs</option>
+                <option value="premiumPage">Premium page blobs</option>
+            </select>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案：</h3>
+            <div class="correct">
+                Redundancy: <strong>RA-GZRS</strong> (Read-access geo-zone-redundant storage)<br>
+                Account type: <strong>General-purpose v2</strong>
+            </div>
+            
+            <div class="explanation">
+                <h3>详细解析：</h3>
+                <ol>
+                    <li><strong>冗余选项选择RA-GZRS的原因</strong>
+                        <ul>
+                            <li><strong>最高可用性</strong>：结合了区域冗余和地理冗余，提供99.99999999999999% (16个9) 的持久性</li>
+                            <li><strong>读取访问</strong>：RA-前缀允许从次要区域读取，提高性能</li>
+                            <li><strong>与其他选项对比</strong>：
+                                <table>
+                                    <tr>
+                                        <th>选项</th>
+                                        <th>持久性</th>
+                                        <th>是否满足要求</th>
+                                    </tr>
+                                    <tr>
+                                        <td>LRS</td>
+                                        <td>99.999999999% (11个9)</td>
+                                        <td>❌ 仅本地冗余</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ZRS</td>
+                                        <td>99.9999999999% (12个9)</td>
+                                        <td>❌ 无地理冗余</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GRS/RA-GRS</td>
+                                        <td>99.99999999999999% (16个9)</td>
+                                        <td>⚠️ 非最高性能</td>
+                                    </tr>
+                                    <tr class="correct">
+                                        <td>GZRS/RA-GZRS</td>
+                                        <td>99.99999999999999% (16个9)</td>
+                                        <td>✅ 最佳选择</td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><strong>账户类型选择General-purpose v2的原因</strong>
+                        <ul>
+                            <li><strong>完整功能支持</strong>：唯一支持生命周期策略的账户类型</li>
+                            <li><strong>性能优化</strong>：提供标准存储层级(热/冷/存档)</li>
+                            <li><strong>排除其他选项</strong>：
+                                <table>
+                                    <tr>
+                                        <th>选项</th>
+                                        <th>问题</th>
+                                    </tr>
+                                    <tr>
+                                        <td>v1</td>
+                                        <td>不支持层级转换和高级功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Premium block/page</td>
+                                        <td>不支持存档层和生命周期策略</td>
+                                    </tr>
+                                    <tr class="correct">
+                                        <td>v2</td>
+                                        <td>完全支持所有需求</td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><strong>与生命周期策略的兼容性</strong>
+                        <pre># 创建支持策略的存储账户
+az storage account create \
+  --name mystorage \
+  --resource-group myRG \
+  --location eastus2 \
+  --sku Standard_RAGZRS \
+  --kind StorageV2 \
+  --access-tier Hot</pre>
+                        <p>此配置：</p>
+                        <ul>
+                            <li>支持立即将Adatum客户数据归档(dayAfterModificationGreaterThan=0)</li>
+                            <li>提供跨区域灾难恢复能力</li>
+                            <li>允许通过blob索引标签(Customer=Adatum)筛选数据</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <p><strong>官方文档参考：</strong></p>
+                <p>
+                    <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview" target="_blank">生命周期管理</a> |
+                    <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy" target="_blank">存储冗余选项</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const redundancyOption = document.getElementById('redundancyOption').value;
+            const accountTypeOption = document.getElementById('accountTypeOption').value;
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <h3>您的选择：</h3>
+                <p><strong>Redundancy:</strong> ${redundancyOption || '未选择'}</p>
+                <p><strong>Account type:</strong> ${accountTypeOption || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure NoSQL Database Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .option label {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure NoSQL Database Connection Test</h1>
+    
+    <div class="question">
+        <p><strong>QUESTION NO: 94</strong></p>
+        <p>You develop Azure solutions.</p>
+        <p>You must connect to a No-SQL globally-distributed database by using the .NET API.</p>
+        <p>You need to create an object to configure and execute requests in the database.</p>
+        <p>Which code segment should you use?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="dbConnection" value="A">
+            <label for="optionA">A. new Container(EndpointUri, PrimaryKey);</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="dbConnection" value="B">
+            <label for="optionB">B. new Database(Endpoint, PrimaryKey);</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="dbConnection" value="C">
+            <label for="optionC">C. new CosmosClient(EndpointUri, PrimaryKey);</label>
+        </div>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p class="correct-answer">正确答案: C. new CosmosClient(EndpointUri, PrimaryKey);</p>
+        <div class="explanation">
+            <p><strong>说明:</strong></p>
+            <p>在Azure Cosmos DB的.NET SDK中：</p>
+            <ul>
+                <li><strong>CosmosClient</strong> 是用于配置和执行数据库请求的主入口点</li>
+                <li>Container和Database对象是通过CosmosClient实例创建的，不能直接实例化</li>
+                <li>正确的连接流程是：先创建CosmosClient，然后通过它获取Database和Container实例</li>
+                <li>EndpointUri和PrimaryKey是连接Cosmos DB服务所需的认证信息</li>
+            </ul>
+            <p>因此，选项C是唯一正确的选择，它创建了配置和执行请求所需的基础客户端对象。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

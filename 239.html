@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Configuration Feature Flags</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .code { background: #333; color: white; padding: 15px; border-radius: 5px; margin: 15px 0; font-family: monospace; }
+        .code-line { margin: 5px 0; }
+        select { padding: 5px; margin: 0 5px; background: #444; color: white; border: 1px solid #666; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 239 HOTSPOT</h3>
+        <p>You are developing an ASP.NET Core app that includes feature flags which are managed by Azure App Configuration. You create an Azure App Configuration store named AppFeatureFlagStore that contains a feature flag named Export.</p>
+        
+        <p>You need to update the app to meet the following requirements:</p>
+        <ul>
+            <li>Use the Export feature in the app without requiring a restart of the app.</li>
+            <li>Validate users before users are allowed access to secure resources.</li>
+            <li>Permit users to access secure resources.</li>
+        </ul>
+        
+        <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+        
+        <div class="code">
+            <div class="code-line">public void Configure(IApplicationBuilder app, IWebHostEnvironment env)</div>
+            <div class="code-line">{</div>
+            <div class="code-line">    if (env.IsDevelopment())</div>
+            <div class="code-line">    {</div>
+            <div class="code-line">        app.UseDeveloperExceptionPage();</div>
+            <div class="code-line">    }</div>
+            <div class="code-line">    else</div>
+            <div class="code-line">    {</div>
+            <div class="code-line">        app.UseExceptionHandler("/Error");</div>
+            <div class="code-line">    }</div>
+            <div class="code-line"></div>
+            <div class="code-line">    app.<select id="select1">
+                <option value="">-- Select --</option>
+                <option value="UseAuthentication">UseAuthentication</option>
+                <option value="UseStaticFiles">UseStaticFiles</option>
+                <option value="UseSession">UseSession</option>
+                <option value="UseCookiePolicy">UseCookiePolicy</option>
+            </select>();</div>
+            <div class="code-line">    app.<select id="select2">
+                <option value="">-- Select --</option>
+                <option value="UseAuthorization">UseAuthorization</option>
+                <option value="UseHttpsRedirection">UseHttpsRedirection</option>
+                <option value="UseSession">UseSession</option>
+                <option value="UseCookiePolicy">UseCookiePolicy</option>
+            </select>();</div>
+            <div class="code-line">    app.<select id="select3">
+                <option value="">-- Select --</option>
+                <option value="UseAzureAppConfiguration">UseAzureAppConfiguration</option>
+                <option value="UseRequestLocalization">UseRequestLocalization</option>
+                <option value="UseSession">UseSession</option>
+                <option value="UseCookiePolicy">UseCookiePolicy</option>
+            </select>();</div>
+            <div class="code-line"></div>
+            <div class="code-line">    app.UseEndpoints(endpoints =></div>
+            <div class="code-line">    {</div>
+            <div class="code-line">        endpoints.MapRazorPages();</div>
+            <div class="code-line">    });</div>
+            <div class="code-line">}</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <p>1. <span class="correct">UseAuthentication</span></p>
+            <p>2. <span class="correct">UseAuthorization</span></p>
+            <p>3. <span class="correct">UseAzureAppConfiguration</span></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>UseAuthentication</strong>：
+                    <ul>
+                        <li>验证用户身份（满足第二个需求）</li>
+                        <li>必须在授权中间件之前调用</li>
+                        <li>示例配置：
+                            <pre>services.AddAuthentication(options => {
+    options.DefaultScheme = "Cookies";
+});</pre>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><strong>UseAuthorization</strong>：
+                    <ul>
+                        <li>授权访问安全资源（满足第三个需求）</li>
+                        <li>必须在端点路由前配置</li>
+                        <li>示例策略：
+                            <pre>services.AddAuthorization(options => {
+    options.AddPolicy("ExportAccess", 
+        policy => policy.RequireRole("Exporter"));
+});</pre>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><strong>UseAzureAppConfiguration</strong>：
+                    <ul>
+                        <li>实现动态功能标志更新（满足第一个需求）</li>
+                        <li>从AppFeatureFlagStore加载Export功能标志</li>
+                        <li>示例配置：
+                            <pre>services.AddAzureAppConfiguration()
+    .UseFeatureFlags(options => {
+        options.CacheExpirationInterval = TimeSpan.FromMinutes(5);
+    });</pre>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>中间件顺序说明：</strong></p>
+            <table>
+                <tr>
+                    <th>顺序</th>
+                    <th>中间件</th>
+                    <th>作用</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>UseAuthentication</td>
+                    <td>用户身份验证</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>UseAuthorization</td>
+                    <td>资源访问授权</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>UseAzureAppConfiguration</td>
+                    <td>功能标志动态更新</td>
+                </tr>
+            </table>
+            
+            <p><strong>完整解决方案架构：</strong></p>
+            <pre>
+HTTP Request → 
+UseAuthentication(验证身份) → 
+UseAuthorization(检查权限) → 
+UseAzureAppConfiguration(检查功能标志) → 
+Endpoint Routing</pre>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Get selected values
+            const select1 = document.getElementById('select1');
+            const select2 = document.getElementById('select2');
+            const select3 = document.getElementById('select3');
+            
+            // Display user selections
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <p><strong>您的选择：</strong></p>
+                <p>1. ${select1.value || '未选择'}</p>
+                <p>2. ${select2.value || '未选择'}</p>
+                <p>3. ${select3.value || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Redis Cache Eviction Policy Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .feature-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .feature-comparison th, .feature-comparison td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .feature-comparison th {
+            background-color: #f2f2f2;
+        }
+        .policy-details {
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 417</h2>
+        
+        <p>You are developing an online game that includes a feature that allows players to interact with
+        other players on the same team within a certain distance. The calculation to determine the players
+        in range occurs when players move and are cached in an Azure Cache for Redis instance.</p>
+        
+        <p>The system should prioritize players based on how recently they have moved and should not
+        prioritize players who have logged out of the game. You need to select an eviction policy. Which
+        eviction policy should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. volatile-lru</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. allkeys-lfu</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. allkeys-lru</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. volatile-ttl</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>C. allkeys-lru</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择allkeys-lru的原因:</strong></p>
+            <ol>
+                <li>题目要求<span class="highlight">全局淘汰机制</span>（包括未设置TTL的活跃玩家数据）→ 必须使用allkeys-*策略</li>
+                <li>需要<span class="highlight">基于最近活动时间排序</span> → LRU算法最适合</li>
+                <li>登出玩家应<span class="highlight">立即删除</span>而非依赖TTL → 主动删除比被动过期更可靠</li>
+            </ol>
+            
+            <div class="policy-details">
+                <p><strong>各策略对比分析:</strong></p>
+                <table class="feature-comparison">
+                    <tr>
+                        <th>策略</th>
+                        <th>淘汰范围</th>
+                        <th>算法</th>
+                        <th>是否符合需求</th>
+                    </tr>
+                    <tr>
+                        <td>volatile-lru</td>
+                        <td>仅带TTL键</td>
+                        <td>LRU</td>
+                        <td>❌ 无法处理未设置TTL的活跃玩家</td>
+                    </tr>
+                    <tr>
+                        <td>allkeys-lfu</td>
+                        <td>所有键</td>
+                        <td>LFU</td>
+                        <td>❌ 基于访问频率非最近活动时间</td>
+                    </tr>
+                    <tr>
+                        <td>allkeys-lru</td>
+                        <td>所有键</td>
+                        <td>LRU</td>
+                        <td>✅ 完美匹配需求</td>
+                    </tr>
+                    <tr>
+                        <td>volatile-ttl</td>
+                        <td>仅带TTL键</td>
+                        <td>剩余时间</td>
+                        <td>❌ 不满足"最近移动优先"需求</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p><strong>实现建议:</strong></p>
+            <ol>
+                <li>配置Redis使用allkeys-lru策略：
+                    <pre>CONFIG SET maxmemory-policy allkeys-lru</pre>
+                </li>
+                <li>玩家移动时更新缓存（自动成为最近使用的数据）</li>
+                <li>玩家登出时立即执行删除命令：
+                    <pre>DEL player:{playerID}</pre>
+                </li>
+                <li>监控内存使用情况：
+                    <pre>INFO memory</pre>
+                </li>
+            </ol>
+            
+            <p><strong>技术验证点:</strong></p>
+            <ul>
+                <li>allkeys-lru是唯一能同时满足以下要求的策略：
+                    <ul>
+                        <li>全局键淘汰（包括未设置TTL的键）</li>
+                        <li>基于最近活动时间排序</li>
+                    </ul>
+                </li>
+                <li>Azure Cache for Redis支持所有标准Redis逐出策略</li>
+                <li>LRU算法会优先淘汰最近最少访问的数据</li>
+            </ul>
+        </div>
+    </div>
+    <div id="answer1">
+        <!-- 保持原有正确答案部分不变 -->
+        
+        <div class="explanation">
+            <!-- 保持原有说明部分不变 -->
+            
+            <div class="policy-details">
+                <h4>Redis逐出策略详解：</h4>
+                <table class="feature-comparison">
+                    <tr>
+                        <th style="width:25%">策略名称</th>
+                        <th style="width:35%">工作机制</th>
+                        <th style="width:40%">典型应用场景</th>
+                    </tr>
+                    <tr>
+                        <td><strong>volatile-lru</strong></td>
+                        <td>
+                            <ul>
+                                <li>仅对设置了过期时间(TTL)的键生效</li>
+                                <li>优先移除最近最少使用的键</li>
+                                <li>不淘汰未设置过期时间的键</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>需要保留永久性配置数据</li>
+                                <li>临时数据需要自动淘汰</li>
+                                <li>例如：用户会话数据缓存</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>allkeys-lru</strong></td>
+                        <td>
+                            <ul>
+                                <li>对所有键生效（无论是否设置TTL）</li>
+                                <li>全局LRU淘汰机制</li>
+                                <li>优先移除最近最少使用的键</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>所有数据都可被淘汰</li>
+                                <li>需要基于访问时间排序</li>
+                                <li>例如：游戏玩家位置缓存</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>allkeys-lfu</strong></td>
+                        <td>
+                            <ul>
+                                <li>对所有键生效</li>
+                                <li>基于访问频率(LFU)淘汰</li>
+                                <li>优先移除最不经常使用的键</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>热点数据需要长期保留</li>
+                                <li>不关心数据的新鲜度</li>
+                                <li>例如：热门商品缓存</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>volatile-ttl</strong></td>
+                        <td>
+                            <ul>
+                                <li>仅对设置了过期时间的键生效</li>
+                                <li>优先移除剩余生存时间(TTL)最短的键</li>
+                                <li>不考虑访问频率或时间</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>数据有明确的时效性要求</li>
+                                <li>需要按时效顺序淘汰</li>
+                                <li>例如：限时促销活动数据</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+    
+                <h4 style="margin-top:20px;">策略选择决策树：</h4>
+                <ol>
+                    <li><strong>是否需要淘汰所有键？</strong>
+                        <ul>
+                            <li>是 → 选择allkeys-*策略</li>
+                            <li>否 → 选择volatile-*策略</li>
+                        </ul>
+                    </li>
+                    <li><strong>需要哪种淘汰标准？</strong>
+                        <ul>
+                            <li>最近最少使用 → LRU</li>
+                            <li>访问频率最低 → LFU</li>
+                            <li>剩余时间最短 → TTL</li>
+                        </ul>
+                    </li>
+                    <li><strong>是否需要主动控制淘汰？</strong>
+                        <ul>
+                            <li>是 → 配合DEL命令手动删除</li>
+                            <li>否 → 依赖自动淘汰机制</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <!-- 保持原有实现建议部分不变 -->
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

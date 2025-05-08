@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Monitor Workbook Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .feature-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .feature-comparison th, .feature-comparison td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .feature-comparison th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 416</h2>
+        
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question
+        in the series contains a unique solution that might meet the stated goals. Some question sets
+        might have more than one correct solution, while others might not have a correct solution.</p>
+        <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these
+        questions will not appear on the review screen.</p>
+        
+        <p>You have an Azure App Service web app named WebApp1 and an Azure Functions app named
+        Function1. WebApp1 is associated with an Application Insights instance named appinsights1.</p>
+        <p>You configure a web test and a corresponding alert for WebApp1 in appinsights1. Each alert
+        triggers a delivery of email to your mailbox.</p>
+        <p>You need to ensure that each alert also triggers execution of Function1.</p>
+        <p>Solution: Configure an Azure Monitor Insights workbook.</p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>B. No</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么选择No:</strong></p>
+            <ol>
+                <li><span class="highlight">Azure Monitor工作簿(Workbooks)</span>主要用于数据可视化和分析，不具备触发执行的功能</li>
+                <li>工作簿的核心功能包括：
+                    <ul>
+                        <li>组合多种数据源进行可视化</li>
+                        <li>创建交互式报告</li>
+                        <li>分析性能趋势</li>
+                    </ul>
+                </li>
+                <li>题目要求的是<span class="highlight">触发Azure Functions执行</span>，这不是工作簿的设计用途</li>
+            </ol>
+            
+            <p><strong>正确的解决方案应该是:</strong></p>
+            <ol>
+                <li>使用<span class="highlight">Azure Monitor操作组(Action Groups)</span>配置警报动作</li>
+                <li>在操作组中添加"Azure Function"作为动作类型</li>
+                <li>将web测试警报与配置好的操作组关联</li>
+            </ol>
+            
+            <p><strong>功能对比:</strong></p>
+            <table class="feature-comparison">
+                <tr>
+                    <th>功能</th>
+                    <th>用途</th>
+                    <th>是否满足需求</th>
+                </tr>
+                <tr>
+                    <td>Insights工作簿</td>
+                    <td>数据可视化和分析报告</td>
+                    <td>❌ 无法触发函数执行</td>
+                </tr>
+                <tr>
+                    <td>操作组</td>
+                    <td>定义警报触发时的动作</td>
+                    <td>✅ 正确解决方案</td>
+                </tr>
+            </table>
+            
+            <p><strong>工作簿的典型使用场景:</strong></p>
+            <ul>
+                <li>分析虚拟机使用情况(CPU、内存等)</li>
+                <li>展示新部署VM的性能指标</li>
+                <li>共享资源调整实验的结果</li>
+                <li>报告中断事件的影响分析</li>
+            </ul>
+            
+            <p><strong>关键结论:</strong></p>
+            <ul>
+                <li>工作簿是<span class="highlight">被动分析工具</span>，不是主动触发机制</li>
+                <li>要实现自动化触发，必须使用操作组或其他工作流服务</li>
+                <li>工作簿可以与警报系统配合使用，但仅用于<span class="highlight">事后分析</span>而非实时响应</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

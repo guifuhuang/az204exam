@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Service Session Storage Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .option:hover { background-color: #f0f0f0; }
+        .option.selected { background-color: #e6f2ff; border-color: #0078d4; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+        .requirement { margin: 5px 0; padding-left: 15px; border-left: 3px solid #0078d4; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 181</h3>
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution. Determine whether the solution meets the stated goals.</p>
+        
+        <p>You are developing and deploying several ASP.Net web applications to Azure App Service. You plan to save session state information and HTML output. You must use a storage mechanism with the following requirements:</p>
+        
+        <div class="requirements">
+            <div class="requirement">• Share session state across all ASP.NET web applications</div>
+            <div class="requirement">• Support controlled, concurrent access to the same session state data for multiple readers and a single writer</div>
+            <div class="requirement">• Save full HTTP responses for concurrent requests</div>
+        </div>
+        
+        <p><strong>Proposed Solution:</strong> Deploy and configure an Azure Database for PostgreSQL. Update the web applications.</p>
+        
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)" data-value="A">A. Yes</div>
+            <div class="option" onclick="selectOption(this)" data-value="B">B. No</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">B. No</span></strong></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>PostgreSQL的限制</strong>：
+                    <ul>
+                        <li>Azure Database for PostgreSQL <strong>不是原生会话状态提供程序</strong></li>
+                        <li>需要额外开发自定义会话状态存储实现</li>
+                        <li>缺乏内置的并发控制机制（多读单写）</li>
+                    </ul>
+                </li>
+                <li><strong>不符合关键需求</strong>：
+                    <table border="1" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <th>需求</th>
+                            <th>PostgreSQL方案</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td>跨应用共享会话</td>
+                            <td>❌ 部分满足</td>
+                            <td>需要自定义开发表结构</td>
+                        </tr>
+                        <tr>
+                            <td>多读单写并发控制</td>
+                            <td>❌ 不满足</td>
+                            <td>无内置锁机制</td>
+                        </tr>
+                        <tr>
+                            <td>存储HTTP响应</td>
+                            <td>⚠️ 需额外处理</td>
+                            <td>二进制大对象存储效率低</td>
+                        </tr>
+                    </table>
+                </li>
+                <li><strong>推荐方案</strong>：
+                    <ul>
+                        <li><strong>Azure Redis缓存</strong>：原生支持分布式会话状态</li>
+                        <li><strong>SQL Server会话提供程序</strong>：内置并发控制</li>
+                        <li><strong>Azure Blob存储+Table存储</strong>：适合大对象存储</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>架构对比：</strong></p>
+            <pre style="background: #333; color: white; padding: 10px; border-radius: 4px;">
++---------------------+---------------------+---------------------+
+|      需求           | PostgreSQL方案      | 推荐方案(Redis)     |
++---------------------+---------------------+---------------------+
+| 跨应用共享          | 需自定义开发        | 开箱即用            |
+| 并发控制            | 需实现锁机制        | 原子操作原生支持    |
+| HTTP响应存储        | 低效的BLOB存储      | 内存缓存+持久化     |
+| 延迟                | 高(10-50ms)         | 低(&lt;5ms)           |
+| 成本                | 中                  | 低                  |
++---------------------+---------------------+---------------------+</pre>
+            
+            <p><strong>实现示例（Redis方案）：</strong></p>
+            <pre style="background: #333; color: white; padding: 10px; border-radius: 4px;">
+// Startup.cs
+services.AddStackExchangeRedisCache(options => {
+    options.Configuration = "your_redis_connection_string";
+    options.InstanceName = "SessionStore_";
+});
+
+services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.IsEssential = true;
+});
+
+// 在控制器中
+HttpContext.Session.SetString("Key", "Value"); // 自动处理并发</pre>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element) {
+            // 移除之前的选择
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            element.classList.add('selected');
+            selectedOption = element.getAttribute('data-value');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 如果有选择，显示用户的选择
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：${selectedOption}</strong>`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

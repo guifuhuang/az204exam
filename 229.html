@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Web App Container Deployment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .dropdown-container {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            min-width: 150px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 229 HOTSPOT</h2>
+        <p>You are preparing to deploy a Python website to an Azure Web App using a container. The solution will use multiple containers in the same container group. The Dockerfile that builds the container is as follows:</p>
+        
+        <div class="code-block">
+FROM python:3
+ADD website.py
+CMD [ "python", "./website.py"]
+        </div>
+
+        <p>You build a container by using the following command. The Azure Container Registry instance named images is a private registry.</p>
+        
+        <div class="code-block">
+docker build -t images.azurecr.io/website:v1.0.0
+        </div>
+
+        <p>The user name and password for the registry is admin.</p>
+        <p>The Web App must always run the same version of the website regardless of future builds.</p>
+        <p>You need to create an Azure Web App to run the website.</p>
+        <p>How should you complete the commands? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="code-block">
+az configure --defaults web=website
+az configure --defaults group=website
+az appservice plan create --name websitePlan <select id="dropdown0">
+    <option value="">Select</option>
+    <option value="--sku SHARED">--sku SHARED</option>
+    <option value="--tags container">--tags container</option>
+    <option value="--sku B1 --is-linux">--sku B1 --is-linux</option>
+    <option value="--sku B1 --hyper-v">--sku B1 --hyper-v</option>
+</select>
+az webapp create --plan websitePlan
+    <select id="dropdown1">
+        <option value="">Select</option>
+        <option value="--deployment-source-url images.azurecr.io/website.v1.0.0">--deployment-source-url images.azurecr.io/website.v1.0.0</option>
+        <option value="--deployment-source-url images.azurecr.io/website.latest">--deployment-source-url images.azurecr.io/website.latest</option>
+        <option value="--deployment-container-image-name images.azurecr.io/website:v1.0.0">--deployment-container-image-name images.azurecr.io/website:v1.0.0</option>
+        <option value="--deployment-container-image-name images.azurecr.io/website:latest">--deployment-container-image-name images.azurecr.io/website:latest</option>
+    </select>
+az webapp config 
+    <select id="dropdown2">
+        <option value="">Select</option>
+        <option value="set --python-version 2.7 --generic-configurations user=admin password=admin">set --python-version 2.7 --generic-configurations user=admin password=admin</option>
+        <option value="set --python-version 3.6 --generic-configurations user=admin password=admin">set --python-version 3.6 --generic-configurations user=admin password=admin</option>
+        <option value="container set --docker-registry-server-url https://images.azurecr.io --u admin --p admin">container set --docker-registry-server-url https://images.azurecr.io --u admin --p admin</option>
+        <option value="container set --docker-registry-server-url https://images.azurecr.io/website -u admin -p admin">container set --docker-registry-server-url https://images.azurecr.io/website -u admin -p admin</option>
+    </select>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">dropdown0: --sku B1 --is-linux</p>
+        <p class="correct-answer">dropdown1: --deployment-container-image-name images.azurecr.io/website:v1.0.0</p>
+        <p class="correct-answer">dropdown2: container set --docker-registry-server-url https://images.azurecr.io --u admin --p admin</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            
+            <p><strong>为什么选择dropdown0: --sku B1 --is-linux:</strong></p>
+            <ul>
+                <li>容器化Python应用需要Linux应用服务计划</li>
+                <li>B1是基本层级的SKU，适合测试环境</li>
+                <li>其他选项：
+                    <ul>
+                        <li><span class="highlight">--sku SHARED</span>：仅适用于Windows计划</li>
+                        <li><span class="highlight">--tags container</span>：不是有效的创建参数</li>
+                        <li><span class="highlight">--sku B1 --hyper-v</span>：用于Windows容器</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>为什么选择dropdown1: --deployment-container-image-name images.azurecr.io/website:v1.0.0:</strong></p>
+            <ul>
+                <li>题目要求使用特定版本(v1.0.0)而非latest</li>
+                <li>必须使用--deployment-container-image-name参数部署容器</li>
+                <li>其他选项：
+                    <ul>
+                        <li><span class="highlight">--deployment-source-url</span>：用于代码部署而非容器</li>
+                        <li><span class="highlight">:latest</span>：违反版本固定要求</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>为什么选择dropdown2: container set --docker-registry-server-url https://images.azurecr.io --u admin --p admin:</strong></p>
+            <ul>
+                <li>这是唯一正确的容器注册表认证语法</li>
+                <li>短参数形式(--u/--p)是Azure CLI的有效简写</li>
+                <li>URL必须指向注册表根地址(images.azurecr.io)</li>
+                <li>其他选项：
+                    <ul>
+                        <li><span class="highlight">python-version</span>：不适用于容器部署</li>
+                        <li><span class="highlight">/website</span>：URL不应包含仓库路径</li>
+                        <li><span class="highlight">-u/-p</span>：单横线参数格式不正确</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>完整命令示例:</strong></p>
+            <div class="code-block">
+az configure --defaults web=website
+az configure --defaults group=website
+az appservice plan create --name websitePlan --sku B1 --is-linux
+az webapp create --plan websitePlan \
+    --name website \
+    --deployment-container-image-name images.azurecr.io/website:v1.0.0
+az webapp config container set \
+    --docker-registry-server-url https://images.azurecr.io \
+    --u admin \
+    --p admin
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('dropdown0').value = '--sku B1 --is-linux';
+            document.getElementById('dropdown1').value = '--deployment-container-image-name images.azurecr.io/website:v1.0.0';
+            document.getElementById('dropdown2').value = 'container set --docker-registry-server-url https://images.azurecr.io --u admin --p admin';
+        }
+    </script>
+</body>
+</html>

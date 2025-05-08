@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB 配置测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure Cosmos DB 配置测试题</h1>
+    
+    <div class="question-container">
+        <p><strong>QUESTION NO: 81 HOTSPOT</strong></p>
+        <p>You need to save customized items to Azure Cosmos DB.</p>
+        <p>Which Azure Cosmos DB configuration should you use? To answer, select the appropriate options in the answer area.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Configuration option</th>
+                <th>Configuration value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>API</td>
+                <td>
+                    <select id="api-select">
+                        <option value="">-- Select an option --</option>
+                        <option value="NoSQL">NoSQL</option>
+                        <option value="MongoDB">MongoDB</option>
+                        <option value="PostgreSQL">PostgreSQL</option>
+                        <option value="Apache Gremlin">Apache Gremlin</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Consistency level</td>
+                <td>
+                    <select id="consistency-select">
+                        <option value="">-- Select an option --</option>
+                        <option value="Strong">Strong</option>
+                        <option value="Session">Session</option>
+                        <option value="Eventual">Eventual</option>
+                        <option value="Bounded Staleness">Bounded Staleness</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p><strong>API 选择:</strong> <span id="api-answer"></span></p>
+        <p><strong>说明:</strong> 对于自定义数据存储，NoSQL API是最灵活的选择，它提供无模式的数据模型，适合存储各种自定义数据结构。</p>
+        
+        <p><strong>Consistency level 选择:</strong> <span id="consistency-answer"></span></p>
+        <p><strong>说明:</strong> Session一致性级别是最常用的选择，它保证单个会话内的读写一致性，同时提供良好的性能和可用性。</p>
+    </div>
+
+    <script>
+        function showAnswer() {
+            // 设置正确答案
+            document.getElementById('api-answer').textContent = 'NoSQL';
+            document.getElementById('consistency-answer').textContent = 'Session';
+            
+            // 显示答案区域
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

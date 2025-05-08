@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Service CORS Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .error-message { background: #fff8f8; padding: 15px; border-left: 4px solid #d8000c; font-family: monospace; margin: 15px 0; }
+        .option { margin: 10px 0; padding: 10px; background: #eee; border-radius: 5px; }
+        input[type="radio"] { margin-right: 10px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 186</h3>
+        <p>You develop and deploy a Java RESTful API to Azure App Service.</p>
+        <p>You open a browser and navigate to the URL for the API. You receive the following error message:</p>
+        
+        <div class="error-message">
+            Failed to load http://api.azurewebsites.net:6000/api/Products<br>
+            No 'Access-Control-Allow-Origin' header is present on the requested resource.<br>
+            Origin 'localhost:6000' is therefore not allowed access.
+        </div>
+        
+        <p>You need to resolve the error.</p>
+        <p>What should you do?</p>
+        
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Bind an SSL certificate</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. Enable authentication</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="answer" value="C">
+            <label for="optionC">C. Enable CORS</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="answer" value="D">
+            <label for="optionD">D. Map a custom domain</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionE" name="answer" value="E">
+            <label for="optionE">E. Add a CDN</label>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">C. Enable CORS</span></p>
+            
+            <h3>详细解析：</h3>
+            <ol>
+                <li><strong>错误分析</strong>
+                    <ul>
+                        <li>错误明确显示缺少 <code>Access-Control-Allow-Origin</code> 头部</li>
+                        <li>这是典型的跨域资源共享(CORS)问题</li>
+                        <li>前端(localhost:6000)尝试访问后端(api.azurewebsites.net)时被浏览器拦截</li>
+                    </ul>
+                </li>
+                
+                <li><strong>为什么选择CORS</strong>
+                    <table>
+                        <tr>
+                            <th>解决方案</th>
+                            <th>效果</th>
+                        </tr>
+                        <tr class="correct">
+                            <td>Enable CORS</td>
+                            <td>在API响应中添加Access-Control-Allow-Origin头部，允许指定来源的跨域请求</td>
+                        </tr>
+                        <tr>
+                            <td>其他选项</td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <th>选项</th>
+                                        <th>不适用原因</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SSL证书</td>
+                                        <td>与HTTPS加密相关，不解决跨域问题</td>
+                                    </tr>
+                                    <tr>
+                                        <td>认证</td>
+                                        <td>涉及身份验证，不解决跨域问题</td>
+                                    </tr>
+                                    <tr>
+                                        <td>自定义域名</td>
+                                        <td>不改变跨域限制本质</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CDN</td>
+                                        <td>用于内容分发，不解决API跨域问题</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>配置方法</strong>
+                    <p><strong>Azure门户配置：</strong></p>
+                    <ol>
+                        <li>导航到App Service资源</li>
+                        <li>在左侧菜单选择"CORS"</li>
+                        <li>添加允许的来源：<code>http://localhost:6000</code></li>
+                        <li>保存设置</li>
+                    </ol>
+                    
+                    <p><strong>代码配置（Java Spring Boot示例）：</strong></p>
+                    <pre>
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+            .allowedOrigins("http://localhost:6000")
+            .allowedMethods("GET", "POST");
+    }
+}</pre>
+                </li>
+                
+                <li><strong>验证方法</strong>
+                    <p>在浏览器开发者工具中检查响应头应包含：</p>
+                    <pre>Access-Control-Allow-Origin: http://localhost:6000</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api#enable-cors" target="_blank">Azure App Service CORS配置</a> |
+                <a href="https://spring.io/guides/gs/rest-service-cors/" target="_blank">Spring CORS配置</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                const userSelectionsDiv = document.createElement('div');
+                userSelectionsDiv.innerHTML = `<p><strong>您的选择：</strong> ${selectedOption.value}</p>`;
+                document.getElementById('answer').prepend(userSelectionsDiv);
+            }
+        }
+    </script>
+</body>
+</html>

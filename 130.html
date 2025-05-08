@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Grid Security Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .scenario-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .scenario-table th, .scenario-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .scenario-table th {
+            background-color: #f2f2f2;
+        }
+        .scenario-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .correct {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 130 HOTSPOT</h3>
+        <p>You are creating an app that uses Event Grid to connect with other services. Your app's event data will be sent to a serverless function that checks compliance. This function is maintained by your company.</p>
+        <p>You write a new event subscription at the scope of your resource. The event must be invalidated after a specific period of time. You need to configure Event Grid to ensure security.</p>
+        <p>What should you implement? To answer, select the appropriate options in the answer area.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <table class="scenario-table">
+        <thead>
+            <tr>
+                <th>Authentication</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>WebHook event delivery</td>
+                <td>
+                    <select id="webhook-auth">
+                        <option value="">-- Select an option --</option>
+                        <option value="SAS tokens">SAS tokens</option>
+                        <option value="Key authentication">Key authentication</option>
+                        <option value="JWT token">JWT token</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Topic publishing</td>
+                <td>
+                    <select id="topic-publishing">
+                        <option value="">-- Select an option --</option>
+                        <option value="ValidationCode handshake">ValidationCode handshake</option>
+                        <option value="ValidationURL handshake">ValidationURL handshake</option>
+                        <option value="Management Access Control">Management Access Control</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案：</strong></p>
+        <p class="correct">WebHook event delivery: SAS tokens</p>
+        <p class="correct">Topic publishing: ValidationCode handshake</p>
+        
+        <div class="explanation">
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li><strong>WebHook 事件传递选择 SAS tokens</strong>：
+                    <ul>
+                        <li>SAS (Shared Access Signature) tokens 可以设置过期时间，满足题目中"event must be invalidated after a specific period of time"的要求</li>
+                        <li>Key authentication 没有内置的过期机制</li>
+                        <li>JWT token 虽然可以设置过期时间，但不是 Event Grid WebHook 的典型认证方式</li>
+                    </ul>
+                </li>
+                <li><strong>主题发布选择 ValidationCode handshake</strong>：
+                    <ul>
+                        <li>ValidationCode handshake 是 Event Grid 主题发布的推荐安全验证方式</li>
+                        <li>它通过验证码确认订阅者的合法性，比简单的 URL 验证更安全</li>
+                        <li>Management Access Control 用于管理平面而非数据平面</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>题目要求确保安全性并能在特定时间后使事件失效，SAS tokens 的时效性特性完美匹配这一需求，而 ValidationCode handshake 提供了主题发布的安全验证机制。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Set the correct selections
+            document.getElementById('webhook-auth').value = 'SAS tokens';
+            document.getElementById('topic-publishing').value = 'ValidationCode handshake';
+            // Scroll to answer
+            document.getElementById('answer').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

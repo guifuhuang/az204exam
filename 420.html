@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Vault Key Pair Retrieval</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            padding: 10px;
+            margin: 8px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #0078D4;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 420</h2>
+        
+        <p>You manage an Azure Key Vault named kv1 of Standard SKU.</p>
+        <p>You plan to programmatically store in kv1 an asymmetric key pair and use the key pair for encryption and decryption.</p>
+        <p>You must develop an application named app1 that will access the key pair in kv1.</p>
+        <p>You need to configure an object to retrieve a key pair from kv1.</p>
+        <p>Which object should you use?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">A. SecretClient</div>
+            <div class="option" onclick="selectOption(this)">B. KeyVaultSettingsClient</div>
+            <div class="option" onclick="selectOption(this)">C. CertificateClient</div>
+            <div class="option" onclick="selectOption(this)">D. KeyClient</div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案: D. KeyClient</h3>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            <p>在Azure Key Vault中处理非对称密钥对时：</p>
+            
+            <table style="width:100%; border-collapse:collapse; margin:15px 0;">
+                <tr>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">客户端类型</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">用途</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">适用场景</th>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;"><strong>KeyClient</strong></td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">管理加密密钥</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">
+                        <ul>
+                            <li>创建/获取密钥对</li>
+                            <li>加密/解密操作</li>
+                            <li>签名/验证操作</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">SecretClient</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">管理机密信息</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">密码、连接字符串等</td>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">CertificateClient</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">管理证书</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">SSL/TLS证书管理</td>
+                </tr>
+                <tr>
+                    <td style="padding:8px;">KeyVaultSettingsClient</td>
+                    <td style="padding:8px;">(不存在)</td>
+                    <td style="padding:8px;">干扰选项</td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p><strong>关键区别：</strong></p>
+                <ul>
+                    <li>密钥对(Key Pair)属于加密密钥范畴，应使用<code>KeyClient</code></li>
+                    <li>虽然证书也包含密钥，但<code>CertificateClient</code>主要用于管理证书生命周期</li>
+                    <li><code>SecretClient</code>仅适用于存储普通机密数据，不适合加密操作</li>
+                </ul>
+            </div>
+            
+            <p><strong>代码示例：</strong></p>
+            <pre>
+// 使用KeyClient获取密钥对
+var keyClient = new KeyClient(
+    new Uri("https://kv1.vault.azure.net"),
+    new DefaultAzureCredential());
+
+// 获取密钥
+KeyVaultKey key = keyClient.GetKey("myAsymmetricKeyPair");
+
+// 使用密钥进行加密/解密
+var cryptoClient = new CryptographyClient(key.Id, new DefaultAzureCredential());</pre>
+        </div>
+    </div>
+    
+    <script>
+        function selectOption(element) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

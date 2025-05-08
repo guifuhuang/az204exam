@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Storage Security Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .component { margin: 15px 0; }
+        select { padding: 5px; margin-left: 10px; min-width: 300px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 303 HOTSPOT</h3>
+        <p>You are developing an application to store and retrieve data in Azure Blob storage. The application will be hosted in an on-premises virtual machine (VM). The VM is connected to Azure by using a Site-to-Site VPN gateway connection. The application is secured by using Azure Active Directory (Azure AD) credentials.</p>
+        <p>The application must be granted access to the Azure Blob storage account with a start time, expiry time, and read permissions. The Azure Blob storage account access must use the Azure AD credentials of the application to secure data access. Data access must be able to be revoked if the client application security is breached.</p>
+        <p>You need to secure the application access to Azure Blob storage.</p>
+        <p>Which security features should you use? To answer select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="component">
+            <label><strong>Application (Client):</strong></label>
+            <select id="clientOption">
+                <option value="">-- Select an option --</option>
+                <option value="AccessKey">Storage Account Access Key</option>
+                <option value="SystemMI">System-assigned Managed Identity</option>
+                <option value="SASToken">Shared access signature (SAS) token</option>
+            </select>
+        </div>
+        
+        <div class="component">
+            <label><strong>Azure Storage (Server):</strong></label>
+            <select id="serverOption">
+                <option value="">-- Select an option --</option>
+                <option value="StoredPolicy">Stored Access Policy</option>
+                <option value="UserMI">User-assigned Managed Identity</option>
+                <option value="CORS">Cross-Origin Resource Sharing (CORS)</option>
+            </select>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案：</h3>
+            
+            <table>
+                <tr>
+                    <th>组件</th>
+                    <th>安全特性</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>Application (Client)</td>
+                    <td class="correct">Shared access signature (SAS) token</td>
+                    <td>
+                        <ul>
+                            <li>支持设置开始/过期时间</li>
+                            <li>可配置只读权限</li>
+                            <li>可随时撤销（通过服务器端策略）</li>
+                            <li>与Azure AD凭证集成</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Azure Storage (Server)</td>
+                    <td class="correct">Stored Access Policy</td>
+                    <td>
+                        <ul>
+                            <li>可集中管理SAS令牌的权限</li>
+                            <li>允许随时撤销访问权限</li>
+                            <li>提供额外的安全控制层</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            
+            <h3>详细解析：</h3>
+            <ol>
+                <li><strong>客户端选择SAS令牌的原因</strong>
+                    <ul>
+                        <li><strong>时间控制</strong>：SAS支持精确设置起止时间（满足题目要求）</li>
+                        <li><strong>权限粒度</strong>：可配置仅读权限（blob.read权限）</li>
+                        <li><strong>Azure AD集成</strong>：可通过Azure AD保护SAS令牌生成过程</li>
+                        <li><strong>排除其他选项</strong>：
+                            <table>
+                                <tr>
+                                    <th>选项</th>
+                                    <th>不适用原因</th>
+                                </tr>
+                                <tr>
+                                    <td>Access Key</td>
+                                    <td>无法设置时间限制，权限过大</td>
+                                </tr>
+                                <tr>
+                                    <td>Managed Identity</td>
+                                    <td>无法满足精确时间控制要求</td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><strong>服务端选择存储访问策略的原因</strong>
+                    <ul>
+                        <li><strong>安全控制</strong>：可随时撤销关联的所有SAS令牌</li>
+                        <li><strong>集中管理</strong>：统一管理多个SAS令牌的权限</li>
+                        <li><strong>配置示例</strong>：
+                            <pre>// 创建存储访问策略
+BlobSignedIdentifier identifier = new BlobSignedIdentifier
+{
+    Id = "read-only-policy",
+    AccessPolicy = new BlobAccessPolicy
+    {
+        PolicyStartsOn = DateTimeOffset.UtcNow,
+        PolicyExpiresOn = DateTimeOffset.UtcNow.AddDays(30),
+        Permissions = "r" // 只读权限
+    }
+};</pre>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><strong>完整解决方案架构</strong>
+                    <ol>
+                        <li>应用通过Azure AD获取SAS令牌生成权限</li>
+                        <li>生成带时间限制的SAS令牌（客户端）</li>
+                        <li>服务端配置存储访问策略控制令牌有效性</li>
+                        <li>发生安全事件时立即撤销策略</li>
+                    </ol>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview" target="_blank">SAS令牌文档</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources" target="_blank">存储访问策略</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const clientOption = document.getElementById('clientOption').value;
+            const serverOption = document.getElementById('serverOption').value;
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <h3>您的选择：</h3>
+                <p><strong>Application (Client):</strong> ${clientOption || '未选择'}</p>
+                <p><strong>Azure Storage (Server):</strong> ${serverOption || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

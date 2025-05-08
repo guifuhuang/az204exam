@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Viewer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #nav {
+      background: #f0f0f0;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #fileList {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
+      white-space: nowrap;
+      scroll-behavior: smooth;
+    }
+    #fileList button {
+      flex: 0 0 auto;
+    }
+    #fileList button.active {
+      background: #007bff;
+      color: white;
+    }
+    #viewer {
+      width: 100%;
+      height: 90vh;
+      border: none;
+    }
+    button, input {
+      padding: 5px 10px;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      #nav {
+        padding: 8px;
+        gap: 6px;
+      }
+      #fileList {
+        gap: 6px;
+      }
+      button, input {
+        padding: 4px 8px;
+        font-size: 14px;
+      }
+      #viewer {
+        height: 80vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #nav {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      #fileList button {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      #viewer {
+        height: 70vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="nav">
+  <button onclick="prevPage()">Previous</button>
+  <button onclick="nextPage()">Next</button>
+  <span>Go to:</span>
+  <input type="number" id="pageInput" min="1" style="width: 60px;" />
+  <button onclick="goToPage()">Go</button>
+</div>
+
+<div id="fileList"></div>
+
+<iframe id="viewer" src=""></iframe>
+
+<script>
+  // 动态获取HTML文件列表
+  const htmlPages = [];
+  function loadHtmlFiles() {
+    // 模拟获取目录下所有HTML文件
+    // 实际部署时可能需要服务器端支持或使用其他方法
+    const allFiles = [
+      "79.html", "80.html", "81.html", "84.html", "85.html", "87.html", 
+      "91.html", "92.html", "93.html", "94.html", "95.html", "96.html", 
+      "97.html", "98.html", "99.html", "100.html", "101.html", "102.html",
+      "107.html", "108.html", "109.html", "110.html", "111.html", "116.html",
+      "117.html", "121.html", "122.html", "123.html", "124.html", "126.html",
+      "127.html", "128.html", "130.html", "131.html", "134.html", "135.html",
+      "136.html", "139.html", "140.html", "141.html", "142.html", "143.html",
+      "144.html", "147.html", "148.html", "150.html", "152.html", "155.html",
+      "159.html", "161.html", "162.html", "163.html", "169.html", "179.html",
+      "181.html", "186.html", "191.html", "193.html", "196.html", "218.html",
+      "221.html", "228.html", "229.html", "239.html", "245.html", "262.html",
+      "270.html", "282.html", "290.html", "291.html", "292.html", "301.html",
+      "303.html", "317.html", "318.html", "319.html", "327.html", "338.html",
+      "344.html", "350.html", "352.html", "354.html", "360.html", "361.html",
+      "375.html", "394.html", "398.html", "401.html", "402.html", "403.html",
+      "404.html", "405.html", "407.html", "408.html", "409.html", "410.html",
+      "411.html", "412.html", "413.html", "414.html", "415.html", "416.html",
+      "417.html", "418.html", "419.html", "420.html", "421.html", "422.html",
+      "423.html", "424.html", "425.html", "426.html", "427.html", "428.html",
+      "429.html", "430.html", "431.html", "432.html"
+    ];
+    
+    // 过滤出HTML文件并按数字排序
+    htmlPages.length = 0;
+    allFiles.forEach(file => {
+      if (file.endsWith('.html')) {
+        htmlPages.push(file);
+      }
+    });
+    
+    // 按文件名数字排序
+    htmlPages.sort((a, b) => {
+      const numA = parseInt(a.split('.')[0]);
+      const numB = parseInt(b.split('.')[0]);
+      return numA - numB;
+    });
+    
+    // 重新渲染文件列表
+    renderFileList();
+  }
+
+  let currentIndex = 0;
+
+  function loadPage(index) {
+    if (index < 0 || index >= htmlPages.length) return;
+    currentIndex = index;
+    document.getElementById("viewer").src = htmlPages[index];
+    
+    // 更新active类
+    const buttons = document.querySelectorAll('#fileList button');
+    buttons.forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
+    
+    // 滚动到当前项
+    const listContainer = document.getElementById("fileList");
+    const activeBtn = buttons[index];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }
+
+  function prevPage() {
+    if (currentIndex > 0) {
+      loadPage(currentIndex - 1);
+    }
+  }
+
+  function nextPage() {
+    if (currentIndex < htmlPages.length - 1) {
+      loadPage(currentIndex + 1);
+    }
+  }
+
+  function goToPage() {
+    const input = document.getElementById("pageInput").value;
+    if (!input) return;
+    
+    // 查找匹配的文件名
+    const targetFile = `${input}.html`;
+    const index = htmlPages.findIndex(file => file === targetFile);
+    
+    if (index >= 0) {
+      loadPage(index);
+    } else {
+      alert(`文件 ${targetFile} 不存在`);
+    }
+  }
+
+  function renderFileList() {
+    const listContainer = document.getElementById("fileList");
+    listContainer.innerHTML = '';
+    htmlPages.forEach((file, idx) => {
+      const btn = document.createElement("button");
+      btn.textContent = `${file}`;
+      btn.onclick = () => loadPage(idx);
+      if (idx === currentIndex) {
+        btn.classList.add('active');
+      }
+      listContainer.appendChild(btn);
+    });
+  }
+
+  // 初始化加载文件列表和第一个页面
+  loadHtmlFiles();
+  loadPage(0);
+</script>
+
+</body>
+</html>

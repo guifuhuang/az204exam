@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Rotation Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #121212;
+            color: white;
+        }
+        .question {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            border: 1px solid #333;
+            margin: 15px 0;
+        }
+        .dropdown-container {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        select {
+            background-color: #252526;
+            color: white;
+            border: 1px solid #333;
+            padding: 8px;
+            border-radius: 4px;
+            min-width: 150px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #4ec9b0;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 352 HOTSPOT</h2>
+        <p>You are developing an application that uses Azure Storage to store customer data. The data must only be decrypted by the customer and the customer must be provided a script to rotate keys.</p>
+        <p>You need to provide a script to rotate keys to the customer.</p>
+        <p>How should you complete the command? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="code-block">
+$sh = $(az keyvault show --hsm-name  --query "properties.hsmUri"
+$x = az keyvault <select id="dropdown1">
+    <option value="">Select</option>
+    <option value="key">key</option>
+    <option value="secret">secret</option>
+    <option value="recover">recover</option>
+    <option value="certificate">certificate</option>
+</select> list-versions --name "
+az storage account
+--vault-name "
+--name "
+--resource-group "
+--resource-group "
+--encryption-key-name "
+--encryption-key-version $
+--encryption-key-source <select id="dropdown2">
+    <option value="">Select</option>
+    <option value="Microsoft.Secret">Microsoft.Secret</option>
+    <option value="Microsoft.Storage">Microsoft.Storage</option>
+    <option value="Microsoft.Keyvault">Microsoft.Keyvault</option>
+    <option value="Microsoft.Certificate">Microsoft.Certificate</option>
+</select>
+--encryption-key-vault $
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">1. key</p>
+        <p class="correct-answer">2. Microsoft.Keyvault</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            <p><strong>为什么选择"key":</strong></p>
+            <ul>
+                <li>题目要求管理加密密钥（非证书或密码），因此使用<span class="highlight">az keyvault key list-versions</span>命令</li>
+                <li>密钥轮换需要操作Key Vault中的加密密钥对象</li>
+                <li>其他选项：
+                    <ul>
+                        <li><span class="highlight">secret</span>：用于管理密码，非加密场景</li>
+                        <li><span class="highlight">certificate</span>：用于证书管理</li>
+                        <li><span class="highlight">recover</span>：非有效子命令</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>为什么选择"Microsoft.Keyvault":</strong></p>
+            <ul>
+                <li><span class="highlight">--encryption-key-source</span>参数必须指定为<span class="highlight">Microsoft.Keyvault</span>才能使用客户管理的密钥</li>
+                <li>这表示加密密钥来自客户控制的Key Vault，而非Azure托管密钥</li>
+                <li>其他选项：
+                    <ul>
+                        <li><span class="highlight">Microsoft.Storage</span>：使用Azure存储服务管理的密钥</li>
+                        <li><span class="highlight">Microsoft.Secret</span>/<span class="highlight">Microsoft.Certificate</span>：无效参数值</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>完整解决方案流程:</strong></p>
+            <ol>
+                <li>获取Key Vault的HSM URI：<span class="highlight">az keyvault show --hsm-name</span></li>
+                <li>列出密钥版本：<span class="highlight">az keyvault key list-versions</span></li>
+                <li>更新存储账户加密设置：<span class="highlight">az storage account update --encryption-key-source Microsoft.Keyvault</span></li>
+            </ol>
+            
+            <p><strong>关键安全要求实现:</strong></p>
+            <ul>
+                <li>只有客户能解密数据（客户管理密钥）</li>
+                <li>通过Key Vault实现密钥轮换自动化</li>
+                <li>密钥版本控制确保无缝轮换</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('dropdown1').value = 'key';
+            document.getElementById('dropdown2').value = 'Microsoft.Keyvault';
+        }
+    </script>
+</body>
+</html>

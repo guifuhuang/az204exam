@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic App Configuration for Blob Storage Tiering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            margin-bottom: 20px;
+        }
+        .drag-drop-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .blocks-column {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .blocks-column h3 {
+            margin-top: 0;
+        }
+        .block {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .answer-area {
+            flex: 2;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .answer-area h3 {
+            margin-top: 0;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px dashed #aaa;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+        .step-number {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .input-field {
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .dropdown {
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+        }
+        .correct-answer {
+            background-color: #e7f7e7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Logic App Configuration for Blob Storage Tiering</h1>
+    
+    <div class="question-container">
+        <p><strong>QUESTION NO: 169 DRAG DROP</strong></p>
+        <p>A company backs up all manufacturing data to Azure Blob Storage. Admins move blobs from hot storage to archive tier storage every month.</p>
+        <p>You must automatically move blocks to Archive tier after they have not been accessed for 180 days. The path for any item that is not archived must be placed in an existing queue. This operation must be performed automatically once a month. You set the value of TierAgeInDays to 180.</p>
+        <p>How should you configure the Logic App? To answer, drag the appropriate triggers or action blocks to the correct trigger or action slots. Each trigger or action block may be used once, more than once, or not at all.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <div class="drag-drop-container">
+        <div class="blocks-column">
+            <h3>Triggers and Action Blocks</h3>
+            <div class="block" draggable="true" data-type="recurrence">
+                <strong>Recurrence Trigger</strong>
+                <p>Triggers the workflow on a schedule</p>
+                <input type="text" class="input-field" placeholder="Interval (e.g., 1 Month)">
+            </div>
+            <div class="block" draggable="true" data-type="condition">
+                <strong>Condition Block</strong>
+                <p>Evaluates a condition and branches execution</p>
+                <input type="text" class="input-field" placeholder="Condition (e.g., age > 180)">
+            </div>
+            <div class="block" draggable="true" data-type="blob">
+                <strong>Blob Action</strong>
+                <p>Performs operations on blob storage</p>
+                <select class="dropdown">
+                    <option>Get blob content</option>
+                    <option>Change blob tier</option>
+                    <option>List blobs</option>
+                </select>
+            </div>
+            <div class="block" draggable="true" data-type="queue">
+                <strong>Queue Action</strong>
+                <p>Adds messages to a queue</p>
+                <input type="text" class="input-field" placeholder="Queue name">
+            </div>
+            <div class="block" draggable="true" data-type="variable">
+                <strong>Variable Action</strong>
+                <p>Sets or modifies variables</p>
+                <input type="text" class="input-field" placeholder="Variable name">
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <h3>Logic App Workflow Configuration</h3>
+            <div class="step" id="step1">
+                <span class="step-number">1.</span> Drag a trigger here
+            </div>
+            <div class="step" id="step2">
+                <span class="step-number">2.</span> Drag actions here
+            </div>
+            <div class="step" id="step3">
+                <span class="step-number">3.</span> Drag actions here
+            </div>
+            <div class="step" id="step4">
+                <span class="step-number">4.</span> Drag actions here
+            </div>
+        </div>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p>正确的Logic App配置应该是：</p>
+        <ol>
+            <li><strong>Recurrence Trigger</strong>: 设置为每月触发一次</li>
+            <li><strong>Initialize variable</strong>: 设置age变量为180</li>
+            <li><strong>List blobs</strong>: 扫描存储容器中的所有blob</li>
+            <li><strong>Condition</strong>: 检查blob的最后访问时间是否超过180天</li>
+            <li><strong>If true</strong>: 使用"Change blob tier"操作将blob移动到Archive层</li>
+            <li><strong>If false</strong>: 使用"Send message"操作将blob路径添加到队列中</li>
+        </ol>
+        <p><strong>说明:</strong></p>
+        <ul>
+            <li>每月自动运行的需求需要使用Recurrence触发器</li>
+            <li>需要先初始化变量并设置比较条件(180天)</li>
+            <li>必须扫描所有blob以检查它们的最后访问时间</li>
+            <li>符合条件的blob需要改变存储层级，不符合条件的需要放入队列</li>
+            <li>整个流程需要按照正确的顺序配置这些操作</li>
+        </ul>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        const blocks = document.querySelectorAll('.block');
+        let draggedBlock = null;
+
+        blocks.forEach(block => {
+            block.addEventListener('dragstart', function() {
+                draggedBlock = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            });
+            
+            block.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 0);
+            });
+        });
+
+        const steps = document.querySelectorAll('.step');
+        
+        steps.forEach(step => {
+            step.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e6f7ff';
+            });
+            
+            step.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            step.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                if (draggedBlock) {
+                    // Clone the dragged block
+                    const clonedBlock = draggedBlock.cloneNode(true);
+                    clonedBlock.style.opacity = '1';
+                    clonedBlock.style.margin = '5px 0';
+                    clonedBlock.draggable = false;
+                    
+                    // Clear the step and add the cloned block
+                    this.innerHTML = '<span class="step-number">' + 
+                                    this.querySelector('.step-number').textContent + '</span>';
+                    this.appendChild(clonedBlock);
+                }
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

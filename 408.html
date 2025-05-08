@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Apps Scaling Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .note-box {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-left: 4px solid #ffd54f;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin: 15px 0;
+        }
+        .solution {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            margin: 15px 0;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .cli-command {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 408</h2>
+        
+        <div class="note-box">
+            <p><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question
+            in the series contains a unique solution that might meet the stated goals. Some question sets
+            might have more than one correct solution, while others might not have a correct solution.</p>
+            <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these
+            questions will not appear in the review screen.</p>
+        </div>
+        
+        <div class="scenario">
+            <p>You deploy an Azure Container Apps app and disable ingress on the container app.</p>
+            <p>Users report that they are unable to access the container app. You investigate and observe that
+            the app has scaled to 0 instances.</p>
+            <p>You need to resolve the issue with the container app.</p>
+        </div>
+        
+        <div class="solution">
+            <p><strong>Solution:</strong> Enable ingress and configure the minimum replicas to 1 for the container app.</p>
+        </div>
+        
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>A. Yes</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么这个解决方案满足要求:</strong></p>
+            <ol>
+                <li>启用ingress允许外部流量访问容器应用，这是解决访问问题的前提条件</li>
+                <li>设置最小副本数为1可以防止应用缩放到0实例，确保至少有一个实例始终运行</li>
+                <li>这两个措施共同解决了题目中描述的两个问题：
+                    <ul>
+                        <li>无法访问（通过启用ingress解决）</li>
+                        <li>缩放到0实例（通过设置最小副本数解决）</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>配置方法:</strong></p>
+            <div class="cli-command">
+                # 启用ingress并设置最小实例数<br>
+                az containerapp update \<br>
+                --name &lt;app-name&gt; \<br>
+                --resource-group &lt;rg-name&gt; \<br>
+                --ingress external \<br>
+                --min-replicas 1
+            </div>
+            
+            <p><strong>关键概念:</strong></p>
+            <ul>
+                <li>当ingress被禁用时，Azure Container Apps可以缩放到0实例以节省成本</li>
+                <li>最小副本数设置确保应用始终保持指定的最小运行实例数</li>
+                <li>外部访问需要同时满足两个条件：ingress启用和至少一个运行实例</li>
+            </ul>
+            
+            <p><strong>其他注意事项:</strong></p>
+            <ul>
+                <li>如果应用需要处理突发流量，还应考虑配置自动缩放规则</li>
+                <li>对于生产环境，建议设置适当的最小副本数以平衡成本和可用性</li>
+                <li>启用ingress后，应考虑配置适当的访问限制和安全措施</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

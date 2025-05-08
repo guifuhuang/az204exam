@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Identity Platform Authorization Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .code {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 411</h2>
+        
+        <p>You are developing a web application that uses the Microsoft identity platform for user and
+        resource authentication. The web application calls several REST APIs.</p>
+        <p>A REST API call must read the user's calendar. The web application requires permission to send
+        an email as the user.</p>
+        <p>You need to authorize the web application and the API.</p>
+        <p>Which parameter should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. code_challenge</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. tenant</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. scope</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. clientid</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionE" value="E">
+                <label for="optionE">E. state</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>C. scope</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么选择scope:</strong></p>
+            <ol>
+                <li><span class="highlight">scope</span>参数用于指定应用程序请求的权限范围</li>
+                <li>在Microsoft身份平台中，scope参数用于：
+                    <ul>
+                        <li>定义应用程序需要的API权限（如读取日历）</li>
+                        <li>请求委派权限（如发送邮件）</li>
+                    </ul>
+                </li>
+                <li>示例scope值：
+                    <div class="code">
+                        scope=Calendars.Read Mail.Send
+                    </div>
+                </li>
+                <li>scope参数是OAuth 2.0和OpenID Connect协议中的标准参数</li>
+            </ol>
+            
+            <p><strong>其他选项分析:</strong></p>
+            <table border="1" style="width:100%; border-collapse: collapse; margin-top: 15px;">
+                <tr>
+                    <th>选项</th>
+                    <th>用途</th>
+                    <th>不适用原因</th>
+                </tr>
+                <tr>
+                    <td>code_challenge</td>
+                    <td>PKCE安全扩展</td>
+                    <td>用于防止授权码拦截攻击，与权限无关</td>
+                </tr>
+                <tr>
+                    <td>tenant</td>
+                    <td>指定Azure AD租户</td>
+                    <td>用于标识组织，不控制权限</td>
+                </tr>
+                <tr>
+                    <td>clientid</td>
+                    <td>应用程序标识</td>
+                    <td>用于识别应用，不指定权限</td>
+                </tr>
+                <tr>
+                    <td>state</td>
+                    <td>防止CSRF攻击</td>
+                    <td>安全参数，与权限无关</td>
+                </tr>
+            </table>
+            
+            <p><strong>关键概念:</strong></p>
+            <ul>
+                <li>Microsoft身份平台使用OAuth 2.0和OpenID Connect协议进行授权</li>
+                <li>scope参数可以同时包含：
+                    <ul>
+                        <li>OpenID Connect范围（如openid profile）</li>
+                        <li>API权限（如Calendars.Read）</li>
+                    </ul>
+                </li>
+                <li>权限需要在Azure AD应用注册中预先配置</li>
+                <li>用户或管理员需要同意请求的权限</li>
+            </ul>
+            
+            <p><strong>实现示例:</strong></p>
+            <div class="code">
+                // 授权请求示例<br>
+                GET https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?<br>
+                &nbsp;&nbsp;client_id=6731de76-14a6-49ae-94bc-xxxxxxxxxxxx<br>
+                &nbsp;&nbsp;response_type=code<br>
+                &nbsp;&nbsp;redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F<br>
+                &nbsp;&nbsp;response_mode=query<br>
+                &nbsp;&nbsp;<span class="highlight">scope=openid%20Calendars.Read%20Mail.Send</span><br>
+                &nbsp;&nbsp;state=12345
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

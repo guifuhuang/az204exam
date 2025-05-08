@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus Topic Filtering Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+        .config-panel {
+            display: flex;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .config-options {
+            width: 200px;
+            background-color: #f5f5f5;
+            padding: 15px;
+        }
+        .config-settings {
+            flex: 1;
+            padding: 15px;
+        }
+        .option-group {
+            margin-bottom: 20px;
+        }
+        .option-group h4 {
+            margin-top: 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 430 HOTSPOT</h2>
+        
+        <p>You have an Azure Service Bus namespace that contains a topic named Topic1.</p>
+        
+        <p>You plan to create a subscription named Sub1 to Topic1. In Sub1, you plan to filter messages from Topic1 based on their system properties and apply an action that will annotate each filtered message.</p>
+        
+        <p>You need to configure the filtering.</p>
+        
+        <p>How should you configure the filtering? To answer, select the appropriate options in the answer area.</p>
+        
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="config-panel">
+            <div class="config-options">
+                <h3>Topic filtering</h3>
+                <ul>
+                    <li>Filter type</li>
+                    <li>Filtering action</li>
+                </ul>
+            </div>
+            <div class="config-settings">
+                <div class="option-group">
+                    <h4>Filter type</h4>
+                    <select id="filter-type">
+                        <option value="">Select filter type</option>
+                        <option value="SQL">SQL filter type</option>
+                        <option value="Boolean">Boolean filter type</option>
+                        <option value="Correlation">Correlation filter type</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Filtering action</h4>
+                    <select id="filter-action">
+                        <option value="">Select filtering action</option>
+                        <option value="Annotate">Copy a message and annotate its metadata</option>
+                        <option value="Copy">Copy a message and update its body</option>
+                        <option value="Update">Annotate the metadata of the original message</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <table>
+                <tr>
+                    <th>配置项</th>
+                    <th>正确选项</th>
+                    <th>技术说明</th>
+                </tr>
+                <tr>
+                    <td>Filter type</td>
+                    <td><strong>SQL filter type</strong></td>
+                    <td>SQL过滤器可以基于系统属性和自定义属性进行复杂过滤</td>
+                </tr>
+                <tr>
+                    <td>Filtering action</td>
+                    <td><strong>Annotate the metadata of the original message</strong></td>
+                    <td>符合题目要求的"注释每个过滤消息"的需求</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>技术说明:</h4>
+            
+            <div class="note">
+                <p><strong>Azure Service Bus 过滤类型对比:</strong></p>
+                <ul>
+                    <li><b>SQL过滤器</b>: 最灵活，支持基于系统属性和自定义属性的复杂表达式</li>
+                    <li><b>相关性过滤器</b>: 仅基于相关性ID进行简单匹配</li>
+                    <li><b>布尔过滤器</b>: 仅支持简单的真/假条件</li>
+                </ul>
+            </div>
+
+            <h4>过滤操作说明:</h4>
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 4px;">
+                <p>1. <strong>注释原始消息元数据</strong> → 添加额外信息而不修改消息体</p>
+                <p>2. <strong>复制并更新消息体</strong> → 创建新版本的消息</p>
+                <p>3. <strong>直接修改消息</strong> → 不推荐，可能破坏消息完整性</p>
+            </div>
+
+            <div class="note">
+                <p><strong>实现建议:</strong></p>
+                <ol>
+                    <li>使用SQL过滤器编写基于系统属性的过滤表达式</li>
+                    <li>配置注释操作来标记符合条件的信息</li>
+                    <li>在生产环境前充分测试过滤规则</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 自动选择正确答案
+            document.getElementById('filter-type').value = 'SQL';
+            document.getElementById('filter-action').value = 'Annotate';
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

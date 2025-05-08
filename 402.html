@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cache for Redis Configuration Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 402</h2>
+        
+        <p>You have a Standard tier instance of Azure Cache for Redis named redis1 configured with the default settings.</p>
+        <p>You need to configure a Maxmemory policy to increase the amount of cache available for read operations.</p>
+        <p>How should you configure the Maxmemory policy?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Decrease the value of maxmemory-reserved.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. Increase the value of maxmemory-reserved.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. Set the Maxmemory policy to noeviction.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Set the Maxmemory policy to volatile-lru.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>A. Decrease the value of maxmemory-reserved.</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择A的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">maxmemory-reserved</span>用于预留非缓存操作的内存（如复制操作）</li>
+                <li>减少maxmemory-reserved值可以释放更多内存用于缓存数据，从而增加可用于读取操作的内存</li>
+                <li>默认情况下，maxmemory-reserved预留10%的内存，减少这个值可以增加缓存容量</li>
+            </ol>
+            
+            <p><strong>其他选项分析:</strong></p>
+            <ul>
+                <li><strong>B选项错误</strong>：增加maxmemory-reserved会减少可用于缓存的内存</li>
+                <li><strong>C选项错误</strong>：noeviction策略会在内存不足时返回错误，不会增加缓存可用性</li>
+                <li><strong>D选项错误</strong>：volatile-lru是默认策略，不会增加缓存可用内存</li>
+            </ul>
+            
+            <p><strong>配置建议:</strong></p>
+            <pre>
+# 使用Azure CLI减少maxmemory-reserved
+az redis update --name redis1 --resource-group yourResourceGroup \
+--set "redisConfiguration.maxmemory-reserved"="100"  # 单位MB</pre>
+            
+            <p><strong>内存管理最佳实践:</strong></p>
+            <ul>
+                <li>maxmemory-reserved允许范围为maxmemory的10%-60%</li>
+                <li>对于读取密集型工作负载，可以适当降低预留值</li>
+                <li>监控内存使用情况确保系统稳定性</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

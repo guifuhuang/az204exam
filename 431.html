@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage Secure Access Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .drag-drop-container {
+            display: flex;
+            margin: 20px 0;
+            min-height: 300px;
+        }
+        .options-list {
+            width: 50%;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px 0 0 8px;
+        }
+        .drop-area {
+            width: 50%;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px dashed #adb5bd;
+            border-radius: 0 8px 8px 0;
+            min-height: 200px;
+        }
+        .drag-item {
+            background-color: #e3f2fd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #bbdefb;
+            cursor: move;
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+        .sequence {
+            counter-reset: step;
+            margin: 20px 0;
+        }
+        .step {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 15px;
+        }
+        .step:before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0078D4;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 431 DRAG DROP</h2>
+        
+        <p>You manage an Azure subscription associated with a Microsoft Entra tenant named contoso.com. The subscription contains an Azure Blob Storage account that has the Contributor Azure role-based access control (RBAC) role within the scope of the subscription.</p>
+        
+        <p>You plan to implement secure access to containers and blobs in storage1. Your solution must satisfy the following requirements:</p>
+        
+        <ul>
+            <li>Authorization requests to access storage1 content must be authenticated by using Microsoft Entra credentials.</li>
+            <li>Authorized access to storage1 content must be time-limited based on arbitrary values specified when requests are raised.</li>
+            <li>The principle of least privilege must be satisfied.</li>
+        </ul>
+        
+        <p>You need to implement the plan.</p>
+        
+        <p>Which three actions should you perform in sequence? To answer, move the appropriate secure access implementation options from the list of secure access implementations to the answer area and arrange them in the correct order.</p>
+        
+        <div class="drag-drop-container">
+            <div class="options-list" id="source">
+                <div class="drag-item" draggable="true" data-value="configure">Configure a stored access policy.</div>
+                <div class="drag-item" draggable="true" data-value="assign">Assign the Owner role to your user account on the scope of the storage account.</div>
+                <div class="drag-item" draggable="true" data-value="acquire">Acquire an OAuth 2.0 token from Microsoft Entra ID.</div>
+                <div class="drag-item" draggable="true" data-value="request">Request a user delegation key.</div>
+                <div class="drag-item" draggable="true" data-value="generate">Generate a shared access signature token.</div>
+            </div>
+            <div class="drop-area" id="target">
+                <p>Drag answers here in correct order</p>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <div class="sequence">
+                <div class="step">Request a user delegation key</div>
+                <div class="step">Acquire an OAuth 2.0 token from Microsoft Entra ID</div>
+                <div class="step">Generate a shared access signature token</div>
+            </div>
+            
+            <div class="explanation">
+                <h4>技术说明:</h4>
+                
+                <div class="note">
+                    <p><strong>实现步骤详解:</strong></p>
+                    <ol>
+                        <li><b>请求用户委托密钥</b>: 这是使用Microsoft Entra凭证进行身份验证的第一步，获取创建SAS令牌所需的密钥</li>
+                        <li><b>获取OAuth 2.0令牌</b>: 从Microsoft Entra ID获取访问令牌，用于后续操作的身份验证</li>
+                        <li><b>生成共享访问签名令牌</b>: 创建具有时间限制的SAS令牌，实现基于最小权限原则的访问控制</li>
+                    </ol>
+                </div>
+
+                <h4>为什么其他选项不正确:</h4>
+                <table>
+                    <tr>
+                        <th>选项</th>
+                        <th>原因</th>
+                    </tr>
+                    <tr>
+                        <td>Configure a stored access policy</td>
+                        <td>存储访问策略适用于账户SAS，不适用于用户委托SAS</td>
+                    </tr>
+                    <tr>
+                        <td>Assign the Owner role</td>
+                        <td>违反最小权限原则，且题目已说明账户有Contributor角色</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="note">
+                <p><strong>Azure存储安全访问最佳实践:</strong></p>
+                <ul>
+                    <li>始终优先使用Microsoft Entra身份验证而非存储账户密钥</li>
+                    <li>用户委托SAS提供最精细的访问控制，支持设置精确的权限和有效期</li>
+                    <li>SAS令牌应设置尽可能短的有效期以满足安全要求</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 拖拽功能实现
+        const items = document.querySelectorAll('.drag-item');
+        let draggedItem = null;
+        
+        items.forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.classList.add('dragging');
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+        });
+        
+        const target = document.getElementById('target');
+        
+        target.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        
+        target.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+        });
+        
+        target.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (draggedItem) {
+                // 检查是否已经存在于目标区域
+                if (!Array.from(target.children).some(child => child.dataset.value === draggedItem.dataset.value)) {
+                    const clone = draggedItem.cloneNode(true);
+                    target.appendChild(clone);
+                    target.querySelector('p')?.remove();
+                }
+            }
+        });
+        
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 清空目标区域并添加正确答案
+            target.innerHTML = '';
+            const correctOrder = ['request', 'acquire', 'generate'];
+            
+            correctOrder.forEach(value => {
+                const item = document.querySelector(`.drag-item[data-value="${value}"]`);
+                if (item) {
+                    const clone = item.cloneNode(true);
+                    target.appendChild(clone);
+                }
+            });
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

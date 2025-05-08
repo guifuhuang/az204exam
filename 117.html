@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Practice Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 117</h3>
+        <p>A company is implementing a publish-subscribe (Pub/Sub) messaging component by using Azure Service Bus. You are developing the first subscription application.</p>
+        <p>In the Azure portal you see that messages are being sent to the subscription for each topic. You create and initialize a subscription client object by supplying the correct details, but the subscription application is still not consuming the messages.</p>
+        <p>You need to complete the source code of the subscription client.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <form>
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. await subscriptionClient.CloseAsync();</label><br>
+                
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. await subscriptionClient.AddRuleAsync(new RuleDescription(RuleDescription.DefaultRuleName, new TrueFilter()));</label><br>
+                
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. subscriptionClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);</label><br>
+                
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. subscriptionClient = new SubscriptionClient(ServiceBusConnectionString, TopicName, SubscriptionName);</label><br>
+            </form>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案: C</strong></p>
+            <p><strong>说明:</strong></p>
+            <p>Using topic client, call RegisterMessageHandler which is used to receive messages continuously from the entity. It registers a message handler and begins a new thread to receive messages. This handler is waited on every time a new message is received by the receiver.</p>
+            <p>References:</p>
+            <p>https://www.c-sharpcorner.com/article/azure-service-bus-topic-and-subscription-pub-sub/</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

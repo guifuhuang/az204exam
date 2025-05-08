@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Messaging Solution Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 290</h3>
+        <p>You are developing an Azure messaging solution.</p>
+        <p>You need to ensure that the solution that meets the following requirements:</p>
+        <ul>
+            <li>Provide transactional support</li>
+            <li>Provide duplicate detection</li>
+            <li>Store the messages for an unlimited period of time</li>
+        </ul>
+        <p>Which two technologies will meet the requirements? Each correct answer presents a complete solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Azure Service Bus Queue</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Azure Storage Queue</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Azure Service Bus Topic</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Azure Event Hub</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">A. Azure Service Bus Queue</span> 和 <span class="correct">C. Azure Service Bus Topic</span></p>
+            
+            <table>
+                <tr>
+                    <th>技术</th>
+                    <th>事务支持</th>
+                    <th>重复检测</th>
+                    <th>无限存储</th>
+                </tr>
+                <tr>
+                    <td class="correct">Service Bus Queue</td>
+                    <td class="correct">✓</td>
+                    <td class="correct">✓</td>
+                    <td class="correct">✓</td>
+                </tr>
+                <tr>
+                    <td class="correct">Service Bus Topic</td>
+                    <td class="correct">✓</td>
+                    <td class="correct">✓</td>
+                    <td class="correct">✓</td>
+                </tr>
+                <tr>
+                    <td>Storage Queue</td>
+                    <td>✗</td>
+                    <td>✗</td>
+                    <td class="correct">✓</td>
+                </tr>
+                <tr>
+                    <td>Event Hub</td>
+                    <td>✗</td>
+                    <td>✗</td>
+                    <td>✗</td>
+                </tr>
+            </table>
+            
+            <p><strong>技术解析：</strong></p>
+            <ol>
+                <li><strong>Azure Service Bus (Queue/Topic)</strong>
+                    <ul>
+                        <li>支持事务性操作（原子性提交多个操作）</li>
+                        <li>内置重复检测机制（基于MessageId）</li>
+                        <li>消息默认永久存储（除非显式删除）</li>
+                    </ul>
+                </li>
+                
+                <li><strong>排除选项分析</strong>
+                    <ul>
+                        <li><strong>Storage Queue</strong>：缺少事务支持和重复检测</li>
+                        <li><strong>Event Hub</strong>：设计用于流处理，不满足任何要求</li>
+                    </ul>
+                </li>
+                
+                <li><strong>配置示例</strong>
+                    <pre>// 创建支持重复检测的Service Bus队列
+QueueDescription queueDescription = new QueueDescription("myqueue")
+{
+    RequiresDuplicateDetection = true,  // 启用重复检测
+    DefaultMessageTimeToLive = TimeSpan.MaxValue  // 永久存储
+};</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/duplicate-detection" target="_blank">Service Bus重复检测</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-transactions" target="_blank">Service Bus事务支持</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOptions = Array.from(document.querySelectorAll('input[name="answer"]:checked'))
+                .map(opt => opt.value);
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <p><strong>您的选择：</strong> ${selectedOptions.join(', ') || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

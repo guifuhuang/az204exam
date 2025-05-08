@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Function Timer Trigger Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .config-table th, .config-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .config-table th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 425 HOTSPOT</h2>
+        
+        <p>You plan to implement an Azure function named Function1 that will use the timer trigger. You plan to use a TimeSpan value to set the schedule of function execution.</p>
+        
+        <p>You need to select the hosting model and the schedule expression assignment method.</p>
+        <p>Which hosting model and schedule expression assignment method should you use? To answer, select the appropriate options in the answer area.</p>
+        
+        <table class="config-table">
+            <thead>
+                <tr>
+                    <th>Function Configuration Option</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hosting model</td>
+                    <td>
+                        <select id="hosting-model">
+                            <option value="">---select---</option>
+                            <option value="Consumption">Consumption</option>
+                            <option value="App Service plan">App Service plan</option>
+                            <option value="Azure Arc-enabled Kubernetes">Azure Arc-enabled Kubernetes</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Schedule expression assignment</td>
+                    <td>
+                        <select id="schedule-assignment">
+                            <option value="">---select---</option>
+                            <option value="function.json file">function.json file</option>
+                            <option value="host.json file">host.json file</option>
+                            <option value="App settings">App settings</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <table class="config-table">
+                <tr>
+                    <th>Configuration Option</th>
+                    <th>Correct Value</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>Hosting model</td>
+                    <td><strong>Consumption</strong></td>
+                    <td>计时器触发器最适合无服务器消费计划</td>
+                </tr>
+                <tr>
+                    <td>Schedule expression assignment</td>
+                    <td><strong>function.json file</strong></td>
+                    <td>TimeSpan值需要在function.json中配置</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>技术说明:</h4>
+            
+            <div class="note">
+                <p><strong>关键配置解析:</strong></p>
+                <ul>
+                    <li><b>消费计划(Consumption)</b>: 计时器触发器在空闲时不会产生费用，只在执行时计费</li>
+                    <li><b>function.json</b>: 定时计划使用CRON表达式或TimeSpan格式，必须在此文件中声明</li>
+                    <li><b>TimeSpan格式</b>: "schedule": "00:30:00" 表示每30分钟执行一次</li>
+                </ul>
+            </div>
+
+            <h4>典型function.json配置示例:</h4>
+            <pre>
+{
+  "bindings": [
+    {
+      "name": "myTimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 */5 * * * *",  // 每5分钟
+      "runOnStartup": false,
+      "useMonitor": true
+    }
+  ]
+}
+            </pre>
+
+            <h4>生产环境建议:</h4>
+            <ol>
+                <li>对于高频定时任务(如每分钟)，使用App Service计划避免冷启动</li>
+                <li>在function.json中添加"useMonitor": true以启用schedule监控</li>
+                <li>通过应用设置(APPLICATION SETTINGS)覆盖开发环境的测试计划</li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <p><strong>验证方法:</strong></p>
+            <ul>
+                <li>在Azure门户中检查函数执行日志的时间间隔</li>
+                <li>使用Kudu工具查看实际加载的function.json文件</li>
+                <li>通过Application Insights分析触发器激活模式</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

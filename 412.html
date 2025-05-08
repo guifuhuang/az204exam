@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Debugging Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .feature-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .feature-comparison th, .feature-comparison td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .feature-comparison th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 412</h2>
+        
+        <p>You develop an Azure App Service web app and deploy to a production environment. You enable
+        Application Insights for the web app.</p>
+        <p>The web app is throwing multiple exceptions in the environment.</p>
+        <p>You need to examine the state of the source code and variables when the exceptions are thrown.</p>
+        <p>Which Application Insights feature should you configure?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Smart detection</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. Snapshot Debugger</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. Standard test</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Profiler</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>B. Snapshot Debugger</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么选择Snapshot Debugger:</strong></p>
+            <ol>
+                <li><span class="highlight">Snapshot Debugger</span>是专门用于捕获生产环境中异常发生时应用程序状态的工具</li>
+                <li>它会在异常发生时自动收集：
+                    <ul>
+                        <li>调用堆栈信息</li>
+                        <li>局部变量的值</li>
+                        <li>源代码执行位置</li>
+                    </ul>
+                </li>
+                <li>这些快照可以在不停止应用的情况下进行调试分析</li>
+                <li>完美匹配题目要求的"检查异常发生时源代码和变量的状态"</li>
+            </ol>
+            
+            <p><strong>功能对比:</strong></p>
+            <table class="feature-comparison">
+                <tr>
+                    <th>功能</th>
+                    <th>用途</th>
+                    <th>是否满足需求</th>
+                </tr>
+                <tr>
+                    <td>Smart detection</td>
+                    <td>自动检测性能异常和故障模式</td>
+                    <td>❌ 仅能发现问题，不能查看代码状态</td>
+                </tr>
+                <tr>
+                    <td>Snapshot Debugger</td>
+                    <td>捕获异常时的应用程序状态</td>
+                    <td>✅ 完美匹配需求</td>
+                </tr>
+                <tr>
+                    <td>Standard test</td>
+                    <td>基本可用性测试</td>
+                    <td>❌ 不提供调试信息</td>
+                </tr>
+                <tr>
+                    <td>Profiler</td>
+                    <td>性能瓶颈分析</td>
+                    <td>❌ 用于性能优化而非异常调试</td>
+                </tr>
+            </table>
+            
+            <p><strong>配置Snapshot Debugger的步骤:</strong></p>
+            <ol>
+                <li>在Application Insights资源中启用Snapshot Debugger</li>
+                <li>在应用服务配置中添加连接字符串</li>
+                <li>部署应用程序时包含调试符号(PDB文件)</li>
+                <li>设置快照收集规则(如异常类型、频率限制等)</li>
+            </ol>
+            
+            <p><strong>关键优势:</strong></p>
+            <ul>
+                <li>无需在生产环境中直接调试，降低风险</li>
+                <li>捕获真实用户场景中的异常状态</li>
+                <li>支持.NET和Java应用程序</li>
+                <li>与Visual Studio集成，可直接在IDE中查看快照</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

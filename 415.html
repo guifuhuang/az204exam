@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Monitor Alert Integration Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .feature-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .feature-comparison th, .feature-comparison td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .feature-comparison th {
+            background-color: #f2f2f2;
+        }
+        .code {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 415</h2>
+        
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question
+        in the series contains a unique solution that might meet the stated goals. Some question sets
+        might have more than one correct solution, while others might not have a correct solution.</p>
+        <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these
+        questions will not appear on the review screen.</p>
+        
+        <p>You have an Azure App Service web app named WebApp1 and an Azure Functions app named
+        Function1. WebApp1 is associated with an Application Insights instance named appinsights1.</p>
+        <p>You configure a web test and a corresponding alert for WebApp1 in appinsights1. Each alert
+        triggers a delivery of email to your mailbox.</p>
+        <p>You need to ensure that each alert also triggers execution of Function1.</p>
+        <p>Solution: Configure an Azure Monitor action group.</p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>A. Yes</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么选择Yes:</strong></p>
+            <ol>
+                <li><span class="highlight">Azure Monitor操作组(Action Groups)</span>是专门设计用于定义警报触发时的响应动作</li>
+                <li>操作组可以配置多种动作类型，包括：
+                    <ul>
+                        <li>电子邮件/SMS通知</li>
+                        <li>Azure Functions执行</li>
+                        <li>Webhook调用</li>
+                        <li>Logic Apps触发等</li>
+                    </ul>
+                </li>
+                <li>题目中已配置的web测试警报可以与操作组关联，实现触发Function1的需求</li>
+            </ol>
+            
+            <p><strong>配置步骤:</strong></p>
+            <div class="code">
+                # 创建操作组的Azure CLI命令示例
+                az monitor action-group create \
+                  --name "Function1TriggerGroup" \
+                  --resource-group "YourRG" \
+                  --action azurefunction function1 \
+                  --function-app "/subscriptions/.../resourceGroups/.../providers/Microsoft.Web/sites/Function1" \
+                  --function-name "HttpTrigger1" \
+                  --https true
+            </div>
+            
+            <p><strong>技术验证点:</strong></p>
+            <table class="feature-comparison">
+                <tr>
+                    <th>验证项目</th>
+                    <th>是否符合需求</th>
+                </tr>
+                <tr>
+                    <td>是否支持触发Azure Functions</td>
+                    <td>✅ 操作组原生支持</td>
+                </tr>
+                <tr>
+                    <td>是否与Application Insights警报兼容</td>
+                    <td>✅ 完全兼容</td>
+                </tr>
+                <tr>
+                    <td>能否与现有邮件通知共存</td>
+                    <td>✅ 一个操作组可包含多个动作</td>
+                </tr>
+            </table>
+            
+            <p><strong>实现架构:</strong></p>
+            <ol>
+                <li>Application Insights检测到异常</li>
+                <li>触发警报规则</li>
+                <li>调用关联的操作组</li>
+                <li>操作组同步执行：
+                    <ul>
+                        <li>发送邮件通知（原有功能）</li>
+                        <li>通过HTTP触发器调用Function1（新增功能）</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>注意事项:</strong></p>
+            <ul>
+                <li>Function1需要暴露HTTP触发器端点</li>
+                <li>操作组需要配置正确的函数访问密钥</li>
+                <li>建议在操作组中添加重试机制处理暂时性故障</li>
+                <li>可通过Azure Monitor的警报处理规则管理触发频率</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB Consistency Level Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .options, .scenarios {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+        .options {
+            background-color: #f5f5f5;
+        }
+        .option {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .scenario {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 20px;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+        }
+        .highlight {
+            background-color: #ffffcc;
+        }
+        .drop-zone {
+            min-height: 20px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+        }
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure Cosmos DB Consistency Level Test</h1>
+    
+    <div class="question">
+        <p><strong>QUESTION NO: 122 DRAG DROP</strong></p>
+        <p>You are developing a solution for a hospital to support the following use cases:</p>
+        <ul>
+            <li>The most recent patient status details must be retrieved even if multiple users in different locations have updated the patient record.</li>
+            <li>Patient health monitoring data retrieved must be the current version or the prior version.</li>
+            <li>After a patient is discharged and all charges have been assessed, the patient billing record contains the final charges.</li>
+        </ul>
+        <p>You provision a Cosmos DB NoSQL database and set the default consistency level for the database account to Strong. You set the value for Indexing Mode to Consistent.</p>
+        <p>You need to minimize latency and any impact to the availability of the solution. You must override the default consistency level at the query level to meet the required consistency guarantees for the scenarios.</p>
+        <p>Which consistency levels should you implement? To answer, drag the appropriate consistency levels to the correct requirements. Each consistency level may be used once, more than once, or not at all.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <div class="container">
+        <div class="options" id="options">
+            <h3>Consistency Levels</h3>
+            <div class="option" draggable="true" data-value="Strong">Strong</div>
+            <div class="option" draggable="true" data-value="Bounded Staleness">Bounded Staleness</div>
+            <div class="option" draggable="true" data-value="Consistent Prefix">Consistent Prefix</div>
+            <div class="option" draggable="true" data-value="Eventual">Eventual</div>
+        </div>
+        
+        <div class="scenarios" id="scenarios">
+            <h3>Answer Area</h3>
+            <div class="scenario">
+                <p>Return the most recent patient status.</p>
+                <div class="drop-zone" data-scenario="1"></div>
+            </div>
+            <div class="scenario">
+                <p>Return health monitoring data that is no less than one version behind.</p>
+                <div class="drop-zone" data-scenario="2"></div>
+            </div>
+            <div class="scenario">
+                <p>After patient is discharged and all changes are assessed, retrieve the correct billing data with the final charges.</p>
+                <div class="drop-zone" data-scenario="3"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p>正确的配置应该是：</p>
+        <table>
+            <tr>
+                <th>Scenario</th>
+                <th>Consistency Level</th>
+            </tr>
+            <tr>
+                <td>Return the most recent patient status</td>
+                <td class="highlight">Strong</td>
+            </tr>
+            <tr>
+                <td>Return health monitoring data that is no less than one version behind</td>
+                <td class="highlight">Bounded Staleness</td>
+            </tr>
+            <tr>
+                <td>After patient is discharged and all changes are assessed, retrieve the correct billing data with the final charges</td>
+                <td class="highlight">Eventual</td>
+            </tr>
+        </table>
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>Strong</strong>: 强一致性提供线性化保证。读取保证返回项目的最新提交版本。客户端永远不会看到未提交或部分写入。用户始终保证读取最新的提交写入。</li>
+            <li><strong>Bounded Staleness</strong>: 读取保证遵循一致前缀保证。读取可能落后于写入最多"K"个版本（即"更新"）或"t"时间间隔。当选择有限过期时，"过期"可以通过两种方式配置：项目的版本数(K)或读取可能落后于写入的时间间隔(t)。</li>
+            <li><strong>Eventual</strong>: 读取没有顺序保证。在没有进一步写入的情况下，副本最终会收敛。</li>
+        </ol>
+    </div>
+
+    <script>
+        // 拖拽功能实现
+        const options = document.querySelectorAll('.option');
+        let draggedItem = null;
+        
+        options.forEach(option => {
+            option.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            });
+            
+            option.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+        
+        const dropZones = document.querySelectorAll('.drop-zone');
+        
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e6f7ff';
+            });
+            
+            zone.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '#f9f9f9';
+            });
+            
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#f9f9f9';
+                
+                if (draggedItem) {
+                    // 清除该区域已有的内容
+                    while (this.firstChild) {
+                        this.removeChild(this.firstChild);
+                    }
+                    
+                    // 添加拖拽的项目副本
+                    const clonedItem = draggedItem.cloneNode(true);
+                    clonedItem.style.opacity = '1';
+                    clonedItem.style.margin = '0';
+                    clonedItem.style.border = 'none';
+                    clonedItem.style.cursor = 'default';
+                    clonedItem.draggable = false;
+                    this.appendChild(clonedItem);
+                }
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

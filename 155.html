@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Cost Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: #4fc3f7;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .correct {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 155</h3>
+        <p>You develop an Azure web app. You monitor performance of the web app by using Application Insights.</p>
+        <p>You need to ensure the cost for Application Insights does not exceed a preset budget.</p>
+        <p>What should you do?</p>
+    </div>
+
+    <div class="options">
+        <label class="option">
+            <input type="radio" name="answer" value="A">
+            A. Implement ingestion sampling using the Azure portal.
+        </label><br><br>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="B">
+            B. Set a daily cap for the Application Insights instance.
+        </label><br><br>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="C">
+            C. Implement adaptive sampling using the Azure portal.
+        </label><br><br>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="D">
+            D. Implement adaptive sampling using the Application Insights SDK.
+        </label><br><br>
+        
+        <label class="option">
+            <input type="radio" name="answer" value="E">
+            E. Implement ingestion sampling using the Application Insights SDK.
+        </label>
+    </div>
+
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案：</strong></p>
+        <p class="correct">B. Set a daily cap for the Application Insights instance.</p>
+        
+        <div class="explanation">
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li><strong>选项B正确</strong>：
+                    <ul>
+                        <li>题目要求确保成本不超过预设预算，最直接的方法是设置每日上限</li>
+                        <li>每日上限是Application Insights原生的成本控制功能</li>
+                        <li>当数据量达到上限时会停止数据收集，直到次日重置</li>
+                        <li>可以在Azure门户中配置："Application Insights资源" → "使用和预估成本" → "每日上限"</li>
+                    </ul>
+                </li>
+                <li><strong>其他选项分析</strong>：
+                    <ul>
+                        <li><strong>选项A/C/D/E</strong>：采样技术可以降低数据量但不能保证绝对不超预算</li>
+                        <li><strong>采样技术</strong>更适合减少数据量同时保持代表性，而非严格的成本控制</li>
+                        <li><strong>自适应采样</strong>会根据流量自动调整采样率，但仍无法保证绝对不超预算</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>根据Microsoft官方文档，设置每日上限是确保成本不超过预算的最可靠方法。采样技术应作为补充措施使用。</p>
+        </div>
+    </div>
+
+    <script>
+        // Highlight selected option
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                if (this.checked) {
+                    this.parentElement.classList.add('selected');
+                }
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Select the correct answer
+            document.querySelector('input[value="B"]').checked = true;
+            document.querySelector('input[value="B"]').parentElement.classList.add('selected');
+            // Scroll to answer
+            document.getElementById('answer').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

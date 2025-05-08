@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB Consistency Level Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        .drag-source, .drag-target {
+            flex: 1;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        .drag-target {
+            background-color: #f0f7ff;
+        }
+        .drag-item {
+            background-color: #e3f2fd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #bbdefb;
+            user-select: none;
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+        .operation-box {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 6px;
+        }
+        .operation-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+        .drop-zone {
+            min-height: 50px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 4px;
+        }
+        .drop-zone.drag-over {
+            background-color: #e1f5fe;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 426 DRAG DROP</h2>
+        
+        <p>You manage an Azure Cosmos DB for a NoSQL API account named account1. You configure account1 with the default consistency level.</p>
+        
+        <p>An application named app1 must access containers in account1 to perform read and write operations. The connections from app1 to account1 must be established by using the direct mode.</p>
+        
+        <p>You plan to configure app1 to override the default consistency level by using the Azure Cosmos DB SDK client.</p>
+        
+        <p>You need to set the maximum consistency level for app1 to use for read and write operations.</p>
+        
+        <p>Which consistency level should you set? To answer, move the appropriate maximum consistency levels to the correct operation types. You may use each maximum consistency level once, more than once, or not at all.</p>
+        
+        <div class="drag-container">
+            <div class="drag-source" id="source">
+                <div class="drag-item" draggable="true" data-value="Strong">Strong</div>
+                <div class="drag-item" draggable="true" data-value="BoundedStaleness">Bounded Staleness</div>
+                <div class="drag-item" draggable="true" data-value="Session">Session</div>
+                <div class="drag-item" draggable="true" data-value="ConsistentPrefix">Consistent Prefix</div>
+                <div class="drag-item" draggable="true" data-value="Eventual">Eventual</div>
+            </div>
+            
+            <div class="drag-target">
+                <div class="operation-box" id="read-ops">
+                    <div class="operation-title">Read Operations</div>
+                    <div class="drop-zone" id="read-drop"></div>
+                </div>
+                <div class="operation-box" id="write-ops">
+                    <div class="operation-title">Write Operations</div>
+                    <div class="drop-zone" id="write-drop"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <table style="width:100%">
+                <tr>
+                    <th>操作类型</th>
+                    <th>最大一致性级别</th>
+                    <th>技术说明</th>
+                </tr>
+                <tr>
+                    <td>Read Operations</td>
+                    <td><strong>Strong</strong></td>
+                    <td>读取时可设置任意级别(最高为Strong)</td>
+                </tr>
+                <tr>
+                    <td>Write Operations</td>
+                    <td><strong>Strong</strong></td>
+                    <td>写入时只能使用Strong或Bounded Staleness</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>技术说明:</h4>
+            
+            <div class="note">
+                <p><strong>关键配置原则:</strong></p>
+                <ul>
+                    <li><b>读取操作</b>: 可以设置为任意一致性级别(Strong, Bounded Staleness, Session, Consistent Prefix, Eventual)</li>
+                    <li><b>写入操作</b>: 只能使用Strong或Bounded Staleness级别</li>
+                    <li><b>SDK配置</b>: 通过CosmosClientBuilder.WithConsistencyLevel()方法设置</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化拖拽项
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // 为每个可拖拽项添加事件监听
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', this.dataset.value);
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+            
+            // 为每个放置区域添加事件监听
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                    this.classList.add('drag-over');
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    const data = e.dataTransfer.getData('text/plain');
+                    if (data) {
+                        // 创建新的项目放入放置区
+                        const newItem = document.createElement('div');
+                        newItem.className = 'drag-item';
+                        
+                        // 根据数据类型设置内容和值
+                        switch(data) {
+                            case 'Strong':
+                                newItem.textContent = 'Strong';
+                                break;
+                            case 'BoundedStaleness':
+                                newItem.textContent = 'Bounded Staleness';
+                                break;
+                            case 'Session':
+                                newItem.textContent = 'Session';
+                                break;
+                            case 'ConsistentPrefix':
+                                newItem.textContent = 'Consistent Prefix';
+                                break;
+                            case 'Eventual':
+                                newItem.textContent = 'Eventual';
+                                break;
+                        }
+                        
+                        newItem.dataset.value = data;
+                        newItem.draggable = true;
+                        
+                        // 添加拖拽事件到新项目
+                        newItem.addEventListener('dragstart', function(e) {
+                            this.classList.add('dragging');
+                            e.dataTransfer.setData('text/plain', this.dataset.value);
+                            e.dataTransfer.effectAllowed = 'copy';
+                        });
+                        
+                        newItem.addEventListener('dragend', function() {
+                            this.classList.remove('dragging');
+                        });
+                        
+                        this.appendChild(newItem);
+                    }
+                });
+            });
+        });
+
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+            
+            // 清空现有答案
+            document.getElementById('read-drop').innerHTML = '';
+            document.getElementById('write-drop').innerHTML = '';
+            
+            // 添加正确答案
+            const readAnswer = document.createElement('div');
+            readAnswer.className = 'drag-item';
+            readAnswer.textContent = 'Strong';
+            readAnswer.dataset.value = 'Strong';
+            readAnswer.style.backgroundColor = '#c8e6c9';
+            readAnswer.draggable = true;
+            document.getElementById('read-drop').appendChild(readAnswer);
+            
+            const writeAnswer = document.createElement('div');
+            writeAnswer.className = 'drag-item';
+            writeAnswer.textContent = 'Strong';
+            writeAnswer.dataset.value = 'Strong';
+            writeAnswer.style.backgroundColor = '#c8e6c9';
+            writeAnswer.draggable = true;
+            document.getElementById('write-drop').appendChild(writeAnswer);
+            
+            // 为答案项添加拖拽事件
+            [readAnswer, writeAnswer].forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', this.dataset.value);
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

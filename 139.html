@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Practice Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .answer {
+            display: none;
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 139</h3>
+        <p>You have an Azure App Services Web App. Azure SQL Database instance. Azure Storage Account and an Azure Redis Cache instance in a resource group.</p>
+        <p>A developer must be able to publish code to the web app. You must grant the developer the Contribute role to the web app.</p>
+        <p>You need to grant the role.</p>
+        <p>What two commands can you use? Each correct answer presents a complete solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="optionA">
+                <label for="optionA">A. New-AzureRmRoleAssignment</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="optionB">
+                <label for="optionB">B. az role assignment create</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="optionC">
+                <label for="optionC">C. az role definition create</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="optionD">
+                <label for="optionD">D. New-AzureRmRoleDefinition</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h4>正确答案: A, B</h4>
+            <p><strong>说明:</strong></p>
+            <p>要授予开发者对Web应用的"参与者"角色，可以使用以下两种命令：</p>
+            <p>1. <strong>New-AzureRmRoleAssignment</strong> - 这是PowerShell命令，用于创建角色分配</p>
+            <p>2. <strong>az role assignment create</strong> - 这是Azure CLI命令，用于创建角色分配</p>
+            <p>选项C和D不正确，因为它们用于创建角色定义而不是分配角色。</p>
+            <p><strong>参考资料:</strong></p>
+            <p><a href="https://docs.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest#az-role-assignment-create" target="_blank">az role assignment create文档</a></p>
+            <p><a href="https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/new-azurermroleassignment?view=azurermps-6.13.0" target="_blank">New-AzureRmRoleAssignment文档</a></p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Front Door Cache Purge Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .option:hover { background-color: #f0f0f0; }
+        .option.selected { background-color: #e6f2ff; border-color: #0078d4; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+        .scenario { margin: 10px 0; padding-left: 15px; border-left: 3px solid #0078d4; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 221</h3>
+        <p>You are developing an ASP.NET Core website that uses Azure FrontDoor. The website is used to build custom weather data sets for researchers. Data sets are downloaded by users as Comma Separated Value (CSV) files. The data is refreshed every 10 hours.</p>
+        
+        <div class="scenario">
+            <p><strong>Scenario Requirements:</strong></p>
+            <ul>
+                <li>Specific files must be purged from the FrontDoor cache based upon Response Header values</li>
+                <li>Need to purge individual assets from the Front Door cache</li>
+            </ul>
+        </div>
+        
+        <p>Which type of cache purge should you use?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)" data-value="A">A. single path</div>
+            <div class="option" onclick="selectOption(this)" data-value="B">B. wildcard</div>
+            <div class="option" onclick="selectOption(this)" data-value="C">C. root domain</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">A. single path</span></strong></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>缓存清除类型对比</strong>：
+                    <table>
+                        <tr>
+                            <th>清除类型</th>
+                            <th>语法示例</th>
+                            <th>适用场景</th>
+                            <th>本题适用性</th>
+                        </tr>
+                        <tr>
+                            <td>Single Path</td>
+                            <td><code>/datasets/weather.csv</code></td>
+                            <td>精确清除特定文件</td>
+                            <td>✅ 完全匹配</td>
+                        </tr>
+                        <tr>
+                            <td>Wildcard</td>
+                            <td><code>/datasets/*.csv</code></td>
+                            <td>批量清除匹配模式的文件</td>
+                            <td>❌ 过于宽泛</td>
+                        </tr>
+                        <tr>
+                            <td>Root Domain</td>
+                            <td><code>/</code></td>
+                            <td>清除整个站点缓存</td>
+                            <td>❌ 影响过大</td>
+                        </tr>
+                    </table>
+                </li>
+                <li><strong>技术实现细节</strong>：
+                    <ul>
+                        <li>通过Azure CLI清除单个路径：
+                            <pre>az afd endpoint purge-content \
+    --resource-group my-rg \
+    --profile-name my-frontdoor \
+    --content-paths "/weather-data/2023-10.csv" \
+    --domains "my-website.azurefd.net"</pre>
+                        </li>
+                        <li>基于响应头的清除逻辑（ASP.NET Core示例）：
+                            <pre>// 在Controller中设置缓存头
+Response.Headers.Append("Cache-Control", "max-age=36000"); // 10小时
+Response.Headers.Append("x-azure-fd-cache-key", "/datasets/"+fileId+".csv");</pre>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>架构设计</strong>：
+                    <pre>
++---------------------+       +---------------------+       +---------------------+
+|   ASP.NET Core      |       |   Azure Front Door  |       |   Researchers       |
+|   Website           |       |   Cache Layer       |       |   (Clients)         |
+|   (Origin Server)   |-----> |   (Edge Locations)  |-----> |   Download CSV      |
+|   Generates CSV     |       |   Caches Files      |       |                     |
++---------------------+       +---------------------+       +---------------------+
+         ↓                                                        ↑
+  [Set Cache Headers]                                      [Purge Single Path]
+  [x-azure-fd-cache-key]                                   [When Data Updates]</pre>
+                </li>
+                <li><strong>最佳实践</strong>：
+                    <ul>
+                        <li>为每个CSV文件生成唯一缓存键（如包含时间戳）</li>
+                        <li>通过Azure Event Grid监听数据更新事件触发清除</li>
+                        <li>在非高峰时段执行批量清除操作</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>错误选项分析</strong>：</p>
+            <ul>
+                <li><strong>B. Wildcard</strong>：会清除所有CSV文件，可能影响其他正在使用的数据集</li>
+                <li><strong>C. Root Domain</strong>：会导致整个站点缓存失效，造成性能下降</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element) {
+            // 移除之前的选择
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            element.classList.add('selected');
+            selectedOption = element.getAttribute('data-value');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 如果有选择，显示用户的选择
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：${selectedOption}</strong>`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

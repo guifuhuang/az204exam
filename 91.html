@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 91</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .variables {
+            background-color: #e9f7ef;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 15px;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        select {
+            padding: 5px;
+            margin: 5px 0;
+            min-width: 200px;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 91 HOTSPOT</h2>
+        <p>You are creating a CLI script that creates an Azure web app related services in Azure App Service. The web app uses the following variables:</p>
+        
+        <div class="variables">
+            <table>
+                <tr>
+                    <th>Variable name</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>$gitrepo</td>
+                    <td>https://github.com/contoso/os/webapp</td>
+                </tr>
+                <tr>
+                    <td>$webappname</td>
+                    <td>Webapp1103</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p>You need to automatically deploy code from GitHub to the newly created web app.</p>
+        <p>How should you complete the script? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="code">
+# Create a resource group
+az group create --location westeurope --name myResourceGroup
+
+# Create an App Service plan
+az <select id="cmd1">
+    <option value="">Select command</option>
+    <option value="webapp create">webapp create</option>
+    <option value="appservice plan create">appservice plan create</option>
+    <option value="webapp deployment">webapp deployment</option>
+    <option value="group delete">group delete</option>
+</select> --name $webappname --resource-group myResourceGroup --sku <select id="sku">
+    <option value="">Select SKU</option>
+    <option value="FREE">FREE</option>
+    <option value="BASIC">BASIC</option>
+    <option value="STANDARD">STANDARD</option>
+</select>
+
+# Create a web app
+az <select id="cmd2">
+    <option value="">Select command</option>
+    <option value="webapp create">webapp create</option>
+    <option value="appservice plan create">appservice plan create</option>
+    <option value="webapp deployment">webapp deployment</option>
+    <option value="group delete">group delete</option>
+</select> --name $webappname --resource-group myResourceGroup
+<select id="cmd3">
+    <option value="">Select command</option>
+    <option value="-repo-url $gitrepo --branch master --manual-integration">-repo-url $gitrepo --branch master --manual-integration</option>
+    <option value="git clone $gitrepo">git clone $gitrepo</option>
+    <option value="--plan $webappname">--plan $webappname</option>
+</select>
+
+# Configure GitHub deployment
+az <select id="cmd4">
+    <option value="">Select command</option>
+    <option value="webapp create">webapp create</option>
+    <option value="appservice plan create">appservice plan create</option>
+    <option value="webapp deployment">webapp deployment</option>
+    <option value="group delete">group delete</option>
+</select> source config --name $webappname --resource-group myResourceGroup --repo-url $gitrepo --branch master --manual-integration
+        </div>
+    </div>
+    
+    <button id="showAnswer">View Answer</button>
+    
+    <div id="answer" class="answer">
+        <h3>Correct Answers:</h3>
+        <ul>
+            <li>First dropdown: <span class="correct">appservice plan create</span></li>
+            <li>SKU dropdown: <span class="correct">FREE</span></li>
+            <li>Second dropdown: <span class="correct">webapp create</span></li>
+            <li>Third dropdown: <span class="correct">--plan $webappname</span></li>
+            <li>Fourth dropdown: <span class="correct">webapp deployment</span></li>
+        </ul>
+        
+        <h3>Explanation:</h3>
+        <p>The complete script should be:</p>
+        <div class="code">
+# Create a resource group
+az group create --location westeurope --name myResourceGroup
+
+# Create an App Service plan
+az appservice plan create --name $webappname --resource-group myResourceGroup --sku FREE
+
+# Create a web app
+az webapp create --name $webappname --resource-group myResourceGroup --plan $webappname
+
+# Configure GitHub deployment
+az webapp deployment source config --name $webappname --resource-group myResourceGroup --repo-url $gitrepo --branch master --manual-integration
+        </div>
+        
+        <p>Key points:</p>
+        <ol>
+            <li>Use <span class="correct">appservice plan create</span> to create the App Service plan</li>
+            <li>The <span class="correct">FREE</span> SKU is appropriate for this scenario</li>
+            <li>Use <span class="correct">webapp deployment source config</span> to configure GitHub deployment</li>
+            <li>The <span class="correct">--manual-integration</span> flag means you'll need to manually sync changes</li>
+        </ol>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

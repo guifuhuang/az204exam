@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Kubernetes Node Pools Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 317</h2>
+        <p>Your company has several containers based on the following operating systems:</p>
+        <ul>
+            <li>Windows Server 2019 Nano Server</li>
+            <li>Windows Server 2019 Server Core</li>
+            <li>Windows Server 2022 Nano Server</li>
+            <li>Windows Server 2022 Server Core</li>
+            <li>Linux</li>
+        </ul>
+        <p>You plan to migrate the containers to an Azure Kubernetes cluster. What is the minimum number of node pools that the cluster must have?</p>
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. 1</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. 2</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="answer" value="C">
+            <label for="optionC">C. 3</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="answer" value="D">
+            <label for="optionD">D. 6</label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案: B. 2</strong></p>
+        <p><strong>说明:</strong></p>
+        <p>Azure Kubernetes Service (AKS) 集群需要至少两个节点池来支持不同的操作系统类型：</p>
+        <ol>
+            <li>一个用于 Linux 容器的节点池</li>
+            <li>一个用于 Windows 容器的节点池（可以同时支持 Windows Server 2019 和 2022 的不同版本）</li>
+        </ol>
+        <p>Linux 和 Windows 容器不能运行在同一个节点池中，因为它们需要不同的操作系统基础镜像。虽然 Windows Server 2019 和 2022 有不同的版本（Nano Server 和 Server Core），但它们可以共存于同一个 Windows 节点池中。</p>
+        <p>因此，最小需要的节点池数量是 2 个：一个 Linux 节点池和一个 Windows 节点池。</p>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

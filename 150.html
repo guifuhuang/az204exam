@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Service Bus Delivery App Solution</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .actions-box, .answer-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            min-height: 200px;
+            width: 45%;
+            margin: 0 10px;
+            position: relative; /* 添加定位 */
+        }
+        .actions-box {
+            background-color: #f9f9f9;
+        }
+        .answer-box {
+            background-color: #fff;
+        }
+        .action-item, .answer-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            cursor: move;
+            user-select: none; /* 防止文本选中 */
+        }
+        .action-item {
+            background-color: #f3f2f1;
+        }
+        .answer-item {
+            background-color: #e6f3ff;
+        }
+        h3 {
+            margin-top: 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct {
+            font-weight: bold;
+            color: #107c10;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 150 DRAG DROP</h2>
+        <p>You develop software solutions for a mobile delivery service. You are developing a mobile app that users can use to order from a restaurant in their area. The app uses the following workflow:</p>
+        <ol>
+            <li>A driver selects the restaurants for which they will deliver orders.</li>
+            <li>Orders are sent to all available drivers in an area.</li>
+            <li>Only orders for the selected restaurants will appear for the driver.</li>
+            <li>The first driver to accept an order removes it from the list of available orders.</li>
+        </ol>
+        <p>You need to implement an Azure Service Bus solution.</p>
+        <p>Which three actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+    </div>
+    
+    <div class="container">
+        <div class="actions-box">
+            <h3>Actions</h3>
+            <div class="action-item" draggable="true" data-value="1">Create a Service Bus topic for each restaurant for which a driver can receive messages</div>
+            <div class="action-item" draggable="true" data-value="2">Create a single Service Bus topic</div>
+            <div class="action-item" draggable="true" data-value="3">Create a single Service Bus subscription</div>
+            <div class="action-item" draggable="true" data-value="4">Create a single Service Bus Namespace</div>
+            <div class="action-item" draggable="true" data-value="5">Create a Service Bus Namespace for each restaurant for which a driver can receive messages</div>
+            <div class="action-item" draggable="true" data-value="6">Create a Service Bus Subscription for each restaurant for which a driver can receive orders</div>
+        </div>
+        
+        <div class="answer-box" id="answerArea">
+            <h3>Answer area</h3>
+            <!-- Dragged items will appear here -->
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案:</strong></p>
+        <ol class="correct">
+            <li>Create a single Service Bus Namespace</li>
+            <li>Create a single Service Bus topic</li>
+            <li>Create a Service Bus Subscription for each restaurant for which a driver can receive orders</li>
+        </ol>
+        
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>创建单一服务总线命名空间</strong>:
+                <ul>
+                    <li>这是Azure Service Bus的基础容器，整个解决方案只需要一个命名空间</li>
+                    <li>为每个餐厅创建命名空间会导致不必要的复杂性和成本增加</li>
+                </ul>
+            </li>
+            
+            <li><strong>创建单一服务总线主题</strong>:
+                <ul>
+                    <li>所有餐厅订单都通过这个主题进行集中分发</li>
+                    <li>主题的发布/订阅模式完美匹配"广播订单给所有司机"的需求</li>
+                    <li>相比为每个餐厅创建主题，这种架构更简单高效</li>
+                </ul>
+            </li>
+            
+            <li><strong>为每个餐厅创建订阅</strong>:
+                <ul>
+                    <li>每个订阅使用SQL过滤器规则筛选特定餐厅的订单</li>
+                    <li>当司机选择要服务的餐厅时，系统会自动过滤显示匹配的订单</li>
+                    <li>使用Complete()方法确保订单只被一个司机接受</li>
+                    <li>相比创建多个主题，这种方案管理更简单且成本更低</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p><strong>关键架构决策:</strong></p>
+        <ul>
+            <li>使用单一主题而非多主题架构，因为：
+                <ul>
+                    <li>所有订单具有相同的处理逻辑和生命周期</li>
+                    <li>减少主题数量可以显著降低管理复杂度</li>
+                    <li>订阅过滤器完全能满足餐厅筛选需求</li>
+                </ul>
+            </li>
+            <li>不需要为每个餐厅创建主题，因为：
+                <ul>
+                    <li>订阅过滤器可以基于消息属性实现相同的筛选功能</li>
+                    <li>避免创建大量主题带来的性能开销</li>
+                    <li>简化消息路由和错误处理逻辑</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <p>这个解决方案实现了: (1) 集中管理所有订单, (2) 精确的餐厅订单过滤, (3) 原子性的订单接受机制。</p>
+    </div>
+    
+    <script>
+        // Drag and drop functionality
+        const answerArea = document.getElementById('answerArea');
+        let draggedItem = null;
+        
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                e.dataTransfer.setData('text/plain', this.dataset.value);
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+                draggedItem = null;
+            });
+        });
+        
+        answerArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.style.border = '2px dashed #0078d4';
+        });
+        
+        answerArea.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            this.style.backgroundColor = '#e6f3ff';
+        });
+        
+        answerArea.addEventListener('dragleave', function() {
+            this.style.backgroundColor = '#fff';
+            this.style.border = '1px solid #ddd';
+        });
+        
+        answerArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.backgroundColor = '#fff';
+            this.style.border = '1px solid #ddd';
+            
+            if (draggedItem && this.children.length < 4) { // 允许最多3个答案项
+                const clone = draggedItem.cloneNode(true);
+                clone.classList.remove('action-item');
+                clone.classList.add('answer-item');
+                clone.style.opacity = '1';
+                
+                // 防止重复添加相同的选项
+                const existingItems = Array.from(this.querySelectorAll('.answer-item'));
+                if (!existingItems.some(item => item.dataset.value === clone.dataset.value)) {
+                    this.appendChild(clone);
+                }
+            }
+        });
+        
+        // Show answer function
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            answerArea.innerHTML = '<h3>Answer area</h3>';
+            
+            const correctAnswers = [
+                'Create a single Service Bus Namespace',
+                'Create a single Service Bus topic',
+                'Create a Service Bus Subscription for each restaurant for which a driver can receive orders'
+            ];
+            
+            correctAnswers.forEach(text => {
+                const div = document.createElement('div');
+                div.className = 'answer-item';
+                div.textContent = text;
+                answerArea.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

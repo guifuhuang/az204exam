@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Apps Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 423 HOTSPOT</h2>
+        
+        <p>You are developing several microservices to run on Azure Container Apps. External HTTP ingress traffic has been enabled for the microservices. A deployed microservice must be updated to allow users to test new features. You have the following requirements:</p>
+        <ul>
+            <li>Enable and maintain a single URL for the updated microservice to provide to test users.</li>
+            <li>Update the microservice that corresponds to the current microservice version</li>
+        </ul>
+        <p>You need to configure Azure Container Apps.</p>
+        <p>Which features should you configure? To answer, select the appropriate options in the answer area.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Feature</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="vertical-align: middle;">Single URL for test users</td>
+                    <td>
+                        <select id="q1-option1">
+                            <option value="">Select an option</option>
+                            <option value="Revision label">Revision label</option>
+                            <option value="Revision mode">Revision mode</option>
+                            <option value="Container image">Container image</option>
+                            <option value="Container registry">Container registry</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle;">Current microservice activation</td>
+                    <td>
+                        <select id="q1-option2">
+                            <option value="">Select an option</option>
+                            <option value="Revision label">Revision label</option>
+                            <option value="Revision mode">Revision mode</option>
+                            <option value="Container image">Container image</option>
+                            <option value="Container registry">Container registry</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <table>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Correct Feature</th>
+                </tr>
+                <tr>
+                    <td>Single URL for test users</td>
+                    <td><strong>Revision label</strong></td>
+                </tr>
+                <tr>
+                    <td>Current microservice activation</td>
+                    <td><strong>Container image</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>配置说明:</h4>
+            
+            <div class="note">
+                <p><strong>Azure Container Apps 版本控制机制:</strong></p>
+                <ul>
+                    <li><b>Revision label</b>: 为特定修订版创建友好URL (如: myapp--v2.trafficmanager.net)</li>
+                    <li><b>Container image</b>: 更新容器镜像会创建新的修订版并自动激活</li>
+                    <li><b>Revision mode</b>: 控制是否允许多个活动修订版(与题目无关)</li>
+                    <li><b>Container registry</b>: 镜像存储位置(非版本控制功能)</li>
+                </ul>
+            </div>
+
+            <h4>实现步骤:</h4>
+            <ol>
+                <li><strong>为测试用户创建固定URL:</strong>
+                    <pre>az containerapp revision label add \
+  --name myapp \
+  --resource-group mygroup \
+  --label v2 \
+  --revision myapp--v2</pre>
+                </li>
+                <li><strong>更新生产环境容器镜像:</strong>
+                    <pre>az containerapp update \
+  --name myapp \
+  --resource-group mygroup \
+  --image myregistry.azurecr.io/myapp:v2</pre>
+                </li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <p><strong>架构示意图:</strong></p>
+            <img src="https://learn.microsoft.com/en-us/azure/container-apps/media/revisions/revision-scenarios.png" alt="Azure Container Apps revision architecture" style="max-width:100%; border:1px solid #ddd;">
+            <p>图示说明：修订标签提供固定访问端点，容器镜像更新触发新版本部署</p>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

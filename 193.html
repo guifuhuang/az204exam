@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure AD Authentication Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .option:hover { background-color: #f0f0f0; }
+        .option.selected { background-color: #e6f2ff; border-color: #0078d4; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+        .note { font-style: italic; color: #666; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 193</h3>
+        <p class="note">Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</p>
+        <p class="note">After you answer a question in this question, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</p>
+        
+        <p>You are developing a website that will run as an Azure Web App. Users will authenticate by using their Azure Active Directory (Azure AD) credentials.</p>
+        <p>You plan to assign users one of the following permission levels for the website: admin, normal, and reader. A user's Azure AD group membership must be used to determine the permission level. You need to configure authorization.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <ul>
+            <li>Create a new Azure AD application's manifest, set value of the groupMembershipClaims option to All.</li>
+            <li>In the website, use the value of the groups claim from the JWT for the user to determine permissions.</li>
+        </ul>
+        
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)" data-value="A">A. Yes</div>
+            <div class="option" onclick="selectOption(this)" data-value="B">B. No</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">A. Yes</span></strong></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>方案有效性验证</strong>：
+                    <table>
+                        <tr>
+                            <th>需求</th>
+                            <th>方案实现</th>
+                            <th>验证结果</th>
+                        </tr>
+                        <tr>
+                            <td>基于Azure AD组分配权限</td>
+                            <td>配置groupMembershipClaims=All</td>
+                            <td>✅ 完全满足</td>
+                        </tr>
+                        <tr>
+                            <td>三种权限级别(admin/normal/reader)</td>
+                            <td>解析JWT中的groups声明</td>
+                            <td>✅ 完全满足</td>
+                        </tr>
+                        <tr>
+                            <td>自动权限映射</td>
+                            <td>代码中实现组-角色映射</td>
+                            <td>✅ 需要额外开发</td>
+                        </tr>
+                    </table>
+                </li>
+                <li><strong>技术实现细节</strong>：
+                    <pre>
+// Azure AD应用清单配置示例
+{
+  "groupMembershipClaims": "All",
+  "optionalClaims": {
+    "idToken": [
+      {
+        "name": "groups",
+        "source": null,
+        "essential": false,
+        "additionalProperties": []
+      }
+    ]
+  }
+}
+
+// ASP.NET Core 授权策略配置示例
+services.AddAuthorization(options => {
+    options.AddPolicy("AdminOnly", policy => 
+        policy.RequireClaim("groups", "admin-group-id"));
+    options.AddPolicy("NormalUser", policy => 
+        policy.RequireClaim("groups", "normal-group-id"));
+});</pre>
+                </li>
+                <li><strong>实现流程</strong>：
+                    <ul>
+                        <li>1. 在Azure AD中创建三个安全组(Admin/Normal/Reader)</li>
+                        <li>2. 配置应用清单启用组声明</li>
+                        <li>3. 在代码中映射组ID到权限级别</li>
+                        <li>4. 使用[Authorize(Policy = "AdminOnly")]等特性保护端点</li>
+                    </ul>
+                </li>
+                <li><strong>注意事项</strong>：
+                    <ul>
+                        <li>需处理组声明超限问题(超过150组时需配置可选声明)</li>
+                        <li>生产环境应使用组Object ID而非显示名称</li>
+                        <li>考虑实现组缓存机制提高性能</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>完整方案架构：</strong></p>
+            <pre>
++---------------------+       +---------------------+       +---------------------+
+|   Azure AD          |       |   Azure Web App     |       |   Client Browser    |
+|   Security Groups   |-----> |   JWT with Groups   |-----> |   Role-Based UI     |
+|   (Admin/Normal/    |       |   Claims            |       |   Rendering         |
+|   Reader)           |       |   Authorization     |       |                     |
++---------------------+       |   Policies          |       +---------------------+
+                              +---------------------+</pre>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element) {
+            // 移除之前的选择
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            element.classList.add('selected');
+            selectedOption = element.getAttribute('data-value');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 如果有选择，显示用户的选择
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：${selectedOption}</strong>`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Apps CLI Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .cli-command {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            margin: 15px 0;
+        }
+        .command-part {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            min-width: 120px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-left: 3px solid #4caf50;
+        }
+        .incorrect {
+            background-color: #ffebee;
+            padding: 10px;
+            border-left: 3px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 424 HOTSPOT</h2>
+        
+        <p>You are developing a microservices-based application that uses Azure Container Apps. The application consists of several containerized services that handle tasks, such as processing orders, managing inventory, and generating reports.</p>
+        
+        <p>You must secure the container apps. All apps must:</p>
+        <ul>
+            <li>Reside in the same virtual network</li>
+            <li>Share the same Dapr configuration</li>
+            <li>Share the same logging location</li>
+            <li>Support configuration of memory and compute resources</li>
+        </ul>
+        
+        <p>You need to configure the Azure Container App.</p>
+        <p>How should you complete the CLI command? To answer, select the appropriate options in the answer area.</p>
+        
+        <div class="cli-command">
+            <span class="command-part">az containerapp</span>
+            <select id="command-part1">
+                <option value="">---select---</option>
+                <option value="env">env</option>
+                <option value="create">create</option>
+                <option value="add-on">add-on</option>
+            </select>
+            <select id="command-part2">
+                <option value="">---select---</option>
+                <option value="env">env</option>
+                <option value="create">create</option>
+                <option value="add-on">add-on</option>
+            </select>
+            <span class="command-part">--n MyContainerApp -g myresourcegroup --location eastus2</span>
+            
+            <select id="command-part3">
+                <option value="">---select---</option>
+                <option value="--enable-mtls">--enable-mtls</option>
+                <option value="--internal-only">--internal-only</option>
+                <option value="--enable-workload-profiles">--enable-workload-profiles</option>
+            </select>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <div class="cli-command">
+                <span class="command-part">az containerapp</span>
+                <span class="command-part" style="color:#107C10">env</span>
+                <span class="command-part" style="color:#107C10">add-on</span>
+                <span class="command-part">--n MyContainerApp -g myresourcegroup --location eastus2</span>
+                <span class="command-part" style="color:#107C10">--enable-workload-profiles</span>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h4>配置说明:</h4>
+            
+            <div class="note">
+                <p><strong>关键参数解析:</strong></p>
+                <ul>
+                    <li><b>env add-on</b>: 配置容器应用环境的附加功能（Dapr/网络/日志等）</li>
+                    <li><b>--enable-workload-profiles</b>: 启用工作负载配置文件，支持内存和计算资源配置</li>
+                    <li><b>--internal-only</b>: 仅适用于VNet内部访问(非本题核心需求)</li>
+                    <li><b>--enable-mtls</b>: 启用mTLS认证(高级安全需求)</li>
+                </ul>
+            </div>
+
+            <h4>完整解决方案:</h4>
+            <ol>
+                <li><strong>创建基础环境:</strong>
+                    <pre>az containerapp env create \
+  --name MyContainerAppEnv \
+  --resource-group myresourcegroup \
+  --location eastus2</pre>
+                </li>
+                <li><strong>配置环境附加功能:</strong>
+                    <pre>az containerapp env add-on set \
+  --name MyContainerAppEnv \
+  --resource-group myresourcegroup \
+  --enable-workload-profiles \
+  --dapr-enable</pre>
+                </li>
+                <li><strong>部署应用:</strong>
+                    <pre>az containerapp create \
+  --name MyContainerApp \
+  --resource-group myresourcegroup \
+  --environment MyContainerAppEnv \
+  --image myregistry.azurecr.io/myapp:latest \
+  --workload-profile-name my-profile \
+  --cpu 2 \
+  --memory 4Gi</pre>
+                </li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <p><strong>架构验证要点:</strong></p>
+            <ul>
+                <li>通过<code>az containerapp env show</code>验证VNet集成状态</li>
+                <li>使用<code>az containerapp env dapr show</code>检查Dapr配置</li>
+                <li>通过Azure门户查看环境级日志配置</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

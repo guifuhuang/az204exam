@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Messaging Solution</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 245</h3>
+        <p>You develop Azure solutions.</p>
+        <p>A .NET application needs to receive a message each time an Azure virtual machine finishes processing data. The messages must NOT persist after being processed by the receiving application.</p>
+        <p>You need to implement the .NET object that will receive the messages.</p>
+        <p>Which object should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. QueueClient</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. SubscriptionClient</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. TopicClient</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. CloudQueueClient</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">A. QueueClient</span></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>关键需求分析</strong>：
+                    <ul>
+                        <li>实时接收VM处理完成通知</li>
+                        <li>消息处理后不持久化（瞬时消息）</li>
+                        <li>.NET应用作为消息消费者</li>
+                    </ul>
+                </li>
+                
+                <li><strong>QueueClient的优势</strong>：
+                    <pre>// 示例代码（2025 SDK）
+var client = new QueueClient(connectionString, queueName, 
+    ReceiveMode.ReceiveAndDelete); // 关键配置</pre>
+                    <ul>
+                        <li>支持<code>ReceiveAndDelete</code>模式，消息被读取后自动删除</li>
+                        <li>专为点对点瞬时通信设计</li>
+                        <li>与Azure VM服务无缝集成</li>
+                    </ul>
+                </li>
+                
+                <li><strong>错误选项排除</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td>SubscriptionClient</td>
+                            <td>用于发布-订阅模式，消息会持久化</td>
+                        </tr>
+                        <tr>
+                            <td>TopicClient</td>
+                            <td>消息生产者组件，不符合接收需求</td>
+                        </tr>
+                        <tr>
+                            <td>CloudQueueClient</td>
+                            <td>旧版存储队列客户端，不支持实时通知</td>
+                        </tr>
+                    </table>
+                </li>
+            </ol>
+            
+            <p><strong>实现方案架构：</strong></p>
+            <pre>
+Azure VM → 发送处理完成事件 → Service Bus队列
+       ↓
+.NET应用(QueueClient) → 瞬时消费消息 → 触发后续操作</pre>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：</strong> ${selectedOption.value}`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

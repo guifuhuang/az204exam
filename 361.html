@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Storage Immutability Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .option { margin: 10px 0; padding: 10px; background: #eee; border-radius: 5px; }
+        input[type="checkbox"] { margin-right: 10px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 361</h3>
+        <p>You are developing an application to store business-critical data in Azure Blob storage. The application must meet the following requirements:</p>
+        <ul>
+            <li>Data must not be modified or deleted for a user-specified interval.</li>
+            <li>Data must be protected from overwrites and deletes.</li>
+            <li>Data must be written once and allowed to be read many times.</li>
+        </ul>
+        <p>You need to protect the data in the Azure Blob storage account.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="option">
+            <input type="checkbox" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Enable version-level immutability support for the storage account.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionB" name="answer" value="B">
+            <label for="optionB">B. Create an account shared-access signature (SAS).</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionC" name="answer" value="C">
+            <label for="optionC">C. Enable point-in-time restore for containers in the storage account.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionD" name="answer" value="D">
+            <label for="optionD">D. Create a service shared-access signature (SAS).</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionE" name="answer" value="E">
+            <label for="optionE">E. Enable the blob change feed for the storage account.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionF" name="answer" value="F">
+            <label for="optionF">F. Configure a time-based retention policy for the storage account.</label>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">A. Enable version-level immutability support for the storage account</span> 和 <span class="correct">F. Configure a time-based retention policy for the storage account</span></p>
+            
+            <h3>详细解析：</h3>
+            <ol>
+                <li><strong>不可变存储的核心要求</strong>
+                    <ul>
+                        <li><strong>WORM模型</strong>：Write Once Read Many (题目明确要求)</li>
+                        <li><strong>时间控制</strong>：用户可指定保留期限</li>
+                        <li><strong>防篡改</strong>：防止覆盖和删除</li>
+                    </ul>
+                </li>
+                
+                <li><strong>正确选项分析</strong>
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>作用</th>
+                            <th>是否符合要求</th>
+                        </tr>
+                        <tr>
+                            <td class="correct">A. 版本级不可变性</td>
+                            <td>在blob版本级别实施不可变策略</td>
+                            <td>完全符合（防止覆盖/删除）</td>
+                        </tr>
+                        <tr>
+                            <td class="correct">F. 基于时间的保留策略</td>
+                            <td>设置用户指定的保留期限</td>
+                            <td>完全符合（时间控制）</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>错误选项排除原因</strong>
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td>B/D. SAS令牌</td>
+                            <td>仅控制访问权限，无法防止数据修改</td>
+                        </tr>
+                        <tr>
+                            <td>C. 时间点恢复</td>
+                            <td>用于意外删除后的恢复，不提供写入保护</td>
+                        </tr>
+                        <tr>
+                            <td>E. 更改源</td>
+                            <td>仅记录变更历史，不保护数据</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>配置示例</strong>
+                    <pre># 启用版本级不可变性
+az storage account blob-service-properties update \
+  --account-name mystorage \
+  --enable-versioning true
+
+# 配置时间保留策略（30天）
+az storage container immutability-policy create \
+  --account-name mystorage \
+  --container-name mycontainer \
+  --period 30 \
+  --protected-mode true</pre>
+                </li>
+                
+                <li><strong>合规性说明</strong>
+                    <p>此方案满足SEC 17a-4(f)、CFTC 1.31(d)等金融合规要求</p>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview" target="_blank">不可变存储文档</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-policy-configure-version-scope" target="_blank">版本级策略配置</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
+            if (checkboxes.length > 0) {
+                const userSelectionsDiv = document.createElement('div');
+                let selectedValues = [];
+                checkboxes.forEach(checkbox => {
+                    selectedValues.push(checkbox.value);
+                });
+                userSelectionsDiv.innerHTML = `<p><strong>您的选择：</strong> ${selectedValues.join(', ')}</p>`;
+                document.getElementById('answer').prepend(userSelectionsDiv);
+            }
+        }
+    </script>
+</body>
+</html>

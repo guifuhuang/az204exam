@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Migration Design</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 318</h2>
+        <p>Your company purchases an Azure subscription and plans to migrate several on-premises virtual machines to Azure. You need to design the infrastructure required for the Azure virtual machines solution.</p>
+        <p>What should you include in the design? (Select all that apply)</p>
+        
+        <div class="options">
+            <label class="option">
+                <input type="radio" name="answer" value="A"> A. the number of Azure Storage accounts
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="B"> B. the settings of the Azure virtual networks
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="C"> C. the size of the virtual machines
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="D"> D. the number of Azure regions
+            </label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">C. the size of the virtual machines</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            <p><strong>为什么选择C:</strong></p>
+            <ul>
+                <li>根据搜索结果[1][6][7]，VM大小是迁移评估的核心要素：
+                    <ul>
+                        <li>Azure Migrate评估工具会基于CPU/内存使用率推荐VM尺寸</li>
+                        <li>直接影响计算性能和成本优化</li>
+                        <li>必须匹配本地工作负载需求</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>其他选项为什么不正确:</strong></p>
+            <ul>
+                <li><strong>A. 存储账户数量</strong>：
+                    <ul>
+                        <li>现代架构使用托管磁盘，存储账户由平台自动管理</li>
+                    </ul>
+                </li>
+                <li><strong>B. 虚拟网络设置</strong>：
+                    <ul>
+                        <li>虽然是重要组件，但题目明确要求"infrastructure required for VMs"</li>
+                        <li>网络属于共享平台服务，非VM专属配置</li>
+                    </ul>
+                </li>
+                <li><strong>D. 区域数量</strong>：
+                    <ul>
+                        <li>初始迁移通常只需单区域</li>
+                        <li>多区域属于高可用性设计，非基本需求</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>关键设计流程:</strong></p>
+            <ol>
+                <li>使用Azure Migrate评估本地VM性能数据</li>
+                <li>根据CPU/内存使用率确定目标VM尺寸</li>
+                <li>选择磁盘类型（Standard HDD/Premium SSD）</li>
+                <li>验证Azure订阅配额是否支持所选VM系列</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.querySelector('input[value="C"]').checked = true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Practice Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 85</h3>
+        <p>You are developing an application that uses Azure Blob storage.</p>
+        <p>The application must read the transaction logs of all the changes that occur to the blobs and the blob metadata in the storage account for auditing purposes. The changes must be in the order in which they occurred, include only create, update, delete, and copy operations and be retained for compliance reasons.</p>
+        <p>You need to process the transaction logs asynchronously.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Process all Azure Blob storage events by using Azure Event Grid with a subscriber Azure Function app.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. Enable the change feed on the storage account and process all changes for available events.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. Process all Azure Storage Analytics logs for successful blob events.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Use the Azure Monitor HTTP Data Collector API and scan the request body for successful blob events.</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">View Answer</button>
+        
+        <div id="answer" class="answer">
+            <p><span class="correct">Correct Answer: B</span></p>
+            <p><strong>Explanation:</strong></p>
+            <p>Change feed support in Azure Blob Storage provides transaction logs of all the changes that occur to the blobs and the blob metadata in your storage account. The change feed provides ordered, guaranteed, durable, immutable, read-only log of these changes. Client applications can read these logs at any time, either in streaming or in batch mode. The change feed enables you to build efficient and scalable solutions that process change events that occur in your Blob Storage account at a low cost.</p>
+            <p>Reference: <a href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-change-feed" target="_blank">Azure Blob Storage change feed documentation</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+                this.textContent = 'Hide Answer';
+            } else {
+                answerDiv.style.display = 'none';
+                this.textContent = 'View Answer';
+            }
+        });
+    </script>
+</body>
+</html>

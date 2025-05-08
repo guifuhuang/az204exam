@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Functions Configuration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .option:hover { background-color: #f0f0f0; }
+        .option.selected { background-color: #e6f2ff; border-color: #0078d4; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 144</h3>
+        <p>You develop a serverless application using several Azure Functions. These functions connect to data from within the code.</p>
+        <p>You want to configure tracing for an Azure Function App project.</p>
+        <p>You need to change configuration settings in the host.json file.</p>
+        <p>Which tool should you use?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)" data-value="A">A. Azure portal</div>
+            <div class="option" onclick="selectOption(this)" data-value="B">B. Azure PowerShell</div>
+            <div class="option" onclick="selectOption(this)" data-value="C">C. Azure Functions Core Tools (Azure CLI)</div>
+            <div class="option" onclick="selectOption(this)" data-value="D">D. Visual Studio</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">D. Visual Studio</span></strong></p>
+            
+            <p><strong>说明：</strong></p>
+            <ol>
+                <li><strong>host.json 文件性质</strong>：
+                    <ul>
+                        <li>host.json 是本地开发配置文件</li>
+                        <li>需要直接编辑文件内容</li>
+                        <li>不属于Azure资源管理器配置</li>
+                    </ul>
+                </li>
+                <li><strong>各选项分析</strong>：
+                    <table border="1" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <th>选项</th>
+                            <th>适用性</th>
+                            <th>原因</th>
+                        </tr>
+                        <tr>
+                            <td>A. Azure门户</td>
+                            <td>❌ 不适用</td>
+                            <td>门户只能修改应用设置(app settings)，不能直接编辑host.json</td>
+                        </tr>
+                        <tr>
+                            <td>B. Azure PowerShell</td>
+                            <td>❌ 不适用</td>
+                            <td>主要用于管理Azure资源，不适合编辑本地配置文件</td>
+                        </tr>
+                        <tr>
+                            <td>C. Azure Functions Core Tools</td>
+                            <td>⚠️ 部分适用</td>
+                            <td>可以查看配置但不能直接编辑host.json文件</td>
+                        </tr>
+                        <tr>
+                            <td>D. Visual Studio</td>
+                            <td>✅ 最佳选择</td>
+                            <td>可直接编辑项目中的host.json文件，支持智能提示和验证</td>
+                        </tr>
+                    </table>
+                </li>
+                <li><strong>最佳实践</strong>：
+                    <ul>
+                        <li>在Visual Studio中直接编辑host.json</li>
+                        <li>通过项目部署自动更新配置</li>
+                        <li>对于生产环境，应通过部署管道管理配置</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>host.json配置示例：</strong></p>
+            <pre style="background: #333; color: white; padding: 10px; border-radius: 4px;">
+{
+  "version": "2.0",
+  "logging": {
+    "fileLoggingMode": "always",
+    "logLevel": {
+      "default": "Information",
+      "Function": "Debug",
+      "Host": "Error",
+      "Microsoft": "Warning"
+    },
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "maxTelemetryItemsPerSecond": 5
+      }
+    }
+  }
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element) {
+            // 移除之前的选择
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            element.classList.add('selected');
+            selectedOption = element.getAttribute('data-value');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 如果有选择，显示用户的选择
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：${selectedOption}</strong>`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

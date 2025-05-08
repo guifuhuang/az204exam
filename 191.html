@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Cosmos DB Partition Key Selection</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .option { margin: 10px 0; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 191</h3>
+        <p>You are developing an Azure Cosmos DB solution by using the Azure Cosmos DB SQL API. The data includes millions of documents. Each document may contain hundreds of properties.</p>
+        <p>The properties of the documents do not contain distinct values for partitioning. Azure Cosmos DB must scale individual containers in the database to meet the performance needs of the application by spreading the workload evenly across all partitions over time.</p>
+        <p>You need to select a partition key.</p>
+        <p>Which two partition keys can you use? Each correct answer presents a complete solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA">
+                <label for="optionA"><strong>A.</strong> a concatenation of multiple property values with a random suffix appended</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB">
+                <label for="optionB"><strong>B.</strong> a single property value that does not appear frequently in the documents</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC">
+                <label for="optionC"><strong>C.</strong> a hash suffix appended to a property value</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD">
+                <label for="optionD"><strong>D.</strong> a value containing the collection name</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE">
+                <label for="optionE"><strong>E.</strong> a single property value that appears frequently in the documents</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <ul>
+                <li><span class="correct">A</span> - 连接多个属性值并附加随机后缀</li>
+                <li><span class="correct">C</span> - 向属性值附加哈希后缀</li>
+            </ul>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>选项A</strong>：
+                    <ul>
+                        <li>当文档属性没有明显分区值时，连接多个属性并添加随机后缀可以创建均匀分布的分区键</li>
+                        <li>这种方法可以避免"热分区"问题，确保工作负载均匀分布</li>
+                        <li>随机后缀增加了键的唯一性和分布性</li>
+                    </ul>
+                </li>
+                
+                <li><strong>选项C</strong>：
+                    <ul>
+                        <li>哈希算法可以将相似的值转换为均匀分布的分区键</li>
+                        <li>即使原始属性值相似或重复，哈希后缀也能创建良好的分布</li>
+                        <li>这是Azure Cosmos DB推荐的解决非唯一分区键的方法</li>
+                    </ul>
+                </li>
+                
+                <li><strong>错误选项分析</strong>：
+                    <table>
+                        <tr>
+                            <th>选项</th>
+                            <th>问题</th>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">B</td>
+                            <td>不常出现的属性值会导致分区数量不足，无法实现均匀分布</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">D</td>
+                            <td>集合名称对所有文档相同，会导致所有数据进入同一分区</td>
+                        </tr>
+                        <tr>
+                            <td class="incorrect">E</td>
+                            <td>频繁出现的属性值会导致"热分区"问题</td>
+                        </tr>
+                    </table>
+                </li>
+                
+                <li><strong>最佳实践</strong>：
+                    <pre>// 创建具有合成分区键的文档示例
+{
+    "id": "12345",
+    "properties": {
+        "prop1": "value1",
+        "prop2": "value2"
+    },
+    // 合成分区键：连接属性值+随机后缀
+    "partitionKey": "value1_value2_" + Math.random().toString(36).substring(2, 8)
+}</pre>
+                    <p>或使用哈希函数：</p>
+                    <pre>// 使用哈希函数创建分区键
+const crypto = require('crypto');
+function getPartitionKey(value) {
+    return value + "_" + 
+           crypto.createHash('sha256').update(value).digest('hex').substring(0, 8);
+}</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>Azure Cosmos DB的<a href="https://learn.microsoft.com/en-us/azure/cosmos-db/partitioning-overview" target="_blank">分区和缩放文档</a>详细说明了分区键选择策略</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const selectedOptions = [];
+            if (document.getElementById('optionA').checked) selectedOptions.push('A');
+            if (document.getElementById('optionB').checked) selectedOptions.push('B');
+            if (document.getElementById('optionC').checked) selectedOptions.push('C');
+            if (document.getElementById('optionD').checked) selectedOptions.push('D');
+            if (document.getElementById('optionE').checked) selectedOptions.push('E');
+            
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <p><strong>您的选择：</strong> ${selectedOptions.length > 0 ? selectedOptions.join(', ') : '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure ARM Template Validation Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .tools-box, .requirements-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            width: 50%;
+            min-height: 200px;
+        }
+        .tools-box {
+            background-color: #e6f2ff;
+        }
+        .requirements-box {
+            background-color: #f0f0f0;
+        }
+        .draggable-tool, .requirement {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .requirement {
+            background-color: #f8f8f8;
+        }
+        .dropzone {
+            min-height: 50px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 344 DRAG DROP</h2>
+        <p>You are authoring a set of nested Azure Resource Manager templates to deploy multiple Azure resources. The templates must be tested before deployment and must follow recommended practices.</p>
+        <p>You need to validate and test the templates before deployment.</p>
+        <p>Which tools should you use? To answer, drag the appropriate tools to the correct requirements. Each tool may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="drag-container">
+            <div class="tools-box" id="tools">
+                <h3>Tools</h3>
+                <div class="draggable-tool" draggable="true" data-tool="Parameter file">Parameter file</div>
+                <div class="draggable-tool" draggable="true" data-tool="Template function">Template function</div>
+                <div class="draggable-tool" draggable="true" data-tool="Azure Resource Manager test toolkit">Azure Resource Manager test toolkit</div>
+                <div class="draggable-tool" draggable="true" data-tool="User-defined function">User-defined function</div>
+                <div class="draggable-tool" draggable="true" data-tool="What-if operation">What-if operation</div>
+                <div class="draggable-tool" draggable="true" data-tool="Azure Deployment Manager">Azure Deployment Manager</div>
+            </div>
+            
+            <div class="requirements-box">
+                <h3>Requirements</h3>
+                <div class="requirement">
+                    Determine whether the templates follow recommended practices.
+                    <div class="dropzone" data-requirement="recommended-practices"></div>
+                </div>
+                <div class="requirement">
+                    Test and validate changes that templates will make to the environment.
+                    <div class="dropzone" data-requirement="test-validate"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">Determine whether the templates follow recommended practices: <strong>Azure Resource Manager test toolkit</strong></p>
+        <p class="correct-answer">Test and validate changes that templates will make to the environment: <strong>What-if operation</strong></p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            
+            <p><strong>为什么选择"Azure Resource Manager test toolkit"用于验证最佳实践:</strong></p>
+            <ul>
+                <li>ARM测试工具包专门设计用于验证模板是否符合Microsoft推荐的最佳实践</li>
+                <li>可以检查模板结构、参数使用、资源属性配置等方面的合规性</li>
+                <li>其他工具：
+                    <ul>
+                        <li><span class="highlight">Parameter file</span>：用于传递参数值而非验证</li>
+                        <li><span class="highlight">Template function</span>：用于模板内部逻辑而非验证</li>
+                        <li><span class="highlight">User-defined function</span>：用于自定义模板逻辑</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>为什么选择"What-if operation"用于测试和验证环境变更:</strong></p>
+            <ul>
+                <li>What-if操作可以模拟部署并显示将会发生的变更而不实际执行</li>
+                <li>能够验证资源创建/修改/删除操作对现有环境的影响</li>
+                <li>其他工具：
+                    <ul>
+                        <li><span class="highlight">Azure Deployment Manager</span>：用于编排多阶段部署</li>
+                        <li><span class="highlight">Parameter file</span>：不提供验证功能</li>
+                        <li><span class="highlight">Template function</span>：不涉及环境验证</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>工具使用场景总结:</strong></p>
+            <table border="1" cellpadding="5">
+                <tr>
+                    <th>工具</th>
+                    <th>主要用途</th>
+                </tr>
+                <tr>
+                    <td>Azure Resource Manager test toolkit</td>
+                    <td>验证模板是否符合最佳实践和规范</td>
+                </tr>
+                <tr>
+                    <td>What-if operation</td>
+                    <td>模拟部署并预览环境变更</td>
+                </tr>
+                <tr>
+                    <td>Parameter file</td>
+                    <td>为模板部署提供参数值</td>
+                </tr>
+                <tr>
+                    <td>Template function</td>
+                    <td>模板内部逻辑和值计算</td>
+                </tr>
+                <tr>
+                    <td>User-defined function</td>
+                    <td>自定义模板逻辑函数</td>
+                </tr>
+                <tr>
+                    <td>Azure Deployment Manager</td>
+                    <td>复杂部署场景的编排</td>
+                </tr>
+            </table>
+            
+            <p><strong>验证流程建议:</strong></p>
+            <ol>
+                <li>首先使用<strong>ARM测试工具包</strong>验证模板结构</li>
+                <li>然后使用<strong>What-if操作</strong>模拟环境变更</li>
+                <li>最后使用<strong>Azure Deployment Manager</strong>编排多阶段部署（如需要）</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Drag and drop functionality
+        document.querySelectorAll('.draggable-tool').forEach(item => {
+            item.addEventListener('dragstart', dragStart);
+        });
+        
+        document.querySelectorAll('.dropzone').forEach(zone => {
+            zone.addEventListener('dragover', dragOver);
+            zone.addEventListener('drop', drop);
+        });
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.tool);
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        function drop(e) {
+            e.preventDefault();
+            const tool = e.dataTransfer.getData('text/plain');
+            const toolElement = document.querySelector(`.draggable-tool[data-tool="${tool}"]`);
+            
+            // Clear previous content
+            e.target.innerHTML = '';
+            
+            // Create a clone of the tool element
+            const clone = toolElement.cloneNode(true);
+            clone.setAttribute('draggable', 'false');
+            clone.style.cursor = 'default';
+            e.target.appendChild(clone);
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Clear all dropzones
+            document.querySelectorAll('.dropzone').forEach(zone => {
+                zone.innerHTML = '';
+            });
+            
+            // Set correct answers
+            const recommendedZone = document.querySelector('.dropzone[data-requirement="recommended-practices"]');
+            recommendedZone.innerHTML = '<div class="draggable-tool" draggable="false" data-tool="Azure Resource Manager test toolkit" style="cursor: default;">Azure Resource Manager test toolkit</div>';
+            
+            const testZone = document.querySelector('.dropzone[data-requirement="test-validate"]');
+            testZone.innerHTML = '<div class="draggable-tool" draggable="false" data-tool="What-if operation" style="cursor: default;">What-if operation</div>';
+        }
+    </script>
+</body>
+</html>

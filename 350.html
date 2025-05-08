@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Service Bus with Event Grid Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .configuration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .configuration-table th {
+            text-align: left;
+            padding: 10px;
+            background-color: #f3f2f1;
+        }
+        .configuration-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        select {
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 350 HOTSPOT</h2>
+        <p>You are developing a solution that uses several Azure Service Bus queues. You create an Azure Event Grid subscription for the Azure Service Bus namespace. You use Azure Functions as subscribers to process the messages.</p>
+        <p>You need to emit events to Azure Event Grid from the queues. You must use principal of least privilege and minimize costs.</p>
+        <p>Which Azure Service Bus values should you use? To answer, select the appropriate options in the answer area.</p>
+        <p>Each correct selection is worth one point.</p>
+    </div>
+    
+    <table class="configuration-table">
+        <tr>
+            <th>Configuration</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Tier</td>
+            <td>
+                <select id="tier">
+                    <option value="">-- Select --</option>
+                    <option value="Basic">Basic</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Premium">Premium</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Access control (IAM) level</td>
+            <td>
+                <select id="accessControl">
+                    <option value="">-- Select --</option>
+                    <option value="Contributor">Contributor</option>
+                    <option value="Data Receiver">Data Receiver</option>
+                    <option value="Data Sender">Data Sender</option>
+                    <option value="Data Owner">Data Owner</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案:</strong></p>
+        <ul>
+            <li><strong>Tier:</strong> Standard</li>
+            <li><strong>Access control (IAM) level:</strong> Data Sender</li>
+        </ul>
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>Standard Tier</strong>:
+                <ul>
+                    <li>Basic 层级不支持与 Event Grid 集成</li>
+                    <li>Standard 层级提供队列功能且支持 Event Grid 集成</li>
+                    <li>Premium 层级虽然支持但成本更高，不符合最小化成本要求</li>
+                </ul>
+            </li>
+            <li><strong>Data Sender 权限</strong>:
+                <ul>
+                    <li>遵循最小权限原则，只需发送数据权限</li>
+                    <li>Contributor 权限过大，包含不必要的管理权限</li>
+                    <li>Data Receiver 是接收数据的权限，方向相反</li>
+                    <li>Data Owner 权限也过大，不符合最小权限要求</li>
+                </ul>
+            </li>
+        </ol>
+        <p>此配置组合既满足功能需求（Event Grid 集成），又遵循最小权限原则并实现成本最小化。</p>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+            // Auto-select the correct answers
+            document.getElementById("tier").value = "Standard";
+            document.getElementById("accessControl").value = "Data Sender";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AKS Cluster Deployment Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .command-segments {
+            width: 40%;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 5px;
+        }
+        .answer-area {
+            width: 60%;
+            padding: 10px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        .command {
+            background-color: white;
+            border: 2px solid #0078d4;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px;
+            cursor: move;
+            text-align: center;
+        }
+        .arrow-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .arrow {
+            width: 40px;
+            height: 40px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .drop-zone {
+            min-height: 100px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 126 DRAG DROP</h2>
+        <p>You are deploying an Azure Kubernetes Services (AKS) cluster that will use multiple containers.</p>
+        <p>You need to create the cluster and verify that the services for the containers are configured correctly and available.</p>
+        <p>Which four commands should you use to develop the solution? To answer, move the appropriate command segments from the list of command segments to the answer area and arrange them in the correct order.</p>
+        
+        <div class="container">
+            <div class="command-segments" id="commandSegments">
+                <h3>Command segments</h3>
+                <div class="command" draggable="true" id="az-group-create">az group create</div>
+                <div class="command" draggable="true" id="az-appservice-plan-create">az appservice plan create</div>
+                <div class="command" draggable="true" id="az-aks-create">az aks create</div>
+                <div class="command" draggable="true" id="az-aks-get-credentials">az aks get-credentials</div>
+                <div class="command" draggable="true" id="kubectl-apply">kubectl apply</div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <h3>Answer Area</h3>
+                <div class="arrow-container">
+                    <div class="arrow">⇦⇦</div>
+                    <div class="arrow">⇩⇩</div>
+                </div>
+                <div class="drop-zone" id="leftDropZone"></div>
+                <div class="drop-zone" id="rightDropZone"></div>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><span class="correct">正确答案:</span></p>
+            <ol>
+                <li>az group create</li>
+                <li>az aks create</li>
+                <li>az aks get-credentials</li>
+                <li>kubectl apply</li>
+            </ol>
+            <p><strong>说明:</strong></p>
+            <p>创建AKS集群的正确命令顺序应该是：</p>
+            <ol>
+                <li>首先创建资源组 (az group create)</li>
+                <li>然后创建AKS集群 (az aks create)</li>
+                <li>获取集群凭证 (az aks get-credentials)</li>
+                <li>最后部署应用 (kubectl apply)</li>
+            </ol>
+            <p>注意：图片中显示的"az appservice plan create"命令不适用于AKS集群部署，这是用于Azure App Service的命令。</p>
+            <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough" target="_blank">AKS快速入门文档</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        const commands = document.querySelectorAll('.command');
+        const leftDropZone = document.getElementById('leftDropZone');
+        const rightDropZone = document.getElementById('rightDropZone');
+        
+        commands.forEach(command => {
+            command.addEventListener('dragstart', () => {
+                command.classList.add('dragging');
+            });
+            
+            command.addEventListener('dragend', () => {
+                command.classList.remove('dragging');
+            });
+        });
+        
+        [leftDropZone, rightDropZone].forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('hover');
+            });
+            
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hover');
+            });
+            
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('hover');
+                
+                const command = document.querySelector('.dragging');
+                if (command) {
+                    zone.appendChild(command);
+                }
+            });
+        });
+        
+        // Show answer button
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = answerSection.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

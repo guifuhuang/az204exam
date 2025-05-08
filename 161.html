@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Function App 测试题 161</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-btn:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4CAF50;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure Function App 测试题</h1>
+    
+    <p>You are developing an Azure Function App by using Visual Studio. The app will process orders input by an Azure Web App. The web app places the order information into Azure Queue Storage. You need to review the Azure Function App code shown below.</p>
+    
+    <div class="code-block">
+        <h3>图一</h3>
+        <pre>
+public static class OrderProcessor
+{
+    [FunctionName("Incoming_orders")]
+    public static void Run([ServiceBusTrigger("incoming-orders", Connection = "ServiceBusConnectionString")] string myQueueItem, [Table("Orders")] ICollector&lt;Order&gt; tableBinding, ILogger log)
+    {
+        log.LogInformation($"Processing order: {myQueueItem}");
+        var order = JsonConvert.DeserializeObject&lt;Order&gt;(myQueueItem);
+        order.ProcessingTime = DateTime.UtcNow;
+        order.ExpirationTime = order.ProcessingTime.AddMinutes(5);
+        tableBinding.Add(order);
+        log.LogInformation($"Order processed: {myQueueItem}");
+    }
+
+    public static void ProcessOrders([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, ILogger log)
+    {
+        log.LogInformation($"Processing orders at: {myTimer.ScheduleStatus.Last}");
+        var orders = tableBinding.ToList();
+        foreach (var order in orders)
+        {
+            // Process the order
+            order.Processed = true;
+            tableBinding.Replace(order);
+            log.LogInformation($"Order processed: {order.OrderId}");
+        }
+    }
+}</pre>
+    </div>
+
+    <div>
+        <h3>图二</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>描述</th>
+                    <th>选择</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The code will log the time that the order was processed from the queue.</td>
+                    <td class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q1-yes" name="q1" value="yes">
+                            <label for="q1-yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q1-no" name="q1" value="no">
+                            <label for="q1-no">No</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>When the ProcessOrders function fails, the function will retry up to five times for a given order, including the first try.</td>
+                    <td class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q2-yes" name="q2" value="yes">
+                            <label for="q2-yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q2-no" name="q2" value="no">
+                            <label for="q2-no">No</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>When there are multiple orders in the queue, a batch of orders will be retrieved from the queue and the ProcessOrders function will run multiple instances concurrently to process the orders.</td>
+                    <td class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q3-yes" name="q3" value="yes">
+                            <label for="q3-yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q3-no" name="q3" value="no">
+                            <label for="q3-no">No</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The ProcessOrders function will output the order to an Orders table in Azure Table Storage.</td>
+                    <td class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q4-yes" name="q4" value="yes">
+                            <label for="q4-yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q4-no" name="q4" value="no">
+                            <label for="q4-no">No</label>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>答案及说明</h3>
+        <p><strong>1. The code will log the time that the order was processed from the queue.</strong></p>
+        <p>答案: <strong>No</strong></p>
+        <p>说明: 代码中记录的ProcessingTime是消息处理开始的时间，而ExpirationTime是处理开始后5分钟的过期时间。题目问的是"从队列中处理的时间"，这应该是消息从队列中取出的时间(InsertionTime)，但代码中并没有记录这个时间。</p>
+        
+        <p><strong>2. When the ProcessOrders function fails, the function will retry up to five times for a given order, including the first try.</strong></p>
+        <p>答案: <strong>Yes</strong></p>
+        <p>说明: Azure Functions的队列触发器默认会重试处理消息5次(maxDequeueCount)，包括第一次尝试。如果5次都失败，消息会被移到毒药队列(poison queue)。</p>
+        
+        <p><strong>3. When there are multiple orders in the queue, a batch of orders will be retrieved from the queue and the ProcessOrders function will run multiple instances concurrently to process the orders.</strong></p>
+        <p>答案: <strong>Yes</strong></p>
+        <p>说明: 当队列中有多个消息时，队列触发器会批量获取消息(默认16个)并并发处理。当处理中的消息减少到8个时，会再获取一批。因此每台VM上每个函数最多可同时处理24个消息。</p>
+        
+        <p><strong>4. The ProcessOrders function will output the order to an Orders table in Azure Table Storage.</strong></p>
+        <p>答案: <strong>Yes</strong></p>
+        <p>说明: ProcessOrders函数使用了tableBinding.Replace(order)操作，这会将处理后的订单更新回Azure表存储中的Orders表。</p>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

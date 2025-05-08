@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Hubs Loyalty Program Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            border: 1px solid #bbdefb;
+        }
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+        .code {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 429</h2>
+        
+        <p>You are building a loyalty program for a major snack producer. When customers buy a snack at any of 100 participating retailers the event is recorded in Azure Event Hub. Each retailer is given a unique identifier that is used as the primary identifier for the loyalty program.</p>
+        
+        <p>Retailers must be able to be added or removed at any time. Retailers must only be able to record sales for themselves.</p>
+        
+        <p>You need to ensure that retailers can record sales.</p>
+        
+        <p>What should you do?</p>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="A">
+                A. Use publisher policies for retailers.
+            </label>
+        </div>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="B">
+                B. Define a namespace for each retailer
+            </label>
+        </div>
+        
+        <div class="option">
+            <label>
+                <input type="radio" name="answer" value="C">
+                C. Create a partition for each retailer.
+            </label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <p><strong>A. Use publisher policies for retailers.</strong></p>
+            
+            <div class="explanation">
+                <h4>技术说明:</h4>
+                
+                <div class="note">
+                    <p><strong>关键配置原则:</strong></p>
+                    <ul>
+                        <li>Publisher policies允许为每个零售商分配唯一的发布者标识</li>
+                        <li>可以动态添加或删除零售商而不影响系统架构</li>
+                        <li>确保每个零售商只能发布自己的销售数据</li>
+                        <li>比为每个零售商创建namespace或partition更灵活高效</li>
+                    </ul>
+                </div>
+                
+                <h4>Azure Event Hubs 发布者策略优势:</h4>
+                <table>
+                    <tr>
+                        <th>方案</th>
+                        <th>优点</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td>Publisher policies</td>
+                        <td>灵活管理，动态调整，细粒度控制</td>
+                        <td>多租户系统，频繁变更的发布者</td>
+                    </tr>
+                    <tr>
+                        <td>Namespace per retailer</td>
+                        <td>完全隔离</td>
+                        <td>需要完全隔离的独立业务单元</td>
+                    </tr>
+                    <tr>
+                        <td>Partition per retailer</td>
+                        <td>数据有序性</td>
+                        <td>需要保证顺序的单一发布者场景</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 自动选择正确答案
+            document.querySelector('input[value="A"]').checked = true;
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .requirements {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .requirements th, .requirements td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .requirements th {
+            background-color: #f2f2f2;
+            width: 50%;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .feature-desc {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 403 HOTSPOT</h2>
+        
+        <p>You deploy an ASP.NET web app to Azure App Service. You must monitor the web app by using Application Insights. You need to configure Application Insights to meet the requirements.</p>
+        
+        <table class="requirements">
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Feature</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Automatically warn you of potential performance problems and failure anomalies in the web app.</td>
+                    <td>
+                        <select id="req1">
+                            <option value="">Select an option</option>
+                            <option value="Smart Detection">Smart Detection</option>
+                            <option value="Profiler">Profiler</option>
+                            <option value="Snapshot Debugger">Snapshot Debugger</option>
+                            <option value="Multi-step test">Multi-step test</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Automatically collect the state of the source code and variables when an exception is thrown in the web app.</td>
+                    <td>
+                        <select id="req2">
+                            <option value="">Select an option</option>
+                            <option value="Snapshot Debugger">Snapshot Debugger</option>
+                            <option value="Smart Detection">Smart Detection</option>
+                            <option value="Profiler">Profiler</option>
+                            <option value="Multi-step test">Multi-step test</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Capture performance traces of the web app without negatively affecting users of the web app.</td>
+                    <td>
+                        <select id="req3">
+                            <option value="">Select an option</option>
+                            <option value="Profiler">Profiler</option>
+                            <option value="Smart Detection">Smart Detection</option>
+                            <option value="Snapshot Debugger">Snapshot Debugger</option>
+                            <option value="Multi-step test">Multi-step test</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <ol>
+            <li><strong>Smart Detection</strong> - 自动警告性能问题和故障异常</li>
+            <li><strong>Snapshot Debugger</strong> - 异常时自动收集代码和变量状态</li>
+            <li><strong>Profiler</strong> - 无影响地捕获性能跟踪</li>
+        </ol>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>1. Smart Detection (智能检测)</strong></p>
+            <div class="feature-desc">
+                - 自动识别性能异常和故障模式<br>
+                - 通过机器学习分析遥测数据<br>
+                - 主动发送警报通知潜在问题
+            </div>
+            
+            <p><strong>2. Snapshot Debugger (快照调试器)</strong></p>
+            <div class="feature-desc">
+                - 在生产环境捕获异常时的应用状态<br>
+                - 记录变量值和调用堆栈<br>
+                - 无需重现问题即可调试
+            </div>
+            
+            <p><strong>3. Profiler (分析器)</strong></p>
+            <div class="feature-desc">
+                - 低开销的性能跟踪收集<br>
+                - 采样方法最小化对用户的影响<br>
+                - 识别CPU和内存热点
+            </div>
+            
+            <p><strong>其他特性说明:</strong></p>
+            <ul>
+                <li><strong>Multi-step test</strong>: 用于复杂事务的端到端测试，不适用于自动监控</li>
+                <li><strong>Smart Debugger Profiler</strong>: 非标准功能名称</li>
+                <li><strong>Snapshot Detection</strong>: 非标准功能名称</li>
+            </ul>
+            
+            <p><strong>配置示例:</strong></p>
+            <pre>
+// 在ApplicationInsights.config中启用这些功能
+&lt;ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings"&gt;
+    &lt;TelemetryModules&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.DiagnosticsTelemetryModule, Microsoft.ApplicationInsights" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.DependencyCollector.DependencyTrackingTelemetryModule, Microsoft.ApplicationInsights.DependencyCollector" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.PerformanceCollectorModule, Microsoft.ApplicationInsights.PerfCounterCollector" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.Extensibility.Heartbeat.HeartbeatTelemetryModule, Microsoft.ApplicationInsights.Heartbeat" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.WindowsServer.DeveloperModeWithDebuggerAttachedTelemetryModule, Microsoft.ApplicationInsights.WindowsServer" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.WindowsServer.UnhandledExceptionTelemetryModule, Microsoft.ApplicationInsights.WindowsServer" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.WindowsServer.UnobservedExceptionTelemetryModule, Microsoft.ApplicationInsights.WindowsServer" /&gt;
+        &lt;Add Type="Microsoft.ApplicationInsights.SnapshotCollector.SnapshotCollectorTelemetryModule, Microsoft.ApplicationInsights.SnapshotCollector"&gt;
+            &lt;IsEnabled&gt;true&lt;/IsEnabled&gt;
+        &lt;/Add&gt;
+    &lt;/TelemetryModules&gt;
+&lt;/ApplicationInsights&gt;</pre>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

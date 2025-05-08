@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage Custom Domain Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .steps-list {
+            width: 60%;
+            padding-right: 20px;
+        }
+        .answer-area {
+            width: 40%;
+            min-height: 200px;
+            border: 2px dashed #0078D4;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f0f7ff;
+        }
+        .step-item {
+            padding: 10px;
+            margin: 8px 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .step-item.dragging {
+            opacity: 0.5;
+            border: 2px dashed #0078D4;
+        }
+        .answer-item {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            position: relative;
+        }
+        .step-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            background-color: #0078D4;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .warning {
+            background-color: #ffebee;
+            padding: 10px;
+            border-left: 3px solid #f44336;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-left: 3px solid #4caf50;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 419 DRAG DROP</h2>
+        
+        <p>You have a static website hosted in an Azure Storage account named storage1. You access the
+        website by using a URL that ends with the web.core.windows.net suffix.</p>
+        
+        <p>You plan to configure the website to be accessible through the URL www.contoso.com. The
+        website must be accessible during configuration.</p>
+        
+        <p>The contoso.com zone is hosted in Azure DNS.</p>
+        
+        <p>You need to complete the website configuration.</p>
+        
+        <p>Which four actions should you perform in sequence? To answer, move the appropriate domain
+        name configuration steps from the list of domain name configuration steps to the answer area and
+        arrange them in the correct order.</p>
+        
+        <div class="drag-container">
+            <div class="steps-list" id="stepsList">
+                <div class="step-item" draggable="true" data-step="1">
+                    <span class="step-number">1</span> Identify the local name of the escape endpoint of the website.
+                </div>
+                <div class="step-item" draggable="true" data-step="2">
+                    <span class="step-number">2</span> Create a CNAME record www.contoso.com in Azure DNS.
+                </div>
+                <div class="step-item" draggable="true" data-step="3">
+                    <span class="step-number">3</span> Verify DNS propagation using nslookup or dig.
+                </div>
+                <div class="step-item" draggable="true" data-step="4">
+                    <span class="step-number">4</span> Set the custom domain name of storage1 to www.contoso.com.
+                </div>
+                <div class="step-item" draggable="true" data-step="X">
+                    <span class="step-number">X</span> Create an A record assembly www.contoso.com in Azure DNS.
+                </div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <p style="color:#666; font-style:italic; text-align:center;">Drag steps here and arrange in correct order</p>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <div class="warning">
+            <h3>原参考答案错误修正：</h3>
+            <p>原答案第4步 "<span class="highlight">Create an A record assembly www.contoso.com in Azure DNS</span>" 是错误的：</p>
+            <ul>
+                <li>Azure存储静态网站<b>不支持A记录</b>，必须使用CNAME</li>
+                <li>"assembly"是非标准术语</li>
+                <li>缺少关键的DNS验证步骤</li>
+            </ul>
+        </div>
+        
+        <h3 class="correct-answer">正确答案:</h3>
+        <ol>
+            <li><strong>Identify</strong> the endpoint name (storage1.web.core.windows.net)</li>
+            <li><strong>Create</strong> a CNAME record: www.contoso.com → storage1.web.core.windows.net</li>
+            <li><strong>Verify</strong> DNS propagation (required but not listed in original options)</li>
+            <li><strong>Set</strong> the custom domain in storage account settings</li>
+        </ol>
+
+        <div class="correct">
+            <h4>正确配置流程说明：</h4>
+            <table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">步骤</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Azure Portal操作</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">技术要点</th>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">1. 识别终结点</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">存储账户 → 属性 → 主Web终结点</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">格式必须为: [存储账户名].web.core.windows.net</td>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">2. 创建CNAME</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">Azure DNS → 记录集 → 添加CNAME</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">
+                        <p><b>必须配置：</b></p>
+                        <p>名称: www</p>
+                        <p>别名: storage1.web.core.windows.net</p>
+                        <p>TTL: 建议300秒</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">3. 验证DNS</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">命令提示符执行:</td>
+                    <td style="padding:8px; border-bottom:1px solid #ddd;">
+                        <pre>nslookup www.contoso.com</pre>
+                        <p>应返回: storage1.web.core.windows.net</p>
+                        <p><b>注意：</b>需等待DNS传播完成</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:8px;">4. 设置自定义域</td>
+                    <td style="padding:8px;">存储账户 → 自定义域</td>
+                    <td style="padding:8px;">
+                        <p>输入: www.contoso.com</p>
+                        <p><b>重要：</b>必须勾选"使用间接CNAME验证"</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>完整Azure CLI实现:</h4>
+            <pre>
+# 1. 获取存储终结点
+ENDPOINT=$(az storage account show \
+    --name storage1 \
+    --query "primaryEndpoints.web" \
+    --output tsv | cut -d'/' -f3)
+
+# 2. 创建CNAME记录
+az network dns record-set cname set-record \
+    --resource-group MyResourceGroup \
+    --zone-name contoso.com \
+    --record-set-name www \
+    --cname $ENDPOINT \
+    --ttl 300
+
+# 3. 验证DNS (等待5分钟)
+echo "Waiting for DNS propagation..."
+sleep 300
+nslookup www.contoso.com
+
+# 4. 配置自定义域
+az storage account update \
+    --name storage1 \
+    --custom-domain www.contoso.com \
+    --use-subdomain true</pre>
+
+            <h4>常见错误排查：</h4>
+            <ul>
+                <li><b>错误1</b>: 尝试使用A记录 → Azure存储仅支持CNAME</li>
+                <li><b>错误2</b>: 跳过DNS验证 → 可能导致自定义域配置失败</li>
+                <li><b>错误3</b>: TTL值过大 → 延长DNS传播等待时间</li>
+                <li><b>错误4</b>: 未启用"使用间接CNAME验证" → 导致HTTPS证书问题</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let draggedItem = null;
+        
+        // Drag start
+        document.querySelectorAll('.step-item').forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.classList.add('dragging');
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+        });
+        
+        // Drag and drop
+        document.getElementById('answerArea').addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        
+        document.getElementById('answerArea').addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (draggedItem) {
+                if (e.target === this || e.target.className === 'answer-area') {
+                    this.appendChild(draggedItem);
+                } 
+                else if (e.target.classList.contains('answer-item')) {
+                    e.target.parentNode.insertBefore(draggedItem, e.target);
+                }
+                
+                // Update step numbers
+                const answerItems = this.querySelectorAll('.step-item');
+                answerItems.forEach((item, index) => {
+                    const number = item.querySelector('.step-number');
+                    if (number) number.textContent = index + 1;
+                });
+            }
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

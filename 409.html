@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Exif Metadata Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .answer-area {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .answer-area th, .answer-area td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-area th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .rest-api {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 409 HOTSPOT</h2>
+        
+        <p>You are developing an application to store millions of images in Azure blob storage.</p>
+        <p>The application has the following requirements:</p>
+        <ul>
+            <li>Store the Exif (exchangeable image file format) data from the image as blob metadata when the application uploads the image.</li>
+            <li>Retrieve the Exif data from the image while minimizing bandwidth and processing time.</li>
+            <li>Utilizes the REST API.</li>
+        </ul>
+        
+        <p>You need to use the image Exif data as blob metadata in the application.</p>
+        <p>Which HTTP verbs should you use? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <table class="answer-area">
+            <thead>
+                <tr>
+                    <th>Application Metadata Action</th>
+                    <th>HTTP Verb</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Store Exif data.</td>
+                    <td>
+                        <select id="storeVerb">
+                            <option value="">Select an option</option>
+                            <option value="PUT">PUT</option>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="HEAD">HEAD</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Retrieve Exif data.</td>
+                    <td>
+                        <select id="retrieveVerb">
+                            <option value="">Select an option</option>
+                            <option value="HEAD">HEAD</option>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>Store Exif data:</strong> PUT</p>
+        <p><strong>Retrieve Exif data:</strong> HEAD</p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>存储Exif数据使用PUT的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">PUT</span>是用于创建或更新资源的标准HTTP方法</li>
+                <li>在Azure Blob Storage中，PUT请求可以同时上传blob内容和元数据</li>
+                <li>示例REST API调用：
+                    <div class="rest-api">
+                        PUT https://[account].blob.core.windows.net/[container]/[blob]?comp=metadata<br>
+                        x-ms-meta-exifdata: [base64 encoded Exif data]
+                    </div>
+                </li>
+                <li>这种方法在一次请求中同时完成blob上传和元数据设置，效率最高</li>
+            </ol>
+            
+            <p><strong>检索Exif数据使用HEAD的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">HEAD</span>方法只返回HTTP头信息而不返回实际blob内容</li>
+                <li>这可以最小化带宽使用，因为不需要传输整个图像文件</li>
+                <li>示例REST API调用：
+                    <div class="rest-api">
+                        HEAD https://[account].blob.core.windows.net/[container]/[blob]
+                    </div>
+                </li>
+                <li>响应头中的x-ms-meta-*字段包含所有元数据，包括Exif数据</li>
+                <li>相比GET方法（会返回整个blob内容），HEAD显著减少了数据传输量</li>
+            </ol>
+            
+            <p><strong>其他HTTP方法分析:</strong></p>
+            <table border="1" style="width:100%; border-collapse: collapse; margin-top: 15px;">
+                <tr>
+                    <th>方法</th>
+                    <th>适用性</th>
+                    <th>原因</th>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>不推荐</td>
+                    <td>虽然可以获取元数据，但会返回整个blob内容，浪费带宽</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>不适用</td>
+                    <td>通常用于提交表单数据或创建资源，不适合元数据操作</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>仅存储</td>
+                    <td>适合创建/更新操作，但不适合仅检索元数据</td>
+                </tr>
+            </table>
+            
+            <p><strong>最佳实践:</strong></p>
+            <ul>
+                <li>对于频繁访问的元数据，考虑缓存结果以减少API调用</li>
+                <li>Exif数据应进行适当的编码（如Base64）后再存储为元数据</li>
+                <li>元数据键名应使用有意义的名称（如x-ms-meta-exifdata）</li>
+                <li>单个blob的元数据总大小不能超过8KB</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

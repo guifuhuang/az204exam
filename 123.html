@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Question 123</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .select-option {
+            margin: 10px 0;
+            display: inline-block;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            min-width: 120px;
+        }
+        .answer-button {
+            padding: 8px 16px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 4px;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .code-line {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 123 HOTSPOT</h2>
+        <p>You are developing an app that manages users for a video game. You plan to store the region, email address, and phone number for the player. Some players may not have a phone number.</p>
+        <p>The player's region will be used to load-balance data.</p>
+        <p>Data for the app must be stored in Azure Table Storage.</p>
+        <p>You need to develop code to retrieve data for an individual player.</p>
+        <p>How should you complete the code? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="code-block">
+<span class="code-line">public class PlayerEntity : TableEntity</span>
+<span class="code-line">{</span>
+<span class="code-line">    public PlayerEntity()</span>
+<span class="code-line">    {</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    public PlayerEntity(string region, string email)</span>
+<span class="code-line">    {</span>
+<span class="code-line">        PartitionKey = <div class="select-option"><select id="partitionKey">
+            <option value="">Select option</option>
+            <option value="region">region</option>
+            <option value="email">email</option>
+            <option value="phone">phone</option>
+        </select></div>;</span>
+<span class="code-line">        RowKey = <div class="select-option"><select id="rowKey">
+            <option value="">Select option</option>
+            <option value="region">region</option>
+            <option value="email">email</option>
+            <option value="phone">phone</option>
+        </select></div>;</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    public string Phone { get; set; }</span>
+<span class="code-line">}</span>
+<span class="code-line"></span>
+<span class="code-line">public class Player</span>
+<span class="code-line">{</span>
+<span class="code-line">    protected PlayerEntity player;</span>
+<span class="code-line"></span>
+<span class="code-line">    async void GetPlayer(string cs, string pk, string rk)</span>
+<span class="code-line">    {</span>
+<span class="code-line">        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(cs);</span>
+<span class="code-line">        CloudTableClient tableClient = storageAccount.CreateCloudTableClient();</span>
+<span class="code-line">        CloudTable table = tableClient.GetTableReference("Players");</span>
+<span class="code-line"></span>
+<span class="code-line">        TableOperation query = <div class="select-option"><select id="tableOperation">
+            <option value="">Select option</option>
+            <option value="TableOperation.Retrieve">TableOperation.Retrieve</option>
+            <option value="TableOperation.Insert">TableOperation.Insert</option>
+            <option value="TableOperation.Replace">TableOperation.Replace</option>
+        </select></div>&lt;PlayerEntity&gt;(pk, rk);</span>
+<span class="code-line"></span>
+<span class="code-line">        TableResult data = await table.<div class="select-option"><select id="executeMethod">
+            <option value="">Select option</option>
+            <option value="ExecuteAsync">ExecuteAsync</option>
+            <option value="ExecuteQueryAsync">ExecuteQueryAsync</option>
+            <option value="ExecuteBatchAsync">ExecuteBatchAsync</option>
+        </select></div>(query);</span>
+<span class="code-line"></span>
+<span class="code-line">        player = data.Result as PlayerEntity;</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+        </div>
+
+        <button class="answer-button" id="showAnswer">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <h3>正确答案:</h3>
+            <ul>
+                <li><span class="correct">PartitionKey: region</span> (因为题目说明region用于负载均衡)</li>
+                <li><span class="correct">RowKey: email</span> (因为email是唯一标识玩家的字段)</li>
+                <li><span class="correct">TableOperation: TableOperation.Retrieve</span> (因为需要检索单个玩家数据)</li>
+                <li><span class="correct">Execute method: ExecuteAsync</span> (用于执行单个表操作)</li>
+            </ul>
+            
+            <h3>说明:</h3>
+            <p>1. <strong>分区键(PartitionKey)</strong>选择region的原因：</p>
+            <ul>
+                <li>题目明确说明"region will be used to load-balance data"</li>
+                <li>Azure表存储中，分区键用于数据分区和负载均衡</li>
+            </ul>
+            
+            <p>2. <strong>行键(RowKey)</strong>选择email的原因：</p>
+            <ul>
+                <li>email地址可以唯一标识一个玩家</li>
+                <li>phone不适合作为行键，因为题目说明"Some players may not have a phone number"</li>
+            </ul>
+            
+            <p>3. <strong>TableOperation</strong>选择Retrieve的原因：</p>
+            <ul>
+                <li>题目要求"retrieve data for an individual player"</li>
+                <li>Retrieve操作专门用于获取单个实体</li>
+            </ul>
+            
+            <p>4. <strong>ExecuteAsync</strong>方法的原因：</p>
+            <ul>
+                <li>ExecuteAsync用于执行单个表操作</li>
+                <li>ExecuteQueryAsync用于查询多个实体，ExecuteBatchAsync用于批量操作</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerDiv.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+        });
+    </script>
+</body>
+</html>

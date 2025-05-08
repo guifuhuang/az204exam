@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Search Index Creation with Latest SDK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #264f78;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: white;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 135</h2>
+        <p>You are developing a project management service by using ASP.NET. The service hosts conversations, files, to-do lists, and a calendar that users can interact with at any time.</p>
+        <p>The application uses Azure Search for allowing users to search for keywords in the project data.</p>
+        <p>You need to implement code that creates the object which is used to create indexes in the Azure Search service.</p>
+        <p>Which two objects should you use? Each correct answer presents part of the solution.</p>
+        <p class="note">NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="option" value="A">
+                <label for="optionA">A. SearchService</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="option" value="B">
+                <label for="optionB">B. SearchIndexClient</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="option" value="C">
+                <label for="optionC">C. SearchServiceClient</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="option" value="D">
+                <label for="optionD">D. SearchCredentials</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">B. SearchIndexClient</p>
+        <p class="correct-answer">C. SearchServiceClient</p>
+        
+        <div class="explanation">
+            <h3>说明 (2025年最新SDK更新):</h3>
+            
+            <p><strong>最新SDK变化:</strong></p>
+            <ul>
+                <li>Azure SDK现在统一使用<strong>Azure.Search.Documents</strong>包(v11+)替代旧的Microsoft.Azure.Search包</li>
+                <li>新版SDK中<strong>SearchServiceClient</strong>已被<strong>SearchClient</strong>和<strong>SearchIndexClient</strong>取代</li>
+                <li>但题目问的是创建索引的对象，仍需要这两个组件的组合功能</li>
+            </ul>
+
+            <p><strong>为什么选择SearchIndexClient和SearchServiceClient:</strong></p>
+            <ul>
+                <li><span class="highlight">SearchServiceClient</span>用于管理搜索服务资源(创建/删除索引)</li>
+                <li><span class="highlight">SearchIndexClient</span>用于操作特定索引(上传文档/查询)</li>
+                <li>新版SDK中这两个功能由<strong>SearchIndexClient</strong>和<strong>SearchClient</strong>分别实现</li>
+            </ul>
+
+            <p><strong>2025年推荐实现代码:</strong></p>
+            <div class="code-block">
+// 使用新版Azure SDK (v11+)
+using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes;
+
+// 1. 创建服务客户端
+Uri endpoint = new Uri("https://[service-name].search.windows.net");
+AzureKeyCredential credential = new AzureKeyCredential("[admin-key]");
+
+SearchIndexClient indexClient = new SearchIndexClient(endpoint, credential);
+
+// 2. 创建索引定义
+var index = new SearchIndex("projects")
+{
+    Fields = new FieldBuilder().Build(typeof(Project))
+};
+
+// 3. 创建索引
+indexClient.CreateIndex(index);
+
+// 4. 获取搜索客户端操作索引
+SearchClient searchClient = indexClient.GetSearchClient("projects");</div>
+
+            <p><strong>关键变化总结:</strong></p>
+            <ol>
+                <li>认证方式从<strong>SearchCredentials</strong>变为<strong>AzureKeyCredential</strong></li>
+                <li>旧版<strong>Indexes.Create</strong>方法改为<strong>CreateIndex</strong></li>
+                <li>新增<strong>FieldBuilder</strong>简化索引字段定义</li>
+                <li>查询操作现在由<strong>SearchClient</strong>处理</li>
+            </ol>
+
+            <p><strong>迁移资源:</strong></p>
+            <ul>
+                <li>官方迁移指南: <a href="https://learn.microsoft.com/en-us/azure/search/search-howto-dotnet-sdk-v10-to-v11">从v10迁移到v11</a></li>
+                <li>最新SDK参考: <a href="https://azuresdkdocs.blob.core.windows.net/$web/dotnet/Azure.Search.Documents/11.0.0/api/Azure.Search.Documents/Azure.Search.Documents.html">Azure.Search.Documents文档</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('optionB').checked = true;
+            document.getElementById('optionC').checked = true;
+        }
+    </script>
+</body>
+</html>

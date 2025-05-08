@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Web App for Containers Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code {
+            font-family: Consolas, monospace;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .settings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .settings-table th, .settings-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .settings-table th {
+            background-color: #f2f2f2;
+        }
+        select {
+            padding: 5px;
+            margin: 5px 0;
+            width: 100%;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 87 HOTSPOT</h2>
+        <p>You are developing an ASP.NET Core web application. You plan to deploy the application to Azure Web App for Containers.</p>
+        <p>The application needs to store runtime diagnostic data that must be persisted across application restarts. You have the following code:</p>
+        
+        <div class="code">
+public void SaveDiagData(string data)
+{
+    var path = Environment.GetEnvironmentVariable("DIAGDATA")
+    File.WriteAllText(Path.Combine(path, "data"), data);
+}
+        </div>
+        
+        <p>You need to configure the application settings so that diagnostic data is stored as required.</p>
+        <p>How should you configure the web app's settings? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <table class="settings-table">
+            <tr>
+                <th>App setting</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>
+                    <select id="storage">
+                        <option value="">(Not set)</option>
+                        <option value="LOCALAPPDATA">LOCALAPPDATA</option>
+                        <option value="WEBSITE_LOCALCACHE_ENABLED">WEBSITE_LOCALCACHE_ENABLED</option>
+                        <option value="DOTNET_HOSTING_OPTIMIZATION_CACHE">DOTNET_HOSTING_OPTIMIZATION_CACHE</option>
+                        <option value="WEBSITES_ENABLE_APP_SERVICE_STORAGE">WEBSITES_ENABLE_APP_SERVICE_STORAGE</option>
+                    </select>
+                </td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>DIAGDATA</td>
+                <td>
+                    <select id="diagdata">
+                        <option value="">(Not set)</option>
+                        <option value="/home">/home</option>
+                        <option value="/local">/local</option>
+                        <option value="D:\home">D:\home</option>
+                        <option value="D:\local">D:\local</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><span class="correct">正确答案:</span></p>
+            <ul>
+                <li><strong>WEBSITES_ENABLE_APP_SERVICE_STORAGE</strong>: true</li>
+                <li><strong>DIAGDATA</strong>: D:\home</li>
+            </ul>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>要在Azure Web App for Containers中持久化存储诊断数据，需要正确配置以下设置：</p>
+                <ol>
+                    <li><strong>WEBSITES_ENABLE_APP_SERVICE_STORAGE</strong>必须设置为true，这样才能启用持久化存储功能。</li>
+                    <li><strong>DIAGDATA</strong>应该设置为D:\home，因为这是Azure Web App中持久化存储的标准路径。</li>
+                </ol>
+                <p>其他设置说明：</p>
+                <ul>
+                    <li>LOCALAPPDATA: 与持久化存储无关</li>
+                    <li>WEBSITE_LOCALCACHE_ENABLED: 用于本地缓存，不是持久化存储</li>
+                    <li>DOTNET_HOSTING_OPTIMIZATION_CACHE: 用于优化缓存，不是持久化存储</li>
+                    <li>D:\local是临时存储路径，重启后会丢失数据</li>
+                </ul>
+                <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/app-service/configure-connect-to-azure-storage" target="_blank">Azure Web App持久化存储文档</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show answer button functionality
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = answerSection.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Apps Scaling Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .note-box {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-left: 4px solid #ffd54f;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin: 15px 0;
+        }
+        .solution {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            margin: 15px 0;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .cli-command {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 407</h2>
+        
+        <div class="note-box">
+            <p><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question
+            in the series contains a unique solution that might meet the stated goals. Some question sets
+            might have more than one correct solution, while others might not have a correct solution.</p>
+            <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these
+            questions will not appear in the review screen.</p>
+        </div>
+        
+        <div class="scenario">
+            <p>You deploy an Azure Container Apps app and disable ingress on the container app.</p>
+            <p>Users report that they are unable to access the container app. You investigate and observe that
+            the app has scaled to 0 instances.</p>
+            <p>You need to resolve the issue with the container app.</p>
+        </div>
+        
+        <div class="solution">
+            <p><strong>Solution:</strong> Enable ingress, create a TCP scale rule, and apply the rule to the container app.</p>
+        </div>
+        
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>B. No</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么这个解决方案不满足要求:</strong></p>
+            <ol>
+                <li>问题根源是容器应用缩放到0实例，导致无法访问</li>
+                <li>禁用ingress后，容器应用无法接收外部流量，这是Azure Container Apps的预期行为</li>
+                <li>解决方案中提到的TCP缩放规则<span class="highlight">不适用于此场景</span>，因为：
+                    <ul>
+                        <li>TCP缩放规则用于基于TCP连接数的自动缩放</li>
+                        <li>当ingress被禁用时，缩放规则不会生效</li>
+                    </ul>
+                </li>
+                <li>正确的解决方案应该是：
+                    <ul>
+                        <li>启用ingress以允许外部访问</li>
+                        <li>设置<span class="highlight">最小实例数</span>为1或更高</li>
+                        <li>或配置HTTP缩放规则（如果使用HTTP流量）</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>正确的配置方法:</strong></p>
+            <div class="cli-command">
+                # 启用ingress并设置最小实例数<br>
+                az containerapp update \<br>
+                --name &lt;app-name&gt; \<br>
+                --resource-group &lt;rg-name&gt; \<br>
+                --ingress external \<br>
+                --min-replicas 1
+            </div>
+            
+            <p><strong>关键概念:</strong></p>
+            <ul>
+                <li>当ingress被禁用时，Azure Container Apps可以缩放到0实例以节省成本</li>
+                <li>缩放规则需要相应的流量类型（HTTP/TCP）和启用的ingress才能工作</li>
+                <li>最小实例数设置可以防止应用完全缩放到0</li>
+                <li>TCP缩放规则适用于非HTTP工作负载（如数据库连接），HTTP缩放规则适用于web应用</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

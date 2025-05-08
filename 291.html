@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Storage Configuration Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .requirements { margin: 15px 0; }
+        .requirement { margin-bottom: 20px; }
+        select { padding: 5px; margin-left: 10px; min-width: 300px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 291 HOTSPOT</h3>
+        <p>You are developing a web application that will use Azure Storage. Older data will be less frequently used than more recent data.</p>
+        <p>You need to configure data storage for the application. You have the following requirements:</p>
+        <ul>
+            <li>Retain copies of data for five years.</li>
+            <li>Minimize costs associated with storing data that is over one year old.</li>
+            <li>Implement Zone Redundant Storage for application data.</li>
+        </ul>
+        <p>What should you do? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="requirements">
+            <div class="requirement">
+                <label>Configure an Azure Storage account:</label>
+                <select id="storageAccount">
+                    <option value="">-- Select an option --</option>
+                    <option value="BlobStorage">Implement Blob Storage</option>
+                    <option value="CosmosDB">Implement Azure Cosmos DB</option>
+                    <option value="GPv1">Implement Storage (general purpose v1)</option>
+                    <option value="GPv2">Implement Storage (general purpose v2)</option>
+                </select>
+            </div>
+            
+            <div class="requirement">
+                <label>Configure data retention:</label>
+                <select id="dataRetention">
+                    <option value="">-- Select an option --</option>
+                    <option value="snapArchive">Snap blobs and move them to the archive tier</option>
+                    <option value="lifecycleCool">Set a lifecycle management policy to move blobs to the cool tier</option>
+                    <option value="azCopy">Use AzCopy to copy the data to an on-premises device for backup</option>
+                    <option value="lifecycleArchive">Set a lifecycle management policy to move blobs to the archive tier</option>
+                </select>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案：</h3>
+            
+            <table>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Solution</th>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
+                    <td>Configure an Azure Storage account</td>
+                    <td class="correct">Implement Storage (general purpose v2)</td>
+                    <td>
+                        <ul>
+                            <li>GPv2 accounts support all blob tiers (hot/cool/archive)</li>
+                            <li>Required for ZRS (Zone Redundant Storage) configuration</li>
+                            <li>Blob-only accounts don't support all access tiers</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Configure data retention</td>
+                    <td class="correct">Set a lifecycle management policy to move blobs to the archive tier</td>
+                    <td>
+                        <ul>
+                            <li>Archive tier provides lowest cost for long-term retention</li>
+                            <li>Lifecycle policies automate tier transitions after 1 year</li>
+                            <li>5 year retention is supported in archive tier</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            
+            <h3>详细解析：</h3>
+            <ol>
+                <li><strong>存储账户选择</strong>
+                    <ul>
+                        <li><strong>排除Cosmos DB</strong>：不提供冷热数据分层功能</li>
+                        <li><strong>排除GPv1</strong>：已淘汰且不支持最新功能</li>
+                        <li><strong>排除Blob Storage</strong>：虽然支持分层但不支持ZRS</li>
+                        <li><strong>选择GPv2</strong>：
+                            <pre>az storage account create \
+  --name mystorageaccount \
+  --resource-group myResourceGroup \
+  --location eastus \
+  --sku Standard_ZRS \
+  --access-tier Hot \
+  --kind StorageV2</pre>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><strong>数据保留策略</strong>
+                    <ul>
+                        <li><strong>Archive vs Cool</strong>：Archive成本比Cool低约75%</li>
+                        <li><strong>生命周期策略示例</strong>：
+                            <pre>{
+  "rules": [{
+    "name": "archiveRule",
+    "enabled": true,
+    "type": "Lifecycle",
+    "definition": {
+      "filters": { "blobTypes": ["blockBlob"] },
+      "actions": {
+        "baseBlob": {
+          "tierToArchive": { "daysAfterModificationGreaterThan": 365 }
+        }
+      }
+    }
+  }]
+}</pre>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h3>成本对比示例：</h3>
+            <table>
+                <tr>
+                    <th>数据量</th>
+                    <th>Hot Tier (1年)</th>
+                    <th>Archive Tier (4年)</th>
+                    <th>总成本</th>
+                </tr>
+                <tr>
+                    <td>1TB</td>
+                    <td>$20.48</td>
+                    <td>$3.68 × 4 = $14.72</td>
+                    <td>$35.20</td>
+                </tr>
+                <tr>
+                    <td>10TB</td>
+                    <td>$204.80</td>
+                    <td>$36.80 × 4 = $147.20</td>
+                    <td>$352.00</td>
+                </tr>
+            </table>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview" target="_blank">生命周期管理策略</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy" target="_blank">存储冗余选项</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const storageAccount = document.getElementById('storageAccount').value;
+            const dataRetention = document.getElementById('dataRetention').value;
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <h3>您的选择：</h3>
+                <p><strong>Storage Account:</strong> ${storageAccount || '未选择'}</p>
+                <p><strong>Data Retention:</strong> ${dataRetention || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

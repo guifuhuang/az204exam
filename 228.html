@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Microservice Communication Backplane Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .option:hover { background-color: #f0f0f0; }
+        .option.selected { background-color: #e6f2ff; border-color: #0078d4; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        h3 { margin-top: 0; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .feature-matrix { font-size: 0.9em; }
+        .feature-yes { color: green; font-weight: bold; }
+        .feature-no { color: red; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 228</h3>
+        <p>You are developing an e-commerce solution that uses a microservice architecture.</p>
+        <p>You need to design a communication backplane for communicating transactional messages between various parts of the solution. Messages must be communicated in first-in-first-out (FIFO) order.</p>
+        
+        <p>What should you use?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)" data-value="A">A. Azure Storage Queue</div>
+            <div class="option" onclick="selectOption(this)" data-value="B">B. Azure Event Hub</div>
+            <div class="option" onclick="selectOption(this)" data-value="C">C. Azure Service Bus</div>
+            <div class="option" onclick="selectOption(this)" data-value="D">D. Azure Event Grid</div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">C. Azure Service Bus</span></strong></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>服务功能对比</strong>：
+                    <table class="feature-matrix">
+                        <tr>
+                            <th>特性</th>
+                            <th>Storage Queue</th>
+                            <th>Event Hub</th>
+                            <th>Service Bus</th>
+                            <th>Event Grid</th>
+                        </tr>
+                        <tr>
+                            <td>严格FIFO顺序</td>
+                            <td class="feature-no">❌ 不保证</td>
+                            <td class="feature-no">❌ 不保证</td>
+                            <td class="feature-yes">✅ 会话/分区支持</td>
+                            <td class="feature-no">❌ 无顺序</td>
+                        </tr>
+                        <tr>
+                            <td>事务支持</td>
+                            <td class="feature-yes">✅ 基本</td>
+                            <td class="feature-no">❌</td>
+                            <td class="feature-yes">✅ 完整ACID</td>
+                            <td class="feature-no">❌</td>
+                        </tr>
+                        <tr>
+                            <td>消息持久化</td>
+                            <td class="feature-yes">✅ 7天</td>
+                            <td class="feature-yes">✅ 1-7天</td>
+                            <td class="feature-yes">✅ 无限(配置)</td>
+                            <td class="feature-no">❌ 瞬时</td>
+                        </tr>
+                        <tr>
+                            <td>消息大小</td>
+                            <td>64KB</td>
+                            <td>1MB</td>
+                            <td>256KB-100MB</td>
+                            <td>64KB</td>
+                        </tr>
+                        <tr>
+                            <td>典型延迟</td>
+                            <td>100ms-1s</td>
+                            <td>&lt;1s</td>
+                            <td>10-100ms</td>
+                            <td>&lt;500ms</td>
+                        </tr>
+                    </table>
+                </li>
+                <li><strong>为什么选择Service Bus？</strong>
+                    <ul>
+                        <li><strong>会话功能(Sessions)</strong>：通过SessionId保证消息组内的FIFO顺序
+                            <pre>var message = new Message(Encoding.UTF8.GetBytes("order123"));
+message.SessionId = "order-12345";  // 相同SessionId的消息保持顺序</pre>
+                        </li>
+                        <li><strong>事务支持</strong>：可与数据库操作组成分布式事务
+                            <pre>using (var scope = new TransactionScope())
+{
+    // 数据库操作
+    _dbContext.Orders.Add(order);
+    
+    // Service Bus操作
+    await _queueClient.SendAsync(message);
+    
+    scope.Complete(); // 同时提交
+}</pre>
+                        </li>
+                        <li><strong>死信队列</strong>：自动处理失败消息</li>
+                    </ul>
+                </li>
+                <li><strong>电商场景典型架构</strong>：
+                    <pre>
++---------------------+       +---------------------+       +---------------------+
+|   Order Service     |       |   Payment Service   |       |   Inventory Service  |
+|   (Publisher)       |-----> |   Azure Service Bus  |-----> |   (Subscriber)      |
+|   Place Order       |       |   FIFO Queues        |       |   Update Stock      |
++---------------------+       +---------------------+       +---------------------+
+        |                         ↑↓                             |
+        |                    +---------------------+             |
+        +------------------->|   Shipping Service  |&lt;------------+
+                             +---------------------+</pre>
+                </li>
+                <li><strong>其他选项的局限性</strong>：
+                    <ul>
+                        <li><strong>A. Storage Queue</strong>：无严格FIFO，不适合订单处理</li>
+                        <li><strong>B. Event Hub</strong>：设计用于流数据处理，不保证顺序</li>
+                        <li><strong>D. Event Grid</strong>：事件驱动架构，无消息排序能力</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>实现示例：</strong></p>
+            <pre>// 创建FIFO队列（Azure CLI）
+az servicebus queue create \
+    --resource-group my-ecommerce-rg \
+    --namespace-name my-sb-namespace \
+    --name order-queue \
+    --enable-session true \
+    --enable-partitioning false \
+    --lock-duration PT5M \
+    --max-size 1024</pre>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element) {
+            // 移除之前的选择
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            element.classList.add('selected');
+            selectedOption = element.getAttribute('data-value');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 如果有选择，显示用户的选择
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：${selectedOption}</strong>`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

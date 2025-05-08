@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Function Configuration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .configuration { background: #333; color: white; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .config-item { margin: 10px 0; display: flex; align-items: center; }
+        .config-label { width: 120px; font-weight: bold; }
+        select { padding: 5px; width: 200px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 394 HOTSPOT</h3>
+        <p>You are developing an Azure Function app.</p>
+        <p>The Azure Function app must enable a WebHook to read an image from Azure Blob Storage and create a new Azure Cosmos DB document.</p>
+        <p>You need to implement the Azure Function app.</p>
+        <p>Which configuration should you use? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="configuration">
+            <div class="config-item">
+                <div class="config-label">Trigger:</div>
+                <select id="trigger">
+                    <option value="">-- Select --</option>
+                    <option value="HTTP">HTTP</option>
+                    <option value="Timer">Timer</option>
+                    <option value="Blob Storage">Blob Storage</option>
+                    <option value="Azure Cosmos DB">Azure Cosmos DB</option>
+                </select>
+            </div>
+            <div class="config-item">
+                <div class="config-label">Input binding:</div>
+                <select id="input">
+                    <option value="">-- Select --</option>
+                    <option value="HTTP">HTTP</option>
+                    <option value="Timer">Timer</option>
+                    <option value="Blob Storage">Blob Storage</option>
+                    <option value="Azure Cosmos DB">Azure Cosmos DB</option>
+                </select>
+            </div>
+            <div class="config-item">
+                <div class="config-label">Output binding:</div>
+                <select id="output">
+                    <option value="">-- Select --</option>
+                    <option value="HTTP">HTTP</option>
+                    <option value="Timer">Timer</option>
+                    <option value="Blob Storage">Blob Storage</option>
+                    <option value="Azure Cosmos DB">Azure Cosmos DB</option>
+                </select>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <ul>
+                <li>Trigger: <span class="correct">HTTP</span></li>
+                <li>Input binding: <span class="correct">Blob Storage</span></li>
+                <li>Output binding: <span class="correct">Azure Cosmos DB</span></li>
+            </ul>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>Trigger选择</strong>：
+                    <ul>
+                        <li>题目明确要求实现WebHook，必须选择HTTP触发器</li>
+                        <li>Timer、Blob Storage和Cosmos DB触发器都不适用于WebHook场景</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Input binding</strong>：
+                    <ul>
+                        <li>需要从Blob Storage读取图片，必须选择Blob Storage输入绑定</li>
+                        <li>HTTP输入绑定用于接收请求数据而非存储访问</li>
+                        <li>Timer和Cosmos DB输入绑定不符合题目要求</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Output binding</strong>：
+                    <ul>
+                        <li>需要创建Cosmos DB文档，必须选择Azure Cosmos DB输出绑定</li>
+                        <li>HTTP输出绑定用于返回响应而非数据存储</li>
+                        <li>Timer和Blob Storage输出绑定不符合题目要求</li>
+                    </ul>
+                </li>
+                
+                <li><strong>完整配置示例</strong>：
+                    <pre>[
+  {
+    "type": "httpTrigger",
+    "name": "req",
+    "direction": "in",
+    "methods": ["post"]
+  },
+  {
+    "type": "blob",
+    "name": "inputBlob",
+    "path": "images/{id}",
+    "connection": "StorageConnectionString",
+    "direction": "in"
+  },
+  {
+    "type": "cosmosDB",
+    "name": "outputDocument",
+    "databaseName": "MyDatabase",
+    "collectionName": "MyCollection",
+    "createIfNotExists": true,
+    "connectionStringSetting": "CosmosDBConnectionString",
+    "direction": "out"
+  }
+]</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>Azure Functions的<a href="https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook" target="_blank">HTTP触发器文档</a>和<a href="https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob" target="_blank">Blob绑定文档</a>详细说明了这种配置模式</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const triggerValue = document.getElementById('trigger').value;
+            const inputValue = document.getElementById('input').value;
+            const outputValue = document.getElementById('output').value;
+            
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <p><strong>您的选择：</strong></p>
+                <ul>
+                    <li>Trigger: ${triggerValue || '未选择'}</li>
+                    <li>Input binding: ${inputValue || '未选择'}</li>
+                    <li>Output binding: ${outputValue || '未选择'}</li>
+                </ul>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

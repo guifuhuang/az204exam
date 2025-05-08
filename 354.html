@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Hubs SDK Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .answer-area {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+        }
+        .requirement, .feature {
+            width: 48%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .requirement {
+            background-color: #f5f5f5;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        select.highlight {
+            background-color: #e6f3ff;
+            border-color: #0078d4;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 354 HOTSPOT</h2>
+        <p>You are developing a solution by using the Azure Event Hubs SDK. You create a standard Azure Event Hub with 16 partitions. You implement eight event processor clients.</p>
+        <p>You must balance the load dynamically when an event processor client fails. When an event processor client fails, another event processor must continue processing from the exact point at which the failure occurred. All events must be aggregate and upload to an Azure Blob storage account.</p>
+        <p>You need to implement event processing recovery for the solution.</p>
+        <p>Which SDK features should you use? To answer, select the appropriate options in the answer area.</p>
+        <p>Each correct selection is worth one point.</p>
+        
+        <div class="answer-area">
+            <div class="requirement">
+                <h3>Requirement</h3>
+                <p>1. Ensure that event process clients mark the position within an event sequence.</p>
+                <p>2. Mark the event processor client position within a partition event sequence.</p>
+            </div>
+            <div class="feature">
+                <h3>Feature</h3>
+                <select id="feature1">
+                    <option value="Offset">Offset</option>
+                    <option value="Checkpoint">Checkpoint</option>
+                    <option value="Namespace">Namespace</option>
+                    <option value="Capture">Capture</option>
+                </select>
+                <select id="feature2" class="highlight">
+                    <option value="Offset">Offset</option>
+                    <option value="Checkpoint">Checkpoint</option>
+                    <option value="Namespace">Namespace</option>
+                    <option value="Capture">Capture</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">1. Checkpoint</p>
+        <p class="correct-answer">2. Offset</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            <p><strong>Checkpoint 的作用:</strong></p>
+            <ul>
+                <li>用于标记事件处理客户端在分区事件序列中的位置</li>
+                <li>当处理器客户端失败时，其他客户端可以从检查点继续处理</li>
+                <li>检查点信息通常存储在Azure Blob存储中</li>
+                <li>实现负载均衡和故障恢复的关键机制</li>
+            </ul>
+            
+            <p><strong>Offset 的作用:</strong></p>
+            <ul>
+                <li>表示事件在分区中的精确位置</li>
+                <li>与检查点配合使用，确保从正确位置恢复处理</li>
+                <li>每个事件都有唯一的偏移量标识</li>
+            </ul>
+            
+            <p><strong>为什么不是其他选项:</strong></p>
+            <ul>
+                <li><strong>Namespace</strong>: 只是Event Hubs的命名容器，与事件处理恢复无关</li>
+                <li><strong>Capture</strong>: 用于自动捕获和保存事件数据到存储，不处理恢复逻辑</li>
+            </ul>
+            
+            <p><strong>解决方案工作流程:</strong></p>
+            <ol>
+                <li>事件处理器客户端定期创建检查点</li>
+                <li>检查点包含分区ID和最新处理事件的偏移量</li>
+                <li>当客户端失败时，新客户端从Blob存储加载检查点</li>
+                <li>根据检查点中的偏移量从正确位置恢复处理</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('feature1').value = 'Checkpoint';
+            document.getElementById('feature2').value = 'Offset';
+        }
+    </script>
+</body>
+</html>

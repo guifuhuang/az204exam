@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Grid Implementation Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .note {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .requirements {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 398</h2>
+        
+        <div class="note">
+            <p><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</p>
+            <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear on the review screen.</p>
+        </div>
+        
+        <p>You are implementing an application by using Azure Event Grid to push near-real-time information to customers.</p>
+        
+        <div class="requirements">
+            <p>You have the following requirements:</p>
+            <ul>
+                <li>You must send events to thousands of customers that include hundreds of various event types.</li>
+                <li>The events must be filtered by event type before processing.</li>
+                <li>Authentication and authorization must be handled by using Microsoft Entra ID.</li>
+                <li>The events must be published to a single endpoint.</li>
+            </ul>
+        </div>
+        
+        <p>You need to implement Azure Event Grid.</p>
+        <p><strong>Solution:</strong> Publish events to a partner topic. Create an event subscription for each customer.</p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <label class="option">
+                <input type="radio" name="answer" value="A"> A. Yes
+            </label>
+            <label class="option">
+                <input type="radio" name="answer" value="B"> B. No
+            </label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案: B. No</h3>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p>该解决方案存在以下问题：</p>
+            
+            <ol>
+                <li><strong>认证授权问题</strong>：合作伙伴主题需要额外配置才能与Microsoft Entra ID集成</li>
+                <li><strong>管理复杂度</strong>：为每个客户创建独立订阅会导致管理负担过重</li>
+                <li><strong>成本问题</strong>：数千个订阅会产生高昂费用</li>
+                <li><strong>过滤限制</strong>：事件类型过滤需要在订阅层面单独配置</li>
+            </ol>
+            
+            <p><strong>更优解决方案应包含：</strong></p>
+            <ul>
+                <li>使用事件域(Event Domain)进行多租户管理</li>
+                <li>通过Microsoft Entra ID实现集中认证</li>
+                <li>在应用层实现事件路由和过滤</li>
+                <li>采用Webhook端点统一接收事件</li>
+            </ul>
+            
+            <p><strong>实现示例：</strong></p>
+            <pre>
+// 创建事件域
+az eventgrid domain create \
+    --name "CustomerDomain" \
+    --resource-group "EventGridRG" \
+    --location "westus2"
+
+// 配置Microsoft Entra ID集成
+az eventgrid domain update \
+    --name "CustomerDomain" \
+    --resource-group "EventGridRG" \
+    --identity-type "SystemAssigned" \
+    --inbound-ip-rules "10.0.0.0/8 Allow"</pre>
+            
+            <p>这种架构更适合大规模多租户场景，同时满足题目所有要求。</p>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

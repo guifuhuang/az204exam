@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Archive Tier Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .cli-command {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 410</h2>
+        
+        <p>A company uses an Azure Blob Storage for archiving.</p>
+        <p>The company requires that data in the Blob Storage is only in the archive tier.</p>
+        <p>You need to ensure data copied to the Blob Storage is moved to the archive tier.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Use a Put Block List operation with a request header of x-ms-immutability-policy-mode.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. Create a lifecycle policy with an action of tierToArchive and configure daysAfterModificationGreaterThan for 0.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. Use a Put Blob operation with a request header of x-ms-immutability-policy-until-date.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Create a lifecycle policy with an action of tierToArchive and configure a filter for blobIndexMatch.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>B. Create a lifecycle policy with an action of tierToArchive and configure daysAfterModificationGreaterThan for 0.</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>为什么选择B:</strong></p>
+            <ol>
+                <li>生命周期管理策略是Azure Blob Storage自动管理数据分层的推荐方式</li>
+                <li><span class="highlight">tierToArchive</span>操作专门用于将blob移动到存档层</li>
+                <li>设置<span class="highlight">daysAfterModificationGreaterThan: 0</span>表示：
+                    <ul>
+                        <li>任何修改时间大于0天（即立即）的blob都会被处理</li>
+                        <li>这确保新上传的数据会立即移动到存档层</li>
+                    </ul>
+                </li>
+                <li>这是满足"数据必须仅存在于存档层"要求的最直接方法</li>
+            </ol>
+            
+            <p><strong>配置示例:</strong></p>
+            <div class="cli-command">
+                {
+                  "rules": [
+                    {
+                      "name": "archiveImmediately",
+                      "enabled": true,
+                      "type": "Lifecycle",
+                      "definition": {
+                        "actions": {
+                          "version": {
+                            "tierToArchive": {
+                              "daysAfterModificationGreaterThan": 0
+                            }
+                          },
+                          "baseBlob": {
+                            "tierToArchive": {
+                              "daysAfterModificationGreaterThan": 0
+                            }
+                          }
+                        },
+                        "filters": {
+                          "blobTypes": ["blockBlob"]
+                        }
+                      }
+                    }
+                  ]
+                }
+            </div>
+            
+            <p><strong>其他选项分析:</strong></p>
+            <table border="1" style="width:100%; border-collapse: collapse; margin-top: 15px;">
+                <tr>
+                    <th>选项</th>
+                    <th>问题</th>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>x-ms-immutability-policy-mode用于设置不可变存储策略，与分层无关</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>x-ms-immutability-policy-until-date也是不可变存储相关，不控制存储层</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>blobIndexMatch用于筛选特定blob，题目要求所有数据都存档，不需要筛选</td>
+                </tr>
+            </table>
+            
+            <p><strong>关键概念:</strong></p>
+            <ul>
+                <li>存档层是最经济的存储选项，但检索延迟最高且需要解冻</li>
+                <li>生命周期策略可以基于多种条件（修改时间、创建时间等）自动转换存储层</li>
+                <li>设置daysAfterModificationGreaterThan: 0是确保立即处理的标准方法</li>
+                <li>对于新上传的数据，也可以考虑直接在PUT请求中设置x-ms-access-tier: Archive头</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

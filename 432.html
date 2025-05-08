@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions Security Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 3px solid #4caf50;
+            margin: 15px 0;
+        }
+        .config-table {
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .config-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .config-row:last-child {
+            border-bottom: none;
+        }
+        .config-cell {
+            padding: 15px;
+            flex: 1;
+        }
+        .config-header {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .option-group {
+            margin-bottom: 15px;
+        }
+        .option-group h4 {
+            margin-top: 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 432 HOTSPOT</h2>
+        
+        <p>You are developing an Azure Functions app named App1. You also plan to use cross-origin requests (CORS). You have the following requirements:</p>
+        
+        <ul>
+            <li>App1 functions must securely access an Azure Blob Storage account.</li>
+            <li>Access to the Azure Blob Storage account must not require the provisioning or rotation of secrets.</li>
+            <li>JavaScript code running in a browser on an external host must not be allowed to interact with the function.</li>
+        </ul>
+        
+        <p>You need to implement App1.</p>
+        
+        <p>Which configuration should you use? To answer, select the appropriate options in the answer area.</p>
+        
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="config-table">
+            <div class="config-row config-header">
+                <div class="config-cell">Requirement</div>
+                <div class="config-cell">Configuration value</div>
+            </div>
+            <div class="config-row">
+                <div class="config-cell">Azure Blob Storage access</div>
+                <div class="config-cell">
+                    <select id="storage-access">
+                        <option value="">Select configuration</option>
+                        <option value="system-assigned">System-assigned managed identity</option>
+                        <option value="client-secret">Client secret credentials</option>
+                        <option value="user-assigned">User-assigned managed identity</option>
+                    </select>
+                </div>
+            </div>
+            <div class="config-row">
+                <div class="config-cell">Disallow access from other domains</div>
+                <div class="config-cell">
+                    <select id="cors-config">
+                        <option value="">Select configuration</option>
+                        <option value="none">Configure CORS allowed origins to none</option>
+                        <option value="wildcard">Configure CORS allowed origins to *</option>
+                        <option value="one">Configure CORS allowed origins to one</option>
+                        <option value="disable">Configure CORS allowed origins to disable</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        
+        <div class="correct">
+            <table>
+                <tr>
+                    <th>需求</th>
+                    <th>正确配置</th>
+                    <th>技术说明</th>
+                </tr>
+                <tr>
+                    <td>Azure Blob Storage access</td>
+                    <td><strong>System-assigned managed identity</strong></td>
+                    <td>托管身份无需管理密钥，满足"不要求提供或轮换密钥"的要求</td>
+                </tr>
+                <tr>
+                    <td>Disallow access from other domains</td>
+                    <td><strong>Configure CORS allowed origins to none</strong></td>
+                    <td>阻止所有外部域访问，满足"不允许外部主机浏览器代码交互"的要求</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h4>技术说明:</h4>
+            
+            <div class="note">
+                <p><strong>为什么选择系统分配的托管身份:</strong></p>
+                <ul>
+                    <li>自动管理身份验证凭据，无需人工轮换密钥</li>
+                    <li>与Azure资源无缝集成，提供安全的访问控制</li>
+                    <li>满足无密钥访问存储账户的要求</li>
+                    <li>相比用户分配的托管身份更简单，适合单一应用场景</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <p><strong>CORS配置详解:</strong></p>
+                <table>
+                    <tr>
+                        <th>选项</th>
+                        <th>效果</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td>none</td>
+                        <td>禁止所有跨域请求</td>
+                        <td>严格安全要求，不允许任何外部访问</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>允许所有域访问</td>
+                        <td>开发测试环境，完全开放</td>
+                    </tr>
+                    <tr>
+                        <td>one</td>
+                        <td>允许指定单个域访问</td>
+                        <td>生产环境，明确知道调用来源</td>
+                    </tr>
+                    <tr>
+                        <td>disable</td>
+                        <td>完全禁用CORS</td>
+                        <td>不推荐，可能导致功能异常</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="note">
+                <p><strong>实现建议:</strong></p>
+                <ol>
+                    <li>为函数应用启用系统分配的托管身份</li>
+                    <li>为存储账户配置RBAC，授予托管身份适当的权限(如Storage Blob Data Contributor)</li>
+                    <li>在函数应用的CORS设置中明确设置为"none"</li>
+                    <li>通过Azure Policy确保这些安全配置不会被意外修改</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 自动选择正确答案
+            document.getElementById('storage-access').value = 'system-assigned';
+            document.getElementById('cors-config').value = 'none';
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

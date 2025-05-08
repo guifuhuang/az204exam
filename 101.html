@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure AD Application Registration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .actions-list, .answer-area {
+            border: 1px solid #ddd;
+            padding: 10px;
+            min-height: 200px;
+            width: 50%;
+        }
+        .draggable {
+            background-color: #f3f2f1;
+            padding: 8px;
+            margin: 5px;
+            cursor: move;
+            border: 1px solid #ccc;
+        }
+        .answer-area .draggable {
+            background-color: #e1f5fe;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct-sequence {
+            font-weight: bold;
+            color: #107c10;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 101 DRAG DROP</h2>
+        <p>You develop a web application.</p>
+        <p>You need to register the application with an active Azure Active Directory (Azure AD) tenant.</p>
+        <p>Which three actions should you perform in sequence? To answer, move all actions from the list of actions to the answer area and arrange them in the correct order.</p>
+    </div>
+    
+    <div class="drag-container">
+        <div class="actions-list" id="actionsList">
+            <div class="draggable" draggable="true" data-action="Select Manifest from the middle-tier service registration.">Select Manifest from the middle-tier service registration.</div>
+            <div class="draggable" draggable="true" data-action="In Enterprise Applications, select New application.">In Enterprise Applications, select New application.</div>
+            <div class="draggable" draggable="true" data-action="Add a Cryptographic key.">Add a Cryptographic key.</div>
+            <div class="draggable" draggable="true" data-action="Create a new application and provide the name,account type,and redirect URL.">Create a new application and provide the name,account type,and redirect URL.</div>
+            <div class="draggable" draggable="true" data-action="Select the Azure AD instance.">Select the Azure AD instance.</div>
+            <div class="draggable" draggable="true" data-action="Use an access token to access the secure resource.">Use an access token to access the secure resource.</div>
+            <div class="draggable" draggable="true" data-action="In App Registrations,select New registration.">In App Registrations, select New registration.</div>
+        </div>
+        
+        <div class="answer-area" id="answerArea">
+            <p>Answer Area (Drag 3 actions here in order)</p>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案:</strong></p>
+        <ol class="correct-sequence">
+            <li>Select the Azure AD instance.</li>
+            <li>In App Registrations, select New registration.</li>
+            <li>Create a new application and provide the name, account type, and redirect URL.</li>
+        </ol>
+        <p><strong>说明:</strong></p>
+        <p>根据Microsoft官方文档，注册Azure AD应用程序的标准流程是：</p>
+        <ol>
+            <li><strong>选择Azure AD实例</strong>：首先需要选择要注册应用程序的Azure AD租户（通过门户右上角账户切换或直接选择）</li>
+            <li><strong>在应用注册中选择新注册</strong>：导航到Azure门户中的"App Registrations"部分并点击"New registration"</li>
+            <li><strong>创建新应用程序</strong>：必须提供应用程序名称、支持的账户类型（如单租户/多租户）和重定向URL（对于Web应用）</li>
+        </ol>
+        <p><strong>错误选项说明：</strong></p>
+        <ul>
+            <li>"In Enterprise Applications"是管理已注册应用的界面，不是初始注册入口</li>
+            <li>添加加密密钥和使用访问令牌都是注册完成后的配置步骤</li>
+            <li>选择Manifest是修改应用配置的高级操作，不属于注册流程</li>
+        </ul>
+    </div>
+    
+    <script>
+        // Drag and drop functionality
+        const draggables = document.querySelectorAll('.draggable');
+        const answerArea = document.getElementById('answerArea');
+        
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+            
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+        
+        answerArea.addEventListener('dragover', e => {
+            e.preventDefault();
+            const draggable = document.querySelector('.dragging');
+            if (draggable && answerArea.children.length < 4) {
+                answerArea.appendChild(draggable);
+            }
+        });
+        
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+            // Highlight correct items if dragged incorrectly
+            const correctActions = [
+                "Select the Azure AD instance.",
+                "In App Registrations, select New registration.",
+                "Create a new application and provide the name,account type,and redirect URL."
+            ];
+            
+            document.querySelectorAll('.draggable').forEach(item => {
+                if (correctActions.includes(item.textContent)) {
+                    item.style.backgroundColor = "#e1f5fe";
+                    item.style.border = "2px solid #107c10";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

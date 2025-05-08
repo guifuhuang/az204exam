@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Management Authentication Policy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: #4fc3f7;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .correct {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 134</h3>
+        <p>You provide an Azure API Management managed web service to clients. The back end web service implements HTTP Strict Transport Security (HSTS).</p>
+        <p>Every request to the backend service must include a valid HTTP authorization header.</p>
+        <p>You need to configure the Azure API Management instance with an authentication policy.</p>
+        <p>Which two policies can you use? Each correct answer presents a complete solution.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <div class="options">
+        <label class="option">
+            <input type="checkbox" name="answer" value="A">
+            A. Certificate Authentication
+        </label>
+        
+        <label class="option">
+            <input type="checkbox" name="answer" value="B">
+            B. Basic Authentication
+        </label>
+        
+        <label class="option">
+            <input type="checkbox" name="answer" value="C">
+            C. OAuth Client Credential Grant
+        </label>
+        
+        <label class="option">
+            <input type="checkbox" name="answer" value="D">
+            D. Digest Authentication
+        </label>
+    </div>
+
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案：</strong></p>
+        <p class="correct">B. Basic Authentication</p>
+        <p class="correct">C. OAuth Client Credential Grant</p>
+        
+        <div class="explanation">
+            <p><strong>说明：</strong></p>
+            <ul>
+                <li><strong>Basic Authentication (B)</strong>：
+                    <ul>
+                        <li>直接在HTTP头中添加Authorization头（Base64编码的凭据）</li>
+                        <li>符合题目要求的"valid HTTP authorization header"</li>
+                        <li>API Management原生支持Basic认证策略</li>
+                    </ul>
+                </li>
+                <li><strong>OAuth Client Credential Grant (C)</strong>：
+                    <ul>
+                        <li>生成包含Bearer token的Authorization头</li>
+                        <li>符合HTTP授权头的规范要求</li>
+                        <li>适合服务到服务的认证场景</li>
+                    </ul>
+                </li>
+                <li><strong>排除选项</strong>：
+                    <ul>
+                        <li>Certificate Authentication (A)：使用TLS客户端证书，不会生成HTTP Authorization头</li>
+                        <li>Digest Authentication (D)：虽然技术上可行，但API Management策略中不直接支持Digest认证</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>题目明确要求必须包含HTTP authorization header，只有Basic和OAuth两种方式会生成标准的Authorization头。根据Azure API Management官方文档，这两种是推荐的后端认证方式。</p>
+        </div>
+    </div>
+
+    <script>
+        // Highlight selected options
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.parentElement.classList.add('selected');
+                } else {
+                    this.parentElement.classList.remove('selected');
+                }
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Select the correct answers
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (['B', 'C'].includes(checkbox.value)) {
+                    checkbox.checked = true;
+                    checkbox.parentElement.classList.add('selected');
+                }
+            });
+            // Scroll to answer
+            document.getElementById('answer').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

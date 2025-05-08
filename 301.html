@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Functions Timeout Solution</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 301</h3>
+        <p>You develop an HTTP triggered Azure Function app to process Azure Storage blob data. The app is triggered using an output binding on the blob.</p>
+        <p>The app continues to time out after four minutes. The app must process the blob data.</p>
+        <p>You need to ensure the app does not time out and processes the blob data.</p>
+        <p>Solution: Update the functionTimeout property of the host.json project file to 10 minutes.</p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong> <span class="correct">B. No</span></p>
+            
+            <p><strong>解析：</strong></p>
+            <ol>
+                <li><strong>HTTP触发限制</strong>：
+                    <ul>
+                        <li>Azure负载均衡器对HTTP响应有230秒(约4分钟)的硬性超时限制</li>
+                        <li>即使通过<code>host.json</code>延长函数超时时间，客户端仍会收到502超时错误</li>
+                    </ul>
+                </li>
+                
+                <li><strong>最佳实践方案</strong>：
+                    <pre>// HTTP触发函数仅负责接收请求和排队
+[FunctionName("HttpTrigger")]
+public static async Task<IActionResult> Run(
+    [HttpTrigger] HttpRequest req,
+    [ServiceBus("processqueue")] IAsyncCollector<string> queueMessages)
+{
+    await queueMessages.AddAsync(JsonConvert.SerializeObject(req.Body));
+    return new OkObjectResult("Request accepted");
+}</pre>
+                    <ul>
+                        <li>实际处理逻辑应由队列触发函数异步执行</li>
+                        <li>符合Azure Functions的<a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-best-practices">最佳实践</a></li>
+                    </ul>
+                </li>
+                
+                <li><strong>技术对比</strong>：
+                    <table>
+                        <tr>
+                            <th>方案</th>
+                            <th>超时限制</th>
+                            <th>适用场景</th>
+                        </tr>
+                        <tr>
+                            <td>直接处理</td>
+                            <td>230秒</td>
+                            <td>快速任务(<3分钟)</td>
+                        </tr>
+                        <tr>
+                            <td>队列模式</td>
+                            <td>无限制</td>
+                            <td>长时间任务</td>
+                        </tr>
+                        <tr>
+                            <td>Durable Functions</td>
+                            <td>无限制</td>
+                            <td>复杂工作流</td>
+                        </tr>
+                    </table>
+                </li>
+            </ol>
+            
+            <p><strong>官方建议</strong>：对于超过230秒的处理任务，应采用异步模式或Durable Functions架构</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                const userAnswer = document.createElement('p');
+                userAnswer.innerHTML = `<strong>您的选择：</strong> ${selectedOption.value}`;
+                document.getElementById('answer').prepend(userAnswer);
+            }
+        }
+    </script>
+</body>
+</html>

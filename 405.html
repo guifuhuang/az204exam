@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Managed Identity Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .cli-command {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 405</h2>
+        
+        <p>You have 100 Azure virtual machines (VMs) with the system-assigned managed identity enabled.</p>
+        <p>You need to identify the value of the object ID attribute for each of the identities.</p>
+        <p>Which command should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. az resource show</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. az ad signed-in-user list-owned-objects</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. az ad user show</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Get-AzVM</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>A. az resource show</strong></p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择A的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">az resource show</span>命令可以显示Azure资源的完整属性，包括托管身份的object ID</li>
+                <li>对于启用了系统分配托管身份的VM，其身份信息存储在资源属性中</li>
+                <li>示例命令：
+                    <div class="cli-command">
+                        az resource show --ids /subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;/providers/Microsoft.Compute/virtualMachines/&lt;vm-name&gt;
+                    </div>
+                </li>
+                <li>在输出中查找<strong>identity.principalId</strong>字段即为object ID</li>
+            </ol>
+            
+            <p><strong>其他选项分析:</strong></p>
+            <ul>
+                <li><strong>B选项错误</strong>：az ad signed-in-user list-owned-objects用于列出当前登录用户拥有的对象，不适用于VM托管身份</li>
+                <li><strong>C选项错误</strong>：az ad user show用于显示Microsoft Entra用户信息，不适用于系统分配的托管身份</li>
+                <li><strong>D选项错误</strong>：Get-AzVM是PowerShell命令，虽然可以获取VM信息，但默认不显示托管身份的object ID</li>
+            </ul>
+            
+            <p><strong>批量获取100台VM object ID的方法:</strong></p>
+            <div class="cli-command">
+                # 获取资源组中所有VM的object ID<br>
+                az vm list --resource-group &lt;rg-name&gt; --query "[].{name:name, objectId:identity.principalId}" --output table
+            </div>
+            
+            <p><strong>关键概念:</strong></p>
+            <ul>
+                <li>系统分配的托管身份object ID是Microsoft Entra ID中服务主体的唯一标识符</li>
+                <li>此ID用于RBAC角色分配和身份验证</li>
+                <li>与用户分配的托管身份不同，系统分配的身份与资源生命周期绑定</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

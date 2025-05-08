@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure CLI Commands Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .command-list {
+            width: 40%;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 5px;
+        }
+        .answer-area {
+            width: 60%;
+            padding: 10px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        .command {
+            background-color: white;
+            border: 2px solid #0078d4;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px;
+            cursor: move;
+            text-align: center;
+            font-family: monospace;
+        }
+        .drop-zone {
+            min-height: 150px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .arrow-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .arrow {
+            width: 40px;
+            height: 40px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 162 DRAG DROP</h2>
+        <p>You are developing a Docker/Go using Azure App Service Web App for Containers. You plan to run the container in an App Service on Linux. You identify a Docker container image to use.</p>
+        <p>None of your current resource groups reside in a location that supports Linux. You must minimize the number of resource groups required.</p>
+        <p>You need to create the application and perform an initial deployment.</p>
+        <p>Which three Azure CLI commands should you use to develop the solution? To answer, move the appropriate commands from the list of commands to the answer area and arrange them in the correct order.</p>
+        
+        <div class="drag-container">
+            <div class="command-list" id="commandList">
+                <h3>Azure CLI Commands</h3>
+                <div class="command" draggable="true" id="groupCreate">az group create</div>
+                <div class="command" draggable="true" id="groupUpdate">az group update</div>
+                <div class="command" draggable="true" id="webappUpdate">az webapp update</div>
+                <div class="command" draggable="true" id="webappCreate">az webapp create</div>
+                <div class="command" draggable="true" id="planCreate">az appservice plan create</div>
+            </div>
+            
+            <div class="answer-area">
+                <h3>Answer Area</h3>
+                <div class="arrow-container">
+                    <div class="arrow">⇦⇦</div>
+                    <div class="arrow">⇩⇩</div>
+                </div>
+                <div class="drop-zone" id="answerDropZone"></div>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><span class="correct">正确答案:</span></p>
+            <ol>
+                <li>az group create</li>
+                <li>az appservice plan create</li>
+                <li>az webapp create</li>
+            </ol>
+            <p><strong>说明:</strong></p>
+            <p>要在支持Linux的区域创建并部署容器化应用，正确的Azure CLI命令顺序应为：</p>
+            <ol>
+                <li><strong>az group create</strong> - 首先在支持Linux的区域创建新的资源组</li>
+                <li><strong>az appservice plan create</strong> - 创建支持Linux的App Service计划</li>
+                <li><strong>az webapp create</strong> - 创建Web应用并配置容器部署</li>
+            </ol>
+            <p>注意：</p>
+            <ul>
+                <li>题目要求最小化资源组数量，因此需要创建新的资源组而不是更新现有资源组</li>
+                <li>Linux支持需要在创建资源组和App Service计划时就指定</li>
+                <li>不需要使用az webapp update或az group update命令</li>
+            </ul>
+            <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/app-service/containers/quickstart-docker-go" target="_blank">Azure Web App for Containers文档</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        const commands = document.querySelectorAll('.command');
+        const answerDropZone = document.getElementById('answerDropZone');
+        
+        commands.forEach(command => {
+            command.addEventListener('dragstart', () => {
+                command.classList.add('dragging');
+            });
+            
+            command.addEventListener('dragend', () => {
+                command.classList.remove('dragging');
+            });
+        });
+        
+        answerDropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            answerDropZone.classList.add('hover');
+        });
+        
+        answerDropZone.addEventListener('dragleave', () => {
+            answerDropZone.classList.remove('hover');
+        });
+        
+        answerDropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            answerDropZone.classList.remove('hover');
+            
+            const command = document.querySelector('.dragging');
+            if (command && answerDropZone.querySelectorAll('.command').length < 3) {
+                const clone = command.cloneNode(true);
+                clone.setAttribute('draggable', 'false');
+                answerDropZone.appendChild(clone);
+            }
+        });
+        
+        // Show answer button
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = answerSection.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

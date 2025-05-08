@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure AD SSO Implementation Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct {
+            font-weight: bold;
+            color: #107c10;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 360</h2>
+        <p>A company maintains multiple web and mobile applications. Each application uses custom inhouse identity providers as well as social identity providers.</p>
+        <p>You need to implement single sign-on (SSO) for all the applications.</p>
+        <p>What should you do?</p>
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="ssoOption" value="A">
+            <label for="optionA">A. Use Azure Active Directory B2C (Azure AD B2C) with custom policies.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="ssoOption" value="B">
+            <label for="optionB">B. Use Azure Active Directory B2B (Azure AD B2B) and enable external collaboration.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="ssoOption" value="C">
+            <label for="optionC">C. Use Azure Active Directory B2C (Azure AD B2C) with user flows.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="ssoOption" value="D">
+            <label for="optionD">D. Use Azure Active Directory B2B (Azure AD B2B).</label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <p><strong>正确答案:</strong> <span class="correct">A. Use Azure Active Directory B2C (Azure AD B2C) with custom policies.</span></p>
+        <p><strong>说明:</strong></p>
+        <ol>
+            <li><strong>Azure AD B2C</strong> 是专门为面向消费者的应用程序设计的身份服务，支持自定义身份提供商和社交身份提供商（如Facebook、Google等）的集成</li>
+            <li><strong>自定义策略</strong> 允许完全自定义身份验证流程，可以同时集成企业内部的定制身份提供商和外部社交身份提供商</li>
+            <li>相比之下：
+                <ul>
+                    <li>B2B（选项B和D）主要用于企业间协作，不适合消费者身份管理</li>
+                    <li>用户流（选项C）虽然简单但不支持自定义身份提供商的深度集成</li>
+                </ul>
+            </li>
+            <li>该解决方案符合最小权限原则，且能够满足同时使用内部和外部身份提供商的需求</li>
+        </ol>
+        <p>因此，<strong>A选项</strong>是唯一能够完全满足题目所有要求的解决方案。</p>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+            document.getElementById("optionA").checked = true;
+        }
+    </script>
+</body>
+</html>

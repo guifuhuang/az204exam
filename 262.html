@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Log Alerts Configuration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .code { background: #333; color: white; padding: 15px; border-radius: 5px; margin: 15px 0; font-family: monospace; }
+        .statement { margin: 15px 0; padding: 10px; background: #eee; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; }
+        pre { background: #333; color: white; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 262 HOTSPOT</h3>
+        <p>You create the following PowerShell script:</p>
+        
+        <div class="code">
+            <pre>
+$Source = New-AzScheduledQueryRuleSource -Query 'Heartbeat | where TimeGenerated > ago(1h)' -DataSourceId "contoso"
+$schedule = New-AzScheduledQueryRuleSchedule -FrequencyInMinutes 60 -TimeWindowInMinutes 60
+$triggerCondition = New-AzScheduledQueryRuleTriggerCondition = ThresholdOperator "LessThan" -Threshold 5
+$aznsActionGroup = New-AzScheduledQueryRuleAznsActionGroup -ActionGroup "contoso" -EmailSubject "Custom mail subject" -CustomWebhookPayload "{ '"alert'":'"#alertrulename'",'"IncludeSearchResults'":true}"
+$alertingAction = New-AzScheduledQueryRuleAlertingAction -AznsAction $aznsActionGroup -Severity "3" -Trigger $triggerCondition New-AzScheduledQueryRule -ResourceGroupName "contoso" -Location "eastus" -Action $alertingAction -Enabled $true -Description "Alert description" -Schedule $schedule -Source $source -Name "Alert Name"
+</pre>
+        </div>
+        
+        <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+        
+        <table>
+            <tr>
+                <th>Statements</th>
+                <th>Yes</th>
+                <th>No</th>
+            </tr>
+            <tr>
+                <td>A log alert is created that sends an email when the CPU percentage is above 60 percent for five minutes.</td>
+                <td><input type="radio" name="statement1" value="Yes"></td>
+                <td><input type="radio" name="statement1" value="No"></td>
+            </tr>
+            <tr>
+                <td>A log alert is created that sends an email when the number of virtual machine heartbeats in the past hour is less than five.</td>
+                <td><input type="radio" name="statement2" value="Yes"></td>
+                <td><input type="radio" name="statement2" value="No"></td>
+            </tr>
+            <tr>
+                <td>The log alert is scheduled to run every two hours.</td>
+                <td><input type="radio" name="statement3" value="Yes"></td>
+                <td><input type="radio" name="statement3" value="No"></td>
+            </tr>
+        </table>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案：</h3>
+            <table>
+                <tr>
+                    <th>Statement</th>
+                    <th>Answer</th>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
+                    <td>CPU percentage alert</td>
+                    <td class="incorrect">No</td>
+                    <td>脚本中没有CPU监控条件，查询的是Heartbeat数据</td>
+                </tr>
+                <tr>
+                    <td>VM heartbeats less than five</td>
+                    <td class="correct">Yes</td>
+                    <td>设置了触发条件(ThresholdOperator "LessThan" -Threshold 5)</td>
+                </tr>
+                <tr>
+                    <td>Runs every two hours</td>
+                    <td class="incorrect">No</td>
+                    <td>计划设置为每小时运行一次(FrequencyInMinutes=60)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const userSelections = document.createElement('div');
+            userSelections.innerHTML = `
+                <h3>您的选择：</h3>
+                <p>1. CPU警报: ${document.querySelector('input[name="statement1"]:checked')?.value || '未选择'}</p>
+                <p>2. 心跳警报: ${document.querySelector('input[name="statement2"]:checked')?.value || '未选择'}</p>
+                <p>3. 执行频率: ${document.querySelector('input[name="statement3"]:checked')?.value || '未选择'}</p>
+            `;
+            document.getElementById('answer').prepend(userSelections);
+        }
+    </script>
+</body>
+</html>

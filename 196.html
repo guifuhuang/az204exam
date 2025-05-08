@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure CLI Logs Test Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .command { font-family: monospace; background: #333; color: white; padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .dropdown { margin: 0 5px; padding: 5px; background: #444; color: white; border: 1px solid #666; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 196 HOTSPOT</h3>
+        <p>You plan to deploy a web app to App Service on Linux. You create an App Service plan. You
+        create and push a custom Docker image that contains the web app to Azure Container
+        Registry.</p>
+        <p>You need to access the console logs generated from inside the container in real-time.</p>
+        <p>How should you complete the Azure CLI command? To answer, select the appropriate options in
+        the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="command">
+            az webapp log <select id="logCommand" class="dropdown">
+                <option value="">-- Select --</option>
+                <option value="config">config</option>
+                <option value="download">download</option>
+                <option value="show">show</option>
+                <option value="tail">tail</option>
+            </select>
+            --name ContosoWeb --resource-group ContosoDevRG <select id="filesys" class="dropdown">
+                <option value="">-- Select --</option>
+                <option value="--web-server-logging">--web-server-logging</option>
+                <option value="--docker-container-logging">--docker-container-logging</option>
+                <option value="--application-logging">--application-logging</option>
+            </select> filesystem
+        </div>
+        
+        <div class="command">
+            az <select id="logType" class="dropdown">
+                <option value="">-- Select --</option>
+                <option value="webapp">webapp</option>
+                <option value="acr">acr</option>
+                <option value="ask">ask</option>
+            </select> log <select id="logCommand2" class="dropdown">
+                <option value="">-- Select --</option>
+                <option value="config">config</option>
+                <option value="download">download</option>
+                <option value="show">show</option>
+                <option value="tail">tail</option>
+            </select> --name ContosoWeb --resource-group ContosoDevRG
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <div class="command">
+                az webapp log <span class="correct">tail</span>
+                --name ContosoWeb --resource-group ContosoDevRG
+            </div>
+            <div class="command">
+                --<span class="correct">docker</span>
+                -<span class="correct">container</span>
+                -<span class="correct">logging</span>
+            </div>
+            <p><strong>说明：</strong></p>
+            <ol>
+                <li>第一行命令使用 <span class="correct">tail</span> 子命令来实时流式传输日志</li>
+                <li>第二行参数组合为：
+                    <ul>
+                        <li><span class="correct">--docker-container-logging</span> 用于查看Docker容器内的日志</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>关键点解释：</p>
+            <ul>
+                <li><strong>tail</strong> 是唯一支持实时日志流的子命令</li>
+                <li><strong>docker-container-logging</strong> 参数专门用于容器日志（而不是文件系统或应用日志）</li>
+                <li>完整的有效命令是：<br>
+                    <code>az webapp log tail --name ContosoWeb --resource-group ContosoDevRG --docker-container-logging</code>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

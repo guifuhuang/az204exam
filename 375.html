@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Monitor Alert Test Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; padding: 8px; background: #fff; border-radius: 4px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 375</h3>
+        <p>You are developing an Azure-based web application. The application goes offline periodically to
+        perform offline data processing. While the application is offline, numerous Azure Monitor alerts fire
+        which result in the on-call developer being paged.</p>
+        <p>The application must always log when the application is offline for any reason.</p>
+        <p>You need to ensure that the on-call developer is not paged during offline processing.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Add Azure Monitor alert processing rules to suppress notifications.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Create an Azure Monitor Metric Alert.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Build an Azure Monitor action group that suppresses the alerts.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Disable Azure Monitor Service Health Alerts during offline processing.</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">C. Build an Azure Monitor action group that suppresses the alerts</span></strong></p>
+            
+            <p><strong>说明：</strong></p>
+            <ol>
+                <li>题目核心需求分析：
+                    <ul>
+                        <li>必须保留离线事件日志记录（合规性要求）</li>
+                        <li>仅需抑制计划内离线时的告警通知</li>
+                        <li>周期性离线场景需要自动化处理</li>
+                    </ul>
+                </li>
+                <li>最佳解决方案：
+                    <ul>
+                        <li><span class="correct">C选项</span>：通过Action Group的抑制功能实现：
+                            <ul>
+                                <li>创建专用Action Group配置抑制规则</li>
+                                <li>设置维护时间窗口匹配离线周期</li>
+                                <li>使用<code>SuppressNotification</code>参数保持日志记录</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>其他选项的不足：
+                    <ul>
+                        <li>A选项：Alert Processing Rules更适合临时性抑制</li>
+                        <li>B选项：新建指标告警无法解决现有告警问题</li>
+                        <li>D选项：禁用Service Health Alerts会影响全局监控</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>实现步骤：</strong></p>
+            <ol>
+                <li>在Azure Portal中：
+                    <ol type="a">
+                        <li>导航到 <code>Monitor > Alerts > Action Groups</code></li>
+                        <li>创建新Action Group时启用<code>Suppress during maintenance</code></li>
+                        <li>配置时间计划匹配离线处理周期</li>
+                    </ol>
+                </li>
+                <li>通过ARM模板实现自动化：
+        <pre>
+        {
+          "type": "Microsoft.Insights/actionGroups",
+          "properties": {
+            "suppressNotifications": true,
+            "schedule": {
+              "recurrenceType": "Weekly",
+              "startTime": "2025-04-30T00:00:00",
+              "duration": "PT8H"
+            }
+          }
+        }
+        </pre>
+                </li>
+            </ol>
+        </div>
+        
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

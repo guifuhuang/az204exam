@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Batch Processing Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .code {
+            font-family: Consolas, monospace;
+            background-color: #f8f8f8;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .intro {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .intro h3 {
+            margin-top: 0;
+            color: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="intro">
+        <h3>Azure Batch 简介</h3>
+        <p>Azure Batch 是微软提供的云规模作业调度和计算管理服务，主要用于运行大规模并行和高性能计算 (HPC) 应用程序。主要特点包括：</p>
+        <ul>
+            <li><strong>大规模并行计算：</strong>可以同时管理数千个计算节点</li>
+            <li><strong>自动缩放：</strong>根据工作负载自动调整计算资源</li>
+            <li><strong>灵活的作业调度：</strong>支持复杂的任务依赖关系和执行计划</li>
+            <li><strong>多种应用程序支持：</strong>可以运行容器、MPI应用程序或自定义应用程序</li>
+            <li><strong>成本优化：</strong>支持低优先级VM和Spot实例以降低成本</li>
+        </ul>
+        <p>典型应用场景包括：金融风险建模、媒体渲染、科学计算、机器学习训练等需要大量计算资源的场景。</p>
+    </div>
+
+    <div class="question">
+        <h2>QUESTION NO: 163</h2>
+        <p>You are developing a software solution for an autonomous transportation system. The solution uses large data sets and Azure Batch processing to simulate navigation sets for entire fleets of vehicles.</p>
+        <p>You need to create compute nodes for the solution on Azure Batch.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. In the Azure portal, create a Batch account.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. In a .NET method, call the method: <span class="code">BatchClient.PoolOperations.CreatePool</span></label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. In Python, implement the class: <span class="code">JobAddParameter</span></label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. In Python, implement the class: <span class="code">TaskAddParameter</span></label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><span class="correct">正确答案: B</span></p>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>要在Azure Batch中创建计算节点，正确的做法是：</p>
+                <ul>
+                    <li><strong>选项B</strong>是正确的，因为<code>BatchClient.PoolOperations.CreatePool</code>方法专门用于创建计算节点池（包含多个计算节点）。</li>
+                    <li>选项A不正确，因为创建Batch账户只是设置管理环境，不会直接创建计算节点。</li>
+                    <li>选项C和D不正确，因为<code>JobAddParameter</span>和<code>TaskAddParameter</code>类用于管理工作和任务，而不是创建计算节点。</li>
+                </ul>
+                <p>在Azure Batch架构中：</p>
+                <ol>
+                    <li><strong>Batch账户</strong>是管理资源的顶层容器</li>
+                    <li><strong>计算节点池(Pool)</strong>是实际的计算资源集合</li>
+                    <li><strong>作业(Job)</strong>是在池上运行的工作单元</li>
+                    <li><strong>任务(Task)</strong>是作业中的具体计算单元</li>
+                </ol>
+                <p>题目中提到的自动驾驶系统需要大量计算资源进行导航模拟，因此创建计算节点池是最合适的解决方案。</p>
+                <p>参考文档: <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.batch.pooloperations.createpool" target="_blank">CreatePool方法文档</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show answer button functionality
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = answerSection.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Option selection highlighting
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                options.forEach(opt => opt.style.backgroundColor = 'white');
+                // Add selected style to clicked option
+                this.style.backgroundColor = '#e1f5fe';
+            });
+        });
+    </script>
+</body>
+</html>

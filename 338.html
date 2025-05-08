@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Snapshots Deletion</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .code { background: #1e1e1e; color: #dcdcdc; padding: 15px; border-radius: 5px; font-family: Consolas, monospace; }
+        .dropdown { margin: 10px 0; }
+        select { padding: 5px; margin-left: 10px; min-width: 200px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        .explanation { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 338 HOTSPOT</h3>
+        <p>An organization deploys a blob storage account. Users take multiple snapshots of the blob storage account over time.</p>
+        <p>You need to delete all snapshots of the blob storage account. You must not delete the blob storage account itself.</p>
+        <p>How should you complete the code segment? To answer select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="code">
+            blob_client.delete_blob(<select id="snapshotsOption">
+                <option value="">-- Select an option --</option>
+                <option value="delete_plot">delete_plot</option>
+                <option value="delete_container">delete_container</option>
+                <option value="delete_snapshots">delete_snapshots</option>
+                <option value="delete_snapshot_present">delete_snapshot_present</option>
+            </select>=<select id="includeOption">
+                <option value="">-- Select an option --</option>
+                <option value="False">False</option>
+                <option value="Include">Include</option>
+                <option value="Only">Only</option>
+            </select>
+            )
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案：</h3>
+            <div class="correct">
+                Box1="delete_snapshots",<br>
+                Box2="include"
+            </div>
+            
+            <div class="explanation">
+                <h3>详细解析：</h3>
+                <ol>
+                    <li><strong>delete_snapshots参数</strong>
+                        <ul>
+                            <li>必须选择<code>delete_snapshots</code>选项</li>
+                            <li>这是唯一能删除所有快照而不删除基础blob的参数</li>
+                            <li>其他选项解释：
+                                <table>
+                                    <tr>
+                                        <th>选项</th>
+                                        <th>作用</th>
+                                    </tr>
+                                    <tr>
+                                        <td>delete_plot</td>
+                                        <td>无效参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>delete_container</td>
+                                        <td>删除整个容器</td>
+                                    </tr>
+                                    <tr>
+                                        <td>delete_snapshot_present</td>
+                                        <td>仅当blob是快照时才删除</td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><strong>include参数</strong>
+                        <ul>
+                            <li>必须选择<code>Only</code>选项</li>
+                            <li>确保只删除快照而保留基础blob</li>
+                            <li>参数对比：
+                                <table>
+                                    <tr>
+                                        <th>选项</th>
+                                        <th>效果</th>
+                                    </tr>
+                                    <tr>
+                                        <td>False</td>
+                                        <td>如果blob有快照则操作失败</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Include</td>
+                                        <td>删除blob及其所有快照</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Only</td>
+                                        <td>仅删除快照而保留blob</td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><strong>完整代码示例</strong>
+                        <pre>
+from azure.storage.blob import BlobClient
+
+blob_client = BlobClient.from_connection_string(
+    conn_str="your_connection_string",
+    container_name="your_container",
+    blob_name="your_blob"
+)
+
+# 删除所有快照但保留基础blob
+blob_client.delete_blob(
+    delete_snapshots="delete_snapshots",
+    include="Only"
+)</pre>
+                    </li>
+                    
+                    <li><strong>官方文档参考</strong>
+                        <p>
+                            <a href="https://learn.microsoft.com/en-us/python/api/azure-storage-blob/azure.storage.blob.blobclient?view=azure-python#delete-blob-delete-snapshots-none--include-none----kwargs-" target="_blank">BlobClient.delete_blob()文档</a>
+                        </p>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const snapshotsOption = document.getElementById('snapshotsOption').value;
+            const includeOption = document.getElementById('includeOption').value;
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <h3>您的选择：</h3>
+                <p><strong>Box1=</strong> ${snapshotsOption}</p>
+                <p><strong>Box2=</strong> ${includeOption}</p>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

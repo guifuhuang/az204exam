@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Networking Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f3f2f1;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 319</h2>
+        <p>You need to design network connectivity for a subnet in an Azure virtual network. The subnet will contain 30 virtual machines. The virtual machines will establish outbound connections to internet hosts by using the same a pool of four public IP addresses, inbound connections to the virtual machines will be prevented.</p>
+        <p>What should include in the design?</p>
+        
+        <div class="options">
+            <label class="option">
+                <input type="radio" name="answer" value="A"> A. Azure Private Link
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="B"> B. NAT Gateway
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="C"> C. User Defined Routes
+            </label></br></br>
+            <label class="option">
+                <input type="radio" name="answer" value="D"> D. Azure Virtual WAN
+            </label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p class="correct-answer">B. NAT Gateway</p>
+        
+        <div class="explanation">
+            <h3>说明:</h3>
+            <p><strong>为什么选择NAT Gateway:</strong></p>
+            <ul>
+                <li>NAT网关专门用于提供出站互联网连接，同时阻止入站连接</li>
+                <li>支持多个VM共享一组公共IP地址（题目要求的4个IP）</li>
+                <li>无需在VM上配置公共IP地址即可实现出站连接</li>
+                <li>自动阻止入站连接，符合安全要求</li>
+                <li>Azure推荐用于大规模出站连接场景</li>
+            </ul>
+            
+            <p><strong>其他选项为什么不正确:</strong></p>
+            <ul>
+                <li><strong>A. Azure Private Link</strong>: 用于安全访问Azure服务，不提供出站互联网连接</li>
+                <li><strong>C. User Defined Routes</strong>: 用于自定义网络流量路由，无法实现IP地址共享</li>
+                <li><strong>D. Azure Virtual WAN</strong>: 用于大规模网络连接中心，不解决具体出站连接需求</li>
+            </ul>
+            
+            <p><strong>NAT Gateway关键特性:</strong></p>
+            <ol>
+                <li>支持最多16个公共IP地址的地址池</li>
+                <li>单个NAT网关可处理最多64,000个并发流</li>
+                <li>自动SNAT（源网络地址转换）</li>
+                <li>与网络安全组(NSG)配合实现完全的网络隔离</li>
+            </ol>
+            
+            <p><strong>实现架构示例:</strong></p>
+            <pre>
+Virtual Machines (30) → Subnet → NAT Gateway (4 Public IPs) → Internet
+            ↑
+            └─────────────× 入站连接被自动阻止
+            </pre>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            document.querySelector('input[value="B"]').checked = true;
+        }
+    </script>
+</body>
+</html>

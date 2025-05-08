@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management Policy Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .policy-code {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .answer-area {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .answer-area th, .answer-area td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-area th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 404 HOTSPOT</h2>
+        
+        <p>You have an Azure API Management instance named API1 that uses a managed gateway.</p>
+        <p>You plan to implement a policy that will apply at a product scope and will set the header of inbound requests to include information about the region hosting the gateway of API1. The policy definition contains the following content:</p>
+        
+        <div class="policy-code">
+&lt;policies&gt;
+    &lt;inbound&gt;
+        &lt;set-header name="x-request-context-data" exists-action="override"&gt;
+            &lt;value&gt;@{TARGET2.Deployment.Region}&lt;/value&gt;
+        &lt;/set-header&gt;
+    &lt;/inbound&gt;
+&lt;/policies&gt;
+        </div>
+        
+        <p>You have the following requirements for the policy definition:</p>
+        <ul>
+            <li>Ensure that the header contains the information about the region hosting the gateway of API1</li>
+            <li>Ensure the policy applies only after any global level policies are processed first</li>
+        </ul>
+        
+        <p>You need to complete the policy definition.</p>
+        
+        <table class="answer-area">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TARGET1</td>
+                    <td>
+                        <select id="target">
+                            <option value="">Select an option</option>
+                            <option value="<base />">&lt;base /&gt;</option>
+                            <option value="<value>root</value>">&lt;value&gt;root&lt;/value&gt;</option>
+                            <option value="<wait for=all></wait>">&lt;wait for="all"&gt;&lt;/wait&gt;</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>TARGET2</td>
+                    <td>
+                        <select id="value">
+                            <option value="">Select an option</option>
+                            <option value="context">context</option>
+                            <option value="config">config</option>
+                            <option value="policy">policy</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">正确答案:</h3>
+        <p><strong>TARGET1:</strong> &lt;base /&gt;</p>
+        <p><strong>TARGET2:</strong> context</p>
+        
+        <div class="explanation">
+            <h4>说明:</h4>
+            
+            <p><strong>选择"&lt;base /&gt;"作为TARGET1的原因:</strong></p>
+            <ol>
+                <li><span class="highlight">&lt;base /&gt;</span>元素确保全局策略先执行</li>
+                <li>必须放在策略开头以保证执行顺序正确</li>
+                <li>其他选项不适用：
+                    <ul>
+                        <li>&lt;value&gt;root&lt;/value&gt; - 静态值，不相关</li>
+                        <li>&lt;wait for="all"&gt; - 用于并行操作，不适用</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>选择"context"作为TARGET2的原因:</strong></p>
+            <ul>
+                <li><span class="highlight">context</span>对象包含API Management运行时信息</li>
+                <li>通过<span class="highlight">context.Deployment.Region</span>可以获取网关所在区域</li>
+                <li>其他选项不包含区域信息：
+                    <ul>
+                        <li>config - 用于配置数据，不包含运行时信息</li>
+                        <li>policy - 用于策略元数据，不包含区域信息</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>修正后的完整策略:</strong></p>
+            <div class="policy-code">
+&lt;policies&gt;
+    &lt;inbound&gt;
+        &lt;base /&gt; &lt;!-- 确保全局策略先执行 --&gt;
+        &lt;set-header name="x-request-context-data" exists-action="override"&gt;
+            &lt;value&gt;@{context.Deployment.Region}&lt;/value&gt;
+        &lt;/set-header&gt;
+    &lt;/inbound&gt;
+&lt;/policies&gt;
+            </div>
+            
+            <p><strong>策略执行流程:</strong></p>
+            <ol>
+                <li>首先执行全局策略（通过&lt;base /&gt;调用）</li>
+                <li>然后执行当前作用域的策略</li>
+                <li>通过context对象获取网关区域信息</li>
+                <li>将区域信息添加到请求头x-request-context-data</li>
+            </ol>
+            
+            <p><strong>关键概念说明:</strong></p>
+            <table border="1" style="width:100%; border-collapse: collapse;">
+                <tr>
+                    <th>概念</th>
+                    <th>描述</th>
+                    <th>示例</th>
+                </tr>
+                <tr>
+                    <td>context对象</td>
+                    <td>包含API Management运行时上下文信息</td>
+                    <td>context.Deployment.Region<br>context.Request.Url</td>
+                </tr>
+                <tr>
+                    <td>策略继承</td>
+                    <td>子作用域策略可以继承父作用域策略</td>
+                    <td>使用&lt;base /&gt;调用父策略</td>
+                </tr>
+                <tr>
+                    <td>执行顺序</td>
+                    <td>全局→产品→API→操作</td>
+                    <td>从外到内依次执行</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

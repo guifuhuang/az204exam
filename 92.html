@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Storage Processing Test Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; padding: 8px; background: #fff; border-radius: 4px; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 92</h3>
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals.</p>
+        <p>You develop a software as a service (SaaS) offering to manage photographs. Users upload photos to a web service which then stores the photos in Azure Storage Blob storage. The storage account type is General-purpose V2.</p>
+        <p>When photos are uploaded, they must be processed to produce and save a mobile-friendly version of the image. The process to produce a mobile-friendly version of the image must start in less than one minute.</p>
+        <p>You need to design the process that starts the photo processing.</p>
+        <p>Solution: Trigger the photo processing from Blob storage events.</p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        <div id="answer" class="answer">
+            <p><strong>正确答案：<span class="correct">B. No</span></strong></p>
+            
+            <p><strong>说明：</strong></p>
+            <ol>
+                <li>题目核心需求分析：
+                    <ul>
+                        <li>需要捕获触发事件（Blob上传完成事件）</li>
+                        <li>必须在1分钟内启动图像处理流程</li>
+                        <li>仅配置Blob存储事件本身不足以保证处理启动</li>
+                    </ul>
+                </li>
+                <li>完整解决方案：
+                    <ul>
+                        <li>必须将处理逻辑部署到<strong>Azure Function</strong>中</li>
+                        <li>通过Event Grid订阅Blob创建事件</li>
+                        <li>使用Blob触发器绑定确保可靠处理</li>
+                    </ul>
+                </li>
+                <li>技术实现细节：
+                    <ul>
+                        <li>GPv2存储账户支持事件集成（题目条件已满足）</li>
+                        <li>事件传递延迟通常为2-10秒（远低于1分钟要求）</li>
+                        <li>需要显式创建事件订阅和处理终端</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>实现步骤：</strong></p>
+            <ol>
+                <li>创建Event Grid订阅：
+        <pre>
+        az eventgrid event-subscription create \
+          --name ImageProcessing \
+          --source-resource-id /subscriptions/{sub-id}/resourceGroups/{rg}/providers/Microsoft.Storage/storageAccounts/{account} \
+          --endpoint-type azurefunction \
+          --endpoint /subscriptions/{sub-id}/resourceGroups/{rg}/providers/Microsoft.Web/sites/{functionapp}/functions/ProcessImage \
+          --included-event-types Microsoft.Storage.BlobCreated
+        </pre>
+                </li>
+                <li>函数代码示例（Python）：
+        <pre>
+        import azure.functions as func
+        
+        app = func.FunctionApp()
+        
+        @app.function_name(name="ProcessImage")
+        @app.blob_trigger(arg_name="myblob", 
+                         path="photos/{name}",
+                         connection="AzureWebJobsStorage")
+        @app.blob_output(arg_name="outputblob",
+                        path="thumbnails/{name}",
+                        connection="AzureWebJobsStorage")
+        def main(myblob: func.InputStream, outputblob: func.Out[bytes]):
+            # 图像处理逻辑
+            processed_image = resize_image(myblob.read())
+            outputblob.set(processed_image)
+        </pre>
+                </li>
+            </ol>
+        </div>
+        
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

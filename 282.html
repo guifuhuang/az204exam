@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Inventory Data Solution</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .container { display: flex; margin: 20px 0; }
+        .technologies { width: 30%; padding: 10px; background: #e9e9e9; border-radius: 5px; margin-right: 10px; }
+        .answer-area { width: 70%; padding: 10px; background: #333; color: white; border-radius: 5px; }
+        .tech-item, .answer-slot { padding: 10px; margin: 5px; background: #fff; border-radius: 4px; cursor: move; color: black; }
+        .answer-slot { background: #555; color: white; border: 1px dashed #999; min-height: 20px; }
+        .tech-item.dragging { opacity: 0.5; }
+        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
+        .correct { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .hint { font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 282 DRAG DROP</h3>
+        <p>You are developing an Azure solution to collect inventory data from thousands of stores located around the world. Each store location will send the inventory data hourly to an Azure Blob storage account for processing.</p>
+        <p>The solution must meet the following requirements:</p>
+        <ul>
+            <li>Begin processing when data is saved to Azure Blob storage.</li>
+            <li>Filter data based on store location information.</li>
+            <li>Trigger an Azure Logic App to process the data for output to Azure Cosmos DB.</li>
+            <li>Enable high availability and geographic distribution.</li>
+            <li>Allow 24-hours for retries.</li>
+            <li>Implement an exponential back off data processing.</li>
+        </ul>
+        <p>You need to configure the solution.</p>
+        <p>What should you implement? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="container">
+            <div class="technologies" id="technologies">
+                <div class="tech-item" draggable="true" data-value="EventHub">Azure Event Hub</div>
+                <div class="tech-item" draggable="true" data-value="EventGrid">Azure Event Grid</div>
+                <div class="tech-item" draggable="true" data-value="ServiceBus">Azure Service Bus</div>
+                <div class="tech-item" draggable="true" data-value="BlobStorage">Azure Blob Storage</div>
+                <div class="tech-item" draggable="true" data-value="AppService">Azure App Service</div>
+                <div class="tech-item" draggable="true" data-value="LogicApp">Azure Logic App</div>
+            </div>
+            
+            <div class="answer-area" id="answer-area">
+                <table>
+                    <tr>
+                        <th>Object</th>
+                        <th>Technology</th>
+                    </tr>
+                    <tr>
+                        <td>Event Source</td>
+                        <td class="answer-slot" data-slot="source"></td>
+                    </tr>
+                    <tr>
+                        <td>Event Receiver</td>
+                        <td class="answer-slot" data-slot="receiver"></td>
+                    </tr>
+                    <tr>
+                        <td>Event Handler</td>
+                        <td class="answer-slot" data-slot="handler"></td>
+                    </tr>
+                </table>
+                <div class="hint">Drag technologies to the appropriate slots</div>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><strong>正确答案：</strong></p>
+            <table>
+                <tr>
+                    <th>Object</th>
+                    <th>Technology</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td class="correct">Event Source</td>
+                    <td class="correct">Azure Blob Storage</td>
+                    <td>题目明确要求从Blob存储开始处理，当数据保存时触发</td>
+                </tr>
+                <tr>
+                    <td class="correct">Event Receiver</td>
+                    <td class="correct">Azure Event Grid</td>
+                    <td>
+                        <ul>
+                            <li>Event Grid可以监听Blob存储事件</li>
+                            <li>支持基于元数据（如存储位置）的事件过滤</li>
+                            <li>天然支持高可用和地理分布</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="correct">Event Handler</td>
+                    <td class="correct">Azure Logic App</td>
+                    <td>
+                        <ul>
+                            <li>题目明确要求触发Logic App进行处理</li>
+                            <li>Logic App内置重试策略（支持24小时重试窗口）</li>
+                            <li>支持指数退避处理模式</li>
+                            <li>可输出到Cosmos DB</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            
+            <p><strong>架构解析：</strong></p>
+            <ol>
+                <li><strong>为什么选择Event Grid而不是其他消息服务？</strong>
+                    <ul>
+                        <li>Event Hub：更适合高吞吐量流数据处理，但缺少存储事件集成</li>
+                        <li>Service Bus：适合可靠消息传递，但不直接支持Blob存储事件</li>
+                        <li>Event Grid：专为事件驱动架构设计，与Blob存储深度集成</li>
+                    </ul>
+                </li>
+                
+                <li><strong>解决方案工作流：</strong>
+                    <pre>1. 商店数据 → Blob存储（触发事件）
+2. Event Grid捕获Blob创建事件
+   → 根据存储位置元数据过滤
+3. Event Grid触发Logic App
+4. Logic App处理数据（带重试机制）
+5. 处理结果写入Cosmos DB</pre>
+                </li>
+                
+                <li><strong>关键配置代码片段：</strong>
+                    <pre>// Event Grid订阅创建（Azure CLI）
+az eventgrid event-subscription create \
+  --name stores-subscription \
+  --source-resource-id /subscriptions/{sub-id}/resourceGroups/{rg}/providers/Microsoft.Storage/storageAccounts/{account} \
+  --endpoint-type logicapp \
+  --endpoint /subscriptions/{sub-id}/resourceGroups/{rg}/providers/Microsoft.Logic/workflows/{logic-app-name} \
+  --subject-begins-with "/blobServices/default/containers/{container}/" \
+  --advanced-filter storeLocation eq 'WestUS'</pre>
+                </li>
+            </ol>
+            
+            <p><strong>官方文档参考：</strong></p>
+            <p>
+                <a href="https://learn.microsoft.com/en-us/azure/event-grid/blob-event-quickstart-portal" target="_blank">Blob存储与Event Grid集成</a> |
+                <a href="https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-exception-handling" target="_blank">Logic App重试策略</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let draggedItem = null;
+        
+        // 设置拖拽事件
+        document.querySelectorAll('.tech-item').forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => this.classList.add('dragging'), 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+        
+        document.querySelectorAll('.answer-slot').forEach(slot => {
+            slot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            slot.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#777';
+            });
+            
+            slot.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '#555';
+            });
+            
+            slot.addEventListener('drop', function() {
+                this.style.backgroundColor = '#555';
+                if (draggedItem) {
+                    this.innerHTML = draggedItem.textContent;
+                    this.setAttribute('data-value', draggedItem.getAttribute('data-value'));
+                }
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 显示用户选择
+            const userSelections = [];
+            document.querySelectorAll('.answer-slot').forEach(slot => {
+                if (slot.textContent.trim() !== '') {
+                    userSelections.push({
+                        role: slot.parentElement.parentElement.firstElementChild.textContent,
+                        technology: slot.textContent
+                    });
+                }
+            });
+            
+            const userSelectionsDiv = document.createElement('div');
+            userSelectionsDiv.innerHTML = `
+                <p><strong>您的选择：</strong></p>
+                <table>
+                    ${userSelections.map(item => `
+                        <tr>
+                            <td>${item.role}</td>
+                            <td>${item.technology}</td>
+                        </tr>
+                    `).join('') || '<tr><td colspan="2">未完成全部选择</td></tr>'}
+                </table>
+            `;
+            document.getElementById('answer').prepend(userSelectionsDiv);
+        }
+    </script>
+</body>
+</html>

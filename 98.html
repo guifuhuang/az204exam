@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure API Authentication Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 98</h2>
+        <p>Your company is developing an Azure API.</p>
+        <p>You need to implement authentication for the Azure API. You have the following requirements:</p>
+        <ul>
+            <li>All API calls must be secure.</li>
+            <li>Callers to the API must not send credentials to the API.</li>
+        </ul>
+        <p>Which authentication mechanism should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Basic</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Anonymous</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Managed identity</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Client certificate</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">View Answer</button>
+        
+        <div id="answer" class="answer">
+            <h3>Correct Answer: C</h3>
+            <p><strong>Explanation:</strong></p>
+            <p>Use the authentication-managed-identity policy to authenticate with a backend service using the managed identity of the API Management service. This policy essentially uses the managed identity to obtain an access token from Azure Active Directory for accessing the specified resource. After successfully obtaining the token, the policy will set the value of the token in the Authorization header using the Bearer scheme.</p>
+            <p><strong>说明：</strong></p>
+            <p>选项分析：</br>
+                1.<strong>Basic</strong>（基本认证）：</br>
+                
+                需要调用方发送用户名和密码凭据（Base64编码），违反了题目中“Callers must not send credentials”的要求。
+                安全性较低，不适合高安全场景。</br>
+                2.<strong>Anonymous</strong>（匿名认证）：</br>
+                
+                完全无需认证，违反“All API calls must be secure”的要求。
+                仅适用于无需安全保护的公开数据场景。</br>
+                3.<strong>Managed identity</strong>（托管标识）：</br>
+                
+                完全符合题目要求：
+                无需调用方发送凭据：托管标识由Azure自动管理，调用方通过Azure AD获取令牌（如OAuth 2.0流程），无需处理原始凭据。
+                高安全性：基于Azure AD的令牌验证（如JWT），支持TLS加密和RBAC授权。
+                适用于服务间认证，是Azure推荐的现代身份验证方式。</br>
+                4.<strong>Client certificate</strong>（客户端证书）：</br>
+                
+                虽然安全，但需要调用方持有并发送证书（相当于凭据），部分违反“不发送凭据”的要求。
+                更适合双向TLS（mTLS）场景，而非题目描述的API调用方场景。</br>
+                <strong>结论:</strong>
+                正确答案是 C. Managed identity，因为它无需调用方直接处理凭据，同时通过Azure AD的令牌机制确保安全性。</br>
+                
+                : 客户端证书需要显式传递凭据</br>
+                : 托管标识与OAuth 2.0集成</br>
+                : 托管标识通过Azure AD令牌授权</br>
+                : 托管标识策略文档</br>
+                : 基本认证需发送凭据</br>
+                : 匿名访问不安全</p>
+            <p><strong>Reference:</strong><br>
+            <a href="https://docs.microsoft.com/bs-cyrl-ba/azure/api-management/api-management-authentication-policies" target="_blank">https://docs.microsoft.com/bs-cyrl-ba/azure/api-management/api-management-authentication-policies</a></p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

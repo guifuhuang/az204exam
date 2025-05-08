@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Management Policy Question</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .question { margin-bottom: 20px; }
+        .options { margin-left: 20px; }
+        button { margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #answer { display: none; margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 99</h3>
+        <p>You are a developer for a SaaS company that offers many web services.</p>
+        <p>All web services for the company must meet the following requirements:</p>
+        <ul>
+            <li>Use API Management to access the services</li>
+            <li>Use OpenID Connect for authentication</li>
+            <li>Prevent anonymous usage</li>
+        </ul>
+        <p>A recent security audit found that several web services can be called without any authentication.</p>
+        <p>Which API Management policy should you implement?</p>
+    </div>
+    <div class="options">
+        <form>
+            <label><input type="radio" name="option" value="A"> A. jsonp</label><br>
+            <label><input type="radio" name="option" value="B"> B. authentication-certificate</label><br>
+            <label><input type="radio" name="option" value="C"> C. check-header</label><br>
+            <label><input type="radio" name="option" value="D"> D. validate-jwt</label><br>
+        </form>
+    </div>
+    <button onclick="showAnswer()">查看答案</button>
+    <div id="answer">
+        <p><strong>答案：D. validate-jwt</strong></p>
+        <p><strong>说明：</strong></p>
+        <ul>
+            <li><strong>validate-jwt</strong> 策略直接验证OpenID Connect的JWT令牌，确保请求携带有效身份凭证。</li>
+            <li>与API Management集成，可配置令牌签名、颁发者等参数，阻止匿名调用。</li>
+            <li>其他选项（如jsonp或check-header）无法满足OpenID Connect的认证要求。</li>
+        </ul>
+        <p><strong>补充说明：</strong></p>
+        <ul>
+            <li>1.jsonp：用于跨域请求的JSONP回调，与身份验证无关，违反题目中“Prevent anonymous usage”的要求。</li>
+            <li>2.authentication-certificate：基于客户端证书的认证，虽然安全，但不符合题目要求的OpenID Connect流程。</li>
+                <li>3.check-header：仅检查请求头（如API密钥），无法验证OpenID Connect的JWT令牌，无法确保令牌有效性。</li>
+                    <li>4.validate-jwt：完全符合题目要求：
+支持OpenID Connect：验证JWT令牌（OpenID Connect的核心输出），确保令牌由可信的Identity Provider（如Azure AD）签发。
+阻止匿名访问：直接拦截未携带有效JWT的请求。
+集成API Management：是Azure API Management等平台的标准策略，可配置令牌签名、颁发者等参数。</li>
+        </ul>
+    </div>
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
