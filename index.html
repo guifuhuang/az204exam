@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
   <title>HTML Viewer</title>
   <style>
     body {
@@ -79,6 +83,7 @@
 <div id="nav">
   <button onclick="prevPage()">Previous</button>
   <button onclick="nextPage()">Next</button>
+  <button onclick="refreshPages()">Refresh</button>
   <span>Go to:</span>
   <input type="number" id="pageInput" min="1" style="width: 60px;" />
   <button onclick="goToPage()">Go</button>
@@ -95,7 +100,7 @@
     // 模拟获取目录下所有HTML文件
     // 实际部署时可能需要服务器端支持或使用其他方法
     const allFiles = [
-      "79.html", "80.html", "81.html", "84.html", "85.html", "87.html", 
+      "79.html", "80.html", "81.html", "84.html", "85.html", "86.html", "87.html", 
       "91.html", "92.html", "93.html", "94.html", "95.html", "96.html", 
       "97.html", "98.html", "99.html", "100.html", "101.html", "102.html",
       "107.html", "108.html", "109.html", "110.html", "111.html", "116.html",
@@ -202,9 +207,37 @@
     });
   }
 
+  function refreshPages() {
+    const currentFile = htmlPages[currentIndex];
+    loadHtmlFiles();
+    // 尝试重新加载当前文件
+    const newIndex = htmlPages.findIndex(file => file === currentFile);
+    if (newIndex >= 0) {
+      loadPage(newIndex);
+    } else {
+      loadPage(0); // 如果原文件不存在了，加载第一个文件
+    }
+  }
+
   // 初始化加载文件列表和第一个页面
   loadHtmlFiles();
   loadPage(0);
+  
+  // 为pageInput添加事件监听，支持回车键和手机输入法确认
+  const pageInput = document.getElementById("pageInput");
+  pageInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      goToPage();
+    }
+  });
+  // 监听input事件以支持手机输入法的"前往"/"确定"按钮
+  pageInput.addEventListener("input", function() {
+    // 当输入框失去焦点时(如点击手机键盘的"完成"按钮)执行跳转
+    this.addEventListener("blur", function handler() {
+      goToPage();
+      this.removeEventListener("blur", handler);
+    });
+  });
 </script>
 
 </body>

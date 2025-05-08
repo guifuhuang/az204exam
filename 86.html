@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Replication Question</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+            touch-action: manipulation;
+        }
+        .question-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        .options-list {
+            width: 100%;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .drop-area {
+            width: 100%;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            min-height: 150px;
+        }
+        .drag-item {
+            background-color: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #bbdefb;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .drag-item.dragging {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            opacity: 0.9;
+        }
+        .drag-item.placeholder {
+            background-color: #f1f8e9;
+            border: 1px dashed #7cb342;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #106EBE;
+        }
+        #answer {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .correct-answer {
+            color: #107C10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 12px;
+            border-left: 4px solid #ffd600;
+            margin: 12px 0;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            margin: 15px 0;
+        }
+        .sequence {
+            counter-reset: step;
+            margin: 20px 0;
+        }
+        .step {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+        .step:before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0078D4;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-size: 16px;
+        }
+        @media (min-width: 768px) {
+            .drag-drop-container {
+                flex-direction: row;
+            }
+            .options-list {
+                width: 50%;
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+            .drop-area {
+                width: 50%;
+            }
+            button {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 86 DRAG DROP</h2>
+        
+        <p>You are developing an application to use Azure Blob storage. You have configured Azure Blob storage to include change feeds.</p>
+        
+        <p>A copy of your storage account must be created in another region. Data must be copied from the current storage account to the new storage account directly between the storage servers.</p>
+        
+        <p>You need to create a copy of the storage account in another region and copy the data.</p>
+        
+        <p>In which order should you perform the actions? To answer, move all actions from the list of actions to the answer area and arrange them in the correct order.</p>
+        
+        <div class="drag-drop-container">
+            <div class="options-list" id="source">
+                <div class="drag-item" data-value="export">Export a Resource Manager template</div>
+                <div class="drag-item" data-value="modify">Modify the template by changing the storage account name and region</div>
+                <div class="drag-item" data-value="deploy">Deploy the template to create a new storage account in the target region</div>
+                <div class="drag-item" data-value="create">Create a new template deployment</div>
+                <div class="drag-item" data-value="copy">Use AZCopy to copy the data to the new storage account</div>
+            </div>
+            <div class="drop-area" id="target">
+                <p>Drag answers here in correct order</p>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">Show Answer</button>
+    
+    <div id="answer">
+        <h3 class="correct-answer">Correct Answer:</h3>
+        
+        <div class="correct">
+            <div class="sequence">
+                <div class="step">Export a Resource Manager template</div>
+                <div class="step">Modify the template by changing the storage account name and region</div>
+                <div class="step">Create a new template deployment</div>
+                <div class="step">Deploy the template to create a new storage account in the target region</div>
+                <div class="step">Use AZCopy to copy the data to the new storage account</div>
+            </div>
+            
+            <div class="explanation">
+                <h4>Technical Explanation:</h4>
+                
+                <div class="note">
+                    <p><strong>Implementation Steps:</strong></p>
+                    <ol>
+                        <li><b>Export template</b>: Capture current storage account configuration</li>
+                        <li><b>Modify template</b>: Update name (for uniqueness) and target region</li>
+                        <li><b>Create deployment</b>: Prepare the deployment configuration</li>
+                        <li><b>Deploy template</b>: Actually create the new storage account</li>
+                        <li><b>Use AZCopy</b>: Microsoft's high-performance copy tool for server-side transfers</li>
+                    </ol>
+                </div>
+
+                <h4>Key Considerations:</h4>
+                <table style="width:100%; border-collapse: collapse;">
+                    <tr style="background-color: #e9ecef;">
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Step</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Azure Service</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Time Required</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">1. Export template</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Azure Resource Manager</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Seconds</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">2. Modify template</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">JSON editing</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Minutes</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">3. Create deployment</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Azure Deployment Service</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Seconds</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">4. Deploy template</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Azure Resource Provider</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Minutes</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">5. Data copy</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">AZCopy + Storage Service</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #ddd;">Hours/Days (data dependent)</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="note">
+                <p><strong>Production Recommendations:</strong></p>
+                <ul>
+                    <li>Schedule data copy during off-peak hours</li>
+                    <li>Consider AZCopy sync mode rather than simple copy for ongoing changes</li>
+                    <li>For very large datasets (>100TB), evaluate Azure Data Box</li>
+                    <li>Verify configuration and data integrity post-migration</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Touch and mouse drag implementation
+        const dragItems = document.querySelectorAll('.drag-item');
+        let draggedItem = null;
+        let placeholder = null;
+        let isDragging = false;
+        let startY, startX, offsetY, offsetX;
+        
+        // Add event listeners to each draggable item
+        dragItems.forEach(item => {
+            // Touch events
+            item.addEventListener('touchstart', handleTouchStart, { passive: false });
+            item.addEventListener('touchmove', handleTouchMove, { passive: false });
+            item.addEventListener('touchend', handleTouchEnd);
+            
+            // Mouse events
+            item.addEventListener('mousedown', handleMouseDown);
+        });
+        
+        // Touch start handler
+        function handleTouchStart(e) {
+            e.preventDefault();
+            isDragging = true;
+            draggedItem = e.target.closest('.drag-item');
+            startY = e.touches[0].clientY;
+            startX = e.touches[0].clientX;
+            
+            // Create placeholder
+            createPlaceholder();
+            draggedItem.classList.add('dragging');
+            
+            // Set initial position
+            const rect = draggedItem.getBoundingClientRect();
+            offsetY = startY - rect.top;
+            offsetX = startX - rect.left;
+            
+            // Elevate element
+            draggedItem.style.position = 'absolute';
+            draggedItem.style.zIndex = '1000';
+            updatePosition(e.touches[0].clientX, e.touches[0].clientY);
+        }
+        
+        // Touch move handler
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            updatePosition(e.touches[0].clientX, e.touches[0].clientY);
+            updateDropAreas(e.touches[0].clientX, e.touches[0].clientY);
+        }
+        
+        // Touch end handler
+        function handleTouchEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // Handle drop
+            const dropArea = document.elementFromPoint(startX, startY).closest('.drop-area');
+            if (dropArea) {
+                dropItem(dropArea);
+            }
+            
+            // Cleanup
+            cleanupDrag();
+        }
+        
+        // Mouse down handler
+        function handleMouseDown(e) {
+            if (e.button !== 0) return; // Only left mouse button
+            e.preventDefault();
+            isDragging = true;
+            draggedItem = e.target.closest('.drag-item');
+            startY = e.clientY;
+            startX = e.clientX;
+            
+            // Create placeholder
+            createPlaceholder();
+            draggedItem.classList.add('dragging');
+            
+            // Set initial position
+            const rect = draggedItem.getBoundingClientRect();
+            offsetY = startY - rect.top;
+            offsetX = startX - rect.left;
+            
+            // Elevate element
+            draggedItem.style.position = 'absolute';
+            draggedItem.style.zIndex = '1000';
+            updatePosition(e.clientX, e.clientY);
+            
+            // Add global mouse events
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+        
+        // Mouse move handler
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            updatePosition(e.clientX, e.clientY);
+            updateDropAreas(e.clientX, e.clientY);
+        }
+        
+        // Mouse up handler
+        function handleMouseUp(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // Handle drop
+            const dropArea = document.elementFromPoint(e.clientX, e.clientY).closest('.drop-area');
+            if (dropArea) {
+                dropItem(dropArea);
+            }
+            
+            // Cleanup
+            cleanupDrag();
+            
+            // Remove global mouse events
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        }
+        
+        // Create placeholder element
+        function createPlaceholder() {
+            placeholder = document.createElement('div');
+            placeholder.classList.add('drag-item', 'placeholder');
+            placeholder.innerHTML = '&nbsp;';
+            draggedItem.parentNode.insertBefore(placeholder, draggedItem);
+        }
+        
+        // Update element position during drag
+        function updatePosition(x, y) {
+            draggedItem.style.left = (x - offsetX) + 'px';
+            draggedItem.style.top = (y - offsetY) + 'px';
+        }
+        
+        // Highlight drop areas during drag
+        function updateDropAreas(x, y) {
+            const elements = document.elementsFromPoint(x, y);
+            const dropArea = elements.find(el => el.classList.contains('drop-area'));
+            
+            document.querySelectorAll('.drop-area').forEach(area => {
+                area.style.backgroundColor = area === dropArea ? '#e3f2fd' : '#f8f9fa';
+            });
+        }
+        
+        // Drop item into target area
+        function dropItem(dropArea) {
+            // Check if already exists in target
+            const existingItem = Array.from(dropArea.children).find(
+                child => child.dataset.value === draggedItem.dataset.value && child !== placeholder
+            );
+            
+            if (!existingItem) {
+                const clone = draggedItem.cloneNode(true);
+                clone.style.position = '';
+                clone.style.top = '';
+                clone.style.left = '';
+                clone.style.zIndex = '';
+                clone.classList.remove('dragging');
+                
+                // Add events to cloned element
+                clone.addEventListener('touchstart', handleTouchStart, { passive: false });
+                clone.addEventListener('touchmove', handleTouchMove, { passive: false });
+                clone.addEventListener('touchend', handleTouchEnd);
+                clone.addEventListener('mousedown', handleMouseDown);
+                
+                dropArea.appendChild(clone);
+                
+                // Remove prompt text if present
+                const prompt = dropArea.querySelector('p');
+                if (prompt && dropArea.children.length > 1) {
+                    dropArea.removeChild(prompt);
+                }
+            }
+        }
+        
+        // Cleanup after drag operation
+        function cleanupDrag() {
+            if (placeholder && placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+            
+            if (draggedItem) {
+                draggedItem.style.position = '';
+                draggedItem.style.top = '';
+                draggedItem.style.left = '';
+                draggedItem.style.zIndex = '';
+                draggedItem.classList.remove('dragging');
+                draggedItem = null;
+            }
+            
+            // Reset drop area highlighting
+            document.querySelectorAll('.drop-area').forEach(area => {
+                area.style.backgroundColor = '';
+            });
+        }
+        
+        // Show answer
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Clear and populate target with correct answer
+            const target = document.getElementById('target');
+            target.innerHTML = '';
+            const correctOrder = ['export', 'modify', 'create', 'deploy', 'copy'];
+            
+            correctOrder.forEach(value => {
+                const item = document.querySelector(`.drag-item[data-value="${value}"]`);
+                if (item) {
+                    const clone = item.cloneNode(true);
+                    
+                    // Add events to cloned answer items
+                    clone.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    clone.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    clone.addEventListener('touchend', handleTouchEnd);
+                    clone.addEventListener('mousedown', handleMouseDown);
+                    
+                    target.appendChild(clone);
+                }
+            });
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
