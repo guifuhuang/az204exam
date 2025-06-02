@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 295 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .select-dropdown {
+            display: inline-block;
+            position: relative;
+            margin: 0 5px;
+        }
+        .select-dropdown select {
+            padding: 6px 10px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 295 HOTSPOT</h2>
+        <p>You are developing an ASP.NET Core time sheet application that runs as an Azure Web App.</p>
+        <p>Users of the application enter their time sheet information on the first day of every month.</p>
+        <p>The application uses a third-party web service to validate data.</p>
+        <p>The application encounters periodic server errors due to errors that result from calling a third-party web server. Each request to the third-party server has the same chance of failure.</p>
+        <p>You need to configure an Azure Monitor alert to detect server errors unrelated to the third-party service. You must minimize false-positive alerts.</p>
+        <p>How should you complete the Azure Resource Manager template? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="code-container">
+{
+  "type": "Microsoft.Insights/metricAlerts",
+  "properties": {
+    "criteria": {
+      "odata.type": "...",
+      "allOf": [
+        {
+          "criterionType": "<span class="select-dropdown">
+            <select id="criterionType">
+              <option value="">Select an option</option>
+              <option value="DynamicThresholdCriterion">DynamicThresholdCriterion</option>
+              <option value="SingleResourceMultipleMetricCriteria">SingleResourceMultipleMetricCriteria</option>
+            </select>
+          </span>",
+          "metricName": "<span class="select-dropdown">
+            <select id="metricName">
+              <option value="">Select an option</option>
+              <option value="Http4xx">Http4xx</option>
+              <option value="Http5xx">Http5xx</option>
+            </select>
+          </span>",
+          "alertSensitivity": "<span class="select-dropdown">
+            <select id="alertSensitivity">
+              <option value="">Select an option</option>
+              <option value="Low">Low</option>
+              <option value="High">High</option>
+            </select>
+          </span>"
+        }
+      ]
+    }
+  }
+}
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <table class="answer-table">
+            <tr>
+                <th>配置项</th>
+                <th>正确选项</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td>criterionType</td>
+                <td class="correct-answer">DynamicThresholdCriterion</td>
+                <td>动态阈值能自动适应流量模式变化，更适合周期性应用</td>
+            </tr>
+            <tr>
+                <td>metricName</td>
+                <td class="correct-answer">Http5xx</td>
+                <td>需要监控服务器错误（5xx），而非客户端错误（4xx）</td>
+            </tr>
+            <tr>
+                <td>alertSensitivity</td>
+                <td class="correct-answer">Low</td>
+                <td>题目明确要求最小化误报，低敏感度最符合要求</td>
+            </tr>
+        </table>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>criterionType</strong>：选择"DynamicThresholdCriterion"因为时间表应用每月第一天使用，流量模式变化大，动态阈值能自动适应这种变化。</p>
+            <p>2. <strong>metricName</strong>：选择"Http5xx"因为需要监控服务器端错误（500-599），这些错误通常表示服务器问题而非第三方服务问题。</p>
+            <p>3. <strong>alertSensitivity</strong>：选择"Low"因为题目明确要求最小化误报，低敏感度可以减少不必要的警报。</p>
+            <p>注意：odata.type选项已被移除，因为在新模板中它已被固定为"..."。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

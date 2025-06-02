@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Question 315</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        .answer-button {
+            padding: 8px 16px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 4px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 315</h2>
+        <p>You have an Azure Cosmos DB instance that uses the Strong consistency level and 10,000 Request Units (RUs) per container. Geo-replication is enabled.</p>
+        <p>The instance stores restaurant information including location, menu items, and staff. You currently store information for 1,000 restaurant locations, 500 menu items, and 10,000 staff members. You select the location id as the partition key.</p>
+        <p>How many logical partitions will be created for the container?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. 500</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. 1,100</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. 10,000</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. 10,000,000</label>
+            </div>
+        </div>
+        
+        <button class="answer-button" id="showAnswer">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <h3>正确答案: <span class="correct">C. 10,000</span></h3>
+            <h3>说明:</h3>
+            <p>在Azure Cosmos DB中，逻辑分区的数量由分区键的唯一值数量决定。题目中指定了location id作为分区键，并且有10,000名员工(staff members)。</p>
+            <p>虽然题目提到有1,000个餐厅位置和500个菜单项，但员工数量(10,000)才是决定分区数量的关键因素，因为：</p>
+            <ul>
+                <li>每个员工记录都需要存储，且使用location id作为分区键</li>
+                <li>即使多个员工可能属于同一个餐厅位置，Cosmos DB会为每个唯一的分区键值创建一个逻辑分区</li>
+                <li>题目中提到的10,000名员工意味着可能有最多10,000个唯一的分区键值</li>
+            </ul>
+            <p>因此，最可能创建10,000个逻辑分区。</p>
+            <p>注意：一致性级别(Strong)和RU设置(10,000)不会影响逻辑分区的数量。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerDiv.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+        });
+    </script>
+</body>
+</html>

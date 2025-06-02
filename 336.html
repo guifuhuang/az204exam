@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">QUESTION NO: 336</div>
+    <div class="question">You are developing a user portal for a company. You need to create a report for the portal that lists information about employees who are subject matter experts for a specific topic. You must ensure that administrators have full control and consent over the data. Which technology should you use?</div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="radio" name="q336" id="q336a" value="A">
+            <label for="q336a">A. Microsoft Graph connectors</label>
+        </div>
+        <div class="option">
+            <input type="radio" name="q336" id="q336b" value="B">
+            <label for="q336b">B. Microsoft graph API</label>
+        </div>
+        <div class="option">
+            <input type="radio" name="q336" id="q336c" value="C">
+            <label for="q336c">C. Microsoft Graph data connect</label>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer" class="answer">
+        <p><strong>正确答案：C. Microsoft Graph data connect</strong></p>
+        <p><strong>解析：</strong></p>
+        <p>Microsoft Graph data connect 是这个场景的最佳选择，原因如下：</p>
+        <ol>
+            <li>它提供了精细的数据访问控制，允许管理员对数据进行精确控制</li>
+            <li>专为批量数据处理和报告场景设计</li>
+            <li>通过Azure AD进行严格的身份验证和授权</li>
+            <li>支持大规模数据提取，适合创建员工专题专家报告</li>
+        </ol>
+        <p>其他选项：</p>
+        <ul>
+            <li>A. Microsoft Graph connectors主要用于连接外部数据源</li>
+            <li>B. Microsoft Graph API更适合实时、小规模的数据访问</li>
+        </ul>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

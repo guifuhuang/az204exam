@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API App Authentication Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+        }
+        .incorrect {
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 164</h2>
+        <p>You are implementing an Azure API app that uses built-in authentication and authorization functionality.</p>
+        <p>All app actions must be associated with information about the current user.</p>
+        <p>You need to retrieve the information about the current user.</p>
+        <p>What are two possible ways to achieve the goal? Each correct answer presents a complete solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="options">
+        <div class="option" onclick="toggleOption(this)">
+            <input type="checkbox" id="optionA" name="option" value="A">
+            <label for="optionA">A. HTTP headers</label>
+        </div>
+        <div class="option" onclick="toggleOption(this)">
+            <input type="checkbox" id="optionB" name="option" value="B">
+            <label for="optionB">B. environment variables</label>
+        </div>
+        <div class="option" onclick="toggleOption(this)">
+            <input type="checkbox" id="optionC" name="option" value="C">
+            <label for="optionC">C. /.auth/me HTTP endpoint</label>
+        </div>
+        <div class="option" onclick="toggleOption(this)">
+            <input type="checkbox" id="optionD" name="option" value="D">
+            <label for="optionD">D. /.auth/login endpoint</label>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><strong>A. HTTP headers</strong> 和 <strong>C. /.auth/me HTTP endpoint</strong></p>
+        
+        <h3>解析:</h3>
+        <p>在Azure API应用中获取当前用户信息的两种有效方法：</p>
+        
+        <ol>
+            <li><strong>HTTP headers</strong>：
+                <ul>
+                    <li>Azure应用服务的身份验证模块会在请求头中添加用户信息</li>
+                    <li>常见的头信息包括：
+                        <ul>
+                            <li>X-MS-CLIENT-PRINCIPAL-NAME</li>
+                            <li>X-MS-CLIENT-PRINCIPAL-ID</li>
+                            <li>X-MS-CLIENT-PRINCIPAL</li>
+                        </ul>
+                    </li>
+                    <li>这些头信息包含了经过验证的用户身份详情[6](@ref)</li>
+                </ul>
+            </li>
+            <li><strong>/.auth/me HTTP endpoint</strong>：
+                <ul>
+                    <li>Azure应用服务提供了一个内置的认证端点</li>
+                    <li>向此端点发送GET请求会返回当前用户的完整身份信息</li>
+                    <li>返回的JSON数据包含用户声明、提供者信息等详细认证数据[4](@ref)</li>
+                    <li>这是获取用户信息的标准方法，适用于所有支持的应用服务认证提供者</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>其他选项分析：</p>
+        <ul>
+            <li><strong>B. environment variables</strong>：环境变量不包含动态的用户认证信息</li>
+            <li><strong>D. /.auth/login endpoint</strong>：这是用于发起登录的端点，不是获取用户信息的[4](@ref)</li>
+        </ul>
+        
+        <p>实现建议：</p>
+        <ul>
+            <li>对于简单场景，使用HTTP头信息更轻量高效</li>
+            <li>需要完整用户声明信息时，应使用/.auth/me端点</li>
+            <li>确保应用配置了正确的身份验证提供者（如Azure AD）[3](@ref)</li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+        }
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Highlight correct answers
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                const value = option.querySelector('input').value;
+                if (value === 'A' || value === 'C') {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

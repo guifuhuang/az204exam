@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure ARM Template Configuration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .code-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown {
+            margin: 5px;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .answer-btn {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .answer-btn:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h2>Azure Resource Manager Template Configuration Test</h2>
+    
+    <p>You are configuring a new development environment for a Java application. The environment requires a Virtual Machine Scale Set (VMSS), several storage accounts, and networking components. The VMSS must not be created until the storage accounts have been successfully created and an associated load balancer and virtual network is configured.</p>
+    
+    <p>How should you complete the Azure Resource Manager template? Select the appropriate options in the answer area.</p>
+    
+    <div class="code-container">
+{
+    "resources": [
+        {
+            "apiVersion": "2016-01-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[concat(<select id="dropdown0" class="dropdown">
+                    <option value="copy">copy</option>
+                    <option value="copyIndex">copyIndex</option>
+                    <option value="priority">priority</option>
+                    <option value="dependsOn">dependsOn</option>
+                </select>(),'storage', uniqueString(resourceGroup().id))]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "Storage",
+            "properties": {},
+            "<select id="dropdown1" class="dropdown">
+                    <option value="copy">copy</option>
+                    <option value="copyIndex">copyIndex</option>
+                    <option value="priority">priority</option>
+                    <option value="dependsOn">dependsOn</option>
+                </select>": {
+                "name": "storagecopy",
+                "count": 3
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat('VM', uniqueString(resourceGroup().id))]",
+            "<select id="dropdown3" class="dropdown">
+                    <option value="copy">copy</option>
+                    <option value="copyIndex">copyIndex</option>
+                    <option value="priority">priority</option>
+                    <option value="dependsOn">dependsOn</option>
+                </select>": [
+                "[ variables('loadbalancerName')]",
+                "[ variables('virtualNetworkName')]",
+                "storagesetup",
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A1"
+                },
+                "osProfile": {
+                    "computerName": "[concat('VM', copyIndex())]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2012-R2-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "osdisk",
+                        "vhd": {
+                            "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, 'vhds/osdisk', copyIndex(), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
+    </div>
+    
+    <button id="answerBtn" class="answer-btn">查看答案</button>
+    
+    <div id="answerSection" class="answer-section">
+        <h3>正确答案:</h3>
+        <p>1. 第一个下拉框: <span class="highlight">copyIndex</span> - 用于生成唯一的存储账户名称，copyIndex()函数返回当前迭代的索引值</p>
+        <p>2. 第二个下拉框: <span class="highlight">copy</span> - 用于创建多个存储账户实例，copy属性定义了复制操作</p>
+        <p>3. 第三个下拉框: <span class="highlight">dependsOn</span> - 虚拟机必须依赖于负载均衡器、虚拟网络和存储账户资源，确保这些资源先创建完成</p>
+        
+        <h3>解释说明:</h3>
+        <p>在Azure资源管理器(ARM)模板中：</p>
+        <p><strong>copyIndex()</strong>函数在创建多个资源实例时非常有用，它返回当前迭代的索引值(从0开始)，可以用来生成唯一的资源名称。</p>
+        <p><strong>copy</strong>属性用于定义资源的复制行为，可以创建多个相同配置的资源实例。在这里用于创建多个存储账户。</p>
+        <p><strong>dependsOn</strong>属性用于定义资源之间的依赖关系，确保资源按特定顺序创建。题目要求VMSS必须在存储账户、负载均衡器和虚拟网络配置完成后才能创建，因此需要使用dependsOn来明确这些依赖关系。</p>
+    </div>
+    
+    <script>
+        document.getElementById('answerBtn').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection.style.display === 'none' || answerSection.style.display === '') {
+                answerSection.style.display = 'block';
+            } else {
+                answerSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

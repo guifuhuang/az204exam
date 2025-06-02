@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Dependency Tracking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .options-container {
+            margin: 20px 0;
+        }
+        .option {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #e9e9e9;
+        }
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: #0288d1;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 4px solid #4caf50;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .option {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 104</h2>
+        <p>You are developing an ASP.NET Core Web API web service. The web service uses Azure Application Insights for all telemetry and dependency tracking. The web service reads and writes data to a database other than Microsoft SQL Server.</p>
+        <p>You need to ensure that dependency tracking works for calls to the third-party database.</p>
+        <p>Which two Dependency Telemetry properties should you store in the database? Each correct answer presents part of the solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="options-container">
+            <div class="option" data-value="A">A. Telemetry.Context.Operation.Id</div>
+            <div class="option" data-value="B">B. Telemetry.Context.Cloud.RoleInstance</div>
+            <div class="option" data-value="C">C. Telemetry.Id</div>
+            <div class="option" data-value="D">D. Telemetry.Context.Session.Id</div>
+            <div class="option" data-value="E">E. Telemetry.Name</div>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct">A. Telemetry.Context.Operation.Id</span></p>
+            <p><span class="correct">E. Telemetry.Name</span></p>
+            
+            <div class="explanation">
+                <h3>说明:</h3>
+                <p>根据Microsoft官方文档，<strong>Telemetry.Context.Operation.Id</strong> (操作ID) 和 <strong>Telemetry.Name</strong> (遥测项名称) 是确保第三方数据库依赖跟踪正常工作所需存储的两个关键属性。</p>
+                
+                <h4>详细解释:</h4>
+                <p>1. <strong>Operation.Id</strong>: 这是关联同一逻辑操作中所有遥测项的关键标识符。存储此ID可以确保数据库操作与Web请求正确关联。</p>
+                <p>2. <strong>Telemetry.Name</strong>: 这标识了依赖项的类型和名称(如"SELECT FROM Customers")，对于理解数据库操作的性质至关重要。</p>
+                
+                <p>其他选项的解释:</p>
+                <ul>
+                    <li><strong>B. RoleInstance</strong>: 标识运行服务的机器实例，对依赖跟踪不是必需的</li>
+                    <li><strong>C. Telemetry.Id</strong>: 单个遥测项的唯一ID，不需要存储</li>
+                    <li><strong>D. Session.Id</strong>: 用户会话标识符，与依赖跟踪无关</li>
+                </ul>
+                
+                <h4>实现建议:</h4>
+                <p>在数据库表中添加两个列来存储这些值:</p>
+                <pre>
+ALTER TABLE YourTable
+ADD 
+    OperationId NVARCHAR(50) NULL,    -- 存储Telemetry.Context.Operation.Id
+    TelemetryName NVARCHAR(255) NULL   -- 存储Telemetry.Name
+                </pre>
+                <p>这样Application Insights就能正确关联和显示数据库依赖关系。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            let selectedCount = 0;
+            const maxSelections = 2;
+
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        selectedCount--;
+                    } else {
+                        if (selectedCount < maxSelections) {
+                            this.classList.add('selected');
+                            selectedCount++;
+                        }
+                    }
+                });
+            });
+        });
+
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            answerContainer.style.display = 'block';
+            
+            // Scroll to answer
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

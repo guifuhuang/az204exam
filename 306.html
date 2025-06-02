@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Exam Question 306</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        .answer {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-left: 4px solid #4CAF50;
+        }
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 306</h2>
+        <p>You are developing an Azure Function App that generates end of day reports for retail stores. All stores close at 11 PM each day. Reports must be run one hour after closing. You configure the function to use a Timer trigger that runs at midnight. Customers in the Western United States Pacific Time zone (UTC - 8) report that the Azure Function runs before the stores close.</p>
+        <p>You need to ensure that the Azure Function runs at midnight in the Pacific Time zone.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="q306" id="q306a">
+                <label for="q306a">A. Configure the Azure Function to run in the West US region.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q306" id="q306b">
+                <label for="q306b">B. Add an app setting named WEBSITE_TIME_ZONE that uses the value Pacific Standard Time</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q306" id="q306c">
+                <label for="q306c">C. Change the Timer trigger to run at 7 AM</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q306" id="q306d">
+                <label for="q306d">D. Update the Azure Function to a Premium plan</label>
+            </div>
+        </div>
+        
+        <button id="viewAnswerBtn">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <p><strong>正确答案：</strong> <span class="correct-answer">B. Add an app setting named WEBSITE_TIME_ZONE that uses the value Pacific Standard Time</span></p>
+            <p><strong>说明：</strong></p>
+            <p>这个问题涉及到Azure Function的时区设置。题目描述的情况是，定时触发器在UTC时间午夜运行，但对于太平洋时区(UTC-8)的用户来说，这相当于下午4点（商店还没关门）。</p>
+            <p>解决方案是通过添加名为WEBSITE_TIME_ZONE的应用设置，并将其值设为"Pacific Standard Time"，这样定时触发器就会按照太平洋时区的时间来执行，而不是默认的UTC时间。</p>
+            <p>其他选项分析：</p>
+            <ul>
+                <li>A选项：更改Azure Function的运行区域不会影响定时触发器的时区设置</li>
+                <li>C选项：虽然改为7AM UTC确实会在太平洋时区的午夜运行，但这不是一个灵活的解决方案</li>
+                <li>D选项：升级到Premium计划与时区问题无关</li>
+            </ul>
+            <p>因此，B选项是最佳解决方案，它允许Function按照太平洋时区的午夜时间执行。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('viewAnswerBtn').addEventListener('click', function() {
+            const answer = document.getElementById('answer');
+            const button = document.getElementById('viewAnswerBtn');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                button.textContent = '查看答案';
+            } else {
+                answer.style.display = 'block';
+                button.textContent = '隐藏答案';
+            }
+        });
+    </script>
+</body>
+</html>

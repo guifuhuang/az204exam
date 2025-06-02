@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure CDN Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            touch-action: none; /* Disable default touch behaviors */
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        @media (min-width: 768px) {
+            .drag-drop-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        .actions-list, .answer-area {
+            width: 100%;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: white;
+            margin-bottom: 15px;
+        }
+        @media (min-width: 768px) {
+            .actions-list, .answer-area {
+                width: 48%;
+                min-height: 300px;
+                margin-bottom: 0;
+            }
+        }
+        .drag-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #ddd;
+            touch-action: none; /* Disable default touch behaviors */
+            user-select: none; /* Prevent text selection */
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+            position: absolute;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .answer-area .drag-item {
+            background-color: #dff0d8;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .correct-order {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .drag-hint {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .drag-hint {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 129 DRAG DROP</h2>
+        <div class="scenario">
+            <p>Your company has several websites that use a company logo image. You use Azure Content
+            Delivery Network (CDN) to store the static image.</p>
+            <p>You need to determine the correct process of how the CDN and the Point of Presence (POP)
+            server will distribute the image and list the items in the correct order.</p>
+        </div>
+        
+        <span class="drag-hint">(Touch and hold to drag items)</span>
+        
+        <div class="drag-drop-container">
+            <div class="actions-list" id="actionsList">
+                <div class="drag-item" data-id="1">A user requests the image from the CDN URL. The DNS routes the request to the best performing POP location.</div>
+                <div class="drag-item" data-id="2">Subsequent requests for the file may be directed to the same POP using the CDN logo image URL. The POP edge server returns the file from cache if the TTL has not expired.</div>
+                <div class="drag-item" data-id="3">If no edge servers in the POP have the image in cache, the POP requests the file from the origin server.</div>
+                <div class="drag-item" data-id="4">The origin server returns the logo image to an edge server in the POP. An edge server in the POP caches the logo image and returns the image to the client.</div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <p>Drop the actions here in correct order:</p>
+            </div>
+        </div>
+        
+        <button class="check-answer" id="checkAnswer">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <div class="correct-order">
+                <p><span class="correct-answer">1.</span> A user requests the image from the CDN URL. The DNS routes the request to the best performing POP location.</p>
+                <p><span class="correct-answer">2.</span> If no edge servers in the POP have the image in cache, the POP requests the file from the origin server.</p>
+                <p><span class="correct-answer">3.</span> The origin server returns the logo image to an edge server in the POP. An edge server in the POP caches the logo image and returns the image to the client.</p>
+                <p><span class="correct-answer">4.</span> Subsequent requests for the file may be directed to the same POP using the CDN logo image URL. The POP edge server returns the file from cache if the TTL has not expired.</p>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p>Azure CDN处理图像请求的正确流程顺序是：</p>
+                <ol>
+                    <li><strong>用户请求</strong>：用户通过CDN URL请求图像，DNS将请求路由到性能最佳的POP位置</li>
+                    <li><strong>缓存检查</strong>：如果POP中的边缘服务器缓存中没有该图像，则向源服务器请求文件</li>
+                    <li><strong>源服务器响应</strong>：源服务器将图像返回到POP边缘服务器，边缘服务器缓存图像并返回给客户端</li>
+                    <li><strong>后续请求</strong>：后续请求可能被定向到同一个POP，如果TTL未过期，直接从缓存返回文件</li>
+                </ol>
+                
+                <p><strong>关键点分析:</strong></p>
+                <ul>
+                    <li>CDN的工作流程总是从用户请求开始</li>
+                    <li>POP服务器会首先检查本地缓存</li>
+                    <li>缓存未命中时才回源请求</li>
+                    <li>第一次请求后的处理流程不同（直接从缓存返回）</li>
+                    <li>TTL（生存时间）决定缓存的有效期</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 修复查看答案按钮功能
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || !answerContainer.style.display) {
+                answerContainer.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerContainer.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+        // Mobile-friendly drag and drop implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            let draggedItem = null;
+            let touchStartY = 0;
+            let originalParent = null;
+            let placeholder = document.createElement('div');
+            placeholder.className = 'drag-item placeholder';
+            placeholder.style.visibility = 'hidden';
+            
+            // Setup touch events for all drag items
+            document.querySelectorAll('.drag-item').forEach(item => {
+                // Mouse events (for desktop)
+                item.addEventListener('mousedown', startDrag);
+                item.addEventListener('dragstart', dragStart);
+                
+                // Touch events (for mobile)
+                item.addEventListener('touchstart', touchStart, { passive: false });
+                item.addEventListener('touchmove', touchMove, { passive: false });
+                item.addEventListener('touchend', touchEnd);
+                
+                // Prevent text selection during drag
+                item.addEventListener('selectstart', function(e) {
+                    if (draggedItem) e.preventDefault();
+                });
+            });
+            
+            // Setup drop zones
+            const dropZones = [document.getElementById('actionsList'), document.getElementById('answerArea')];
+            dropZones.forEach(zone => {
+                // Mouse events
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('drop', drop);
+                
+                // Touch events
+                zone.addEventListener('touchmove', zoneTouchMove, { passive: false });
+                zone.addEventListener('touchend', zoneTouchEnd);
+            });
+            
+            function startDrag(e) {
+                if (e.button !== 0) return; // Only left mouse button
+                draggedItem = e.target;
+                originalParent = draggedItem.parentNode;
+                touchStartY = e.clientY;
+                
+                // Add dragging class
+                draggedItem.classList.add('dragging');
+                
+                // Set up placeholder
+                placeholder.style.height = draggedItem.offsetHeight + 'px';
+                originalParent.insertBefore(placeholder, draggedItem);
+                
+                // Position the dragged item absolutely
+                const rect = draggedItem.getBoundingClientRect();
+                draggedItem.style.position = 'absolute';
+                draggedItem.style.left = rect.left + 'px';
+                draggedItem.style.top = rect.top + 'px';
+                draggedItem.style.width = rect.width + 'px';
+                
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', dragEnd);
+            }
+            
+            function dragStart(e) {
+                e.dataTransfer.setData('text/plain', e.target.dataset.id);
+                e.dataTransfer.effectAllowed = 'move';
+            }
+            
+            function dragMove(e) {
+                if (!draggedItem) return;
+                
+                // Update position of dragged item
+                draggedItem.style.left = (e.clientX - draggedItem.offsetWidth / 2) + 'px';
+                draggedItem.style.top = (e.clientY - draggedItem.offsetHeight / 2) + 'px';
+                
+                // Find drop target
+                const dropZone = document.elementFromPoint(e.clientX, e.clientY);
+                const parent = findDropZoneParent(dropZone);
+                
+                if (parent && (parent.id === 'actionsList' || parent.id === 'answerArea')) {
+                    const items = Array.from(parent.querySelectorAll('.drag-item:not(.dragging):not(.placeholder)'));
+                    const closest = findClosestItem(parent, e.clientY);
+                    
+                    if (closest) {
+                        if (e.clientY < closest.getBoundingClientRect().top + closest.offsetHeight / 2) {
+                            parent.insertBefore(placeholder, closest);
+                        } else {
+                            parent.insertBefore(placeholder, closest.nextSibling);
+                        }
+                    } else {
+                        parent.appendChild(placeholder);
+                    }
+                }
+            }
+            
+            function dragEnd(e) {
+                if (!draggedItem) return;
+                
+                // Find drop zone
+                const dropZone = document.elementFromPoint(e.clientX, e.clientY);
+                const parent = findDropZoneParent(dropZone);
+                
+                if (parent && (parent.id === 'actionsList' || parent.id === 'answerArea')) {
+                    // Insert before placeholder
+                    parent.insertBefore(draggedItem, placeholder);
+                } else {
+                    // Return to original position
+                    originalParent.insertBefore(draggedItem, placeholder);
+                }
+                
+                // Clean up
+                resetDrag();
+                
+                // Remove event listeners
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('mouseup', dragEnd);
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+            
+            function drop(e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const draggedElement = document.querySelector(`.drag-item[data-id="${id}"]`);
+                
+                if (draggedElement) {
+                    // Check if we're moving within the same container
+                    if (draggedElement.parentNode === e.currentTarget) {
+                        return;
+                    }
+                    
+                    // Move the item to the new container
+                    e.currentTarget.appendChild(draggedElement);
+                }
+            }
+            
+            // Touch event handlers
+            function touchStart(e) {
+                if (e.touches.length !== 1) return;
+                
+                e.preventDefault();
+                draggedItem = e.target;
+                originalParent = draggedItem.parentNode;
+                touchStartY = e.touches[0].clientY;
+                
+                // Add dragging class
+                draggedItem.classList.add('dragging');
+                
+                // Set up placeholder
+                placeholder.style.height = draggedItem.offsetHeight + 'px';
+                originalParent.insertBefore(placeholder, draggedItem);
+                
+                // Position the dragged item absolutely
+                const rect = draggedItem.getBoundingClientRect();
+                draggedItem.style.position = 'absolute';
+                draggedItem.style.left = rect.left + 'px';
+                draggedItem.style.top = rect.top + 'px';
+                draggedItem.style.width = rect.width + 'px';
+            }
+            
+            function touchMove(e) {
+                if (!draggedItem || e.touches.length !== 1) return;
+                e.preventDefault();
+                
+                const touch = e.touches[0];
+                
+                // Update position of dragged item
+                draggedItem.style.left = (touch.clientX - draggedItem.offsetWidth / 2) + 'px';
+                draggedItem.style.top = (touch.clientY - draggedItem.offsetHeight / 2) + 'px';
+                
+                // Find drop target
+                const dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
+                const parent = findDropZoneParent(dropZone);
+                
+                if (parent && (parent.id === 'actionsList' || parent.id === 'answerArea')) {
+                    const items = Array.from(parent.querySelectorAll('.drag-item:not(.dragging):not(.placeholder)'));
+                    const closest = findClosestItem(parent, touch.clientY);
+                    
+                    if (closest) {
+                        if (touch.clientY < closest.getBoundingClientRect().top + closest.offsetHeight / 2) {
+                            parent.insertBefore(placeholder, closest);
+                        } else {
+                            parent.insertBefore(placeholder, closest.nextSibling);
+                        }
+                    } else {
+                        parent.appendChild(placeholder);
+                    }
+                }
+            }
+            
+            function touchEnd(e) {
+                if (!draggedItem) return;
+                e.preventDefault();
+                
+                // Find drop zone
+                const touch = e.changedTouches[0];
+                const dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
+                const parent = findDropZoneParent(dropZone);
+                
+                if (parent && (parent.id === 'actionsList' || parent.id === 'answerArea')) {
+                    // Insert before placeholder
+                    parent.insertBefore(draggedItem, placeholder);
+                } else {
+                    // Return to original position
+                    originalParent.insertBefore(draggedItem, placeholder);
+                }
+                
+                // Clean up
+                resetDrag();
+            }
+            
+            function zoneTouchMove(e) {
+                if (!draggedItem || e.touches.length !== 1) return;
+                e.preventDefault();
+            }
+            
+            function zoneTouchEnd(e) {
+                // Handled by touchEnd
+            }
+            
+            // Helper functions
+            function findDropZoneParent(element) {
+                while (element && element !== document) {
+                    if (element.id === 'actionsList' || element.id === 'answerArea') {
+                        return element;
+                    }
+                    element = element.parentNode;
+                }
+                return null;
+            }
+            
+            function findClosestItem(container, yPos) {
+                const items = Array.from(container.querySelectorAll('.drag-item:not(.dragging):not(.placeholder)'));
+                
+                return items.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = yPos - box.top - box.height / 2;
+                    
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+            
+            function resetDrag() {
+                if (!draggedItem) return;
+                
+                // Reset styles
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.position = '';
+                draggedItem.style.left = '';
+                draggedItem.style.top = '';
+                draggedItem.style.width = '';
+                
+                // Remove placeholder
+                if (placeholder.parentNode) {
+                    placeholder.parentNode.removeChild(placeholder);
+                }
+                
+                draggedItem = null;
+                originalParent = null;
+            }
+            
+            function showAnswer() {
+                const answerContainer = document.getElementById('answer');
+                if (answerContainer.style.display === 'none' || answerContainer.style.display === '') {
+                    answerContainer.style.display = 'block';
+                } else {
+                    answerContainer.style.display = 'none';
+                }
+                answerContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

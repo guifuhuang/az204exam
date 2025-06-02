@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 310</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 310</h2>
+        <p>You are developing a SaaS application that stores data as key-value pairs.</p>
+        <p>Requirements:</p>
+        <ul>
+            <li>Multiple editions of the application must be available</li>
+            <li>In the lowest cost edition:
+                <ul>
+                    <li>Performance is best-effort</li>
+                    <li>No regional failover</li>
+                </ul>
+            </li>
+            <li>In higher cost editions:
+                <ul>
+                    <li>Customers can select guaranteed performance</li>
+                    <li>Support for multiple regions</li>
+                </ul>
+            </li>
+            <li>Azure costs must be minimized</li>
+        </ul>
+        <p>Which Azure Cosmos DB API should you use for the application?</p>
+    </div>
+
+    <div class="options-container">
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Core"> A. Core (SQL)
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="MongoDB"> B. MongoDB
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Cassandra"> C. Cassandra
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Table"> D. Table API
+        </label>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <p class="correct-answer">C. Cassandra</p>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>Cassandra API</strong> 是最佳选择的原因：</p>
+            <ul>
+                <li>原生支持键值对数据模型，同时具备宽列存储的灵活性</li>
+                <li>低成本版本可使用基本吞吐量配置（最低400 RU/s），实现"best-effort"性能</li>
+                <li>高成本版本支持：
+                    <ul>
+                        <li>预配吞吐量（可精确到RU/s级别）</li>
+                        <li>多区域写入（自动同步数据）</li>
+                        <li>性能SLA保障（99.99%可用性）</li>
+                    </ul>
+                </li>
+                <li>相比Table API，Cassandra在跨区域场景下的成本优化更好</li>
+            </ul>
+            
+            <p>2. 成本优化实现方案：</p>
+            <ul>
+                <li><strong>低成本版</strong>：单区域部署 + 最小RU/s配置（400 RU/s起）</li>
+                <li><strong>高性能版</strong>：多区域自动扩展 + 预留容量折扣</li>
+                <li><strong>弹性扩展</strong>：支持按小时调整吞吐量，应对业务波动</li>
+            </ul>
+            
+            <p>3. 其他API的限制：</p>
+            <ul>
+                <li><strong>Core (SQL)</strong>：文档模型冗余，基础成本高30%以上</li>
+                <li><strong>MongoDB</strong>：适合复杂文档结构，键值场景性价比低</li>
+                <li><strong>Table API</strong>：多区域部署成本高于Cassandra</li>
+            </ul>
+            
+            <p>4. Cassandra解决方案优势：</p>
+            <ul>
+                <li><strong>线性扩展</strong>：添加节点即可提升性能，适合SaaS多租户场景</li>
+                <li><strong>成熟生态</strong>：与现有Cassandra工具链兼容，降低运维成本</li>
+                <li><strong>精细控制</strong>：可针对不同租户配置独立吞吐量</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

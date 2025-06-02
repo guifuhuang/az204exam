@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure SQL Database Dynamic Data Masking Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option.selected {
+            background-color: #d4edff;
+            border-color: #a8d1ff;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .answer-image {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .answer-image img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 170</h2>
+        <p>You develop a solution that uses an Azure SQL Database to store user information for a mobile app.</p>
+        <p>The app stores sensitive information about users.</p>
+        <p>You need to hide sensitive information from developers that query the data for the mobile app.</p>
+        <p>Which three items must you identify when configuring dynamic data masking? Each correct answer presents a part of the solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="options">
+        <div class="option" data-value="A">A. Column</div>
+        <div class="option" data-value="B">B. Table</div>
+        <div class="option" data-value="C">C. Trigger</div>
+        <div class="option" data-value="D">D. Index</div>
+        <div class="option" data-value="E">E. Schema</div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><span class="correct">A. Column</span>, <span class="correct">B. Table</span>, <span class="correct">E. Schema</span></p>
+        
+        <div class="explanation">
+            <h3>解析:</h3>
+            <p>在配置Azure SQL数据库的动态数据掩码(DDM)时，必须识别以下三个关键元素[1](@ref)[2](@ref)[4](@ref)：</p>
+            
+            <ol>
+                <li><strong>Schema (架构)</strong>：
+                    <ul>
+                        <li>数据库架构定义了表和其他数据库对象的结构和组织方式</li>
+                        <li>在配置掩码规则时需要指定包含敏感数据的表所属的架构</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Table (表)</strong>：
+                    <ul>
+                        <li>需要明确哪些表包含需要保护的敏感数据</li>
+                        <li>例如包含用户信用卡信息或个人身份信息的表</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Column (列)</strong>：
+                    <ul>
+                        <li>必须具体指定表中哪些列包含敏感数据</li>
+                        <li>例如信用卡号列、社会安全号码列或电子邮件地址列</li>
+                        <li>可以对不同列应用不同的掩码函数(如部分掩码、完全掩码等)[3](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>为什么其他选项不正确：</strong></p>
+            <ul>
+                <li><strong>C. Trigger (触发器)</strong>：动态数据掩码不涉及触发器配置，它是基于策略的安全功能，在查询结果返回时应用[1](@ref)</li>
+                <li><strong>D. Index (索引)</strong>：索引与数据掩码无关，掩码操作是在查询处理阶段应用的，不影响底层存储结构[4](@ref)</li>
+            </ul>
+            
+            <p><strong>配置流程说明：</strong></p>
+            <ol>
+                <li>在Azure门户中导航到SQL数据库的"安全"部分下的"动态数据掩码"面板[2](@ref)</li>
+                <li>选择架构、表和列来定义需要掩码的字段[1](@ref)</li>
+                <li>从敏感数据掩码类别列表中选择适当的掩码方式[3](@ref)</li>
+                <li>指定应从掩码中排除的SQL认证用户或Microsoft Entra ID身份[2](@ref)</li>
+                <li>保存设置以更新动态数据掩码策略[1](@ref)</li>
+            </ol>
+        </div>
+        <div class="answer-image">
+            <img src="https://s1.fnnas.net/s/preview/30e0985d40d646ddab?fileId=3&path=%2F170.png" alt="答案示意图">
+        </div>
+    </div>
+
+    <script>
+        // 多选功能实现
+        const options = document.querySelectorAll('.option');
+        let selectedOptions = [];
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedOptions = selectedOptions.filter(item => item !== value);
+                } else {
+                    if (selectedOptions.length < 3) {
+                        this.classList.add('selected');
+                        selectedOptions.push(value);
+                    }
+                }
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 清除所有选择
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 选择正确答案
+            document.querySelector('.option[data-value="A"]').classList.add('selected');
+            document.querySelector('.option[data-value="B"]').classList.add('selected');
+            document.querySelector('.option[data-value="E"]').classList.add('selected');
+        }
+    </script>
+</body>
+</html>

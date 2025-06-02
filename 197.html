@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos DB Trigger Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #f8f8f8;
+            border-left: 3px solid #0078d4;
+            padding: 10px;
+            margin: 15px 0;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown-row {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .dropdown {
+            padding: 5px;
+            margin: 0 5px;
+            min-width: 150px;
+        }
+        #answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 197 HOTSPOT</h2>
+        <p>You have a web service that is used to pay for food deliveries. The web service uses Azure Cosmos DB as the data store.</p>
+        <p>You plan to add a new feature that allows users to set a tip amount. The new feature requires that a property named tip on the document in Cosmos DB must be present and contain a numeric value.</p>
+        <p>There are many existing websites and mobile apps that use the web service that will not be updated to set the tip property for some time.</p>
+        <p>How should you complete the trigger?</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="code-container">
+function ensureTip() {
+  var r = <select id="dropdown1" class="dropdown">
+            <option value="">Select...</option>
+            <option value="_.value()">_.value()</option>
+            <option value="_.readDocument('item')">_.readDocument('item')</option>
+            <option value="getContext().getRequest()">getContext().getRequest()</option>
+            <option value="getContext().getResponse()">getContext().getResponse()</option>
+          </select>;
+  var i = r.getBody();
+<select id="dropdown2" class="dropdown">
+                <option value="">Select...</option>
+                <option value="if1">if (!("tip" in i)) {</option>
+                <option value="if2">if (request.getValue("tip")===null) {</option>
+                <option value="if3">if (isNaN(i)["tip"]||i["tip"] ===null) {</option>
+                <option value="if4">if (typeof_.pluck("tip")=='number') {</option>
+              </select>
+              i["tip"] = 0;
+  }
+
+  <select id="dropdown3" class="dropdown">
+    <option value="">Select...</option>
+    <option value="r.setBody(i)">r.setBody(i)</option>
+    <option value="r.setValue(i)">r.setValue(i)</option>
+    <option value="_.upsertDocument(i)">_.upsertDocument(i)</option>
+    <option value="_.replaceDocument(i)">_.replaceDocument(i)</option>
+  </select>
+}
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p>第一个下拉框选择: <strong>getContext().getRequest()</strong></p>
+        <p>第二个下拉框选择: <strong>if (!("tip" in i)) {</strong></p>
+        <p>第三个下拉框选择: <strong>r.setBody(i)</strong></p>
+        
+        <h3>说明:</h3>
+        <p>这个触发器需要确保Cosmos DB文档中始终存在一个有效的tip属性：</p>
+        
+        <ol>
+            <li><strong>第一个下拉框 (获取请求对象):</strong>
+                <ul>
+                    <li>选择<code>getContext().getRequest()</code>获取当前请求对象</li>
+                    <li>这是Cosmos DB触发器中的标准做法，用于访问当前操作请求</li>
+                    <li>其他选项要么不正确，要么不是获取请求对象的正确方法</li>
+                </ul>
+            </li>
+            
+            <li><strong>第二个下拉框 (检查tip属性):</strong>
+                <ul>
+                    <li>选择<code>if (!("tip" in i)) {</code>检查tip属性是否存在</li>
+                    <li>这是最直接的方法来检查属性是否存在</li>
+                    <li>其他选项要么语法错误，要么检查条件不符合题目要求</li>
+                </ul>
+            </li>
+            
+            <li><strong>第三个下拉框 (更新文档):</strong>
+                <ul>
+                    <li>选择<code>r.setBody(i)</code>更新请求体</li>
+                    <li>这是修改文档内容的标准方法，确保修改后的文档会被保存</li>
+                    <li>其他选项要么不正确，要么不是更新文档的标准方法</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>这样配置后，触发器将：</p>
+        <ul>
+            <li>获取当前请求对象</li>
+            <li>检查文档中是否存在tip属性</li>
+            <li>如果不存在则设置为默认值0</li>
+            <li>更新请求体以确保修改被保存</li>
+            <li>确保所有文档都符合新功能的要求</li>
+            <li>不影响现有客户端的使用</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

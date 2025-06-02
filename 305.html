@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 305</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 305</h2>
+        <p>You are developing a complex workflow by using Azure Durable Functions.</p>
+        <p>During testing you observe that the results of the workflow differ based on how many instances of the Azure Function are running.</p>
+        <p>You need to resolve the issue.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA">
+                <label for="optionA">A. Ensure that all Orchestrator code is deterministic.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB">
+                <label for="optionB">B. Read all state data from the durable function context</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC">
+                <label for="optionC">C. Configure the Azure Durable Function to run on an App Service Plan with one instance.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD">
+                <label for="optionD">D. Implement the monitor pattern within the workflow.</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><span class="correct">正确答案: A</span></p>
+            <p><strong>说明:</strong></p>
+            <p>1. <strong>问题根源</strong>：Durable Functions的编排器函数(Orchestrator Function)必须是确定性的(deterministic)，这意味着在不同实例数量下运行时应该产生相同的结果。</p>
+            <p>2. <strong>解决方案分析</strong>：</p>
+            <ul>
+                <li><strong>选项A</strong>：确保所有编排器代码是确定性的，这是Durable Functions的基本要求。编排器函数不应包含随机性操作或直接调用外部服务。</li>
+                <li>其他选项的问题：
+                    <ul>
+                        <li>选项B：从上下文读取状态数据是正常操作，但不能解决非确定性问题</li>
+                        <li>选项C：限制为单个实例违背了Durable Functions的可扩展性优势</li>
+                        <li>选项D：监控模式与解决非确定性问题无关</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>3. <strong>代码示例</strong>：</p>
+            <pre>[FunctionName("OrchestratorFunction")]
+public static async Task RunOrchestrator(
+    [OrchestrationTrigger] IDurableOrchestrationContext context)
+{
+    // 正确的确定性代码示例
+    var input = context.GetInput&lt;string&gt;();
+    await context.CallActivityAsync("Function1", input);
+    
+    // 错误的非确定性代码示例（避免这样做）
+    // var random = new Random().Next(); // 会产生不同结果
+}</pre>
+            <p>4. <strong>参考文档</strong>：<a href="https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-code-constraints" target="_blank">Durable Functions代码约束</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answer = document.getElementById('answer');
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answer.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+        });
+    </script>
+</body>
+</html>

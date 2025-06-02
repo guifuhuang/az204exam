@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure WebJobs Scenario Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+        .services-box, .scenarios-box {
+            flex: 1;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .service-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+        }
+        .scenario-slot {
+            background-color: #e8f5e9;
+            min-height: 60px;
+            margin-bottom: 15px;
+            position: relative;
+            border: 2px dashed #81c784;
+        }
+        .scenario-slot::before {
+            content: attr(data-scenario);
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .scenario-slot.highlight {
+            background-color: #fff59d;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 167 DRAG DROP</h2>
+        <p>You have a web app named MainApp. You are developing a triggered App Service background task by using the WebJobs SDK. This task automatically invokes a function code whenever any new data is received in a queue.</p>
+        <p>You need to configure the services.</p>
+        <p>Which service should you use for each scenario? To answer, drag the appropriate services to the correct scenarios. Each service may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="container">
+        <div class="services-box" id="servicesBox">
+            <div class="service-item" draggable="true" data-id="1">Logic Apps</div>
+            <div class="service-item" draggable="true" data-id="2">WebJobs</div>
+            <div class="service-item" draggable="true" data-id="3">Flow</div>
+        </div>
+        
+        <div class="scenarios-box" id="scenariosBox">
+            <div class="scenario-slot" data-scenario="Process a queue data item."></div>
+            <div class="scenario-slot" data-scenario="Manage all code segments from the same DevOps environment."></div>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <table>
+            <tr>
+                <th>Scenario</th>
+                <th>Service</th>
+            </tr>
+            <tr>
+                <td>Process a queue data item.</td>
+                <td>WebJobs</td>
+            </tr>
+            <tr>
+                <td>Manage all code segments from the same DevOps environment.</td>
+                <td>WebJobs</td>
+            </tr>
+        </table>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure服务特性：</p>
+        <ol>
+            <li><strong>处理队列数据项</strong>：
+                <ul>
+                    <li>正确答案：<strong>WebJobs</strong></li>
+                    <li>WebJobs SDK专门设计用于处理队列消息触发的工作[6](@ref)[11](@ref)</li>
+                    <li>可以自动触发函数代码处理新队列数据[2](@ref)</li>
+                    <li>与App Service无缝集成，适合后台任务处理[11](@ref)</li>
+                </ul>
+            </li>
+            <li><strong>从同一DevOps环境管理所有代码段</strong>：
+                <ul>
+                    <li>正确答案：<strong>WebJobs</strong></li>
+                    <li>WebJobs可以与主Web应用一起部署和管理[11](@ref)</li>
+                    <li>共享相同的代码库和DevOps流程[6](@ref)</li>
+                    <li>作为应用服务的一部分，可以使用相同的部署管道[2](@ref)</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>其他服务分析：</p>
+        <ul>
+            <li><strong>Logic Apps</strong>：更适合可视化工作流编排，不适合需要SDK编程的场景[6](@ref)[10](@ref)</li>
+            <li><strong>Flow</strong>：现为Power Automate，主要用于业务用户自动化，不适用开发人员代码管理[6](@ref)[10](@ref)</li>
+        </ul>
+        
+        <p>实现建议：</p>
+        <ul>
+            <li>使用WebJobs SDK处理队列触发任务[2](@ref)</li>
+            <li>将WebJobs与主应用一起部署维护[11](@ref)</li>
+            <li>利用相同的CI/CD管道管理所有代码[2](@ref)</li>
+        </ul>
+    </div>
+
+    <script>
+        // 增强版拖拽功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const servicesBox = document.getElementById('servicesBox');
+            const scenariosBox = document.getElementById('scenariosBox');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            servicesBox.querySelectorAll('.service-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                });
+            });
+            
+            scenariosBox.querySelectorAll('.scenario-slot').forEach(slot => {
+                slot.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                slot.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                slot.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        // 如果槽位已有内容则交换
+                        if (this.innerHTML) {
+                            const existingContent = this.innerHTML;
+                            const existingId = this.getAttribute('data-id');
+                            this.innerHTML = draggedItem.innerHTML;
+                            this.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                            
+                            draggedItem.innerHTML = existingContent;
+                            draggedItem.setAttribute('data-id', existingId);
+                        } else {
+                            this.innerHTML = draggedItem.innerHTML;
+                            this.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                        }
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            document.addEventListener('touchstart', function(e) {
+                if (e.target.classList.contains('service-item')) {
+                    draggedItem = e.target;
+                    draggedItem.style.opacity = '0.4';
+                }
+            }, {passive: false});
+            
+            document.addEventListener('touchmove', function(e) {
+                if (draggedItem) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    // 高亮目标槽位
+                    document.querySelectorAll('.scenario-slot').forEach(slot => {
+                        slot.classList.remove('highlight');
+                        if (slot.contains(element) || slot === element) {
+                            slot.classList.add('highlight');
+                        }
+                    });
+                }
+            }, {passive: false});
+            
+            document.addEventListener('touchend', function(e) {
+                if (draggedItem) {
+                    const touch = e.changedTouches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const targetSlot = element.closest('.scenario-slot');
+                    
+                    if (targetSlot) {
+                        if (targetSlot.innerHTML) {
+                            // 交换内容
+                            const existingContent = targetSlot.innerHTML;
+                            const existingId = targetSlot.getAttribute('data-id');
+                            targetSlot.innerHTML = draggedItem.innerHTML;
+                            targetSlot.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                            
+                            draggedItem.innerHTML = existingContent;
+                            draggedItem.setAttribute('data-id', existingId);
+                        } else {
+                            targetSlot.innerHTML = draggedItem.innerHTML;
+                            targetSlot.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                        }
+                    }
+                    
+                    document.querySelectorAll('.scenario-slot').forEach(slot => {
+                        slot.classList.remove('highlight');
+                    });
+                    
+                    draggedItem.style.opacity = '1';
+                    draggedItem = null;
+                }
+            }, {passive: false});
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 清空所有槽位
+            document.querySelectorAll('.scenario-slot').forEach(slot => {
+                slot.innerHTML = '';
+                slot.removeAttribute('data-id');
+            });
+            
+            // 设置正确答案
+            const slots = document.querySelectorAll('.scenario-slot');
+            slots[0].innerHTML = 'WebJobs';
+            slots[0].setAttribute('data-id', '2');
+            slots[1].innerHTML = 'WebJobs';
+            slots[1].setAttribute('data-id', '2');
+        }
+    </script>
+</body>
+</html>

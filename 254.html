@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure CDN Rule Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .code-line {
+            margin-bottom: 10px;
+        }
+        .dropdown {
+            margin: 0 5px;
+            padding: 3px;
+            border-radius: 4px;
+            min-width: 150px;
+            background-color: #3c3c3c;
+            color: #d4d4d4;
+            border: 1px solid #666;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 254 HOTSPOT</h1>
+    
+    <div class="question-container">
+        <p>You are building a website that is used to review restaurants. The website will use an Azure CDN to improve performance and add functionality to requests.</p>
+        <p>You build and deploy a mobile app for Apple iPhones. Whenever a user accesses the website from an iPhone, the user must be redirected to the app store.</p>
+        <p>You need to implement an Azure CDN rule that ensures that iPhone users are redirected to the app store.</p>
+        <p>How should you complete the Azure Resource Manager template? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="code-container">
+        <div class="code-line">"conditions":[{</div>
+        <div class="code-line">  "name": "IsDevice",</div>
+        <div class="code-line">  "parameters": {</div>
+        <div class="code-line">  "@odata.type": "#Microsoft.Azure.Cdn.Models.<select id="dropdown0" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="DeliveryRulesDeviceConditionParameters">DeliveryRulesDeviceConditionParameters</option>
+            <option value="DeliveryRuleCookiesConditionParameters">DeliveryRuleCookiesConditionParameters</option>
+            <option value="DeliveryRulePostArgsConditionParameters">DeliveryRulePostArgsConditionParameters</option>
+            <option value="DeliveryRuleRequestHeaderConditionParameters">DeliveryRuleRequestHeaderConditionParameters</option>
+        </select>",</div>
+        <div class="code-line">    "operator": "Equal",</div>
+        <div class="code-line">    "matchValues": ["<select id="dropdown1" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="iOS">iOS</option>
+            <option value="Mobile">Mobile</option>
+            <option value="iPhone">iPhone</option>
+            <option value="Desktop">Desktop</option>
+        </select>"]</div>
+        <div class="code-line">  }},</div>
+        <div class="code-line">   {</div>
+        <div class="code-line">  "name": "RequestHeader",</div>
+        <div class="code-line">  "parameters": {</div>
+        <div class="code-line">  "@odata.type": "#Microsoft.Azure.Cdn.Models.<select id="dropdown2" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="DeliveryRulesDeviceConditionParameters">DeliveryRulesDeviceConditionParameters</option>
+            <option value="DeliveryRuleCookiesConditionParameters">DeliveryRuleCookiesConditionParameters</option>
+            <option value="DeliveryRulePostArgsConditionParameters">DeliveryRulePostArgsConditionParameters</option>
+            <option value="DeliveryRuleRequestHeaderConditionParameters">DeliveryRuleRequestHeaderConditionParameters</option>
+        </select>",</div>
+        <div class="code-line">    "operator": "Contains",</div>
+        <div class="code-line">    "selector": "<select id="dropdown3" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="FROM">FROM</option>
+            <option value="PRAGMA">PRAGMA</option>
+            <option value="X-POWERED-BY">X-POWERED-BY</option>
+            <option value="HTTP_USER_AGENT">HTTP_USER_AGENT</option>
+        </select>",</div>
+        <div class="code-line">    "matchValues": ["<select id="dropdown4" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="iOS">iOS</option>
+            <option value="Mobile">Mobile</option>
+            <option value="iPhone">iPhone</option>
+            <option value="Desktop">Desktop</option>
+        </select>"]</div>
+        <div class="code-line">    }}</div>
+       <div class="code-line">]</div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Selections:</strong></p>
+            <ol>
+                <li>First @odata.type: DeliveryRulesDeviceConditionParameters</li>
+                <li>First matchValues: iPhone</li>
+                <li>Second @odata.type: DeliveryRuleRequestHeaderConditionParameters</li>
+                <li>selector: HTTP_USER_AGENT</li>
+                <li>Second matchValues: iPhone</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>第一个@odata.type: DeliveryRulesDeviceConditionParameters</strong></p>
+            <ul>
+                <li>选择设备检测条件参数类型</li>
+                <li>这是专门用于检测设备类型的参数类型</li>
+                <li>能准确识别iPhone设备</li>
+            </ul>
+            
+            <p>2. <strong>第一个matchValues: iPhone</strong></p>
+            <ul>
+                <li>精确匹配iPhone设备</li>
+                <li>使用Equal操作符确保完全匹配</li>
+                <li>直接识别设备类型，不依赖User-Agent</li>
+            </ul>
+            
+            <p>3. <strong>第二个@odata.type: DeliveryRuleRequestHeaderConditionParameters</strong></p>
+            <ul>
+                <li>选择请求头条件参数类型</li>
+                <li>用于检查HTTP请求头信息</li>
+                <li>作为设备检测的补充验证</li>
+            </ul>
+            
+            <p>4. <strong>selector: HTTP_USER_AGENT</strong></p>
+            <ul>
+                <li>选择User-Agent请求头</li>
+                <li>User-Agent包含设备信息</li>
+                <li>可以检测各种浏览器发送的iPhone标识</li>
+            </ul>
+            
+            <p>5. <strong>第二个matchValues: iPhone</strong></p>
+            <ul>
+                <li>匹配包含"iPhone"的User-Agent</li>
+                <li>使用Contains操作符确保能匹配各种变体</li>
+                <li>双重验证提高识别准确性</li>
+            </ul>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>双重验证机制确保准确识别iPhone用户</li>
+                <li>设备检测(IsDevice)提供直接可靠的识别</li>
+                <li>User-Agent检测(RequestHeader)作为备用验证</li>
+                <li>Equal操作符确保设备类型精确匹配</li>
+                <li>Contains操作符确保能匹配各种User-Agent字符串中的iPhone标识</li>
+                <li>这种组合方式既可靠又全面</li>
+            </ul>
+            
+            <p><strong>完整规则示例：</strong></p>
+            <pre>"conditions":[{
+  "name": "IsDevice",
+  "parameters": {
+    "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRulesDeviceConditionParameters",
+    "operator": "Equal",
+    "matchValues": ["iPhone"]
+  }},
+  {
+  "name": "RequestHeader",
+  "parameters": {
+    "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleRequestHeaderConditionParameters",
+    "operator": "Contains",
+    "selector": "HTTP_USER_AGENT",
+    "matchValues": ["iPhone"]
+  }}
+]</pre>
+            
+            <p><strong>参考文档：</strong> <a href="https://docs.microsoft.com/en-us/azure/cdn/cdn-standard-rules-engine-reference" target="_blank">Azure CDN规则引擎参考</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

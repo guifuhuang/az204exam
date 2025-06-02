@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Web App Deployment Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .code-line {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .code-select {
+            margin-left: 10px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f3f2f1;
+            border-radius: 8px;
+            border-left: 4px solid #0078d4;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d2d0ce;
+        }
+        .answer-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            color: #605e5c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .code-line {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .code-select {
+                margin-left: 0;
+                margin-top: 5px;
+                width: 100%;
+            }
+            .answer-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Azure Web App Deployment Configuration</h1>
+    
+    <div class="question-container">
+        <div class="scenario">
+            <p>A company is developing a Node.js web app. The web app code is hosted in a GitHub repository located at https://github.com/TailSpinToys/webapp.</p>
+            <p>The web app must be reviewed before it is moved to production. You must deploy the initial code release to a deployment slot named review.</p>
+            <p>You need to create the web app and deploy the code.</p>
+            <p>How should you complete the commands? To answer, select the appropriate options in the answer area.</p>
+        </div>
+        
+        <div class="code-block">
+            <div class="code-line">
+                $gitrepo="https://github.com/TailspinToys/webapp"
+            </div>
+            <div class="code-line">
+                $webappname="TailSpinToysWeb"
+            </div>
+            <div class="code-line">
+                $location="WestUS2"
+            </div>
+            <div class="code-line">
+                <select id="command1">
+                    <option value="">-- Select --</option>
+                    <option value="New-AzWebAppSlot">New-AzWebAppSlot</option>
+                    <option value="New-AzWebApp">New-AzWebApp</option>
+                    <option value="New-AzAppServicePlan">New-AzAppServicePlan</option>
+                    <option value="New-AzResourceGroup">New-AzResourceGroup</option>
+                </select> -Name myResourceGroup -Location $location
+            </div>
+            <div class="code-line">
+                <select id="command2">
+                    <option value="">-- Select --</option>
+                    <option value="New-AzWebAppSlot">New-AzWebAppSlot</option>
+                    <option value="New-AzWebApp">New-AzWebApp</option>
+                    <option value="New-AzAppServicePlan">New-AzAppServicePlan</option>
+                    <option value="New-AzResourceGroup">New-AzResourceGroup</option>
+                </select> -Name $webappname -Location $location -ResourceGroupName myResourceGroup -Tier Standard
+            </div>
+            <div class="code-line">
+                <select id="command3">
+                    <option value="">-- Select --</option>
+                    <option value="New-AzWebAppSlot">New-AzWebAppSlot</option>
+                    <option value="New-AzWebApp">New-AzWebApp</option>
+                    <option value="New-AzAppServicePlan">New-AzAppServicePlan</option>
+                    <option value="New-AzResourceGroup">New-AzResourceGroup</option>
+                </select> -Name $webappname -Location $location -AppServicePlan $webappname -ResourceGroupName myResourceGroup
+            </div>
+            <div class="code-line">
+                <select id="command4">
+                    <option value="">-- Select --</option>
+                    <option value="New-AzWebAppSlot">New-AzWebAppSlot</option>
+                    <option value="New-AzWebApp">New-AzWebApp</option>
+                    <option value="New-AzAppServicePlan">New-AzAppServicePlan</option>
+                    <option value="New-AzResourceGroup">New-AzResourceGroup</option>
+                </select> -Name $webappname -ResourceGroupName myResourceGroup -Slot review
+            </div>
+            <div class="code-line">
+                $propertiesObject = @{repoUrl = "$gitrepo"; branch = "master"}
+            </div>
+            <div class="code-line">
+                Set-AzResource -PropertyObject $propertiesObject -ResourceGroupName myResourceGroup -ResourceType "Microsoft.Web/sites/slots/sourcecontrols" -ResourceName "$webappname/review/web" -ApiVersion 2015-08-01 -Force
+            </div>
+            <div class="code-line">
+                Switch-AzWebAppSlot -Name $webappname -ResourceGroupName myResourceGroup -SourceSlotName review -DestinationSlotName production
+            </div>
+        </div>
+        
+        <button class="answer-button" id="showAnswer">View Answer</button>
+        
+        <div class="answer-section" id="answerSection">
+            <h3>Correct Answers and Explanations:</h3>
+            <div class="answer-item">
+                <strong>Command 1:</strong>
+                <p class="correct-answer">Answer: New-AzResourceGroup</p>
+                <p class="explanation">The first step is to create a resource group to contain all the Azure resources. The New-AzResourceGroup cmdlet creates a new resource group in the specified location.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Command 2:</strong>
+                <p class="correct-answer">Answer: New-AzAppServicePlan</p>
+                <p class="explanation">Before creating a web app, you need to create an App Service Plan which defines the compute resources for your web app. The -Tier Standard parameter specifies the pricing tier.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Command 3:</strong>
+                <p class="correct-answer">Answer: New-AzWebApp</p>
+                <p class="explanation">This creates the main production web app. The -AppServicePlan parameter associates it with the App Service Plan created in the previous step.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Command 4:</strong>
+                <p class="correct-answer">Answer: New-AzWebAppSlot</p>
+                <p class="explanation">This creates the 'review' deployment slot for staging and testing before moving to production. Deployment slots allow you to test changes before swapping them to production.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Implementation Notes:</strong>
+                <p class="explanation">1. The Set-AzResource command configures continuous deployment from the GitHub repository to the 'review' slot.</p>
+                <p class="explanation">2. The Switch-AzWebAppSlot command is used to swap the 'review' slot with production after testing is complete.</p>
+                <p class="explanation">3. Standard tier or higher is required for deployment slots feature.</p>
+                <p class="explanation">4. The branch parameter is set to "master" which is the default branch in GitHub repositories.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerSection = document.getElementById('answerSection');
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = answerSection.style.display === 'block' ? 'none' : 'block';
+                this.textContent = answerSection.style.display === 'block' ? 'Hide Answer' : 'View Answer';
+                
+                // Set correct answers in dropdowns when showing answers
+                if (answerSection.style.display === 'block') {
+                    document.getElementById('command1').value = 'New-AzResourceGroup';
+                    document.getElementById('command2').value = 'New-AzAppServicePlan';
+                    document.getElementById('command3').value = 'New-AzWebApp';
+                    document.getElementById('command4').value = 'New-AzWebAppSlot';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

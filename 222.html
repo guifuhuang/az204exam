@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Monitor Query Debugging</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .query-section {
+            margin: 15px 0;
+            font-family: Consolas, monospace;
+        }
+        .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #0078d4;
+            background-color: #f0f0f0;
+            font-family: Consolas, monospace;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 222 HOTSPOT</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are debugging an application that is running on Azure Kubernetes cluster named cluster1. The cluster uses Azure Monitor for containers to monitor the cluster. The application has sticky sessions enabled on the ingress controller. Some customers report a large number of errors in the application over the last 24 hours.</p>
+        
+        <p><strong>Requirement:</strong></p>
+        <p>You need to determine on which virtual machines (VMs) the errors are occurring.</p>
+        
+        <p><strong>Task:</strong></p>
+        <p>How should you complete the Azure Monitor query? To answer, select the appropriate options in the answer area.</p>
+        
+        <div class="query-section">
+            let startTimestamp = 
+            <div class="dropdown">
+                <select id="timestamp">
+                    <option value="">-- Select --</option>
+                    <option value="ago(1d)">ago(1d)</option>
+                    <option value="since(1d)">since(1d)</option>
+                    <option value="todatetime(1d)">todatetime(1d)</option>
+                    <option value="date(now()) - 1d">date(now()) - 1d</option>
+                </select>
+            </div>
+            <br><br>
+            let ContainerDs = KubePodInventory<br>
+            | where ClusterName == "Cluster1"<br>
+            | 
+            <div class="dropdown">
+                <select id="containerDs">
+                    <option value="">-- Select --</option>
+                    <option value="top ContainerID">top ContainerID</option>
+                    <option value="union ContainerID">union ContainerID</option>
+                    <option value="sample ContainerID">sample ContainerID</option>
+                    <option value="distinct ContainerID">distinct ContainerID</option>
+                </select>
+            </div>
+            <br><br>
+            ContainerLog<br>
+            <div class="dropdown">
+                <select id="containerLog">
+                    <option value="">-- Select --</option>
+                    <option value="fork containerIDs">fork containerIDs</option>
+                    <option value="where ContainerID in (ContainerDs)">where ContainerID in (ContainerDs)</option>
+                    <option value="restrict ContainerIDs in (ContainerDs)">restrict ContainerIDs in (ContainerDs)</option>
+                    <option value="join ContainerID == ContainerDs.ContainerID">join ContainerID == ContainerDs.ContainerID</option>
+                </select>
+            </div>
+            <br><br>
+            | where TimeGenerated > startTimestamp<br>
+            | where LogEntrySource == "stderr"<br>
+            | 
+            <div class="dropdown">
+                <select id="aggregation">
+                    <option value="">-- Select --</option>
+                    <option value="project by Computer">project by Computer</option>
+                    <option value="summarize by Computer">summarize by Computer</option>
+                    <option value="partition count(1) by Computer">partition count(1) by Computer</option>
+                    <option value="summarize count(1) by Computer">summarize count(1) by Computer</option>
+                </select>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p>正确的查询补全应该是：</p>
+            <ol>
+                <li><span class="correct">ago(1d)</span> - 获取过去24小时的时间戳</li>
+                <li><span class="correct">distinct ContainerID</span> - 获取唯一的容器ID列表</li>
+                <li><span class="correct">where ContainerID in (ContainerDs)</span> - 筛选属于Cluster1的容器日志</li>
+                <li><span class="correct">summarize count(1) by Computer</span> - 按计算机汇总错误计数</li>
+            </ol>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>这个查询的目的是找出过去24小时内Cluster1集群中哪些VM上发生了错误。完整的查询应该：</p>
+            <ol>
+                <li>设置时间范围为过去24小时（使用ago(1d)）</li>
+                <li>从KubePodInventory获取Cluster1中唯一的容器ID（使用distinct ContainerID）</li>
+                <li>筛选ContainerLog中属于这些容器的日志（使用where ContainerID in (ContainerDs)）</li>
+                <li>按计算机汇总错误日志数量（使用summarize count(1) by Computer）</li>
+            </ol>
+            
+            <p><strong>完整查询示例：</strong></p>
+            <pre>
+let startTimestamp = ago(1d);
+let ContainerDs = KubePodInventory
+| where ClusterName == "Cluster1"
+| distinct ContainerID;
+
+ContainerLog
+| where ContainerID in (ContainerDs)
+| where TimeGenerated > startTimestamp
+| where LogEntrySource == "stderr"
+| summarize count(1) by Computer
+            </pre>
+            
+            <p><strong>关键点说明：</strong></p>
+            <ul>
+                <li>使用<code>ago(1d)</code>而不是其他时间函数，因为它专门用于表示过去的时间段</li>
+                <li><code>distinct ContainerID</code>确保我们获取唯一的容器列表</li>
+                <li><code>where ContainerID in (ContainerDs)</code>是最有效的连接方式</li>
+                <li><code>summarize count(1) by Computer</code>会给出每台VM上的错误数量</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

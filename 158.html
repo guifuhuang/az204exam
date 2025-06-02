@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Encryption Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+        .actions-box, .answer-box {
+            flex: 1;
+            min-height: 300px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .action-item, .answer-slot {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: move;
+            touch-action: none;
+        }
+        .answer-slot {
+            background-color: #e8f5e9;
+            min-height: 60px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .answer-slot::before {
+            content: attr(data-order) ". ";
+            font-weight: bold;
+        }
+        .answer-slot.empty {
+            background-color: #fff8e1;
+            border: 1px dashed #ffc107;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+        }
+        .incorrect {
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 158 DRAG DROP</h2>
+        <p>You are preparing to deploy a medical records application to an Azure virtual machine (VM). The application will be deployed by using a VHD produced by an on-premises build server.</p>
+        <p>You need to ensure that both the application and related data are encrypted during and after deployment to Azure.</p>
+        <p>Which three actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+    </div>
+
+    <div class="container">
+        <div class="actions-box" id="actionsBox">
+            <div class="action-item" draggable="true" data-id="1">Encrypt the on-premises VHD by using BitLocker without a TPM. Upload the VHD to Azure Storage.</div>
+            <div class="action-item" draggable="true" data-id="2">Run the Azure PowerShell command set-AzureRmVMDiskEncryptionExtension.</div>
+            <div class="action-item" draggable="true" data-id="3">Run the Azure PowerShell command set-AzureRMVMOSDisk.</div>
+            <div class="action-item" draggable="true" data-id="4">Encrypt the on-premises VHD by using BitLocker with a TPM. Upload the VHD to Azure Storage.</div>
+            <div class="action-item" draggable="true" data-id="5">Run the Azure PowerShell command New-AzureRmVM.</div>
+        </div>
+        
+        <div class="answer-box" id="answerBox">
+            <div class="answer-slot empty" data-order="1"></div>
+            <div class="answer-slot empty" data-order="2"></div>
+            <div class="answer-slot empty" data-order="3"></div>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <ol>
+            <li>Encrypt the on-premises VHD by using BitLocker without a TPM. Upload the VHD to Azure Storage.</li>
+            <li>Run the Azure PowerShell command New-AzureRmVM.</li>
+            <li>Run the Azure PowerShell command Set-AzureRmVMDiskEncryptionExtension.</li>
+        </ol>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure磁盘加密最佳实践：</p>
+        <ol>
+            <li><strong>本地VHD加密</strong>：
+                <ul>
+                    <li>首先需要使用BitLocker加密本地VHD（不使用TPM，因为Azure不支持TPM加密的VHD上传）</li>
+                    <li>然后将加密后的VHD上传到Azure存储</li>
+                </ul>
+            </li>
+            <li><strong>创建Azure虚拟机</strong>：
+                <ul>
+                    <li>使用New-AzureRmVM命令创建新的虚拟机</li>
+                    <li>使用之前上传的加密VHD作为OS磁盘</li>
+                </ul>
+            </li>
+            <li><strong>启用VM磁盘加密</strong>：
+                <ul>
+                    <li>最后使用Set-AzureRmVMDiskEncryptionExtension命令为VM启用磁盘加密</li>
+                    <li>这会确保数据和操作系统磁盘都保持加密状态</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>注意事项：</p>
+        <ul>
+            <li>不要使用TPM加密的VHD（选项4），因为Azure不支持</li>
+            <li>Set-AzureRMVMOSDisk（选项3）不是加密步骤，而是用于配置OS磁盘</li>
+            <li>New-AzureRmVM（选项5）必须在加密扩展之前执行</li>
+        </ul>
+    </div>
+
+    <script>
+        // Drag and drop functionality with touch support
+        let draggedItem = null;
+        const answerSlots = document.querySelectorAll('.answer-slot');
+        const actionItems = document.querySelectorAll('.action-item');
+        
+        // Mouse events
+        actionItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.display = 'none';
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+        
+        answerSlots.forEach(slot => {
+            slot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#fff59d';
+            });
+            
+            slot.addEventListener('dragleave', function() {
+                this.style.backgroundColor = this.classList.contains('empty') ? '#fff8e1' : '#e8f5e9';
+            });
+            
+            slot.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = this.classList.contains('empty') ? '#fff8e1' : '#e8f5e9';
+                
+                if (this.classList.contains('empty')) {
+                    this.innerHTML = draggedItem.innerHTML;
+                    this.classList.remove('empty');
+                    this.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                    draggedItem.remove();
+                }
+            });
+        });
+        
+        // Touch events
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element.classList.contains('action-item')) {
+                draggedItem = element;
+                element.style.opacity = '0.5';
+            }
+        }, {passive: false});
+        
+        document.addEventListener('touchmove', function(e) {
+            if (draggedItem) {
+                e.preventDefault();
+            }
+        }, {passive: false});
+        
+        document.addEventListener('touchend', function(e) {
+            if (draggedItem) {
+                const touch = e.changedTouches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                
+                if (element && element.classList.contains('answer-slot') && element.classList.contains('empty')) {
+                    element.innerHTML = draggedItem.innerHTML;
+                    element.classList.remove('empty');
+                    element.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                    draggedItem.remove();
+                }
+                
+                draggedItem.style.opacity = '1';
+                draggedItem = null;
+            }
+        }, {passive: false});
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Clear answer slots
+            answerSlots.forEach(slot => {
+                slot.innerHTML = '';
+                slot.classList.add('empty');
+            });
+            
+            // Add correct answers in order
+            const correctOrder = ['1', '5', '2'];
+            correctOrder.forEach((id, index) => {
+                const item = document.querySelector(`.action-item[data-id="${id}"]`);
+                if (item) {
+                    answerSlots[index].innerHTML = item.innerHTML;
+                    answerSlots[index].classList.remove('empty');
+                    answerSlots[index].setAttribute('data-id', id);
+                    item.remove();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

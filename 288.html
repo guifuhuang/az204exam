@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Monitor 测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f3ff;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 288</h3>
+        <p>An organization hosts web apps in Azure. The organization uses Azure Monitor. You discover that configuration changes were made to some of the web apps. You need to identify the configuration changes. Which Azure Monitor log should you review?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="question288" id="optionA" value="A">
+                <label for="optionA">A. AppServiceEnvironmentPlatformLogs</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="question288" id="optionB" value="B">
+                <label for="optionB">B. AppServiceApplogs</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="question288" id="optionC" value="C">
+                <label for="optionC">C. AppServiceAuditLogs</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="question288" id="optionD" value="D">
+                <label for="optionD">D. AppServiceConsoteLogs</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <h3>答案及说明：</h3>
+        <p><strong>正确答案：C. AppServiceAuditLogs</strong></p>
+        <p>说明：</p>
+        <p>要识别Azure Web应用的配置更改，应该查看AppServiceAuditLogs（应用服务审核日志）。</p>
+        <p>各选项说明：</p>
+        <ul>
+            <li>A. AppServiceEnvironmentPlatformLogs - 记录应用服务环境的平台日志，不是用于跟踪配置更改</li>
+            <li>B. AppServiceApplogs - 记录应用程序日志，不是配置更改日志</li>
+            <li>C. AppServiceAuditLogs - 正确选项，专门记录对应用服务的配置更改操作</li>
+            <li>D. AppServiceConsoteLogs - 此选项名称可能有误，正确的应该是AppServiceConsoleLogs（控制台日志），用于记录应用控制台输出</li>
+        </ul>
+        <p>审核日志(AppServiceAuditLogs)会记录所有管理操作，包括创建、修改或删除Web应用及其设置的更改，是识别配置更改的最佳选择。</p>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Vault BYOK Process Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .actions-area, .answer-area {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .actions-title, .answer-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .action {
+            background-color: #e6f2ff;
+            border: 1px solid #b3d1ff;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: move;
+            display: inline-block;
+        }
+        .answer-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .drop-target {
+            min-height: 40px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .drop-target.highlight {
+            border-color: #0078d4;
+            background-color: #f0f7ff;
+        }
+        .slot-number {
+            background-color: #0078d4;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+        .answer-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .action {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 277 DRAG DROP</h2>
+    <p>You are developing an Azure-hosted application that must use an on-premises hardware security module (HSM) key.</p>
+    <p>The key must be transferred to your existing Azure Key Vault by using the Bring Your Own Key (BYOK) process.</p>
+    <p>You need to securely transfer the key to Azure Key Vault.</p>
+    <p>Which four actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+
+    <div class="container">
+        <div class="actions-area">
+            <div class="actions-title">Actions</div>
+            <div class="action" draggable="true" data-action="generate-blob">Generate a key transfer blob file by using the HSM vendor-provided tool.</div>
+            <div class="action" draggable="true" data-action="generate-kek">Generate a Key Exchange Key (KEK).</div>
+            <div class="action" draggable="true" data-action="create-policy">Create a custom policy definition in Azure Policy.</div>
+            <div class="action" draggable="true" data-action="key-import">Run the az keyvault key import command.</div>
+            <div class="action" draggable="true" data-action="key-restore">Run the az keyvault key restore command.</div>
+            <div class="action" draggable="true" data-action="retrieve-kek">Retrieve the Key Exchange Key (KEK) public key.</div>
+        </div>
+
+        <div class="answer-area">
+            <div class="answer-title">Answer Area</div>
+            <div class="answer-slots">
+                <div class="drop-target" data-slot="1">
+                    <div class="slot-number">1</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="2">
+                    <div class="slot-number">2</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="3">
+                    <div class="slot-number">3</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="4">
+                    <div class="slot-number">4</div>
+                    <div class="slot-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="showAnswer" class="button">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <div class="answer-step">
+            <div class="slot-number">1</div>
+            <div class="correct-answer">Generate a Key Exchange Key (KEK).</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">2</div>
+            <div class="correct-answer">Retrieve the Key Exchange Key (KEK) public key.</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">3</div>
+            <div class="correct-answer">Generate a key transfer blob file by using the HSM vendor-provided tool.</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">4</div>
+            <div class="correct-answer">Run the az keyvault key import command.</div>
+        </div>
+        
+        <h3>说明:</h3>
+        <p>Azure Key Vault BYOK (Bring Your Own Key) 流程的正确顺序如下：</p>
+        <ol>
+            <li><strong>生成密钥交换密钥(KEK)</strong>: 首先需要在Azure Key Vault中创建一个KEK，这个密钥将用于加密传输你的HSM密钥。</li>
+            <li><strong>检索KEK公钥</strong>: 获取KEK的公钥部分，用于在本地加密你的HSM密钥。</li>
+            <li><strong>生成密钥传输blob文件</strong>: 使用HSM供应商提供的工具和KEK公钥，对你的HSM密钥进行加密，生成传输blob文件。</li>
+            <li><strong>运行az keyvault key import命令</strong>: 最后将加密后的密钥blob导入到Azure Key Vault中。</li>
+        </ol>
+        <p>这个过程确保了你的HSM密钥在传输过程中始终处于加密状态，提供了端到端的安全性。</p>
+        <p>注意：其他选项如创建自定义策略定义和运行密钥恢复命令不是BYOK标准流程的一部分。</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const actions = document.querySelectorAll('.action');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerDiv = document.getElementById('answer');
+            
+            // Store dragged action
+            let draggedItem = null;
+            
+            // Add event listeners for actions
+            actions.forEach(action => {
+                action.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                action.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Add event listeners for drop targets
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        const slotContent = this.querySelector('.slot-content');
+                        slotContent.innerHTML = '';
+                        const clonedAction = draggedItem.cloneNode(true);
+                        clonedAction.style.opacity = '1';
+                        clonedAction.style.cursor = 'default';
+                        clonedAction.draggable = false;
+                        slotContent.appendChild(clonedAction);
+                        
+                        // Store data attribute for answer checking
+                        this.setAttribute('data-answer', draggedItem.getAttribute('data-action'));
+                    }
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerDiv.style.display = 'block';
+                
+                // Highlight correct answers
+                const correctAnswers = {
+                    '1': 'generate-kek',
+                    '2': 'retrieve-kek',
+                    '3': 'generate-blob',
+                    '4': 'key-import'
+                };
+                
+                dropTargets.forEach(target => {
+                    const slot = target.getAttribute('data-slot');
+                    const userAnswer = target.getAttribute('data-answer');
+                    const correctAnswer = correctAnswers[slot];
+                    
+                    if (userAnswer === correctAnswer) {
+                        target.style.backgroundColor = '#e6ffe6'; // Light green for correct
+                    } else if (userAnswer) {
+                        target.style.backgroundColor = '#ffe6e6'; // Light red for incorrect
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 324</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+        }
+        .correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 324</h2>
+        <p>You are building a web application that uses the Microsoft identity platform for user authentication.</p>
+        <p>You are implementing user identification for the web application. You need to retrieve a claim to uniquely identify a user.</p>
+        <p>Which claim type should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="q324" id="q324a">
+                <label for="q324a">A. oid</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q324" id="q324b">
+                <label for="q324b">B. aud</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q324" id="q324c">
+                <label for="q324c">C. idp</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q324" id="q324d">
+                <label for="q324d">D. nonce</label>
+            </div>
+        </div>
+        
+        <button id="viewAnswerBtn">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <p><span class="correct">正确答案: A. oid</span></p>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>1. <strong>问题分析</strong>：题目要求从Microsoft身份平台获取唯一标识用户的声明(claim)。</p>
+                
+                <p>2. <strong>为什么选择oid</strong>：</p>
+                <ul>
+                    <li><strong>oid</strong> (Object ID) 是Azure AD中用户的全局唯一标识符(GUID)</li>
+                    <li>即使用户更改了用户名或邮箱，oid也保持不变</li>
+                    <li>在租户内每个用户的oid都是唯一的</li>
+                    <li>是Microsoft身份平台推荐的用户唯一标识方式</li>
+                </ul>
+                
+                <p>3. <strong>其他选项分析</strong>：</p>
+                <ul>
+                    <li><strong>B. aud</strong>：受众声明，表示令牌的目标接收者(通常是应用ID)，不是用户标识</li>
+                    <li><strong>C. idp</strong>：身份提供者声明，表示用户认证的来源，不能唯一标识用户</li>
+                    <li><strong>D. nonce</strong>：用于防止重放攻击的一次性值，与用户标识无关</li>
+                </ul>
+                
+                <p>4. <strong>实际应用</strong>：</p>
+                <p>在代码中可以通过解析JWT令牌获取oid声明，例如：</p>
+                <pre>var oid = User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('viewAnswerBtn').addEventListener('click', function() {
+            const answer = document.getElementById('answer');
+            const button = document.getElementById('viewAnswerBtn');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                button.textContent = '查看答案';
+            } else {
+                answer.style.display = 'block';
+                button.textContent = '隐藏答案';
+            }
+        });
+    </script>
+</body>
+</html>

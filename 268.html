@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Functions Monitoring Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 268</h2>
+        <p>You develop and add several functions to an Azure Function app that uses the latest runtime host.</p>
+        <p>The functions contain several REST API endpoints secured by using SSL. The Azure Function app runs in a Consumption plan.</p>
+        <p>You must send an alert when any of the function endpoints are unavailable or responding too slowly.</p>
+        <p>You need to monitor the availability and responsiveness of the functions.</p>
+        <p>What should you do?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" name="answer" id="optionA" value="A">
+            <label for="optionA">A. Create a URL ping test.</label>
+        </div>
+        <div class="option">
+            <input type="radio" name="answer" id="optionB" value="B">
+            <label for="optionB">B. Create a timer triggered function that calls TrackAvailability() and send the results to Application Insights.</label>
+        </div>
+        <div class="option">
+            <input type="radio" name="answer" id="optionC" value="C">
+            <label for="optionC">C. Create a timer triggered function that calls GetMetric("Request Size") and send the results to Application Insights.</label>
+        </div>
+        <div class="option">
+            <input type="radio" name="answer" id="optionD" value="D">
+            <label for="optionD">D. Add a new diagnostic setting to the Azure Function app. Enable the FunctionAppLogs and Send to Log Analytics options.</label>
+        </div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div class="answer" id="answerSection">
+        <h3>正确答案: <span class="correct">B. Create a timer triggered function that calls TrackAvailability() and send the results to Application Insights.</span></h3>
+        <p><strong>说明:</strong></p>
+        <p>题目要求监控函数端点的可用性和响应速度，并在不可用或响应过慢时发送警报。</p>
+        <p>选项B是正确的解决方案，因为：</p>
+        <ol>
+            <li>可以创建一个使用TimerTrigger定期运行的Azure函数</li>
+            <li>使用TrackAvailability()方法可以自定义测试逻辑</li>
+            <li>测试结果会发送到Application Insights</li>
+            <li>可以在Application Insights中查询可用性结果数据并设置警报</li>
+            <li>这种方法比门户UI中的可用性测试更灵活，可以编写更复杂的测试</li>
+            <li>可以监控VNET内部的应用程序，更改端点地址，或在某些区域不可用时创建可用性测试</li>
+        </ol>
+        <p>其他选项分析：</p>
+        <ul>
+            <li>A. URL ping测试虽然简单，但无法提供自定义测试逻辑</li>
+            <li>C. GetMetric("Request Size")获取的是请求大小指标，与题目要求的可用性和响应时间监控无关</li>
+            <li>D. 诊断设置和Log Analytics主要用于日志收集和分析，不适合实时监控端点的可用性和响应时间</li>
+        </ul>
+        <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/app/availability-azure-functions" target="_blank">Azure Functions可用性监控</a></p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

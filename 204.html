@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Access Token Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 204</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop Azure solutions.</p>
+        <p>You must grant a virtual machine (VM) access to specific resource groups in Azure Resource Manager.</p>
+        
+        <p><strong>Goal:</strong></p>
+        <p>You need to obtain an Azure Resource Manager access token.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Use an X.509 certificate to authenticate the VM with Azure Resource Manager.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>B. No</strong></p>
+            <p><strong>解释：</strong></p>
+            <p>这个解决方案不能满足目标，因为使用X.509证书不是获取Azure资源管理器访问令牌的推荐方法。</p>
+            
+            <p>主要原因：</p>
+            <ul>
+                <li>Azure官方推荐使用托管标识(Managed Identity)来获取资源管理器访问令牌，而不是X.509证书[2](@ref)[3](@ref)</li>
+                <li>托管标识是Azure自动管理的身份验证机制，专门设计用于访问Azure资源[3](@ref)</li>
+                <li>获取访问令牌的标准方法是向Azure实例元数据服务(IMDS)终结点发送请求[2](@ref)[3](@ref)</li>
+            </ul>
+            
+            <p>正确的做法应该是：</p>
+            <ol>
+                <li>为VM启用系统分配的托管标识</li>
+                <li>使用以下curl命令获取访问令牌：
+                    <div class="code">
+                        curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/' -H Metadata:true
+                    </div>
+                </li>
+                <li>为托管标识分配适当的RBAC角色以访问资源组[3](@ref)</li>
+            </ol>
+            
+            <p>虽然技术上可以使用X.509证书进行身份验证[8](@ref)，但这需要复杂的配置且不是Azure推荐的最佳实践。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

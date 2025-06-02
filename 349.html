@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service 性能问题诊断测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 349</h2>
+        <p>You develop and deploy a web app to Azure App Service. The Azure App Service uses a Basic plan in a region.</p>
+        <p>Users report that the web app is responding must capture the complete call stack to help performance issues in code. Call stack data must be correlated across app instances. You must minimize cost and impact to users on the web app.</p>
+        <p>You need to capture the telemetry.</p>
+        <p>Which three actions should you perform? Each answer presents part of the solution.</p>
+        <p>NOTE: Each correct selection is worth point</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="optionA">
+                <label for="optionA">A. Enable Application Insights site extensions.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="optionB">
+                <label for="optionB">B. Enable Profiler.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="optionC">
+                <label for="optionC">C. Restart all apps in the App Service plan.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="optionD">
+                <label for="optionD">D. Enable Snapshot debugger.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="optionE">
+                <label for="optionE">E. Enable remote debugging.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionF" name="optionF">
+                <label for="optionF">F. Enable the Always On setting for the app service.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionG" name="optionG">
+                <label for="optionG">G. Upgrade the Azure App Service plan to Premium</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <h3>正确答案: B, D, F</h3>
+        <p><strong>说明:</strong></p>
+        <p>1. <strong>B. Enable Profiler</strong> - Profiler可以帮助捕获应用程序的性能数据，包括完整的调用堆栈，这对于诊断性能问题非常有用。</p>
+        <p>2. <strong>D. Enable Snapshot debugger</strong> - 快照调试器可以在生产环境中捕获异常时的调用堆栈和变量状态，而不会影响用户体验。</p>
+        <p>3. <strong>F. Enable the Always On setting for the app service</strong> - 启用"始终开启"设置可以防止应用程序因闲置而卸载，确保性能数据收集的连续性。</p>
+        <p>其他选项分析：</p>
+        <p>- A选项不正确，因为题目要求的是捕获调用堆栈数据，而不仅仅是启用Application Insights。</p>
+        <p>- C选项不正确，因为重启应用会中断服务，不符合"最小化影响用户"的要求。</p>
+        <p>- E选项不正确，因为远程调试不适合生产环境，且会影响性能。</p>
+        <p>- G选项不正确，因为题目要求最小化成本，升级到Premium计划会增加成本。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

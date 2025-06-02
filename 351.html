@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Key Vault 密钥轮换配置测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-top: 15px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 351</h2>
+        <p>You are developing several microservices to deploy to a Azure Service cluster. The microservices manage data stored in Azure Cosmos DB and Azure Blob storage. The data is secured by using customer-managed keys stored in Azure Key Vault.</p>
+        <p>You must automate key rotation for all Key Vault keys and allow for manual key rotation. Keys must rotate every three months. Notifications of expiring keys must be sent before key expiry.</p>
+        <p>You need to configure key rotation and enable key expiry notifications.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options" value="A">
+                <label for="optionA">A. Create and configure a new Azure Event Grid instance.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options" value="B">
+                <label for="optionB">B. Create configure a key rotation policy during key creation</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options" value="C">
+                <label for="optionC">C. Create and assign an Azure Key Vault access policy</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options" value="D">
+                <label for="optionD">D. Configure Azure Key Vault</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer" class="answer">
+        <h3>正确答案: A, C</h3>
+        <p><strong>说明：</strong></p>
+        <p>1. <strong>A. 创建并配置新的Azure Event Grid实例</strong> - 这是正确的，因为Azure Event Grid可以用来接收Key Vault关于密钥即将过期的事件通知，从而在密钥到期前发送通知。</p>
+        <p>2. <strong>C. 创建并分配Azure Key Vault访问策略</strong> - 这是正确的，因为需要为应用程序和服务配置适当的访问策略，以便它们能够访问Key Vault中的密钥。</p>
+        <p>B选项不正确，因为在Key Vault中创建密钥时不能直接配置轮换策略，轮换策略需要在密钥创建后单独配置。</p>
+        <p>D选项表述过于笼统，不是具体的解决方案。</p>
+    </div>
+    
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

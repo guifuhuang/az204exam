@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Instance 配置测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d4, #50e6ff, #0078d4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+            text-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .question-no {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #50e6ff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .config-table th, .config-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        .config-table th {
+            background: rgba(0, 120, 212, 0.2);
+            color: #9cdcfe;
+            font-weight: normal;
+            width: 40%;
+        }
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+        .select-container {
+            position: relative;
+            width: 100%;
+        }
+        .custom-select {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 120, 212, 0.2);
+            border: 2px solid #50e6ff;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .custom-select:hover {
+            background: rgba(0, 120, 212, 0.4);
+        }
+        .custom-select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .select-arrow {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #50e6ff;
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #0078d4, #50e6ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 18px;
+            font-family: 'Consolas', monospace;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #50e6ff;
+            border-left: 4px solid #4ec9b0;
+            line-height: 1.8;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #50e6ff;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .azure-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #50e6ff, transparent);
+            animation: azureWave 3s infinite linear;
+        }
+        @keyframes azureWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .config-table th, .config-table td {
+                padding: 15px 10px;
+            }
+            .custom-select {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Azure Container Instance 配置测试</h1>
+            <div class="question-no">QUESTION NO: 392 HOTSPOT</div>
+        </div>
+        
+        <div class="requirements">
+            <p>您开发了两个Python脚本来处理数据。这些Python脚本必须部署到在Azure Container Instance容器组中运行的两个独立的Linux容器中。容器必须使用服务器消息块（SMB）协议访问外部数据。容器组中的容器必须只运行一次。</p>
+            <p>您需要配置Azure Container Instance。</p>
+            <p class="note">注意：在答案区域中选择适当的选项。</p>
+        </div>
+        
+        <table class="config-table">
+            <thead>
+                <tr>
+                    <th>Configuration Setting</th>
+                    <th>Configuration Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>External data volume</td>
+                    <td>
+                        <div class="select-container">
+                            <select class="custom-select" id="volumeSelect">
+                                <option value="">请选择选项</option>
+                                <option value="Secret">Secret</option>
+                                <option value="Empty directory">Empty directory</option>
+                                <option value="Cloned git repo">Cloned git repo</option>
+                                <option value="Azure file share">Azure file share</option>
+                            </select>
+                            <div class="select-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Container restart policy</td>
+                    <td>
+                        <div class="select-container">
+                            <select class="custom-select" id="policySelect">
+                                <option value="">请选择选项</option>
+                                <option value="Never">Never</option>
+                                <option value="Always">Always</option>
+                                <option value="OnFailure">OnFailure</option>
+                            </select>
+                            <div class="select-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                <p><strong>External data volume：</strong> <span class="highlight">Azure file share</span></p>
+                <p><strong>Container restart policy：</strong> <span class="highlight">Never</span></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>配置解析：</h3>
+                <ul>
+                    <li><span class="highlight">External data volume：</span> 题目要求容器使用SMB协议访问外部数据。Azure文件共享（Azure file share）支持SMB协议，允许容器通过挂载文件共享的方式访问外部数据。其他选项如Secret用于存储敏感信息，Empty directory是临时存储，Cloned git repo用于克隆代码库，均不支持SMB协议。</li>
+                    <li><span class="highlight">Container restart policy：</span> 题目要求容器"只运行一次"，因此重启策略应设置为Never。这意味着容器执行完任务后不会重启，符合一次性任务的要求。Always策略会使容器持续重启，OnFailure策略会在失败时重启，均不符合要求。</li>
+                </ul>
+                
+                <h3>技术细节：</h3>
+                <ul>
+                    <li><strong>Azure文件共享（Azure file share）</strong>：提供基于云的完全托管文件共享服务，使用标准SMB协议。容器可以通过挂载Azure文件共享来访问共享文件系统中的数据。</li>
+                    <li><strong>重启策略（Restart policy）</strong>：
+                        <ul>
+                            <li><strong>Never</strong>：容器启动后只运行一次，完成后即停止</li>
+                            <li><strong>Always</strong>：容器停止后总是重启（默认策略）</li>
+                            <li><strong>OnFailure</strong>：容器以非零退出代码停止时重启</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>为什么选择此配置：</h3>
+                <ul>
+                    <li><strong>Azure文件共享</strong>：是唯一支持SMB协议的存储选项，满足容器访问外部数据的要求</li>
+                    <li><strong>Never重启策略</strong>：确保容器只运行一次，符合任务型容器的需求</li>
+                    <li>此组合完美满足题目中关于数据访问方式和运行行为的双重需求</li>
+                </ul>
+                
+                <h3>实际应用场景：</h3>
+                <ul>
+                    <li><strong>数据处理任务</strong>：运行一次性数据处理脚本，完成后容器自动停止</li>
+                    <li><strong>批处理作业</strong>：处理存储在Azure文件共享中的批量数据</li>
+                    <li><strong>定时任务</strong>：结合Azure逻辑应用或函数触发容器执行计划任务</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Container Instance 配置测试 | 下拉选择功能实现</p>
+        </div>
+        
+        <div class="azure-animation"></div>
+    </div>
+
+    <script>
+        // 查看答案按钮功能
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('volumeSelect').value = 'Azure file share';
+            document.getElementById('policySelect').value = 'Never';
+            
+            // 禁用下拉框
+            document.getElementById('volumeSelect').disabled = true;
+            document.getElementById('policySelect').disabled = true;
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // 自定义下拉框样式增强
+        const customSelects = document.querySelectorAll('.custom-select');
+        customSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                if(this.value) {
+                    this.style.backgroundColor = 'rgba(80, 230, 255, 0.2)';
+                } else {
+                    this.style.backgroundColor = 'rgba(0, 120, 212, 0.2)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

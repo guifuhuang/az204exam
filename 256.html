@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Deployment Slots Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <p><strong>QUESTION NO: 256</strong></p>
+        <p>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</p>
+        <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You have an Azure App Service web app named App1 that uses a deployment slot named Development. You create additional deployment slots named Testing and Production. You enable auto swap on the Production deployment slot.</p>
+        <p><strong>Goal:</strong></p>
+        <p>You need to ensure that scripts run and resources are available before a swap operation occurs.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Update the app with a method named statuscheck to run the scripts. Update the app settings for the app. Set the WEBSITE_SWAP_WARMUP_PING_PATH and WEBSITE_SWAP_WARMUP_PING_STATUSES with a path to the new method and appropriate response codes.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Yes</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. No</label>
+        </div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div class="answer" id="answer">
+        <p><strong>正确答案: A. Yes</strong></p>
+        <p><strong>说明:</strong></p>
+        <p>这个解决方案是正确的。在Azure应用服务中，WEBSITE_SWAP_WARMUP_PING_PATH和WEBSITE_SWAP_WARMUP_PING_STATUSES是两个重要的应用设置，用于控制交换操作前的预热行为。</p>
+        <p>WEBSITE_SWAP_WARMUP_PING_PATH指定了交换操作前要调用的路径（这里是statuscheck方法），而WEBSITE_SWAP_WARMUP_PING_STATUSES定义了可接受的HTTP响应代码。通过这种方式，可以确保在交换操作发生前，脚本能够运行并且资源可用。</p>
+        <p>这种方法正是Azure推荐的在交换操作前验证应用是否准备就绪的方式，因此该解决方案能够满足题目要求的目标。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage Blob 测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 275</h2>
+        <p><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</p>
+        <p>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</p>
+        
+        <h3>Scenario:</h3>
+        <p>You develop a software as a service (SaaS) offering to manage photographs. Users upload photos to a web service which then stores the photos in Azure Storage Blob storage. The storage account type is General-purpose V2.</p>
+        <p>When photos are uploaded, they must be processed to produce and save a mobile-friendly version of the image. The process to produce a mobile-friendly version of the image must start in less than one minute.</p>
+        <p>You need to design the process that starts the photo processing.</p>
+        
+        <h3>Solution:</h3>
+        <p>Use the Azure Blob Storage change feed to trigger photo processing.</p>
+        
+        <p>Does the solution meet the goal?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Yes</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. No</label>
+        </div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案: B. No</h3>
+        <p><strong>说明:</strong></p>
+        <p>Azure Blob Storage change feed（更改源）不适合用于实时触发处理，因为它主要用于跟踪Blob存储中的更改历史记录，而不是提供实时通知功能。</p>
+        <p>要在一分钟内触发照片处理，更好的解决方案是使用Azure Event Grid或Blob Storage触发器与Azure Functions结合使用。Event Grid可以在Blob创建时几乎实时（通常在几秒内）触发事件，非常适合这种需要快速响应的场景。</p>
+        <p>Blob Storage change feed的主要用途是审计、数据分析和其他需要了解存储账户中所有变更的后台处理，而不是用于需要快速响应的实时处理场景。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

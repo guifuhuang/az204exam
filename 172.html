@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Real-time Copy Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option.selected {
+            background-color: #d4edff;
+            border-color: #a8d1ff;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 172</h2>
+        <p>You develop an app that allows users to upload photos and videos to Azure storage. The app uses a storage REST API call to upload the media to a blob storage account named Account1.</p>
+        <p>You have blob storage containers named Container1 and Container2.</p>
+        <p>Uploading of videos occurs on an irregular basis.</p>
+        <p>You need to copy specific blobs from Container1 to Container2 in real time when specific requirements are met, excluding backup blob copies.</p>
+        <p>What should you do?</p>
+    </div>
+
+    <div class="options">
+        <div class="option" data-value="A">A. Download the blob to a virtual machine and then upload the blob to Container2.</div>
+        <div class="option" data-value="B">B. Run the Azure PowerShell command Start-AzureStorageBlobCopy.</div>
+        <div class="option" data-value="C">C. Copy blobs to Container2 by using the Put Blob operation of the Blob Service REST API.</div>
+        <div class="option" data-value="D">D. Use AzCopy with the Snapshot switch blobs to Container2.</div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><span class="correct">B. Run the Azure PowerShell command Start-AzureStorageBlobCopy</span></p>
+        
+        <div class="explanation">
+            <h3>解析:</h3>
+            <p>要实现实时复制特定Blob且排除备份副本的需求，最佳方案是使用Azure PowerShell的<code>Start-AzureStorageBlobCopy</code>命令[9](@ref)：</p>
+            
+            <ol>
+                <li><strong>实时性要求</strong>：
+                    <ul>
+                        <li><code>Start-AzureStorageBlobCopy</code>直接在存储服务间执行复制操作，无需下载再上传[9](@ref)</li>
+                        <li>对于同一存储账户内的复制，操作通常是同步完成的[4](@ref)</li>
+                        <li>支持条件筛选，可精确控制哪些Blob需要复制[6](@ref)</li>
+                    </ul>
+                </li>
+                
+                <li><strong>排除备份副本</strong>：
+                    <ul>
+                        <li>该命令默认不复制快照(Snapshot)，符合题目要求[10](@ref)</li>
+                        <li>可通过参数精确控制复制行为，避免包含不需要的副本[9](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>示例代码：</strong></p>
+            <div class="code">
+                # 复制特定Blob并排除快照
+                Start-AzStorageBlobCopy -SrcContainer "Container1" `
+                    -SrcBlob "video123.mp4" `
+                    -DestContainer "Container2" `
+                    -DestBlob "processed/video123.mp4" `
+                    -Context $ctx
+            </div>
+            
+            <p><strong>为什么其他选项不正确：</strong></p>
+            <ul>
+                <li><strong>A. 通过虚拟机中转</strong>：会产生不必要的网络传输和延迟，不符合实时性要求[9](@ref)</li>
+                <li><strong>C. Put Blob REST API</strong>：适用于上传新Blob而非复制现有Blob，且需要手动处理所有数据传输[3](@ref)</li>
+                <li><strong>D. AzCopy with Snapshot</strong>：Snapshot开关会复制快照，与题目要求相反[10](@ref)</li>
+            </ul>
+            
+            <p><strong>技术实现要点：</strong></p>
+            <ol>
+                <li>创建存储上下文对象：
+                    <div class="code">
+                        $ctx = New-AzStorageContext -StorageAccountName "Account1" -UseConnectedAccount
+                    </div>
+                </li>
+                <li>添加事件触发器（如Blob上传事件）自动执行复制命令</li>
+                <li>通过条件参数控制仅复制符合特定要求的Blob（如特定扩展名、元数据等）</li>
+            </ol>
+            
+            <p>此方案完全满足题目中的关键要求：实时复制、排除备份、高效执行[4](@ref)[9](@ref)。</p>
+        </div>
+    </div>
+
+    <script>
+        // 单选功能实现
+        const options = document.querySelectorAll('.option');
+        let selectedOption = null;
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedOption = null;
+                } else {
+                    // 清除其他选项的选择状态
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    // 选择当前选项
+                    this.classList.add('selected');
+                    selectedOption = this.getAttribute('data-value');
+                }
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 清除所有选择
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 选择正确答案
+            document.querySelector('.option[data-value="B"]').classList.add('selected');
+        }
+    </script>
+</body>
+</html>

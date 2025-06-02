@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell Command Ordering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            touch-action: none;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .drag-options {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .drag-item {
+            padding: 10px;
+            margin: 8px 0;
+            background-color: #e1f5fe;
+            border: 1px solid #0288d1;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+        }
+        .answer-area {
+            border: 1px dashed #9e9e9e;
+            padding: 15px;
+            min-height: 300px;
+            background-color: #f9f9f9;
+        }
+        .answer-slot {
+            min-height: 50px;
+            border: 1px dashed #ccc;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+        }
+        .highlight {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 4px solid #4caf50;
+        }
+        .dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+        .drag-ghost {
+            position: absolute;
+            opacity: 0.8;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .drag-item, .answer-slot {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 103 DRAG DROP</h2>
+        <p>You are developing an application. You have an Azure user account that has access to two subscriptions.</p>
+        <p>You need to retrieve a storage account key secret from Azure Key Vault.</p>
+        <p>In which order should you arrange the PowerShell commands to develop the solution? To answer, move all commands from the list of commands to the answer area and arrange them in the correct order.</p>
+
+        <div class="drag-drop-container">
+            <div class="drag-options">
+                <h3>PowerShell Commands</h3>
+                <div class="drag-item" draggable="true" data-value="1">$Secretvalue = ConvertTo-SecureString $PlainText -AsPlainText -Force</div>
+                <div class="drag-item" draggable="true" data-value="2">Set-AzKeyVaultSecret -VaultName $VaultName -Name $SecretName -SecretValue $Secretvalue</div>
+                <div class="drag-item" draggable="true" data-value="3">Get-AzStorageAccountKey -ResourceGroupName $ResGroup -Name $StorageAcct</div>
+                <div class="drag-item" draggable="true" data-value="4">Set-AzContext -SubscriptionId $subscriptionID</div>
+                <div class="drag-item" draggable="true" data-value="5">Get-AzKeyVaultSecret -VaultName $VaultName -Name $SecretName</div>
+                <div class="drag-item" draggable="true" data-value="6">Get-AzSubscription</div>
+            </div>
+
+            <div class="answer-area">
+                <h3>Answer Area</h3>
+                <div class="answer-slot" data-order="1"></div>
+                <div class="answer-slot" data-order="2"></div>
+                <div class="answer-slot" data-order="3"></div>
+                <div class="answer-slot" data-order="4"></div>
+                <div class="answer-slot" data-order="5"></div>
+                <div class="answer-slot" data-order="6"></div>
+            </div>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案顺序:</h3>
+            <ol>
+                <li>Get-AzSubscription</li>
+                <li>Set-AzContext -SubscriptionId $subscriptionID</li>
+                <li>Get-AzStorageAccountKey -ResourceGroupName $ResGroup -Name $StorageAcct</li>
+                <li>$Secretvalue = ConvertTo-SecureString $PlainText -AsPlainText -Force</li>
+                <li>Set-AzKeyVaultSecret -VaultName $VaultName -Name $SecretName -SecretValue $Secretvalue</li>
+                <li>Get-AzKeyVaultSecret -VaultName $VaultName -Name $SecretName</li>
+            </ol>
+            
+            <h3>说明:</h3>
+            <p>1. <strong>Get-AzSubscription</strong>: 首先需要获取可用的订阅列表</p>
+            <p>2. <strong>Set-AzContext</strong>: 设置要操作的订阅上下文</p>
+            <p>3. <strong>Get-AzStorageAccountKey</strong>: 获取存储账户密钥</p>
+            <p>4. <strong>ConvertTo-SecureString</strong>: 将密钥转换为安全字符串</p>
+            <p>5. <strong>Set-AzKeyVaultSecret</strong>: 将安全字符串保存到Key Vault</p>
+            <p>6. <strong>Get-AzKeyVaultSecret</strong>: 最后从Key Vault检索密钥</p>
+            
+            <h4>完整流程解释:</h4>
+            <p>这个顺序反映了从Azure获取存储账户密钥并安全存储在Key Vault中的标准流程：首先确定订阅上下文，然后获取原始存储密钥，将其转换为安全格式，存储在Key Vault中，最后验证可以检索它。</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const answerSlots = document.querySelectorAll('.answer-slot');
+            
+            let draggedItem = null;
+            let ghostElement = null;
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            // Desktop drag events
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    e.dataTransfer.setData('text/plain', this.dataset.value);
+                    this.classList.add('dragging');
+                    
+                    // Create ghost element
+                    ghostElement = this.cloneNode(true);
+                    ghostElement.classList.add('drag-ghost');
+                    ghostElement.style.width = this.offsetWidth + 'px';
+                    document.body.appendChild(ghostElement);
+                    
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                    
+                    if (ghostElement && ghostElement.parentNode) {
+                        ghostElement.parentNode.removeChild(ghostElement);
+                    }
+                });
+            });
+
+            // Mobile touch events
+            dragItems.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    draggedItem = this;
+                    this.classList.add('dragging');
+                    
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    
+                    // Create ghost element
+                    ghostElement = this.cloneNode(true);
+                    ghostElement.classList.add('drag-ghost');
+                    ghostElement.style.position = 'fixed';
+                    ghostElement.style.left = touchStartX - this.offsetWidth/2 + 'px';
+                    ghostElement.style.top = touchStartY - this.offsetHeight/2 + 'px';
+                    document.body.appendChild(ghostElement);
+                });
+                
+                item.addEventListener('touchmove', function(e) {
+                    if (!draggedItem) return;
+                    e.preventDefault();
+                    
+                    const touch = e.touches[0];
+                    const x = touch.clientX - ghostElement.offsetWidth/2;
+                    const y = touch.clientY - ghostElement.offsetHeight/2;
+                    
+                    ghostElement.style.left = x + 'px';
+                    ghostElement.style.top = y + 'px';
+                    
+                    // Highlight potential drop targets
+                    const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const answerSlot = elementAtPoint?.closest('.answer-slot');
+                    
+                    answerSlots.forEach(slot => {
+                        slot.classList.toggle('highlight', slot === answerSlot);
+                    });
+                });
+                
+                item.addEventListener('touchend', function() {
+                    if (!draggedItem) return;
+                    
+                    // Find drop target
+                    const answerSlot = document.querySelector('.answer-slot.highlight');
+                    if (answerSlot) {
+                        answerSlot.innerHTML = '';
+                        const clone = this.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        answerSlot.appendChild(clone);
+                    }
+                    
+                    // Clean up
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                    
+                    if (ghostElement && ghostElement.parentNode) {
+                        ghostElement.parentNode.removeChild(ghostElement);
+                    }
+                    
+                    answerSlots.forEach(slot => {
+                        slot.classList.remove('highlight');
+                    });
+                });
+            });
+
+            // Answer slot events
+            answerSlots.forEach(slot => {
+                slot.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                slot.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                slot.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clone = draggedItem.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        this.appendChild(clone);
+                    }
+                });
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

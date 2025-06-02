@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Disk Encryption Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 5px;
+            margin: 0 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .command-line {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Azure Disk Encryption Configuration</h2>
+    <p>You plan to deploy a new application to a Linux virtual machine (VM) that is hosted in Azure. The entire VM must be secured at rest by using industry-standard encryption technology to address organizational security and compliance requirements. You need to configure Azure Disk Encryption for the VM. How should you complete the Azure CLI commands?</p>
+    
+    <div class="code-block">
+        <div class="command-line">az provider register -n Microsoft.KeyVault</div>
+        <div class="command-line">resourcegroup="myResourceGroup"</div>
+        <div class="command-line">az group create --name $resourcegroup --location westus</div>
+        <div class="command-line">keyvault_name=myvaultname$RANDOM</div>
+        <div class="command-line">az <select id="q2">
+                <option value="">Select</option>
+                <option value="vm">vm</option>
+                <option value="keyvault">keyvault</option>
+                <option value="keyvault key">keyvault key</option>
+                <option value="vm encryption">vm encryption</option>
+            </select> create --name $keyvault_name --resource-group $resourcegroup --location eastus --enabled-for-disk-encryption True</div>
+        <div class="command-line">az <select id="q3">
+                <option value="">Select</option>
+                <option value="vm">vm</option>
+                <option value="keyvault">keyvault</option>
+                <option value="keyvault key">keyvault key</option>
+                <option value="vm encryption">vm encryption</option>
+            </select> create --vault-name $keyvault_name --name Name1 --protection software</div>
+    </div>
+
+    <div class="code-block">
+        <div class="command-line">az <select id="q4">
+                <option value="">Select</option>
+                <option value="vm">vm</option>
+                <option value="keyvault">keyvault</option>
+                <option value="keyvault key">keyvault key</option>
+                <option value="vm encryption">vm encryption</option>
+            </select> create --resource-group $resourcegroup --name Name2 --image Canonical:UbuntuServer:16.04-LTS:latest --admin-username azureuser --generate-ssh-keys --data-disk-sizes-gb 5</div>
+        <div class="command-line">az <select id="q5">
+                <option value="">Select</option>
+                <option value="vm">vm</option>
+                <option value="keyvault">keyvault</option>
+                <option value="keyvault key">keyvault key</option>
+                <option value="vm encryption">vm encryption</option>
+            </select> enable --resource-group $resourcegroup --name Name2 --disk-encryption-keyvault $keyvault_name --key-encryption-key Name1 --volume-type <select id="q6">
+                <option value="">Select</option>
+                <option value="all">all</option>
+                <option value="data">data</option>
+                <option value="os">os</option>
+            </select></div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div id="answerSection" class="answer-section">
+        <h3>正确答案:</h3>
+        <p>1. <strong>keyvault</strong> (创建密钥保管库)</p>
+        <p>2. <strong>keyvault key</strong> (创建密钥保管库密钥)</p>
+        <p>3. <strong>vm</strong> (创建虚拟机)</p>
+        <p>4. <strong>vm encryption</strong> (启用虚拟机加密)</p>
+        <p>5. <strong>all</strong> (加密所有卷类型)</p>
+        
+        <h3>说明:</h3>
+        <p>要配置Azure磁盘加密，需要以下步骤：</p>
+        <ol>
+            <li>首先注册Key Vault提供程序</li>
+            <li>创建资源组</li>
+            <li>创建Key Vault (az keyvault create)</li>
+            <li>在Key Vault中创建加密密钥 (az keyvault key create)</li>
+            <li>创建虚拟机 (az vm create)</li>
+            <li>为虚拟机启用加密 (az vm encryption enable)，指定Key Vault和加密密钥，并选择加密所有卷类型(--volume-type all)</li>
+        </ol>
+        <p>选择"all"作为卷类型会加密虚拟机的操作系统磁盘和数据磁盘，满足题目中"整个虚拟机必须被加密"的要求。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

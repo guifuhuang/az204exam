@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 337 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .requirements-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .requirements-table th, .requirements-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .requirements-table th {
+            background-color: #f2f2f2;
+        }
+        .select-container {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 337 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing a solution to store documents in Azure Blob storage. Customers upload documents to multiple containers. Documents consist of PDF, CSV, Microsoft Office format, and plain text files.</p>
+            <p>The solution must process millions of documents across hundreds of containers. The solution must meet the following requirements:</p>
+            <ul>
+                <li>Documents must be categorized by a customer identifier as they are uploaded to the storage account.</li>
+                <li>Allow filtering by the customer identifier.</li>
+                <li>Allow searching of information contained within a document.</li>
+                <li>Minimize costs.</li>
+            </ul>
+            <p>You created and configured a standard general-purpose v2 storage account to support the solution.</p>
+            <p>You need to implement the solution.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <table class="requirements-table">
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Solution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Search and filter by customer identifier.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="solution-1">
+                                <option value="">Select an option</option>
+                                <option value="Azure Cognitive Search">Azure Cognitive Search</option>
+                                <option value="Azure Blob index tags">Azure Blob index tags</option>
+                                <option value="Azure Blob inventory policy">Azure Blob inventory policy</option>
+                                <option value="Azure Blob metadata">Azure Blob metadata</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Search information inside documents.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="solution-2">
+                                <option value="">Select an option</option>
+                                <option value="Azure Cognitive Search">Azure Cognitive Search</option>
+                                <option value="Azure Blob index tags">Azure Blob index tags</option>
+                                <option value="Azure Blob inventory policy">Azure Blob inventory policy</option>
+                                <option value="Azure Blob metadata">Azure Blob metadata</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">Search and filter by customer identifier: Azure Blob index tags</p>
+            <p class="correct-answer">Search information inside documents: Azure Cognitive Search</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>Azure Blob index tags</strong> 是用于按客户标识符进行搜索和筛选的最佳解决方案。Blob索引标签允许您为每个Blob存储资源添加键值对标签，这些标签可以用于高效地分类和筛选大量文档，同时成本较低。</p>
+                <p>2. <strong>Azure Cognitive Search</strong> 是在文档内部搜索信息的最佳选择。它可以提取和索引各种文档格式(PDF、CSV、Office文档等)中的内容，提供全文搜索功能，非常适合搜索文档内部信息的需求。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>Blob索引标签专门设计用于基于元数据的筛选和分类，成本低且效率高</li>
+                    <li>Azure Cognitive Search是专门的内容搜索服务，支持多种文档格式的内容提取</li>
+                    <li>组合使用这两种服务可以在满足需求的同时最小化成本</li>
+                    <li>其他选项如Blob元数据或清单策略无法同时满足搜索和筛选的需求</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

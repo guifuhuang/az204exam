@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Deployment Slot Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 203</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop and deploy an Azure App Service API app to a Windows-hosted deployment slot named Development. You create additional deployment slots named Testing and Production. You enable auto swap on the Production deployment slot.</p>
+        
+        <p><strong>Goal:</strong></p>
+        <p>You need to ensure that scripts run and resources are available before a swap operation occurs.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Disable auto swap. Update the app with a method named statuscheck to run the scripts. Re-enable auto swap and deploy the app to the Production slot.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>B. No</strong></p>
+            <p><strong>Explanation:</strong></p>
+            <p>The solution does not meet the goal because simply adding a <code>statuscheck</code> method and redeploying does not guarantee it will run before auto swap completes. Azure's auto swap mechanism requires specific configurations to ensure pre-swap validation[2](@ref)[5](@ref).</p>
+            
+            <p>Key issues with this solution:</p>
+            <ul>
+                <li>Auto swap does not automatically invoke custom methods like <code>statuscheck</code> during the swap process[5](@ref)</li>
+                <li>The solution lacks integration with Azure's swap warm-up mechanism which requires HTTP endpoint configuration[2](@ref)</li>
+                <li>Redeploying to Production slot directly bypasses the staging validation purpose of deployment slots[4](@ref)</li>
+                <li>No assurance the scripts will complete before swap finalization[2](@ref)</li>
+            </ul>
+            
+            <p>Recommended approaches from Azure documentation:</p>
+            <ol>
+                <li>Configure <code>applicationInitialization</code> in web.config with specific warm-up paths[2](@ref)</li>
+                <li>Implement health check endpoints that auto swap can monitor[5](@ref)</li>
+                <li>Use slot settings to maintain environment-specific configurations during swaps[4](@ref)</li>
+            </ol>
+            
+            <div class="code">
+                &lt;system.webServer&gt;
+                &nbsp;&nbsp;&lt;applicationInitialization&gt;
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;add initializationPage="/statuscheck" /&gt;
+                &nbsp;&nbsp;&lt;/applicationInitialization&gt;
+                &lt;/system.webServer&gt;
+            </div>
+            
+            <p>This configuration would ensure Azure automatically hits the endpoint during swap warm-up[2](@ref).</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

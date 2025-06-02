@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redis Streams 实时地震数据监控测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #ff8a00);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #ff8a00;
+            text-shadow: 0 0 10px rgba(255, 138, 0, 0.5);
+        }
+        .question-no {
+            background: #e52e71;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #ff8a00;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .command-container {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .command-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #1a2a6c;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #ff8a00;
+        }
+        .redis-command {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 22px;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown select {
+            background: #333;
+            color: white;
+            border: 2px solid #555;
+            padding: 10px 15px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            min-width: 150px;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+        .dropdown select:hover {
+            border-color: #ff8a00;
+            background-color: #3a3a3a;
+        }
+        .dropdown select:focus {
+            outline: none;
+            border-color: #e52e71;
+            box-shadow: 0 0 0 2px rgba(229, 46, 113, 0.3);
+        }
+        .static-text {
+            color: #4ec9b0;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(229, 46, 113, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(229, 46, 113, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #4ec9b0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 22px;
+            font-family: 'Consolas', monospace;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            color: #ff8a00;
+            border-left: 4px solid #4ec9b0;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #e52e71;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(255, 138, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .seismic-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #ff8a00, transparent);
+            animation: seismicWave 3s infinite linear;
+        }
+        @keyframes seismicWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .redis-command {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Redis Streams 实时地震数据监控测试</h1>
+            <div class="question-no">QUESTION NO: 376 HOTSPOT</div>
+        </div>
+        
+        <div class="requirements">
+            <p>您正在为一家提供全球地震数据访问的公司开发新的Web应用程序功能。地震数据存储在Azure Cache for Redis实例的Redis Streams中。</p>
+            <p>新功能包括实时显示发生的地震事件。</p>
+            <p>您需要实现Azure Cache for Redis命令来接收地震数据。</p>
+            <p>如何完成命令？请在答案区域选择适当的选项。</p>
+            <p class="note">注意：每个正确选项得一分。</p>
+        </div>
+        
+        <div class="command-container">
+            <div class="command-title">Redis 命令</div>
+            <div class="redis-command">
+                <div class="dropdown">
+                    <select id="dropdown1">
+                        <option value="">--选择命令--</option>
+                        <option value="XREAD">XREAD</option>
+                        <option value="XLEN">XLEN</option>
+                        <option value="XRANGE">XRANGE</option>
+                    </select>
+                </div>
+                
+                <div class="dropdown">
+                    <select id="dropdown2">
+                        <option value="">--选择选项--</option>
+                        <option value="BLOCK 0">BLOCK 0</option>
+                        <option value="COUNT 0">COUNT 0</option>
+                        <option value="COUNT -1">COUNT -1</option>
+                    </select>
+                </div>
+                
+                <div class="dropdown">
+                    <select id="dropdown3">
+                        <option value="">--选择流--</option>
+                        <option value="STREAMS seisDate $">STREAMS seisDate $</option>
+                        <option value="STREAMS seisDate 0">STREAMS seisDate 0</option>
+                        <option value="STREAMS seisDate -">STREAMS seisDate -</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                XREAD BLOCK 0 STREAMS seisDate $
+            </div>
+            
+            <div class="explanation">
+                <h3>命令解析：</h3>
+                <p>此Redis命令用于从名为"seisDate"的流中实时读取地震数据：</p>
+                
+                <ul>
+                    <li><span class="highlight">XREAD</span> - 用于从Redis Streams中读取数据，支持阻塞模式，适合实时数据消费</li>
+                    <li><span class="highlight">BLOCK 0</span> - 表示无限期阻塞，直到有新数据到达，这是实现实时监控的关键</li>
+                    <li><span class="highlight">STREAMS seisDate $</span> - 指定流名称和起始ID：
+                        <ul>
+                            <li><strong>seisDate</strong> - 存储地震数据的流名称</li>
+                            <li><strong>$</strong> - 特殊ID，表示只接收新到达的数据（在命令调用后添加的数据）</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>为什么其他选项不正确：</h3>
+                <ul>
+                    <li><strong>XLEN</strong> - 仅返回流中元素数量，不返回实际数据</li>
+                    <li><strong>XRANGE</strong> - 用于按范围查询历史数据，不支持阻塞模式</li>
+                    <li><strong>COUNT 0/COUNT -1</strong> - 限制返回条目数量，不适合实时监控场景</li>
+                    <li><strong>STREAMS seisDate 0/-</strong> - 会从流的历史数据开始读取，而不是只接收新数据</li>
+                </ul>
+                
+                <h3>应用场景说明：</h3>
+                <p>该命令组合特别适合地震数据实时监控：</p>
+                <ol>
+                    <li>当新的地震事件发生时，数据被推送到Redis Stream</li>
+                    <li>XREAD命令会立即返回新数据（因为使用了BLOCK 0）</li>
+                    <li>Web应用程序可以实时接收并显示这些地震事件</li>
+                    <li>使用$作为ID确保不会重复读取历史数据</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Cache for Redis 测试题 | 实时数据监控解决方案</p>
+        </div>
+        
+        <div class="seismic-animation"></div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('dropdown1').value = 'XREAD';
+            document.getElementById('dropdown2').value = 'BLOCK 0';
+            document.getElementById('dropdown3').value = 'STREAMS seisDate $';
+            
+            // 禁用下拉框
+            document.getElementById('dropdown1').disabled = true;
+            document.getElementById('dropdown2').disabled = true;
+            document.getElementById('dropdown3').disabled = true;
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

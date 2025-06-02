@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Application Secrets Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .answer-btn:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 240</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You have an application that includes an Azure Web app and several Azure Function apps.</p>
+        <p>Application secrets including connection strings and certificates are stored in Azure Key Vault.</p>
+        <p>Secrets must not be stored in the application or application runtime environment. Changes to Azure Active Directory (Azure AD) must be minimized.</p>
+        <p>You need to design the approach to loading application secrets.</p>
+        
+        <p><strong>Question:</strong> What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Create a single user-assigned Managed Identity with permission to access Key Vault and configure each App Service to use that Managed Identity.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Create a single Azure AD Service Principal with permission to access Key Vault and use a client secret from within the App Services to access Key Vault.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Create a system assigned Managed Identity in each App Service with permission to access Key Vault.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Create an Azure AD Service Principal with Permissions to access Key Vault for each App Service and use a certificate from within the App Services to access Key Vault.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="answerBtn" class="answer-btn">查看答案</button>
+    
+    <div id="answerSection" class="answer-section">
+        <h3>正确答案: <span class="highlight correct-answer">C. Create a system assigned Managed Identity in each App Service with permission to access Key Vault.</span></h3>
+        
+        <h3>解释说明:</h3>
+        <p>这个解决方案最符合题目要求，原因如下：</p>
+        
+        <p>1. <strong>使用系统分配的托管身份</strong>：
+        <ul>
+            <li>每个应用服务（Web App和Function App）自动获得自己的系统分配托管身份</li>
+            <li>无需在代码中存储任何凭据（完全符合"Secrets must not be stored in the application"的要求）</li>
+            <li>身份生命周期与应用服务生命周期自动绑定</li>
+        </ul>
+        </p>
+        
+        <p>2. <strong>最小化Azure AD变更</strong>：
+        <ul>
+            <li>系统分配的托管身份由Azure自动管理，几乎不需要在Azure AD中进行任何配置变更</li>
+            <li>避免了创建和维护服务主体或用户分配身份的需要</li>
+        </ul>
+        </p>
+        
+        <p>3. <strong>安全优势</strong>：
+        <ul>
+            <li>消除了管理客户端密钥或证书的需要（选项B和D的问题）</li>
+            <li>每个应用有独立的身份，比共享身份（选项A）提供更好的安全隔离</li>
+        </ul>
+        </p>
+        
+        <p><strong>其他选项的问题</strong>：</p>
+        <p><strong>A选项</strong>：使用单个用户分配的托管身份虽然可行，但不如系统分配的身份安全，因为所有应用共享相同身份，且需要额外的Azure AD配置。</p>
+        <p><strong>B选项</strong>：使用服务主体和客户端密钥违反了"Secrets must not be stored in the application"的要求。</p>
+        <p><strong>D选项</strong>：虽然使用证书比客户端密钥更安全，但仍然需要在应用中存储证书信息，违反了题目要求。</p>
+        
+        <p><strong>最佳实践</strong>：在Azure中访问Key Vault时，系统分配的托管身份是最安全、最方便的选择，完全符合零信任安全原则。</p>
+    </div>
+    
+    <script>
+        document.getElementById('answerBtn').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection.style.display === 'none' || answerSection.style.display === '') {
+                answerSection.style.display = 'block';
+            } else {
+                answerSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

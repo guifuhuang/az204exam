@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 339 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-family: Consolas, monospace;
+            position: relative;
+        }
+        .binding-option {
+            position: absolute;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+        .binding-option select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .type-select {
+            top: 70px;
+        }
+        .event-type-select {
+            top: 170px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 339 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing a service where customers can report news events from a browser using Azure Web PubSub. The service is implemented as an Azure App that uses the JSON WebSocket subprotocol to receive news events.</p>
+            <p>You need to implement the bindings for the Azure Function App.</p>
+            <p>How should you configure the binding? To answer, select the appropriate options in the answer area.</p>
+            <p>Note: Each correct selection is worth one point.</p>
+        </div>
+        
+        <div class="code-container">
+            <pre>{
+  "bindings": [
+    {
+      "type": "<span class="binding-option type-select">
+                <select id="type-select">
+                  <option value="">Select</option>
+                  <option value="user">user</option>
+                  <option value="system">system</option>
+                  <option value="message">message</option>
+                  <option value="connected">connected</option>
+                  <option value="webPubSubTrigger">webPubSubTrigger</option>
+                  <option value="webPubSubConnection">webPubSubConnection</option>
+                </select>
+              </span>",
+      "direction": "in",
+      "name": "data",
+      "eventName": "message",
+      "eventType": "<span class="binding-option event-type-select">
+                     <select id="event-type-select">
+                       <option value="">Select</option>
+                       <option value="user">user</option>
+                       <option value="system">system</option>
+                       <option value="message">message</option>
+                       <option value="connected">connected</option>
+                       <option value="webPubSubTrigger">webPubSubTrigger</option>
+                       <option value="webPubSubConnection">webPubSubConnection</option>
+                     </select>
+                   </span>"
+    }
+  ]
+}</pre>
+        </div>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">type: system</p>
+            <p class="correct-answer">eventType: message</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>system</strong> 是用于Azure Web PubSub绑定的正确类型。当需要处理来自Web PubSub服务的系统事件时，应该使用这种类型。</p>
+                <p>2. <strong>message</strong> 是正确的事件类型。因为题目描述中提到服务需要接收新闻事件(message events)，所以应该将eventType设置为"message"。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>"system"类型用于处理Web PubSub服务的系统级事件</li>
+                    <li>"message"事件类型对应WebSocket协议中的消息事件</li>
+                    <li>题目描述中明确提到使用JSON WebSocket子协议接收新闻事件</li>
+                    <li>配置中的"eventName": "message"也提示了应该使用"message"作为eventType</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

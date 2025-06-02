@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Static Web App路由配置测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeff5;
+        }
+        
+        .question-number {
+            background: #0078d4;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+        }
+        
+        .question-text p {
+            margin-bottom: 12px;
+        }
+        
+        .requirements {
+            background: #eef7ff;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+        }
+        
+        .requirements h3 {
+            color: #1e4a8e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirements h3 i {
+            margin-right: 10px;
+        }
+        
+        .requirement-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        .requirement-item i {
+            color: #4a90e2;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .config-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            position: relative;
+            margin: 30px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .config-line {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .line-number {
+            color: #7f7f7f;
+            min-width: 30px;
+            text-align: right;
+            margin-right: 15px;
+            user-select: none;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        .dropdown select {
+            background-color: #3c3c3c;
+            color: #f8f8f2;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            cursor: pointer;
+            min-width: 200px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .dropdown select:hover {
+            background-color: #4a4a4a;
+            border-color: #4a90e2;
+        }
+        
+        .dropdown select:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn:hover {
+            background: linear-gradient(120deg, #0066b8 0%, #163a75 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            display: none;
+            background: linear-gradient(to right, #e6f7ff, #f0f9ff);
+            border-left: 5px solid #1890ff;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+        
+        .answer-header i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+        
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .correct-answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .correct-answer h3 i {
+            margin-right: 10px;
+        }
+        
+        .json-code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 25px;
+        }
+        
+        .explanation h3 {
+            color: #1e4a8e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .role-tag {
+            display: inline-block;
+            background: #4a90e2;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0 3px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .config-line {
+                flex-wrap: wrap;
+            }
+            
+            .dropdown {
+                margin: 5px 0;
+                width: 100%;
+            }
+            
+            .dropdown select {
+                width: 100%;
+            }
+            
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .question-number {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Static Web App路由配置测试题</h1>
+            <p class="subtitle">配置路由规则以实现不同角色的访问控制</p>
+        </header>
+        
+        <div class="card">
+            <div class="question-header">
+                <div class="question-number">368</div>
+                <div class="question-text">
+                    <p><strong>HOTSPOT 题目</strong></p>
+                    <p>您正在为技术手册开发一个内容管理应用程序。该应用程序部署为Azure Static Web App。</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3><i class="fas fa-tasks"></i> 访问控制要求</h3>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>认证用户（authenticated）可以访问 <code>/manuals</code> 目录下的所有页面</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>只有贡献者（contributors）可以访问 <code>/manuals/new.html</code> 页面</div>
+                </div>
+            </div>
+            
+            <h2 style="margin: 25px 0 15px; color: #1e4a8e;">路由配置</h2>
+            <p style="margin-bottom: 20px;">请完成以下JSON配置，选择正确的路由和角色设置：</p>
+            
+            <div class="config-container">
+                <div class="config-line">
+                    <div class="line-number">1</div>
+                    <div>{</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">2</div>
+                    <div>&nbsp;&nbsp;"routes": [</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">3</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">4</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"route": <div class="dropdown"><select id="box1">
+                        <option value="">-- 请选择 --</option>
+                        <option value="/manuals">/manuals</option>
+                        <option value="contributors">contributors</option>
+                        <option value="/manuals/new.html">/manuals/new.html</option>
+                        <option value="authenticated">authenticated</option>
+                    </select></div>,</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">5</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"allowedRoles": [<div class="dropdown"><select id="box2">
+                        <option value="">-- 请选择 --</option>
+                        <option value="/manuals">/manuals</option>
+                        <option value="contributors">contributors</option>
+                        <option value="/manuals/new.html">/manuals/new.html</option>
+                        <option value="authenticated">authenticated</option>
+                    </select></div>]</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">6</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;},</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">7</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">8</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"route": <div class="dropdown"><select id="box3">
+                        <option value="">-- 请选择 --</option>
+                        <option value="/manuals">/manuals</option>
+                        <option value="contributors">contributors</option>
+                        <option value="/manuals/new.html">/manuals/new.html</option>
+                        <option value="authenticated">authenticated</option>
+                    </select></div>,</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">9</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"allowedRoles": [<div class="dropdown"><select id="box4">
+                        <option value="">-- 请选择 --</option>
+                        <option value="/manuals">/manuals</option>
+                        <option value="contributors">contributors</option>
+                        <option value="/manuals/new.html">/manuals/new.html</option>
+                        <option value="authenticated">authenticated</option>
+                    </select></div>]</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">10</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">11</div>
+                    <div>&nbsp;&nbsp;]</div>
+                </div>
+                <div class="config-line">
+                    <div class="line-number">12</div>
+                    <div>}</div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button id="checkAnswer" class="btn">
+                    <i class="fas fa-check-circle"></i> 查看答案
+                </button>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <div class="answer-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>正确答案与解析</h2>
+                </div>
+                
+                <div class="correct-answer">
+                    <h3><i class="fas fa-check"></i> 正确配置</h3>
+                    <div class="json-code">
+                        {<br>
+                        &nbsp;&nbsp;"routes": [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"route": <span style="color:#f92672">"/manuals/new.html"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"allowedRoles": [<span style="color:#a6e22e">"contributors"</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"route": <span style="color:#f92672">"/manuals*"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"allowedRoles": [<span style="color:#a6e22e">"authenticated"</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;]<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-book"></i> 配置解析</h3>
+                    <p>此配置实现了题目要求的访问控制：</p>
+                    
+                    <p><strong>1. 第一条规则（针对特定页面）</strong><br>
+                    <span class="highlight">"route": "/manuals/new.html"</span> - 指定要保护的特定页面<br>
+                    <span class="highlight">"allowedRoles": ["contributors"]</span> - 仅允许<span class="role-tag">contributors</span>角色访问</p>
+                    
+                    <p><strong>2. 第二条规则（针对目录）</strong><br>
+                    <span class="highlight">"route": "/manuals*"</span> - 使用通配符(*)匹配/manuals下的所有页面<br>
+                    <span class="highlight">"allowedRoles": ["authenticated"]</span> - 允许所有<span class="role-tag">authenticated</span>用户访问</p>
+                    
+                    <p><strong>为什么这样配置？</strong></p>
+                    <p>Azure Static Web App的路由规则按顺序匹配，更具体的规则应放在前面：</p>
+                    <ul style="padding-left: 25px; margin: 15px 0;">
+                        <li>首先匹配特定页面<code>/manuals/new.html</code>，限制只有贡献者可以访问</li>
+                        <li>然后匹配<code>/manuals*</code>，允许所有认证用户访问/manuals下的其他页面</li>
+                    </ul>
+                    
+                    <p><strong>注意事项：</strong></p>
+                    <p>通配符(*)的使用很重要，它确保规则适用于<code>/manuals</code>目录下的所有页面和子目录。如果没有通配符，规则只会匹配精确路径<code>/manuals</code>。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Static Web App 路由配置测试题 | 基于实际场景设计</p>
+            <p>© 2023 技术文档管理系统 - 模拟测试环境</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案区域
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // 设置正确选项（仅用于演示）
+            document.getElementById('box1').value = '/manuals/new.html';
+            document.getElementById('box2').value = 'contributors';
+            document.getElementById('box3').value = '/manuals';
+            document.getElementById('box4').value = 'authenticated';
+        });
+    </script>
+</body>
+</html>

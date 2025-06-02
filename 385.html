@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions 队列与Blob配置测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d4, #50e6ff, #0078d4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+            text-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .question-no {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #50e6ff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .config-container {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .config-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #1a2a6c;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #50e6ff;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .config-table th, .config-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        .config-table th {
+            background: rgba(0, 120, 212, 0.2);
+            color: #9cdcfe;
+            font-weight: normal;
+        }
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+        .dropdown {
+            position: relative;
+            display: block;
+        }
+        .dropdown select {
+            background: #333;
+            color: white;
+            border: 2px solid #555;
+            padding: 12px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+        }
+        .dropdown select:hover {
+            border-color: #50e6ff;
+            background-color: #3a3a3a;
+        }
+        .dropdown select:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.3);
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #0078d4, #50e6ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 18px;
+            font-family: 'Consolas', monospace;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #50e6ff;
+            border-left: 4px solid #4ec9b0;
+            line-height: 1.8;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #50e6ff;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .binding-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 120, 212, 0.1);
+            border-radius: 8px;
+        }
+        .binding-step {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+        }
+        .binding-arrow {
+            font-size: 24px;
+            color: #50e6ff;
+        }
+        .binding-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .azure-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #50e6ff, transparent);
+            animation: azureWave 3s infinite linear;
+        }
+        @keyframes azureWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .binding-diagram {
+                flex-direction: column;
+            }
+            .binding-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Azure Functions 队列与Blob配置测试</h1>
+            <div class="question-no">QUESTION NO: 385 HOTSPOT</div>
+        </div>
+        
+        <div class="requirements">
+            <p>您计划实现一个Azure Functions应用，该应用需满足以下要求：</p>
+            <ul>
+                <li>必须由Azure存储队列中的消息触发</li>
+                <li>必须使用名为input-queue的应用设置中设置的队列名称</li>
+                <li>必须创建与消息内容同名的Azure Blob存储</li>
+            </ul>
+            <p>您需要确定如何在函数中引用队列和Blob名称。</p>
+            <p class="note">注意：每个正确选项得一分。</p>
+        </div>
+        
+        <div class="config-container">
+            <div class="config-title">配置选项</div>
+            <table class="config-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">引用类型</th>
+                        <th style="width: 70%;">值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>队列名称 (Queue name)</td>
+                        <td>
+                            <div class="dropdown">
+                                <select id="queueDropdown">
+                                    <option value="">-- 选择队列名称引用方式 --</option>
+                                    <option value="percent_input_queue">input_queue</option>
+                                    <option value="bracket_input_queue">{input_queue}</option>
+                                    <option value="percent_input_dot_queue">%input_queue%</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Blob名称 (Blob name)</td>
+                        <td>
+                            <div class="dropdown">
+                                <select id="blobDropdown">
+                                    <option value="">-- 选择Blob名称引用方式 --</option>
+                                    <option value="bracket_queue_trigger">{queueTrigger}</option>
+                                    <option value="percent_input_queue_id">{input_queue}/{id}</option>
+                                    <option value="percent_input_queue_filename">%input_queue%/{filename}</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                <p><strong>队列名称：</strong> <span class="highlight">%input_queue%</span></p>
+                <p><strong>Blob名称：</strong> <span class="highlight">{input_queue}/{id}</span></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>配置解析：</h3>
+                <p>要实现由队列触发并创建对应Blob的Azure Functions应用，需要正确配置以下选项：</p>
+                
+                <ul>
+                    <li><span class="highlight">队列名称：%input_queue%</span> 
+                        <ul>
+                            <li>使用百分号语法引用应用设置中的值</li>
+                            <li>input_queue是应用设置的名称，存储队列名称</li>
+                            <li>这种语法在Azure Functions绑定中用于引用应用设置</li>
+                            <li>正确格式：%app_setting_name%</li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="highlight">Blob名称：{input_queue}/{id}</span> 
+                        <ul>
+                            <li>使用绑定表达式组合应用设置值和消息ID</li>
+                            <li>{input_queue}引用应用设置中的值作为路径前缀</li>
+                            <li>{id}是绑定表达式变量，包含消息的唯一标识符</li>
+                            <li>这种配置确保Blob名称包含应用设置值和唯一ID</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>绑定工作流程：</h3>
+                <div class="binding-diagram">
+                    <div class="binding-step">
+                        <div class="binding-icon">📥</div>
+                        <div>队列消息触发</div>
+                        <div>(使用%input_queue%引用队列)</div>
+                    </div>
+                    <div class="binding-arrow">→</div>
+                    <div class="binding-step">
+                        <div class="binding-icon">⚙️</div>
+                        <div>函数处理</div>
+                        <div>提取消息内容和ID</div>
+                    </div>
+                    <div class="binding-arrow">→</div>
+                    <div class="binding-step">
+                        <div class="binding-icon">📁</div>
+                        <div>创建Blob</div>
+                        <div>(使用{input_queue}/{id}命名)</div>
+                    </div>
+                </div>
+                
+                <h3>为什么选择此配置：</h3>
+                <ul>
+                    <li><strong>动态队列引用：</strong> %input_queue%允许通过应用设置动态配置队列名称</li>
+                    <li><strong>环境隔离：</strong> 应用设置可在不同环境（开发/生产）中使用不同队列</li>
+                    <li><strong>Blob命名精确性：</strong> {input_queue}/{id}确保Blob名称包含应用设置值和唯一ID</li>
+                    <li><strong>符合要求：</strong> 组合应用设置值和消息ID作为Blob名称</li>
+                    <li><strong>安全实践：</strong> 避免在代码中硬编码敏感信息</li>
+                </ul>
+                
+                <h3>其他选项为什么不正确：</h3>
+                <table class="config-table">
+                    <tr>
+                        <th>选项</th>
+                        <th>问题</th>
+                    </tr>
+                    <tr>
+                        <td>input_queue</td>
+                        <td>缺少百分号，无法识别为应用设置引用</td>
+                    </tr>
+                    <tr>
+                        <td>{input_queue}</td>
+                        <td>大括号语法用于绑定表达式，不适用于应用设置</td>
+                    </tr>
+                    <tr>
+                        <td>{queueTrigger}</td>
+                        <td>直接使用消息内容，不符合组合命名要求</td>
+                    </tr>
+                    <tr>
+                        <td>%input_queue%/{filename}</td>
+                        <td>{filename}未定义，且不符合组合命名要求</td>
+                    </tr>
+                </table>
+                
+                <h3>技术实现细节：</h3>
+                <ol>
+                    <li>在Azure门户中创建名为input_queue的应用设置，存储队列名称</li>
+                    <li>在function.json文件中配置队列触发器：<br>
+                        <code>"queueName": "%input_queue%"</code></li>
+                    <li>配置Blob输出绑定：<br>
+                        <code>"path": "{input_queue}/{id}"</code></li>
+                    <li>函数代码中，消息ID自动绑定到id变量</li>
+                    <li>当新消息到达队列时，函数触发并创建对应Blob</li>
+                </ol>
+                
+                <h3>完整function.json示例：</h3>
+                <pre style="background: #2d2d2d; padding: 15px; border-radius: 8px; margin: 15px 0;">
+{
+  "bindings": [
+    {
+      "name": "myQueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": <span class="highlight">"%input_queue%"</span>,
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "name": "outputBlob",
+      "type": "blob",
+      "direction": "out",
+      "path": <span class="highlight">"{input_queue}/{id}"</span>,
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}</pre>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Functions 配置测试 | 队列与Blob集成解决方案</p>
+        </div>
+        
+        <div class="azure-animation"></div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('queueDropdown').value = 'percent_input_dot_queue';
+            document.getElementById('blobDropdown').value = 'percent_input_queue_id';
+            
+            // 禁用下拉框
+            document.getElementById('queueDropdown').disabled = true;
+            document.getElementById('blobDropdown').disabled = true;
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

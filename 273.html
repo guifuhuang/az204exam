@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Authentication Test Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 273</h2>
+        <p>You deploy an Azure App Service web app. You create an app registration for the app in Azure Active Directory (Azure AD) and Twitter. The app must authenticate users and must use SSL for all communications. The app must use Twitter as the identity provider. You need to validate the Azure AD request in the app code. What should you validate?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. HTTP response code</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. ID token header</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. ID token signature</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. Tenant ID</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answerSection">
+        <p><span class="correct">正确答案: C. ID token signature</span></p>
+        <div class="explanation">
+            <p>解析:</p>
+            <p>在Azure AD身份验证流程中，验证ID令牌的签名是最关键的安全步骤。这是因为:</p>
+            <ol>
+                <li>ID令牌签名使用Azure AD的私钥进行签名，可以使用公钥验证其真实性</li>
+                <li>验证签名可以确保令牌确实来自Azure AD，而不是伪造的</li>
+                <li>签名验证可以防止令牌在传输过程中被篡改</li>
+                <li>虽然验证Tenant ID(选项D)也是必要的，但它应该在签名验证之后进行</li>
+                <li>HTTP响应代码(选项A)和ID令牌头(选项B)不能提供足够的安全验证</li>
+            </ol>
+            <p>因此，在应用代码中验证Azure AD请求时，首先且最重要的是验证ID令牌签名。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 149 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .scenario-list {
+            margin-left: 20px;
+        }
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .property-table th, .property-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .property-table th {
+            background-color: #f2f2f2;
+        }
+        .answer-area {
+            margin-top: 20px;
+        }
+        .answer-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-label {
+            width: 200px;
+            font-weight: bold;
+        }
+        select {
+            padding: 5px;
+            width: 300px;
+        }
+        .answer-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .answer-item {
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 149 HOTSPOT</h2>
+    <p>You are developing a .NET Core MVC application for customers to research hotels. The application will use Azure Search. The application will search the index by using various criteria to locate documents related to hotels. The index will include search fields for rate, a list of amenities, and distance to the nearest airport.</p>
+    
+    <p>The application must support the following scenarios for specifying search criteria and organizing results:</p>
+    <ul class="scenario-list">
+        <li>Search the index by using regular expressions.</li>
+        <li>Organize results by counts for name-value pairs.</li>
+        <li>List hotels within a specified distance to an airport and that fall within a specific price range.</li>
+    </ul>
+    
+    <p>You need to configure the SearchParameters class.</p>
+    <p>Which properties should you configure? To answer, select the appropriate options in the answer area.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+
+    <table class="property-table">
+        <tr>
+            <th>Property</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>QueryType</td>
+            <td>Query type</td>
+        </tr>
+        <tr>
+            <td>OrderBy</td>
+            <td>Sorting criteria</td>
+        </tr>
+        <tr>
+            <td>SearchMode</td>
+            <td>Search mode</td>
+        </tr>
+        <tr>
+            <td>Facets</td>
+            <td>Facets (for organizing results by name-value pair counts)</td>
+        </tr>
+        <tr>
+            <td>Filter</td>
+            <td>Filter conditions</td>
+        </tr>
+        <tr>
+            <td>Top</td>
+            <td>Top (possibly used to specify the maximum number of results to return)</td>
+        </tr>
+    </table>
+
+    <div class="answer-area">
+        <div class="answer-row">
+            <div class="answer-label">Search by regular expressions:</div>
+            <select id="scenario1">
+                <option value="">Select property...</option>
+                <option value="QueryType">QueryType</option>
+                <option value="OrderBy">OrderBy</option>
+                <option value="SearchMode">SearchMode</option>
+            </select>
+        </div>
+        <div class="answer-row">
+            <div class="answer-label">Organize by name-value pairs:</div>
+            <select id="scenario2">
+                <option value="">Select property...</option>
+                <option value="Facets">Facets</option>
+                <option value="Filter">Filter</option>
+                <option value="SearchMode">SearchMode</option>
+            </select>
+        </div>
+        <div class="answer-row">
+            <div class="answer-label">Filter by distance and price:</div>
+            <select id="scenario3">
+                <option value="">Select property...</option>
+                <option value="OrderBy">OrderBy</option>
+                <option value="Top">Top</option>
+                <option value="Filter">Filter</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswers()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>Answers and Explanations:</h3>
+        <div class="answer-item">
+            <p><strong>1. Search by regular expressions:</strong></p>
+            <p><span class="correct">Correct answer: QueryType</span></p>
+            <p>Explanation: To search using regular expressions, you need to set QueryType to "full" which enables advanced query capabilities including regular expressions.</p>
+        </div>
+        <div class="answer-item">
+            <p><strong>2. Organize by name-value pairs:</strong></p>
+            <p><span class="correct">Correct answer: Facets</span></p>
+            <p>Explanation: Facets are used to organize results by counts for name-value pairs, which is exactly what this scenario requires.</p>
+        </div>
+        <div class="answer-item">
+            <p><strong>3. Filter by distance and price:</strong></p>
+            <p><span class="correct">Correct answer: Filter</span></p>
+            <p>Explanation: The Filter property is used to specify conditions like distance to airport and price range to narrow down search results.</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswers() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

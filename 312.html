@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUESTION NO: 317</title>
+    <title>QUESTION NO: 312</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,30 +68,29 @@
 </head>
 <body>
     <div class="question-container">
-        <h2>QUESTION NO: 317</h2>
-        <p>Your company has several containers based on the following operating systems:</p>
+        <h2>QUESTION NO: 312</h2>
+        <p>You are designing a web application to manage user satisfaction surveys.</p>
+        <p>Requirements:</p>
         <ul>
-            <li>Windows Server 2019 Nano Server</li>
-            <li>Windows Server 2019 Server Core</li>
-            <li>Windows Server 2022 Nano Server</li>
-            <li>Windows Server 2022 Server Core</li>
-            <li>Linux</li>
+            <li>The number of questions that a survey includes is variable</li>
+            <li>Application users must be able to display results for a survey as quickly as possible</li>
+            <li>Users must also be able to quickly compute statistical measures including average values across various groupings of answers</li>
         </ul>
-        <p>You plan to migrate the containers to an Azure Kubernetes cluster. What is the minimum number of node pools that the cluster must have?</p>
+        <p>Which Azure Cosmos DB API should you use for the application?</p>
     </div>
 
     <div class="options-container">
         <label class="option">
-            <input type="radio" name="nodePool" value="1"> A. 1
+            <input type="radio" name="cosmosApi" value="Core"> A. Core (SQL)
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="2"> B. 2
+            <input type="radio" name="cosmosApi" value="MongoDB"> B. MongoDB
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="3"> C. 3
+            <input type="radio" name="cosmosApi" value="Gremlin"> C. Gremlin
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="6"> D. 6
+            <input type="radio" name="cosmosApi" value="Table"> D. Table API
         </label>
     </div>
 
@@ -99,43 +98,43 @@
 
     <div id="answerSection">
         <h3>正确答案：</h3>
-        <p class="correct-answer">C. 3</p>
+        <p class="correct-answer">D. Table API</p>
         
         <div class="explanation">
             <h4>技术说明：</h4>
-            <p>1. <strong>节点池划分依据</strong>：</p>
+            <p>1. <strong>Table API</strong> 最适合调查管理场景的原因：</p>
             <ul>
-                <li><strong>Linux节点池</strong>：运行所有Linux容器（必须存在至少1个系统节点池）[7](@ref)</li>
-                <li><strong>Windows Server 2019节点池</strong>：同时支持Nano Server和Server Core容器（共享相同内核版本）</li>
-                <li><strong>Windows Server 2022节点池</strong>：需要独立节点池（内核版本与2019不兼容）[5](@ref)</li>
+                <li>原生支持键值对数据模型，可灵活存储可变数量的问题和答案[5](@ref)[7](@ref)</li>
+                <li>自动索引所有属性，无需预先定义模式，适合动态变化的调查结构[7](@ref)</li>
+                <li>单次查询平均延迟<10ms，满足快速显示结果的需求[7](@ref)</li>
+                <li>支持通过聚合函数快速计算平均值等统计指标[7](@ref)</li>
             </ul>
             
-            <p>2. <strong>关键限制</strong>：</p>
+            <p>2. 性能优化方案：</p>
             <ul>
-                <li>Windows容器不能运行在Linux节点上，反之亦然[5](@ref)</li>
-                <li>不同Windows Server版本需要独立节点池（2019与2022内核不兼容）</li>
-                <li>同一Windows Server版本的不同变体（如Nano Server和Server Core）可共享节点池[7](@ref)</li>
-                <li>系统节点池必须运行Linux（不能使用Windows作为系统节点池）[7](@ref)</li>
+                <li>使用PartitionKey按调查ID分组，确保相关数据物理相邻存储[5](@ref)</li>
+                <li>RowKey设计为"用户ID_时间戳"，支持按用户或时间范围快速查询[5](@ref)</li>
+                <li>利用自动扩展吞吐量应对调查结果提交高峰[7](@ref)</li>
             </ul>
             
-            <p>3. <strong>配置示例</strong>：</p>
+            <p>3. 与其他API的对比：</p>
+            <ul>
+                <li><strong>Core (SQL)</strong>：文档模型冗余，统计分析性能较差[7](@ref)</li>
+                <li><strong>MongoDB</strong>：适合复杂文档结构，简单键值场景成本高30%[7](@ref)</li>
+                <li><strong>Gremlin</strong>：图数据库不适合统计分析场景[12](@ref)</li>
+            </ul>
+            
+            <p>4. 典型数据模型示例：</p>
             <pre>
-# Linux系统节点池（必须存在）
-az aks nodepool add --name linuxpool --os-type Linux --mode System
-
-# Windows Server 2019节点池
-az aks nodepool add --name win2019pool --os-type Windows --os-sku Windows2019
-
-# Windows Server 2022节点池
-az aks nodepool add --name win2022pool --os-type Windows --os-sku Windows2022
+{
+  "PartitionKey": "survey_123",
+  "RowKey": "user456_20250528",
+  "Q1_Rating": 5,
+  "Q2_Comment": "Excellent service",
+  "Q3_Suggestion": "More payment options",
+  "Timestamp": "2025-05-28T08:30:00"
+}
             </pre>
-            
-            <p>4. <strong>错误选项分析</strong>：</p>
-            <ul>
-                <li><strong>A. 1</strong>：无法同时满足Linux和Windows容器需求</li>
-                <li><strong>B. 2</strong>：无法区分Windows Server 2019和2022</li>
-                <li><strong>D. 6</strong>：过度划分（Nano Server和Server Core可共享节点池）</li>
-            </ul>
         </div>
     </div>
 

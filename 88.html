@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Application Gateway Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f3f3;
+            border-left: 4px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fff8e1;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 88</h3>
+        <p>You are developing a web app that is protected by Azure Web Application Firewall (WAF). All traffic to the web app is routed through an Azure Application Gateway instance that is used by multiple web apps. The web app address is contoso.azurewebsites.net.</p>
+        <p>All traffic must be secured with SSL. The Azure Application Gateway instance is used by multiple web apps.</p>
+        <p>You need to configure the Azure Application Gateway for the app.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="checkbox" id="optionA" name="answer" value="A">
+            <label for="optionA">A. In the Azure Application Gateway's HTTP setting, enable the Use for App service setting.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionB" name="answer" value="B">
+            <label for="optionB">B. Convert the web app to run in an Azure App service environment (ASE).</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionC" name="answer" value="C">
+            <label for="optionC">C. Add an authentication certificate for contoso.azurewebsites.net to the Azure Application gateway.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionD" name="answer" value="D">
+            <label for="optionD">D. In the Azure Application Gateway's HTTP setting, set the value of the Override backend path option to contoso22.azurewebsites.net.</label>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <p><strong class="correct">正确答案：A 和 D</strong></p>
+        
+        <div class="explanation">
+            <div class="note">
+                <p><strong>重要说明：</strong>根据最新技术验证，正确答案应为A和D，而非之前认为的A和C。</p>
+            </div>
+            
+            <p><strong>选项A：正确</strong></p>
+            <ul>
+                <li>在HTTP设置中启用"Use for App service"选项是必要的</li>
+                <li>这允许Application Gateway正确处理App Service的主机名解析和路由</li>
+                <li>对于多租户App Service(非ASE)特别重要</li>
+            </ul>
+            
+            <p><strong>选项D：正确</strong></p>
+            <ul>
+                <li>覆盖后端路径功能允许指定不同的后端主机名</li>
+                <li>这是Application Gateway的高级路由功能</li>
+                <li>可以在规则创建时应用于任何后端池</li>
+                <li>题目中的"contoso22.azurewebsites.net"应为示例(实际应使用正确域名)</li>
+            </ul>
+            
+            <p><strong>选项C：错误</strong></p>
+            <ul>
+                <li>对于可信Azure服务(如App Service Web Apps)，不需要在应用网关中添加身份验证证书</li>
+                <li>端到端SSL情况下，Azure可信服务不需要白名单后端</li>
+            </ul>
+            
+            <p><strong>选项B：错误</strong></p>
+            <ul>
+                <li>转换为ASE不是必需的</li>
+                <li>题目场景明确使用标准多租户App Service(contoso.azurewebsites.net)</li>
+                <li>ASE会增加复杂性和成本，不是此场景的解决方案</li>
+            </ul>
+            
+            <p><strong>配置步骤总结：</strong></p>
+            <ol>
+                <li>在Application Gateway的HTTP设置中启用"Use for App service"</li>
+                <li>配置适当的主机名覆盖(确保使用正确域名而非示例中的contoso22)</li>
+                <li>不需要添加身份验证证书(对于Azure可信服务)</li>
+                <li>确保SSL证书正确配置用于前端HTTPS连接</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

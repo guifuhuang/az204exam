@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights SDK 功能匹配测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            min-height: 500px;
+        }
+        .features-section {
+            flex: 1;
+            min-width: 250px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            color: #0078d7;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        .feature-item {
+            background: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid #bbdefb;
+            font-weight: 500;
+        }
+        .feature-item:hover {
+            background: #bbdefb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .feature-item:active {
+            cursor: grabbing;
+        }
+        .connector {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .connector-line {
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff9800, #ff5722);
+            border-radius: 4px;
+            position: relative;
+        }
+        .connector-dot {
+            width: 16px;
+            height: 16px;
+            background: #2196f3;
+            border-radius: 50%;
+            position: absolute;
+            left: -4px;
+        }
+        .dot-1 { top: 20%; }
+        .dot-2 { top: 40%; }
+        .dot-3 { top: 60%; }
+        .dot-4 { top: 80%; }
+        .answer-section {
+            flex: 2;
+            min-width: 300px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .requirement-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 2px solid #e0e0e0;
+        }
+        .requirement-title {
+            color: #0078d7;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .requirement-content {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            min-height: 60px;
+        }
+        .drop-zone {
+            min-height: 80px;
+            background: #f0f0f0;
+            border: 2px dashed #9e9e9e;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: #757575;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .drop-zone.active {
+            background: #e1f5fe;
+            border-color: #03a9f4;
+        }
+        .dropped-item {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #bbdefb;
+        }
+        .remove-btn {
+            background: #ff5252;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 25px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-title {
+            color: #0078d7;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .answer-row {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .requirement-col {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .answer-col {
+            flex: 1;
+            padding-left: 20px;
+            border-left: 1px solid #eee;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .drag-drop-container {
+                flex-direction: column;
+            }
+            .connector {
+                flex-direction: row;
+                height: 20px;
+                padding: 10px 0;
+            }
+            .connector-line {
+                width: 100%;
+                height: 8px;
+            }
+            .connector-dot {
+                top: -4px;
+                left: auto;
+            }
+            .dot-1 { left: 20%; }
+            .dot-2 { left: 40%; }
+            .dot-3 { left: 60%; }
+            .dot-4 { left: 80%; }
+            .answer-row {
+                flex-direction: column;
+            }
+            .requirement-col, .answer-col {
+                padding: 0;
+                border-left: none;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Application Insights SDK 功能匹配测试</h1>
+            <p>QUESTION NO: 363 DRAG DROP</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>You develop and deploy a Java application to Azure. The application has been instrumented by using the Application Insights SDK.</p>
+                <p>The telemetry data must be enriched and processed before it is sent to the Application Insights service.</p>
+                <p>You need to modify the telemetry data.</p>
+                <p>Which Application Insights SDK features should you use? To answer, drag the appropriate features to the correct requirements. Each feature may be used once, more than once, or not at all.</p>
+                <p>NOTE: Each correct selection is worth one point.</p>
+            </div>
+        </div>
+        
+        <div class="drag-drop-container">
+            <div class="features-section">
+                <div class="section-title">Features</div>
+                <div class="feature-item" draggable="true" data-feature="Telemetry Initializers">Telemetry Initializers</div>
+                <div class="feature-item" draggable="true" data-feature="Telemetry Processors">Telemetry Processors</div>
+                <div class="feature-item" draggable="true" data-feature="Telemetry Channels">Telemetry Channels</div>
+                <div class="feature-item" draggable="true" data-feature="Sampling">Sampling</div>
+            </div>
+            
+            <div class="connector">
+                <div class="connector-line">
+                    <div class="connector-dot dot-1"></div>
+                    <div class="connector-dot dot-2"></div>
+                    <div class="connector-dot dot-3"></div>
+                    <div class="connector-dot dot-4"></div>
+                </div>
+            </div>
+            
+            <div class="answer-section">
+                <div class="section-title">Answer Area</div>
+                
+                <div class="requirement-box">
+                    <div class="requirement-title">Requirement 1</div>
+                    <div class="requirement-content">
+                        Reduce the volume of telemetry without affecting statistics.
+                    </div>
+                    <div class="requirement-title">Feature</div>
+                    <div class="drop-zone" id="drop-zone-1">
+                        <p>拖放功能项到此处</p>
+                    </div>
+                </div>
+                
+                <div class="requirement-box">
+                    <div class="requirement-title">Requirement 2</div>
+                    <div class="requirement-content">
+                        Enrich telemetry with additional properties or remove an existing one.
+                    </div>
+                    <div class="requirement-title">Feature</div>
+                    <div class="drop-zone" id="drop-zone-2">
+                        <p>拖放功能项到此处</p>
+                    </div>
+                </div>
+                
+                <div class="requirement-box">
+                    <div class="requirement-title">Requirement 3</div>
+                    <div class="requirement-content">
+                        Completely replace or discard a telemetry item.
+                    </div>
+                    <div class="requirement-title">Feature</div>
+                    <div class="drop-zone" id="drop-zone-3">
+                        <p>拖放功能项到此处</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="answer-row">
+                    <div class="requirement-col">
+                        <h3>需求描述：</h3>
+                        <div class="requirement-content">
+                            <p><strong>Requirement 1:</strong> Reduce the volume of telemetry without affecting statistics.</p>
+                            <p><strong>Requirement 2:</strong> Enrich telemetry with additional properties or remove an existing one.</p>
+                            <p><strong>Requirement 3:</strong> Completely replace or discard a telemetry item.</p>
+                        </div>
+                    </div>
+                    <div class="answer-col">
+                        <h3>正确答案：</h3>
+                        <div class="correct-answer">
+                            <p><strong>Requirement 1:</strong> Sampling</p>
+                            <p><strong>Requirement 2:</strong> Telemetry Initializers</p>
+                            <p><strong>Requirement 3:</strong> Telemetry Processors</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>Sampling（采样）</h4>
+                    <p>用于<span class="highlight">减少遥测数据量而不影响统计信息</span>。采样功能通过选择代表性数据子集来减少发送到Application Insights服务的遥测数据量，同时保持统计数据的准确性。</p>
+                    
+                    <h4>Telemetry Initializers（遥测初始化器）</h4>
+                    <p>用于<span class="highlight">丰富遥测数据</span>：添加自定义属性或上下文信息，以及<span class="highlight">修改现有属性</span>：删除或修改已存在的属性。</p>
+                    
+                    <h4>Telemetry Processors（遥测处理器）</h4>
+                    <p>用于<span class="highlight">完全替换或丢弃遥测项</span>。处理器可以基于特定条件（如遥测类型、属性值等）完全移除或替换整个数据项。</p>
+                    
+                    <h4>Telemetry Channels（遥测通道）</h4>
+                    <p>主要用于控制遥测数据的传输方式（如缓冲、重试机制等），不用于修改遥测数据内容，因此不满足上述需求。</p>
+                    
+                    <h4>总结：</h4>
+                    <p>根据需求分析：</p>
+                    <ul>
+                        <li>需求1（减少数据量）对应<span class="highlight">Sampling</span></li>
+                        <li>需求2（丰富/修改属性）对应<span class="highlight">Telemetry Initializers</span></li>
+                        <li>需求3（替换/丢弃遥测项）对应<span class="highlight">Telemetry Processors</span></li>
+                    </ul>
+                    
+                    <div style="margin-top: 20px; background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <h4>功能对比表：</h4>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <tr style="background: #bbdefb;">
+                                <th style="padding: 10px; text-align: left; border: 1px solid #90caf9;">功能</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #90caf9;">添加属性</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #90caf9;">删除属性</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #90caf9;">丢弃项</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #90caf9;">减少数据量</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd;">Telemetry Initializers</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                            </tr>
+                            <tr style="background: #f5f5f5;">
+                                <td style="padding: 10px; border: 1px solid #e3f2fd;">Telemetry Processors</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd;">Sampling</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✗</td>
+                                <td style="padding: 10px; border: 1px solid #e3f2fd; text-align: center;">✓</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Application Insights SDK 功能匹配测试 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能实现
+        const draggableItems = document.querySelectorAll('.feature-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        let draggedItem = null;
+        
+        // 桌面端拖拽事件
+        draggableItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                this.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', this.dataset.feature);
+                setTimeout(() => this.style.opacity = '0.4', 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                this.style.opacity = '1';
+                draggedItem = null;
+            });
+        });
+        
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('active');
+            });
+            
+            zone.addEventListener('dragleave', function() {
+                this.classList.remove('active');
+            });
+            
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('active');
+                
+                if (draggedItem) {
+                    const feature = draggedItem.dataset.feature;
+                    addFeatureToDropZone(this, feature);
+                }
+            });
+        });
+        
+        // 移动端触摸事件
+        draggableItems.forEach(item => {
+            item.addEventListener('touchstart', function(e) {
+                draggedItem = this;
+                this.classList.add('dragging');
+            }, { passive: true });
+            
+            item.addEventListener('touchend', function() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+        
+        dropZones.forEach(zone => {
+            zone.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            zone.addEventListener('touchend', function(e) {
+                if (draggedItem) {
+                    const feature = draggedItem.dataset.feature;
+                    addFeatureToDropZone(this, feature);
+                    draggedItem = null;
+                }
+            });
+        });
+        
+        // 添加功能到放置区域
+        function addFeatureToDropZone(zone, feature) {
+            // 检查是否已存在相同功能
+            const existingFeatures = zone.querySelectorAll('.dropped-item');
+            for (let item of existingFeatures) {
+                if (item.textContent.includes(feature)) {
+                    return; // 已存在则不重复添加
+                }
+            }
+            
+            // 移除提示文本
+            if (zone.querySelector('p')) {
+                zone.querySelector('p').remove();
+            }
+            
+            const featureElement = document.createElement('div');
+            featureElement.className = 'dropped-item';
+            featureElement.innerHTML = `
+                ${feature}
+                <button class="remove-btn">×</button>
+            `;
+            
+            // 添加移除功能
+            featureElement.querySelector('.remove-btn').addEventListener('click', function() {
+                featureElement.remove();
+                
+                // 如果区域为空，重新添加提示文本
+                if (zone.querySelectorAll('.dropped-item').length === 0) {
+                    const prompt = document.createElement('p');
+                    prompt.textContent = '拖放功能项到此处';
+                    zone.appendChild(prompt);
+                }
+            });
+            
+            zone.appendChild(featureElement);
+        }
+        
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

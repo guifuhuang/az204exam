@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Batch Job Submission Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            border-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 156</h2>
+        <p>You are writing code to create and run an Azure Batch job.</p>
+        <p>You have created a pool of compute nodes.</p>
+        <p>You need to choose the right class and its method to submit a batch job to the Batch service.</p>
+        <p>Which method should you use?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. JobOperations.CreateJob()</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. CloudJob.Enable(IEnumerable&lt;BatchClientBehavior&gt;)</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="answer" value="C">
+            <label for="optionC">C. CloudJob.CommitAsync(IEnumerable&lt;BatchClientBehavior&gt;, CancellationToken)</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="answer" value="D">
+            <label for="optionD">D. JobOperations.EnableJob(String, IEnumerable&lt;BatchClientBehavior&gt;)</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionE" name="answer" value="E">
+            <label for="optionE">E. JobOperations.EnableJobAsync(String, IEnumerable&lt;BatchClientBehavior&gt;, CancellationToken)</label>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案: C</h3>
+        <p><strong>C. CloudJob.CommitAsync(IEnumerable&lt;BatchClientBehavior&gt;, CancellationToken)</strong></p>
+        
+        <h3>解析:</h3>
+        <p>根据Azure Batch服务文档和最佳实践：</p>
+        <ol>
+            <li><strong>创建和提交作业的正确流程</strong>：在Azure Batch中创建和运行作业的标准流程是：
+                <ul>
+                    <li>首先创建作业对象（可以使用JobOperations.CreateJob()）</li>
+                    <li>然后配置作业属性（如关联的计算节点池）</li>
+                    <li>最后提交作业到Batch服务（使用CommitAsync方法）[9](@ref)</li>
+                </ul>
+            </li>
+            <li><strong>CommitAsync方法的作用</strong>：CloudJob.CommitAsync方法是将新创建的作业实际提交到Batch服务的方法，它会将作业绑定到Batch服务并建立一致性关系[9](@ref)</li>
+            <li><strong>其他方法分析</strong>：
+                <ul>
+                    <li>CreateJob()只是创建本地作业对象，不会提交到服务[9](@ref)</li>
+                    <li>Enable方法用于重新启用已存在的作业，而不是提交新作业[5](@ref)</li>
+                    <li>EnableJob方法也是用于启用已存在的作业，不是提交新作业[5](@ref)</li>
+                </ul>
+            </li>
+            <li><strong>异步操作的优势</strong>：使用CommitAsync的异步版本（而不是同步Commit）是推荐做法，可以避免阻塞调用线程[9](@ref)</li>
+        </ol>
+        
+        <p>完整的工作流程示例：</p>
+        <pre>
+// 1. 创建作业对象
+var job = batchClient.JobOperations.CreateJob(jobId, poolInformation);
+
+// 2. 配置作业属性
+job.DisplayName = "My Batch Job";
+
+// 3. 提交作业到Batch服务
+await job.CommitAsync();</pre>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Highlight the correct answer
+            document.querySelectorAll('.option').forEach(opt => {
+                if (opt.querySelector('input').value === 'C') {
+                    opt.classList.add('correct');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

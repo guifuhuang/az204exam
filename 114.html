@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage Queues Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            font-family: Consolas, monospace;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .statement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .statement-table th, .statement-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .statement-table th {
+            background-color: #f2f2f2;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 114 HOTSPOT</h2>
+        <p>You are developing an application that uses Azure Storage Queues.</p>
+        <p>You have the following code:</p>
+        
+        <div class="code-block">
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));<br>
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();<br>
+            CloudQueue queue = queueClient.GetQueueReference("appqueue");<br>
+            await queue.CreateIfNotExistsAsync();<br>
+            CloudQueueMessage peekedMessage = await queue.PeekMessageAsync();<br>
+            if (peekedMessage != null)<br>
+            {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("The peeked message is: {0}", peekedMessage.AsString);<br>
+            }<br>
+            CloudQueueMessage message = await queue.GetMessageAsync();
+        </div>
+        
+        <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <table class="statement-table">
+            <thead>
+                <tr>
+                    <th>Statement</th>
+                    <th>Yes/No</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The code configures the lock duration for the queue.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement1" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement1" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The last message read remains in the queue after the code runs.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement2" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement2" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The storage queue remains in the storage account after the code runs.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement3" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement3" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct-answer">1. The code configures the lock duration for the queue: No</span></p>
+            <p><span class="correct-answer">2. The last message read remains in the queue after the code runs: Yes</span></p>
+            <p><span class="correct-answer">3. The storage queue remains in the storage account after the code runs: Yes</span></p>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p><strong>1. 代码是否配置了队列的锁定持续时间？</strong></p>
+                <p>代码中没有设置锁定持续时间的操作。在Azure Storage Queues中，锁定持续时间通常在获取消息时通过GetMessageAsync方法的visibilityTimeout参数设置，但代码中并未指定此参数。</p>
+                
+                <p><strong>2. 代码运行后，最后读取的消息是否仍然保留在队列中？</strong></p>
+                <p>代码使用PeekMessageAsync()查看消息，这不会从队列中删除消息。GetMessageAsync()虽然会获取并删除消息，但题目中并未显示后续处理代码，因此消息仍保留在队列中。</p>
+                
+                <p><strong>3. 代码运行后，存储队列是否仍然保留在存储帐户中？</strong></p>
+                <p>代码使用CreateIfNotExistsAsync()创建队列（如果不存在），但没有删除队列的操作。因此队列会保留在存储帐户中。</p>
+                
+                <h3>代码关键点分析:</h3>
+                <ul>
+                    <li>CreateIfNotExistsAsync() - 确保队列存在</li>
+                    <li>PeekMessageAsync() - 查看消息但不删除</li>
+                    <li>GetMessageAsync() - 获取并删除消息（但题目中未显示后续处理）</li>
+                    <li>没有设置锁定时间的参数</li>
+                    <li>没有删除队列的操作</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            answerContainer.style.display = 'block';
+            
+            // Scroll to answer
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

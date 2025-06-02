@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 309</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 309</h2>
+        <p>You are developing an application to store information about the organizational structure for a company.</p>
+        <p>Users must be able to determine:</p>
+        <ul>
+            <li>Which people report to a particular manager</li>
+            <li>The office where employees work</li>
+            <li>The projects that are assigned to an employee</li>
+        </ul>
+        <p>Which Azure Cosmos DB API should you use for the application?</p>
+    </div>
+
+    <div class="options-container">
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Core"> A. Core (SQL)
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Cassandra"> B. Cassandra
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Table"> C. Table API
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Gremlin"> D. Gremlin
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="MongoDB"> E. MongoDB
+        </label>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <p class="correct-answer">E. MongoDB</p>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>MongoDB API</strong> 最适合组织架构管理的原因：</p>
+            <ul>
+                <li><strong>文档模型匹配数据结构</strong>：员工信息、汇报关系、办公地点和项目分配可以自然地表示为嵌套文档或引用</li>
+                <li><strong>灵活查询</strong>：支持丰富的查询语法（如<code>$lookup</code>聚合），可直接查询嵌套字段（如"查找某经理的所有下属"）</li>
+                <li><strong>开发效率高</strong>：与大多数现代开发框架（如Node.js、.NET）集成良好，减少代码复杂度</li>
+                <li><strong>性能优化</strong>：对层级数据的查询性能优于关系型模型（如Core/SQL）</li>
+            </ul>
+            
+            <p>2. 典型数据模型示例：</p>
+            <pre>
+{
+  "_id": "emp101",
+  "name": "张三",
+  "position": "经理",
+  "reportsTo": "emp100",  // 汇报关系
+  "office": {             // 办公地点
+    "building": "A栋",
+    "floor": 5,
+    "desk": "502A"
+  },
+  "projects": [           // 分配的项目
+    {"id": "proj1", "role": "负责人"},
+    {"id": "proj2", "role": "成员"}
+  ]
+}
+            </pre>
+            
+            <p>3. 其他API的限制：</p>
+            <ul>
+                <li><strong>Core (SQL)</strong>：需要复杂JOIN操作查询多级关系，性能较差</li>
+                <li><strong>Cassandra</strong>：适合宽列存储，无法高效处理嵌套文档</li>
+                <li><strong>Table API</strong>：仅支持简单键值对，无法表示复杂关系</li>
+                <li><strong>Gremlin</strong>：虽然能处理关系，但对于简单层级结构过度设计</li>
+            </ul>
+            
+            <p>4. 解决方案优势：</p>
+            <ul>
+                <li><strong>快速开发</strong>：文档模型与业务数据结构高度一致</li>
+                <li><strong>查询灵活性</strong>：支持从简单（如"查找某办公室员工"）到复杂（如"查找参与某项目的所有经理"）的查询</li>
+                <li><strong>无缝扩展</strong>：未来可轻松添加新字段（如员工技能、部门预算等）</li>
+                <li><strong>成本可控</strong>：支持按需扩展吞吐量，适合SaaS多版本需求</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Resource Manager 模板存储方案</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .question-container {
+            padding: 30px;
+            background: #f0f7ff;
+            border-bottom: 2px solid #d0e8ff;
+        }
+        .question {
+            font-size: 19px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .requirements {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .requirements ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .requirements li {
+            margin-bottom: 10px;
+        }
+        .answer-area {
+            padding: 30px;
+            background: white;
+        }
+        .answer-title {
+            font-size: 26px;
+            color: #0078d7;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #bbdefb;
+            text-align: center;
+            font-weight: 600;
+        }
+        .command-container {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 18px;
+            margin: 20px 0;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .command-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .command-prefix {
+            color: #3498db;
+        }
+        .select-container {
+            position: relative;
+            display: inline-block;
+            min-width: 200px;
+        }
+        .config-select {
+            width: 100%;
+            background: #34495e;
+            color: white;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            padding: 12px 15px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233498db' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        .config-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+            border-color: #2980b9;
+        }
+        .file-list {
+            background: #1a2530;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .file-list-title {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .file-list-title:before {
+            content: "📁";
+            margin-right: 10px;
+        }
+        .file-item {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 8px 0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .file-item:before {
+            content: "📄";
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+        .controls {
+            padding: 25px;
+            text-align: center;
+            background: #f0f7ff;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            font-size: 19px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 6px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 6px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            font-size: 15px;
+        }
+        .answer-section {
+            margin-top: 20px;
+        }
+        .answer-section h3 {
+            color: #0078d7;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .answer-row {
+            display: flex;
+            margin: 18px 0;
+            padding: 15px;
+            background: #f5f9ff;
+            border-radius: 8px;
+            align-items: flex-start;
+        }
+        .answer-label {
+            font-weight: bold;
+            min-width: 250px;
+            color: #0078d7;
+            font-size: 18px;
+        }
+        .azure-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.1;
+        }
+        @media (max-width: 768px) {
+            .command-line {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .select-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Resource Manager 模板存储方案</h1>
+            <div class="subtitle">QUESTION NO: 366 HOTSPOT</div>
+            <div class="azure-icon">☁️</div>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您正在创作一组嵌套的Azure Resource Manager模板来部署Azure资源。</p>
+                <p>您创建了一个名为mainTemplate.json的Azure Resource Manager模板，其中包含以下链接模板：linkedTemplate1.json和linkedTemplate2.json。</p>
+                <p>您将参数添加到名为mainTemplate.parameters.json的参数模板文件中。所有模板都保存在本地设备的C:\templates\文件夹中。</p>
+                
+                <div class="requirements">
+                    <p><strong>要求：</strong></p>
+                    <ul>
+                        <li>将模板存储在Azure中以供后续部署</li>
+                        <li>启用模板版本控制</li>
+                        <li>使用Azure RBAC管理对模板的访问</li>
+                    </ul>
+                    <p>您需要将模板存储在Azure中。</p>
+                    <p>应该如何完成命令？请选择答案区域中的适当选项。</p>
+                    <p>注意：每个正确选项值1分。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <div class="answer-title">命令配置</div>
+            
+            <div class="command-container">
+                <div class="command-line">
+                    <span class="command-prefix">az </span>
+                    <div class="select-container">
+                        <select class="config-select" id="select1">
+                            <option value="">选择选项</option>
+                            <option value="ts create">ts create</option>
+                            <option value="storage account create">storage account create</option>
+                            <option value="storage account update">storage account update</option>
+                            <option value="blueprint artifact template create">blueprint artifact template create</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="command-line"><span class="command-prefix">--name templateStore \</span></div>
+                <div class="command-line"><span class="command-prefix">--version "1.0" \</span></div>
+                <div class="command-line"><span class="command-prefix">--resource-group templateRG \</span></div>
+                <div class="command-line"><span class="command-prefix">--location eastus \</span></div>
+                <div class="command-line"><span class="command-prefix">--template-file \</span>"<div class="select-container">
+                        <select class="config-select" id="select2">
+                            <option value="">选择选项</option>
+                            <option value="mainTemplate.json">mainTemplate.json</option>
+                            <option value="linkedTemplate1.json">linkedTemplate1.json</option>
+                            <option value="linkedTemplate2.json">linkedTemplate2.json</option>
+                            <option value="mainTemplate.parameters.json">mainTemplate.parameters.json</option>
+                        </select>
+                    </div>" \</div>
+                <div class="command-line"><span class="command-prefix">C:\templates</span></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第一个下拉框：</div>
+                            <div>ts create</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">第二个下拉框：</div>
+                            <div>mainTemplate.json</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>需求分析：</h4>
+                    <p>根据题目要求，需要实现以下功能：</p>
+                    <ul>
+                        <li>将嵌套模板存储在Azure中</li>
+                        <li>支持模板版本控制</li>
+                        <li>使用Azure RBAC管理访问权限</li>
+                        <li>模板存储在本地C:\templates目录</li>
+                    </ul>
+                    
+                    <h4>Azure 模板规格 (Template Specs)：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">模板规格的作用：</div>
+                            <div>
+                                <p>Azure模板规格是存储和管理ARM模板的专用资源</p>
+                                <p>提供版本控制功能，可以管理模板的不同版本</p>
+                                <p>支持Azure RBAC进行精细的访问控制</p>
+                                <p>可以存储嵌套模板及其所有链接模板</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">az ts create 命令：</div>
+                            <div>
+                                <p>用于创建新的模板规格</p>
+                                <p><span class="highlight">--template-file</span> 参数指定主模板文件</p>
+                                <p>命令会自动上传主模板及其引用的所有链接模板</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>配置方案说明：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第一个下拉框选择：</div>
+                            <div>
+                                <p>选择<span class="highlight">ts create</span></p>
+                                <p>原因：</p>
+                                <ul>
+                                    <li>这是创建模板规格的正确命令</li>
+                                    <li>满足存储模板、版本控制和RBAC访问管理的需求</li>
+                                    <li>其他选项不符合要求：</li>
+                                    <ul>
+                                        <li><strong>storage account create</strong>：创建存储账户，不适合模板管理</li>
+                                        <li><strong>blueprint artifact template create</strong>：用于蓝图，不是模板存储的最佳方案</li>
+                                    </ul>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">第二个下拉框选择：</div>
+                            <div>
+                                <p>选择<span class="highlight">mainTemplate.json</span></p>
+                                <p>原因：</p>
+                                <ul>
+                                    <li>这是主模板文件，包含对其他模板的引用</li>
+                                    <li>模板规格会递归处理所有链接模板</li>
+                                    <li>不需要单独上传每个链接模板</li>
+                                    <li>参数文件不需要上传，因为模板规格主要存储模板结构</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>完整命令说明：</h4>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; font-family: 'Consolas', monospace;">
+                        az ts create --name "templateStore" --resource-group "templateRG" --location "eastus" <br>
+                        --version "1.0" --template-file "C:\templates\mainTemplate.json"
+                    </div>
+                    
+                    <h4>命令参数解析：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">--name templateStore</div>
+                            <div>指定模板规格的名称</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">--version "1.0"</div>
+                            <div>设置模板的初始版本号</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">--resource-group templateRG</div>
+                            <div>指定存储模板规格的资源组</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">--location eastus</div>
+                            <div>设置模板规格的存储位置</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">--template-file</div>
+                            <div>指定主模板文件路径</div>
+                        </div>
+                    </div>
+                    
+                    <h4>模板规格的优势：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">版本控制：</div>
+                            <div>可以创建模板的多个版本，轻松回滚到历史版本</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">访问控制：</div>
+                            <div>使用Azure RBAC精确控制谁可以访问或修改模板</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">嵌套模板支持：</div>
+                            <div>自动处理所有链接模板，保持引用关系</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">共享与重用：</div>
+                            <div>可以在不同订阅、租户和部署中重复使用模板</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Resource Manager 模板存储方案测试 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

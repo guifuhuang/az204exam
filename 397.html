@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights 配置测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d4, #50e6ff, #0078d4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+            text-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .question-no {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #50e6ff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .content-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .actions {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        .actions h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .drag-item {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: move;
+            border: 2px dashed #50e6ff;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .drag-item:hover {
+            background: rgba(0, 120, 212, 0.4);
+            transform: translateY(-3px);
+        }
+        .drag-item i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .answer-area {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        .answer-area h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .step-container {
+            margin-bottom: 30px;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .step-number {
+            background: #50e6ff;
+            color: #1e3c72;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #50e6ff;
+        }
+        .drop-zone {
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .drop-zone.active {
+            border-color: #50e6ff;
+            background: rgba(80, 230, 255, 0.1);
+        }
+        .drop-zone .drag-item {
+            width: 100%;
+            margin: 0;
+            padding: 5px;
+            border: none;
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #0078d4, #50e6ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 18px;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #50e6ff;
+            border-left: 4px solid #4ec9b0;
+            line-height: 1.8;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #50e6ff;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .azure-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #50e6ff, transparent);
+            animation: azureWave 3s infinite linear;
+        }
+        @keyframes azureWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Application Insights 配置测试</h1>
+            <div class="question-no">QUESTION NO: 397 DRAG DROP</div>
+        </div>
+        
+        <div class="requirements">
+            <p>某组织在Azure中托管了Web应用程序。该组织希望使用Application Insights跟踪Web应用中的事件和遥测数据，并通过Azure Event Grid推送近实时信息。</p>
+            <p>您需要为Web应用程序配置Application Insights。</p>
+            <p class="note">注意：从左侧操作列表中选择三个操作并按正确顺序排列到右侧区域。</p>
+        </div>
+        
+        <div class="content-area">
+            <div class="actions">
+                <h2>操作列表 (Actions)</h2>
+                <div class="drag-item" draggable="true" data-id="1">
+                    <i class="fas fa-cogs"></i> 创建Azure机器学习工作区 (Create an Azure Machine Learning workspace)
+                </div>
+                <div class="drag-item" draggable="true" data-id="2">
+                    <i class="fas fa-cogs"></i> 为应用程序配置Azure API服务SDK (Configure the Azure API Service SDK for the app)
+                </div>
+                <div class="drag-item" draggable="true" data-id="3">
+                    <i class="fas fa-cogs"></i> 创建Application Insights资源 (Create an Application Insights resource)
+                </div>
+                <div class="drag-item" draggable="true" data-id="4">
+                    <i class="fas fa-cogs"></i> 复制连接字符串 (Copy the connection string)
+                </div>
+                <div class="drag-item" draggable="true" data-id="5">
+                    <i class="fas fa-cogs"></i> 在应用程序中配置Application Insights SDK (Configure the Application Insights SDK in the app)
+                </div>
+            </div>
+            
+            <div class="answer-area">
+                <h2>配置步骤 (Answer area)</h2>
+                
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">第一步</div>
+                    </div>
+                    <div class="drop-zone" data-step="1"></div>
+                </div>
+                
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">第二步</div>
+                    </div>
+                    <div class="drop-zone" data-step="2"></div>
+                </div>
+                
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">第三步</div>
+                    </div>
+                    <div class="drop-zone" data-step="3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                <p><strong>正确步骤顺序：</strong></p>
+                <p>1. 创建Application Insights资源 (Create an Application Insights resource)</p>
+                <p>2. 复制连接字符串 (Copy the connection string)</p>
+                <p>3. 在应用程序中配置Application Insights SDK (Configure the Application Insights SDK in the app)</p>
+            </div>
+            
+            <div class="explanation">
+                <h3>配置解析：</h3>
+                <ul>
+                    <li><span class="highlight">第一步：创建Application Insights资源</span> - 这是配置的基础，您需要在Azure门户中创建Application Insights实例来收集和分析遥测数据。</li>
+                    <li><span class="highlight">第二步：复制连接字符串</span> - 创建资源后，您需要获取连接字符串（或检测密钥），这是将应用程序连接到Application Insights服务的关键凭证。</li>
+                    <li><span class="highlight">第三步：配置Application Insights SDK</span> - 最后，在您的Web应用程序中安装并配置SDK，使用上一步获取的连接字符串将应用程序与Application Insights资源关联。</li>
+                </ul>
+                
+                <h3>为什么其他选项不正确：</h3>
+                <ul>
+                    <li><span class="highlight">创建Azure机器学习工作区</span> - 此操作与Application Insights配置无关，属于不同服务。</li>
+                    <li><span class="highlight">配置Azure API服务SDK</span> - 虽然API管理可能涉及，但不是配置Application Insights的直接步骤。</li>
+                </ul>
+                
+                <h3>技术细节：</h3>
+                <ul>
+                    <li><strong>Application Insights资源</strong>：提供数据收集、存储和分析的基础设施，每个资源有唯一标识符和连接字符串。</li>
+                    <li><strong>连接字符串</strong>：包含端点URL和身份验证信息，用于将应用程序遥测数据发送到正确的Application Insights资源。</li>
+                    <li><strong>SDK配置</strong>：通过NuGet包安装SDK，在应用程序设置中添加连接字符串，SDK会自动收集请求、异常、依赖项等遥测数据。</li>
+                </ul>
+                
+                <h3>与Event Grid集成：</h3>
+                <ul>
+                    <li>配置Application Insights后，可以设置诊断设置将事件导出到Event Grid</li>
+                    <li>Event Grid可以实时路由Application Insights事件到各种端点</li>
+                    <li>支持近实时处理遥测数据，触发自定义工作流</li>
+                </ul>
+                
+                <h3>实际应用场景：</h3>
+                <ul>
+                    <li><strong>实时监控</strong>：立即检测应用程序性能问题和错误</li>
+                    <li><strong>使用分析</strong>：了解用户行为和应用使用模式</li>
+                    <li><strong>警报通知</strong>：基于遥测数据设置自动警报</li>
+                    <li><strong>自定义事件处理</strong>：通过Event Grid将事件路由到Azure Functions或逻辑应用</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Application Insights 配置测试 | 拖拽功能实现</p>
+        </div>
+        
+        <div class="azure-animation"></div>
+    </div>
+
+    <script>
+        // 拖拽功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', this.dataset.id);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('active');
+                    e.dataTransfer.dropEffect = 'move';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('active');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('active');
+                    
+                    if (draggedItem) {
+                        const dataId = draggedItem.dataset.id;
+                        const displayText = draggedItem.textContent.trim();
+                        
+                        // 创建新的元素显示在放置区
+                        const newElement = document.createElement('div');
+                        newElement.className = 'drag-item';
+                        newElement.innerHTML = `<i class="${draggedItem.querySelector('i').className}"></i> ${displayText}`;
+                        newElement.dataset.id = dataId;
+                        newElement.style.margin = '0';
+                        newElement.style.width = '100%';
+                        newElement.style.cursor = 'default';
+                        newElement.draggable = false;
+                        
+                        this.innerHTML = '';
+                        this.appendChild(newElement);
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            dragItems.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.7';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                });
+                
+                zone.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        const dataId = draggedItem.dataset.id;
+                        const displayText = draggedItem.textContent.trim();
+                        
+                        // 创建新的元素显示在放置区
+                        const newElement = document.createElement('div');
+                        newElement.className = 'drag-item';
+                        newElement.innerHTML = `<i class="${draggedItem.querySelector('i').className}"></i> ${displayText}`;
+                        newElement.dataset.id = dataId;
+                        newElement.style.margin = '0';
+                        newElement.style.width = '100%';
+                        newElement.style.cursor = 'default';
+                        newElement.draggable = false;
+                        
+                        this.innerHTML = '';
+                        this.appendChild(newElement);
+                        
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                });
+            });
+            
+            // 查看答案按钮
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                const answerSection = document.getElementById('answerSection');
+                answerSection.style.display = 'block';
+                
+                // 设置正确答案
+                const dropZones = document.querySelectorAll('.drop-zone');
+                
+                // 第一步: 创建Application Insights资源
+                dropZones[0].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-cogs"></i> 创建Application Insights资源 (Create an Application Insights resource)</div>';
+                
+                // 第二步: 复制连接字符串
+                dropZones[1].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-cogs"></i> 复制连接字符串 (Copy the connection string)</div>';
+                
+                // 第三步: 在应用程序中配置Application Insights SDK
+                dropZones[2].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-cogs"></i> 在应用程序中配置Application Insights SDK (Configure the Application Insights SDK in the app)</div>';
+                
+                // 禁用拖拽功能
+                dragItems.forEach(item => {
+                    item.draggable = false;
+                    item.style.opacity = '0.5';
+                    item.style.cursor = 'not-allowed';
+                });
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

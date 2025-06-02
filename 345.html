@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Blob Storage 不可变性策略测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>测试题</h2>
+        <p>你有一个提供法律文档访问的Web应用程序，这些文档存储在Azure Blob Storage中，并应用了版本级别的不可变性策略。文档同时受到基于时间的策略和法律保留策略的保护。所有基于时间的保留策略都启用了AllowProtectedAppendWrites属性。</p>
+        <p>你需要满足一个要求：防止用户在仅法律保留策略生效且所有其他策略都已过期时尝试执行会失败的操作。</p>
+        <p>你需要阻止哪两个操作？</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options" value="A">
+                <label for="optionA">A. 覆盖现有文档</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options" value="B">
+                <label for="optionB">B. 向文档添加数据</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options" value="C">
+                <label for="optionC">C. 删除文档</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options" values="D">
+                <label for="optionD">D. 创建文档</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <h3>正确答案: A, C</h3>
+        <p><strong>说明：</strong></p>
+        <p>在Azure Blob Storage的不可变性策略中：</p>
+        <ul>
+            <li>当法律保留策略生效时，会阻止所有删除和覆盖操作（选项A和C），因为这些操作会改变或删除受保护的文档。</li>
+            <li>选项B（添加数据）是允许的，因为AllowProtectedAppendWrites属性已启用，允许在保留期内追加数据。</li>
+            <li>选项D（创建文档）不受不可变性策略的限制，可以正常执行。</li>
+            <li>因此，需要阻止的操作是覆盖现有文档（A）和删除文档（C）。</li>
+        </ul>
+    </div>
+    
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions 配置测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .code-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        .json-section {
+            flex: 1;
+            min-width: 300px;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .json-title {
+            color: #61dafb;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        .json-content {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            position: relative;
+            padding: 10px;
+            background: #1e1e1e;
+            border-radius: 5px;
+        }
+        .dropdown {
+            display: inline-block;
+            position: relative;
+            margin: 3px 0;
+        }
+        .dropdown select {
+            background: #444;
+            color: white;
+            border: 1px solid #61dafb;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            cursor: pointer;
+            width: 100%;
+            max-width: 250px;
+        }
+        .dropdown select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.5);
+        }
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-section {
+            padding: 25px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-title {
+            color: #0078d7;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .answer-content h3 {
+            color: #0078d7;
+            margin: 15px 0 10px;
+        }
+        .answer-content p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .code-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Functions 配置测试题</h1>
+            <p>QUESTION NO: 356 HOTSPOT</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>You are developing a C++ application that compiles to a native application named process.exe.</p>
+                <p>The application accepts images as input and returns images in one of the following image formats: GIF, PNG, or JPEG.</p>
+                <p>You must deploy the application as an Azure Function.</p>
+                <p>You need to configure the function and host json files.</p>
+                <p>How should you complete the json files? To answer, select the appropriate options in the answer area.</p>
+                <p>NOTE: Each correct selection is worth one point.</p>
+            </div>
+        </div>
+        
+        <div class="code-container">
+            <div class="json-section">
+                <div class="json-title">function.json</div>
+                <div class="json-content">{
+    <div class="dropdown">
+        <select id="box1">
+            <option value="">--select--</option>
+            <option value="type">"type":"http"</option>
+            <option value="platform">"platform": "gcm"</option>
+            <option value="datatype">"datatype": "stream",</option>
+            <option value="path">"path": "process.exe"</option>
+        </select>
+    </div>,
+    "direction": "out",
+    "name": "result"
+}
+                </div>
+            </div>
+            
+            <div class="json-section">
+                <div class="json-title">host.json</div>
+                <div class="json-content">{
+    <div class="dropdown">
+        <select id="box2">
+            <option value="">--select--</option>
+            <option value="customHandler">"customHandler": {"description": {</option>
+            <option value="languageWorker">"languageWorker": {"path": {</option>
+            <option value="extensions">"extensions": {"worker": {</option>
+            <option value="extensionBundle">"extensionBundle": {</option>
+        </select>
+    </div>
+    "defaultExecutablePath": "process.exe"
+    },
+    <div class="dropdown">
+        <select id="box3">
+            <option value="">--select--</option>
+            <option value="true">"enableForwardingHttpRequest": true</option>
+            <option value="false">"enableForwardingHttpRequest": false</option>
+        </select>
+    </div>
+    }
+}
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-section" class="answer-section">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <p><strong>function.json:</strong> "type":"http"</p>
+                    <p><strong>host.json:</strong> "customHandler": {"description": { 和 "enableForwardingHttpRequest": true</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>function.json 配置说明：</h4>
+                    <p>1. <span class="highlight">"type":"http"</span> - 由于应用程序需要处理HTTP请求并返回图像，因此需要配置HTTP绑定类型。</p>
+                    
+                    <h4>host.json 配置说明：</h4>
+                    <p>1. <span class="highlight">"customHandler": {"description": {</span> - 这是配置自定义处理程序的正确结构，用于指定原生应用程序的处理方式。</p>
+                    <p>2. <span class="highlight">"enableForwardingHttpRequest": true</span> - 需要设置为true以启用HTTP请求转发功能，这样Azure Functions才能将传入的HTTP请求正确转发给本机应用程序process.exe处理。</p>
+                    
+                    <h4>整体配置原理：</h4>
+                    <p>此配置允许Azure Functions作为托管环境，将传入的HTTP请求（包含图像数据）转发给本机C++应用程序process.exe进行处理。处理完成后，应用程序会返回处理后的图像（GIF、PNG或JPEG格式）。</p>
+                    <p>关键点在于正确配置HTTP绑定类型作为输出，并启用请求转发功能，使Azure Functions能够与本机应用程序正确交互。</p>
+                    
+                    <h4>配置详解：</h4>
+                    <ul>
+                        <li><strong>function.json</strong>：定义了函数的绑定信息
+                            <ul>
+                                <li><code>"type":"http"</code>：指定绑定类型为HTTP</li>
+                                <li><code>"direction":"out"</code>：表示这是输出绑定</li>
+                                <li><code>"name":"result"</code>：绑定参数的名称</li>
+                            </ul>
+                        </li>
+                        <li><strong>host.json</strong>：配置函数应用级别的设置
+                            <ul>
+                                <li><code>"customHandler"</code>：启用自定义处理程序</li>
+                                <li><code>"defaultExecutablePath":"process.exe"</code>：指定要执行的原生应用程序</li>
+                                <li><code>"enableForwardingHttpRequest":true</code>：启用HTTP请求转发</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Functions 配置测试题 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('box1').value = 'type';
+            document.getElementById('box2').value = 'customHandler';
+            document.getElementById('box3').value = 'true';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

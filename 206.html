@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Access Token Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 206</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop Azure solutions.</p>
+        <p>You must grant a virtual machine (VM) access to specific resource groups in Azure Resource Manager.</p>
+        
+        <p><strong>Goal:</strong></p>
+        <p>You need to obtain an Azure Resource Manager access token.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Run the Invoke-RestMethod cmdlet to make a request to the local managed identity for Azure resources endpoint.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>A. Yes</strong></p>
+            <p><strong>解释：</strong></p>
+            <p>这个解决方案能够满足目标，因为使用Invoke-RestMethod cmdlet向本地托管标识终结点发送请求是获取Azure资源管理器访问令牌的正确方法之一。</p>
+            
+            <p>关键原因：</p>
+            <ul>
+                <li>Invoke-RestMethod是PowerShell中用于发送HTTP请求的标准cmdlet</li>
+                <li>向本地托管标识终结点(169.254.169.254)请求令牌是Azure推荐的做法</li>
+                <li>这种方法与使用curl命令等效，都是通过托管标识获取访问令牌的有效方式</li>
+            </ul>
+            
+            <p>典型的PowerShell实现示例：</p>
+            <div class="code">
+                $response = Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/' -Headers @{Metadata="true"}
+                $accessToken = $response.access_token
+            </div>
+            
+            <p>注意事项：</p>
+            <ol>
+                <li>确保VM已启用系统分配的托管标识</li>
+                <li>为托管标识分配适当的RBAC角色以访问目标资源组</li>
+                <li>resource参数必须精确指定为"https://management.azure.com/"</li>
+            </ol>
+            
+            <p>这种方法避免了在代码中存储凭据，是Azure推荐的安全实践。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

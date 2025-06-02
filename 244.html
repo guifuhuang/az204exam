@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage Blob Processing Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef6fd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 244</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop a software as a service (SaaS) offering to manage photographs. Users upload photos to a web service which then stores the photos in Azure Storage Blob storage. The storage account type is General-purpose V2.</p>
+        <p>When photos are uploaded, they must be processed to produce and save a mobile-friendly version of the image. The process to produce a mobile-friendly version of the image must start in less than one minute.</p>
+        <p>You need to design the process that starts the photo processing.</p>
+        
+        <p><strong>Solution:</strong> Create an Azure Function app that uses the Consumption hosting model and that is triggered from the blob upload.</p>
+        
+        <p><strong>Question:</strong> Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案: A. Yes</h3>
+            <p><strong>说明:</strong></p>
+            <p>这个解决方案满足需求。使用Azure Functions的消费托管模型，并通过Blob存储触发，是一个符合要求的解决方案。</p>
+            <p>具体原因如下：</p>
+            <ol>
+                <li>Azure Functions可以与Blob存储集成，当新Blob上传时会自动触发函数执行</li>
+                <li>消费托管模型会根据需要自动扩展，适合处理突发的上传请求</li>
+                <li>Azure Functions的触发延迟通常在几秒内，远低于要求的1分钟</li>
+                <li>General-purpose V2存储账户支持Blob触发器</li>
+                <li>这种无服务器架构可以自动处理照片处理任务的启动，无需人工干预</li>
+            </ol>
+            <p>因此，这个解决方案完全满足题目中提出的所有要求。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

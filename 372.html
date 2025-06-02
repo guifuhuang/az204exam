@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions 投票功能实现</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeff5;
+        }
+        
+        .question-number {
+            background: #0078d4;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+        }
+        
+        .question-text p {
+            margin-bottom: 12px;
+        }
+        
+        .requirements {
+            background: #eef7ff;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+        }
+        
+        .requirements h3 {
+            color: #1e4a8e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirements h3 i {
+            margin-right: 10px;
+        }
+        
+        .requirement-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        .requirement-item i {
+            color: #4a90e2;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .code-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .code-line {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        
+        .line-number {
+            color: #6a9955;
+            min-width: 40px;
+            text-align: right;
+            margin-right: 15px;
+            user-select: none;
+        }
+        
+        .code-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-class {
+            color: #4ec9b0;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-attribute {
+            color: #d7ba7d;
+        }
+        
+        .code-method {
+            color: #dcdcaa;
+        }
+        
+        .select-container {
+            position: relative;
+            display: inline-block;
+            min-width: 200px;
+            margin: 0 5px;
+        }
+        
+        .select-container select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            background-color: white;
+            font-size: 0.95rem;
+            color: #495057;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        .select-container select:focus {
+            border-color: #0078d4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.2);
+        }
+        
+        .select-container::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn:hover {
+            background: linear-gradient(120deg, #0066b8 0%, #163a75 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            display: none;
+            background: linear-gradient(to right, #e6f7ff, #f0f9ff);
+            border-left: 5px solid #1890ff;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+        
+        .answer-header i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+        
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .correct-answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .correct-answer h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 25px;
+        }
+        
+        .explanation h3 {
+            color: #1e4a8e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        .solution-indicator {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .code-selection {
+            background: #444;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+            border-left: 3px solid #0078d4;
+        }
+        
+        .correct-selection {
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .inline-select {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            vertical-align: middle;
+        }
+        
+        .code-param {
+            color: #9cdcfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Functions 投票功能实现</h1>
+            <p class="subtitle">为在线游戏实现高性能投票功能</p>
+        </header>
+        
+        <div class="card">
+            <div class="question-header">
+                <div class="question-number">372</div>
+                <div class="question-text">
+                    <p><strong>题目描述</strong></p>
+                    <p>您正在开发一个在线游戏，允许玩家投票选择最能说明某个单词的图片。该游戏使用 Azure Functions 构建，并使用持久实体（durable entities）跟踪投票计数。</p>
+                    <p>投票窗口为30秒，您必须最小化延迟。</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3><i class="fas fa-tasks"></i> 需求</h3>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>使用 Azure Functions 实现投票功能</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>使用持久实体（durable entities）跟踪投票计数</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>投票窗口仅30秒，必须最小化延迟</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 15px; color: #1e4a8e; display: flex; align-items: center;">
+                <i class="fas fa-code"></i> 代码实现
+            </h3>
+            
+            <div class="code-container">
+                <div class="code-line">
+                    <div class="line-number">1</div>
+                    <div class="code-content"><span class="code-attribute">[FunctionName(</span><span class="code-string">"Vote"</span><span class="code-attribute">)]</span></div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">2</div>
+                    <div class="code-content"><span class="code-keyword">public static async</span> <span class="code-keyword">Task</span>&lt;<span class="code-class">HttpResponseMessage</span>&gt; <span class="code-method">Run</span>(</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">3</div>
+                    <div class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-attribute">[HttpTrigger(</span><span class="code-string">"POST"</span>, <span class="code-class">Route</span> = <span class="code-string">"pic/{id}"</span><span class="code-attribute">)]</span> <span class="code-class">HttpRequestMessage</span> req,</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">4</div>
+                    <div class="code-content">
+                        <div class="inline-select">
+                            <div class="select-container">
+                                <select id="code-option1">
+                                    <option value="">-- 选择客户端类型 --</option>
+                                    <option value="CallEntityAsync">CallEntityAsync</option>
+                                    <option value="SignalEntityAsync">SignalEntityAsync</option>
+                                    <option value="[DurableClient]IDurableEntityClient">[DurableClient]IDurableEntityClient</option>
+                                    <option value="[DurableClient]IDurableOrchestrationClient">[DurableClient]IDurableOrchestrationClient</option>
+                                </select>
+                            </div>
+                        </div>
+                        <span class="code-param"> client</span>,
+                    </div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">5</div>
+                    <div class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">string</span> id) <span class="code-comment">// 从路由参数中获取图片ID</span></div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">6</div>
+                    <div class="code-content">{</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">7</div>
+                    <div class="code-content">
+                        <span class="code-keyword">var</span> eid = <span class="code-keyword">new</span> <span class="code-class">EntityId</span>(<span class="code-string">"pic"</span>, id);
+                    </div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">8</div>
+                    <div class="code-content">
+                        <span class="code-keyword">await</span> client.
+                        <div class="inline-select">
+                            <div class="select-container">
+                                <select id="code-option2">
+                                    <option value="">-- 选择操作方法 --</option>
+                                    <option value="CallEntityAsync">CallEntityAsync</option>
+                                    <option value="SignalEntityAsync">SignalEntityAsync</option>
+                                    <option value="[DurableClient]IDurableEntityClient">[DurableClient]IDurableEntityClient</option>
+                                    <option value="[DurableClient]IDurableOrchestrationClient">[DurableClient]IDurableOrchestrationClient</option>
+                                </select>
+                            </div>
+                        </div>
+                        (eid, <span class="code-string">"vote"</span>);
+                    </div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">9</div>
+                    <div class="code-content">
+                        <span class="code-keyword">return</span> req.<span class="code-method">CreateResponse</span>(<span class="code-class">HttpStatusCode</span>.OK);
+                    </div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">10</div>
+                    <div class="code-content">}</div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button id="checkAnswer" class="btn">
+                    <i class="fas fa-check-circle"></i> 查看答案
+                </button>
+                <button id="resetBtn" class="btn" style="background:linear-gradient(120deg, #6c757d 0%, #495057 100%); margin-left:15px;">
+                    <i class="fas fa-redo"></i> 重置选择
+                </button>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <div class="answer-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>正确答案与解析</h2>
+                </div>
+                
+                <div class="correct-answer">
+                    <h3><i class="fas fa-check"></i> 正确答案</h3>
+                    <p>第4行：<span class="correct-selection">[DurableClient]IDurableEntityClient</span></p>
+                    <p>第8行：<span class="correct-selection">SignalEntityAsync</span></p>
+                    
+                    <div class="code-selection">
+                        <span class="code-attribute">[DurableClient]</span> <span class="code-class">IDurableEntityClient</span> client,<br>
+                        <span class="code-keyword">await</span> client.<span class="code-method">SignalEntityAsync</span>(eid, <span class="code-string">"vote"</span>);
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-book"></i> 解析说明</h3>
+                    
+                    <p><strong>为什么选择这些代码片段？</strong></p>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-check" style="color:#28a745"></i>
+                        <div><strong>客户端类型选择</strong>：必须使用<code>IDurableEntityClient</code>来操作持久实体，而不是<code>IDurableOrchestrationClient</code>（用于编排）</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-check" style="color:#28a745"></i>
+                        <div><strong>最小化延迟需求</strong>：使用<code>SignalEntityAsync</code>而不是<code>CallEntityAsync</code>，因为它是单向操作（fire-and-forget），不需要等待响应，可以立即返回结果</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-check" style="color:#28a745"></i>
+                        <div><strong>性能优化</strong>：在30秒的投票窗口中，低延迟至关重要，<code>SignalEntityAsync</code>是最佳选择</div>
+                    </div>
+                    
+                    <p><strong>各选项对比分析：</strong></p>
+                    <table style="width:100%; border-collapse: collapse; margin:20px 0;">
+                        <thead>
+                            <tr style="background-color: #f8f9fa;">
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #dee2e6;">选项</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #dee2e6;">是否合适</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #dee2e6;">原因</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;"><code>[DurableClient]IDurableEntityClient</code></td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">✅ 正确</td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">用于操作持久实体的正确客户端类型</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;"><code>SignalEntityAsync</code></td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">✅ 正确</td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">单向操作，最小化延迟，适合投票场景</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;"><code>[DurableClient]IDurableOrchestrationClient</code></td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">❌ 不合适</td>
+                                <td style="padding:12px; border-bottom:1px solid #dee2e6;">用于编排函数，不适用于直接操作实体</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:12px;"><code>CallEntityAsync</code></td>
+                                <td style="padding:12px;">❌ 不合适</td>
+                                <td style="padding:12px;">需要等待响应，会增加延迟，不适合高并发投票场景</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>完整解决方案说明：</strong></p>
+                    <p>在30秒的短暂投票窗口中，最小化延迟至关重要：</p>
+                    <ul style="padding-left:25px; margin:15px 0;">
+                        <li><span class="highlight">IDurableEntityClient</span>：用于与持久实体交互的正确客户端类型</li>
+                        <li><span class="highlight">SignalEntityAsync</span>：单向操作，不等待持久实体操作完成即可返回响应</li>
+                        <li>适用于高吞吐量场景，如实时投票</li>
+                        <li>持久实体会在后台处理投票计数</li>
+                        <li>相比CallEntityAsync，延迟降低50-70%</li>
+                    </ul>
+                    
+                    <p>在投票场景中，不需要即时确认投票计数更新，因此使用SignalEntityAsync是最佳选择。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Functions 投票功能实现 | 基于实际场景设计</p>
+            <p>© 2023 Azure 认证模拟测试</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const option1Select = document.getElementById('code-option1');
+            const option2Select = document.getElementById('code-option2');
+            const checkAnswerBtn = document.getElementById('checkAnswer');
+            const resetBtn = document.getElementById('resetBtn');
+            const answerSection = document.getElementById('answerSection');
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 重置按钮事件
+            resetBtn.addEventListener('click', function() {
+                option1Select.value = '';
+                option2Select.value = '';
+                option1Select.style.borderColor = '#dee2e6';
+                option1Select.style.backgroundColor = 'white';
+                option2Select.style.borderColor = '#dee2e6';
+                option2Select.style.backgroundColor = 'white';
+            });
+            
+            // 为选择框添加样式反馈
+            option1Select.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#28a745';
+                    this.style.backgroundColor = '#e8f5e9';
+                } else {
+                    this.style.borderColor = '#dee2e6';
+                    this.style.backgroundColor = 'white';
+                }
+            });
+            
+            option2Select.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#28a745';
+                    this.style.backgroundColor = '#e8f5e9';
+                } else {
+                    this.style.borderColor = '#dee2e6';
+                    this.style.backgroundColor = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Vault Features Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .features-box, .answers-box {
+            flex: 1;
+            min-height: 150px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin: 0 10px;
+            border-radius: 5px;
+        }
+        .feature-item, .answer-item {
+            background-color: #e7f3fe;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #0078d4;
+        }
+        .answer-item {
+            background-color: #f0f0f0;
+            border: 1px dashed #666;
+        }
+        .answer-area {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 212 DRAG DROP</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing an application to securely transfer data between on-premises file systems and Azure Blob storage. The application stores keys, secrets, and certificates in Azure Key Vault. The application uses the Azure Key Vault APIs.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>The application must allow recovery of an accidental deletion of the key vault or key vault objects</li>
+            <li>Key vault objects must be retained for 90 days after deletion</li>
+        </ul>
+        
+        <p><strong>Task:</strong></p>
+        <p>You need to protect the key vault and key vault objects. Which Azure Key Vault feature should you use? To answer, drag the appropriate features to the correct actions. Each feature may be used once, more than once, or not at all.</p>
+        
+        <div class="drag-container">
+            <div class="features-box" id="featuresBox">
+                <div class="feature-item" draggable="true" data-feature="Access policy">Access policy</div>
+                <div class="feature-item" draggable="true" data-feature="Purge protection">Purge protection</div>
+                <div class="feature-item" draggable="true" data-feature="Soft delete">Soft delete</div>
+                <div class="feature-item" draggable="true" data-feature="Shared access signature">Shared access signature</div>
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Enable retention period and accidental deletion</td>
+                        <td class="drop-target" data-action="enable-retention"></td>
+                    </tr>
+                    <tr>
+                        <td>Enforce retention period and accidental deletion</td>
+                        <td class="drop-target" data-action="enforce-retention"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Enable retention period and accidental deletion</td>
+                        <td>Soft delete</td>
+                    </tr>
+                    <tr>
+                        <td>Enforce retention period and accidental deletion</td>
+                        <td>Purge protection</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确的功能匹配应该是：</p>
+            <ul>
+                <li><strong>Soft delete</strong>：启用保留期和意外删除恢复功能。软删除会将删除的密钥保管库或对象保留90天（可配置），在此期间可以恢复。</li>
+                <li><strong>Purge protection</strong>：强制执行保留期和防止意外删除。启用后，在保留期内即使有权限也无法永久删除（清除）密钥保管库或对象。</li>
+            </ul>
+            
+            <p>关键点说明：</p>
+            <ol>
+                <li>软删除(Soft delete)是基础功能，提供90天的恢复窗口</li>
+                <li>清除保护(Purge protection)是额外保护层，防止在保留期内强制删除</li>
+                <li>这两个功能通常一起启用以满足合规性要求</li>
+                <li>访问策略(Access policy)和共享访问签名(Shared access signature)与此场景无关</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能实现（支持桌面和移动端）
+        document.addEventListener('DOMContentLoaded', function() {
+            const features = document.querySelectorAll('.feature-item');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            features.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e1f5fe';
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '';
+                    
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        this.appendChild(clonedItem);
+                        this.setAttribute('data-feature', clonedItem.getAttribute('data-feature'));
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            features.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.4';
+                    e.preventDefault();
+                }, {passive: false});
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                target.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        this.appendChild(clonedItem);
+                        this.setAttribute('data-feature', clonedItem.getAttribute('data-feature'));
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                    e.preventDefault();
+                }, {passive: false});
+            });
+            
+            // 显示答案
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                document.getElementById('answerSection').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

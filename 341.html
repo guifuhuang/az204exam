@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 341 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .config-table th, .config-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .config-table th {
+            background-color: #f2f2f2;
+        }
+        .select-container {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 341 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing an application that includes two Docker containers.</p>
+            <p>The application must meet the following requirements:</p>
+            <ul>
+                <li>The containers must not run as root.</li>
+                <li>The containers must be deployed to Azure Container Instances by using a YAML file.</li>
+                <li>The containers must share a lifecycle, resources, local network and storage volume.</li>
+                <li>The storage volume must persist through container crashes.</li>
+                <li>The storage volume must be destroyed on stop or restart of the containers.</li>
+            </ul>
+            <p>You need to configure Azure Container Instances for the application.</p>
+        </div>
+        
+        <table class="config-table">
+            <thead>
+                <tr>
+                    <th>Configuration setting</th>
+                    <th>Configuration value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Shared lifecycle</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="shared-lifecycle">
+                                <option value="">Select an option</option>
+                                <option value="Container group">Container group</option>
+                                <option value="Container image">Container image</option>
+                                <option value="Service endpoint">Service endpoint</option>
+                                <option value="Resource group">Resource group</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Storage volume</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="storage-volume">
+                                <option value="">Select an option</option>
+                                <option value="Azure file share">Azure file share</option>
+                                <option value="Secret">Secret</option>
+                                <option value="Empty directory">Empty directory</option>
+                                <option value="Cloned Git repo">Cloned Git repo</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">Shared lifecycle: Container group</p>
+            <p class="correct-answer">Storage volume: Azure file share</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>Container group</strong> 是实现共享生命周期的正确选择。容器组(Container group)是Azure容器实例中的顶级资源，可以包含多个容器实例，这些容器共享生命周期、资源、本地网络和存储卷。</p>
+                <p>2. <strong>Azure file share</strong> 是满足存储卷要求的正确选择。Azure文件共享提供持久化存储，在容器崩溃时保留数据，同时可以通过配置在容器组停止时自动删除，符合题目要求。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>容器组是唯一支持多个容器共享资源的配置</li>
+                    <li>Azure文件共享提供持久化存储，适合需要保留数据的场景</li>
+                    <li>通过配置可以在容器组停止时自动删除文件共享</li>
+                    <li>空目录(Empty directory)虽然会在容器崩溃时保留数据，但不如Azure文件共享稳定可靠</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

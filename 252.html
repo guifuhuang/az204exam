@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure VM 托管标识测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 252</h2>
+        <p>You develop a solution that uses Azure Virtual Machines (VMs).</p>
+        <p>The VMs contain code that must access resources in an Azure resource group. You grant the VM access to the resource group in Resource Manager.</p>
+        <p>You need to obtain an access token that uses the VMs system-assigned managed identity.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options">
+                <label for="optionA">A. Use PowerShell on a remote machine to make a request to the local managed identity for Azure resources endpoint.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options">
+                <label for="optionB">B. Use PowerShell on the VM to make a request to the local managed identity for Azure resources endpoint.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options">
+                <label for="optionC">C. From the code on the VM, call Azure Resource Manager using an access token.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options">
+                <label for="optionD">D. From the code on the VM, call Azure Resource Manager using a SAS token.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="options">
+                <label for="optionE">E. From the code on the VM, generate a user delegation SAS token.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer" class="answer">
+        <h3>正确答案: <span class="correct">B, C</span></h3>
+        <h3>说明:</h3>
+        <p>1. 要获取使用VM系统分配托管标识的访问令牌，正确的做法是在VM上使用PowerShell向本地托管标识终结点发出请求（选项B）。因为托管标识终结点只能在VM内部访问（169.254.169.254），远程机器无法直接访问。</p>
+        <p>2. 获取访问令牌后，应该在VM上的代码中使用该访问令牌调用Azure资源管理器（选项C）。这是使用托管标识的标准流程。</p>
+        <p>3. 其他选项不正确的原因：</p>
+        <ul>
+            <li>A：远程机器无法访问本地托管标识终结点</li>
+            <li>D：SAS令牌不适用于此场景</li>
+            <li>E：用户委托SAS令牌与此场景无关</li>
+        </ul>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Redis Cache 配置测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef6fd;
+            border-left: 4px solid #0078d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>测试题 329</h3>
+        <p>You are building a web application that performs image analysis on user photos and returns metadata containing objects identified. The image is very costly in terms of time and compute resources. You are planning to use Azure Redis Cache so duplicate uploads do not need to be reprocessed.</p>
+        <p>In case of an Azure data center outage, metadata loss must be kept to a minimum. You need to configure the Azure Redis cache instance.</p>
+        <p>Which two actions should you perform?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options">
+                <label for="optionA">A. Configure Azure Redis with RDB persistence</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options">
+                <label for="optionB">B. Configure second storage account for persistence</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options">
+                <label for="optionC">C. Set backup frequency to the minimum value</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options">
+                <label for="optionD">D. Configure Azure Redis with AOF persistence</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h4>正确答案: B, C</h4>
+            <p><strong>解析说明：</strong></p>
+            <p>1. <strong>配置第二个存储账户用于持久化(B)</strong>：文档中明确指出数据持久化需要配置存储账户，使用第二个存储账户可以提高数据可靠性。</p>
+            <p>2. <strong>将备份频率设置为最小值(C)</strong>：文档提到可以配置备份频率，设置为最小值可以减少数据丢失的风险，符合题目要求最小化元数据丢失的需求。</p>
+            <p>选项A的RDB持久化是Redis的标准快照机制，但定时备份可能不够及时；选项D的AOF持久化虽然也是一种选择，但题目更强调备份存储配置。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

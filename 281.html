@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Monitor Configuration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .actions-area, .answer-area {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .actions-title, .answer-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .action {
+            background-color: #e6f2ff;
+            border: 1px solid #b3d1ff;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: move;
+            display: inline-block;
+        }
+        .answer-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .drop-target {
+            min-height: 40px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .drop-target.highlight {
+            border-color: #0078d4;
+            background-color: #f0f7ff;
+        }
+        .slot-number {
+            background-color: #0078d4;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+        .answer-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .action {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 281 DRAG DROP</h2>
+    <p>You develop an application. You plan to host the application on a set of virtual machines (VMs) in Azure.</p>
+    <p>You need to configure Azure Monitor to collect logs from the application.</p>
+    <p>Which four actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+
+    <div class="container">
+        <div class="actions-area">
+            <div class="actions-title">Actions</div>
+            <div class="action" draggable="true" data-action="create-workspace">Create a Log Analytics workspace.</div>
+            <div class="action" draggable="true" data-action="install-agents">Install agents on the VM and VM scale set to be monitored.</div>
+            <div class="action" draggable="true" data-action="send-logs">Send console logs.</div>
+            <div class="action" draggable="true" data-action="add-insights">Add a VM insights solution.</div>
+            <div class="action" draggable="true" data-action="create-appinsights">Create an Application Insights resource.</div>
+        </div>
+
+        <div class="answer-area">
+            <div class="answer-title">Answer Area</div>
+            <div class="answer-slots">
+                <div class="drop-target" data-slot="1">
+                    <div class="slot-number">1</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="2">
+                    <div class="slot-number">2</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="3">
+                    <div class="slot-number">3</div>
+                    <div class="slot-content"></div>
+                </div>
+                <div class="drop-target" data-slot="4">
+                    <div class="slot-number">4</div>
+                    <div class="slot-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="showAnswer" class="button">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <div class="answer-step">
+            <div class="slot-number">1</div>
+            <div class="correct-answer">Create a Log Analytics workspace.</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">2</div>
+            <div class="correct-answer">Add a VM insights solution.</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">3</div>
+            <div class="correct-answer">Install agents on the VM and VM scale set to be monitored.</div>
+        </div>
+        <div class="answer-step">
+            <div class="slot-number">4</div>
+            <div class="correct-answer">Create an Application Insights resource.</div>
+        </div>
+        
+        <h3>说明:</h3>
+        <p>配置Azure Monitor收集应用程序日志的正确顺序如下：</p>
+        <ol>
+            <li><strong>创建Log Analytics工作区</strong>：首先需要创建工作区作为日志数据的存储和分析中心。</li>
+            <li><strong>添加VM见解解决方案</strong>：在Log Analytics工作区中安装VMInsights解决方案，这是使用VM见解的必要条件。</li>
+            <li><strong>在虚拟机上安装代理</strong>：安装Log Analytics代理和依赖代理以收集数据，必须在工作区配置完成后进行。</li>
+            <li><strong>创建Application Insights资源</strong>：用于收集应用程序级别的日志和性能数据，这是配置的最后一步。</li>
+        </ol>
+        <p>这个顺序确保了从基础设施准备到应用程序监控的完整流程：</p>
+        <ul>
+            <li>首先建立日志存储基础(Log Analytics工作区)</li>
+            <li>然后添加虚拟机监控解决方案(VM Insights)</li>
+            <li>接着在虚拟机上部署监控代理</li>
+            <li>最后配置应用程序级别的监控(Application Insights)</li>
+        </ul>
+        <p>注意：发送控制台日志(Send console logs)不是配置过程中的独立步骤，而是通过上述配置自动实现的。</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const actions = document.querySelectorAll('.action');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerDiv = document.getElementById('answer');
+            
+            // Store dragged action
+            let draggedItem = null;
+            
+            // Add event listeners for actions
+            actions.forEach(action => {
+                action.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                action.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Add event listeners for drop targets
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        const slotContent = this.querySelector('.slot-content');
+                        slotContent.innerHTML = '';
+                        const clonedAction = draggedItem.cloneNode(true);
+                        clonedAction.style.opacity = '1';
+                        clonedAction.style.cursor = 'default';
+                        clonedAction.draggable = false;
+                        slotContent.appendChild(clonedAction);
+                        
+                        // Store data attribute for answer checking
+                        this.setAttribute('data-answer', draggedItem.getAttribute('data-action'));
+                    }
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerDiv.style.display = 'block';
+                
+                // Highlight correct answers
+                const correctAnswers = {
+                    '1': 'create-workspace',
+                    '2': 'add-insights',
+                    '3': 'install-agents',
+                    '4': 'create-appinsights'
+                };
+                
+                dropTargets.forEach(target => {
+                    const slot = target.getAttribute('data-slot');
+                    const userAnswer = target.getAttribute('data-answer');
+                    const correctAnswer = correctAnswers[slot];
+                    
+                    if (userAnswer === correctAnswer) {
+                        target.style.backgroundColor = '#e6ffe6'; // Light green for correct
+                    } else if (userAnswer) {
+                        target.style.backgroundColor = '#ffe6e6'; // Light red for incorrect
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

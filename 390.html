@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Container Apps 存储配置测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d4, #50e6ff, #0078d4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+            text-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .question-no {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #50e6ff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .content-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .storage-types {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        .storage-types h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .drag-item {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: move;
+            border: 2px dashed #50e6ff;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .drag-item:hover {
+            background: rgba(0, 120, 212, 0.4);
+            transform: translateY(-3px);
+        }
+        .drag-item i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .answer-area {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        .answer-area h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .service-table th, .service-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        .service-table th {
+            background: rgba(0, 120, 212, 0.2);
+            color: #9cdcfe;
+            font-weight: normal;
+        }
+        .service-table tr:last-child td {
+            border-bottom: none;
+        }
+        .drop-zone {
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .drop-zone.active {
+            border-color: #50e6ff;
+            background: rgba(80, 230, 255, 0.1);
+        }
+        .drop-zone .drag-item {
+            width: 100%;
+            margin: 0;
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #0078d4, #50e6ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 18px;
+            font-family: 'Consolas', monospace;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #50e6ff;
+            border-left: 4px solid #4ec9b0;
+            line-height: 1.8;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #50e6ff;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .azure-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #50e6ff, transparent);
+            animation: azureWave 3s infinite linear;
+        }
+        @keyframes azureWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Azure Container Apps 存储配置测试</h1>
+            <div class="question-no">QUESTION NO: 390 DRAG DROP</div>
+        </div>
+        
+        <div class="requirements">
+            <p>您正在开发多个名为 serviceA、serviceB 和 serviceC 的微服务。您将这些微服务部署到新的 Azure Container Apps 环境。</p>
+            <p>要求如下：</p>
+            <ul>
+                <li>微服务必须将数据持久化到存储</li>
+                <li>serviceA 必须持久化仅对当前容器可见的数据，并且存储必须限制为容器中可用的磁盘空间</li>
+                <li>serviceB 必须在副本的生命周期内持久化数据，并允许副本中的多个容器挂载相同的存储位置</li>
+                <li>serviceC 必须在副本生命周期之外持久化数据，同时允许多个容器访问存储并启用每个对象的权限</li>
+            </ul>
+            <p>您需要为每个微服务配置存储。</p>
+            <p class="note">注意：将左侧存储类型拖拽到右侧相应的微服务区域</p>
+        </div>
+        
+        <div class="content-area">
+            <div class="storage-types">
+                <h2>Storage Types</h2>
+                <div class="drag-item" draggable="true" data-type="Azure Blob Storage">
+                    <i class="fas fa-database"></i> Azure Blob Storage
+                </div>
+                <div class="drag-item" draggable="true" data-type="Azure Files storage">
+                    <i class="fas fa-folder-open"></i> Azure Files storage
+                </div>
+                <div class="drag-item" draggable="true" data-type="Ephemeral volume">
+                    <i class="fas fa-hourglass-half"></i> Ephemeral volume
+                </div>
+                <div class="drag-item" draggable="true" data-type="Container file system">
+                    <i class="fas fa-hdd"></i> Container file system
+                </div>
+            </div>
+            
+            <div class="answer-area">
+                <h2>Answer Area</h2>
+                <table class="service-table">
+                    <thead>
+                        <tr>
+                            <th>Microservice</th>
+                            <th>Storage Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>serviceA</td>
+                            <td>
+                                <div class="drop-zone" data-service="serviceA">
+                                    <div class="placeholder">拖放存储类型到这里</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>serviceB</td>
+                            <td>
+                                <div class="drop-zone" data-service="serviceB">
+                                    <div class="placeholder">拖放存储类型到这里</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>serviceC</td>
+                            <td>
+                                <div class="drop-zone" data-service="serviceC">
+                                    <div class="placeholder">拖放存储类型到这里</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                <p><strong>serviceA：</strong> <span class="highlight">Ephemeral volume</span></p>
+                <p><strong>serviceB：</strong> <span class="highlight">Container file system</span></p>
+                <p><strong>serviceC：</strong> <span class="highlight">Azure Files storage</span></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>配置解析：</h3>
+                <ul>
+                    <li><span class="highlight">serviceA：</span> 需要仅对当前容器可见的存储，且受限于容器磁盘空间。临时卷（Ephemeral volume）可以配置为仅对单个容器可见，并限制在容器可用的磁盘空间内。</li>
+                    <li><span class="highlight">serviceB：</span> 需要在副本的生命周期内持久化数据，并允许多个容器挂载相同位置。容器文件系统（Container file system）在副本的生命周期内存在，可以被副本中的多个容器共享挂载，适合此场景。</li>
+                    <li><span class="highlight">serviceC：</span> 需要超出副本生命周期的持久化存储，允许多容器访问并支持对象级权限。Azure文件存储（Azure Files storage）提供持久的共享文件存储，支持SMB协议，允许多个容器同时访问，并通过共享访问签名或Azure AD集成实现对象级权限控制。</li>
+                </ul>
+                
+                <h3>存储类型详解：</h3>
+                <ul>
+                    <li><strong>临时卷（Ephemeral volume）</strong>：在副本的生命周期内存在，可以配置为仅对单个容器可见，并限制在容器可用的磁盘空间内。</li>
+                    <li><strong>容器文件系统（Container file system）</strong>：可以被副本中的多个容器共享挂载，数据在副本的生命周期内存在。</li>
+                    <li><strong>Azure文件存储（Azure Files storage）</strong>：基于云的完全托管文件共享服务，使用SMB协议，提供持久化存储。</li>
+                    <li><strong>Azure Blob存储（Azure Blob Storage）</strong>：适用于存储大量非结构化数据，但不适合作为容器文件系统直接挂载。</li>
+                </ul>
+                
+                <h3>为什么选择此配置：</h3>
+                <ul>
+                    <li><strong>serviceA</strong>：临时卷提供隔离的存储环境，确保数据仅对当前容器可见，且受限于容器磁盘空间。</li>
+                    <li><strong>serviceB</strong>：容器文件系统在副本的生命周期内保持数据，允许多个容器共享访问，适合副本内协作场景。</li>
+                    <li><strong>serviceC</strong>：Azure文件存储提供持久化、共享访问和细粒度权限控制，满足长期存储和多容器访问需求。</li>
+                </ul>
+                
+                <h3>实际应用场景：</h3>
+                <ul>
+                    <li><strong>临时卷</strong>：适用于需要隔离存储的单容器应用，如临时数据处理</li>
+                    <li><strong>容器文件系统</strong>：适用于副本内需要共享数据的批处理作业或计算任务</li>
+                    <li><strong>Azure文件存储</strong>：适用于需要持久化和共享访问的内容管理系统、用户上传文件等场景</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Container Apps 存储配置测试 | 拖拽功能实现</p>
+        </div>
+        
+        <div class="azure-animation"></div>
+    </div>
+
+    <script>
+        // 拖拽功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('active');
+                    e.dataTransfer.dropEffect = 'move';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('active');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('active');
+                    
+                    if (draggedItem) {
+                        // 移除原有占位符
+                        const placeholder = this.querySelector('.placeholder');
+                        if (placeholder) placeholder.remove();
+                        
+                        // 克隆拖拽项并放入放置区
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.opacity = '1';
+                        clonedItem.style.margin = '0';
+                        clonedItem.style.width = '100%';
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        
+                        this.innerHTML = '';
+                        this.appendChild(clonedItem);
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            dragItems.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.7';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                });
+                
+                zone.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        // 移除原有占位符
+                        const placeholder = this.querySelector('.placeholder');
+                        if (placeholder) placeholder.remove();
+                        
+                        // 克隆拖拽项并放入放置区
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.opacity = '1';
+                        clonedItem.style.margin = '0';
+                        clonedItem.style.width = '100%';
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        
+                        this.innerHTML = '';
+                        this.appendChild(clonedItem);
+                        
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                });
+            });
+            
+            // 查看答案按钮
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                const answerSection = document.getElementById('answerSection');
+                answerSection.style.display = 'block';
+                
+                // 设置正确答案
+                const dropZones = document.querySelectorAll('.drop-zone');
+                dropZones[0].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-hourglass-half"></i> Ephemeral volume</div>';
+                dropZones[1].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-hdd"></i> Container file system</div>';
+                dropZones[2].innerHTML = '<div class="drag-item" style="margin:0; width:100%; cursor:default;"><i class="fas fa-folder-open"></i> Azure Files storage</div>';
+                
+                // 禁用拖拽功能
+                dragItems.forEach(item => {
+                    item.draggable = false;
+                    item.style.opacity = '0.5';
+                    item.style.cursor = 'not-allowed';
+                });
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dockerfile Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .commands-box {
+            flex: 1;
+            min-height: 300px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .answer-box {
+            flex: 1;
+            min-height: 300px;
+            border: 2px dashed #666;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .command-item {
+            background-color: #e7f3fe;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #0078d4;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 233 DRAG DROP</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You plan to create a Docker image that runs an ASP.NET Core application named ContosoApp. You have a setup script named setupScript.ps1 and a series of application files including ContosoApp.dll.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>Call setupScript.ps1 when the container is built</li>
+            <li>Run ContosoApp.dll when the container starts</li>
+            <li>The Dockerfile must be created in the same folder where ContosoApp.dll and setupScript.ps1 are stored</li>
+        </ul>
+        
+        <p><strong>Task:</strong></p>
+        <p>Which five commands should you use to develop the solution? To answer, move the appropriate commands from the list of commands to the answer area and arrange them in the correct order.</p>
+        
+        <div class="drag-container">
+            <div class="commands-box" id="commandsBox">
+                <div class="command-item" draggable="true" data-command="FROM microsoft/aspnetcore:latest">FROM microsoft/aspnetcore:latest</div>
+                <div class="command-item" draggable="true" data-command="WORKDIR /apps/ContosoApp">WORKDIR /apps/ContosoApp</div>
+                <div class="command-item" draggable="true" data-command="COPY ["./dotnet", "ContosoApp.dll"]">COPY ["./dotnet", "ContosoApp.dll"]</div>
+                <div class="command-item" draggable="true" data-command="CMD ["./dotnet", "ContosoApp.dll"]">CMD ["./dotnet", "ContosoApp.dll"]</div>
+                <div class="command-item" draggable="true" data-command="RUN powershell ./setupScript.ps1">RUN powershell ./setupScript.ps1</div>
+            </div>
+            
+            <div class="answer-box" id="answerBox"></div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p>正确的Dockerfile命令顺序应该是：</p>
+            <ol>
+                <li class="correct">FROM microsoft/aspnetcore:latest</li>
+                <li class="correct">WORKDIR /apps/ContosoApp</li>
+                <li class="correct">COPY ["./dotnet", "ContosoApp.dll"]</li>
+                <li class="correct">RUN powershell ./setupScript.ps1</li>
+                <li class="correct">CMD ["./dotnet", "ContosoApp.dll"]</li>
+            </ol>
+            
+            <p><strong>Explanation:</strong></p>
+            <ol>
+                <li><strong>FROM microsoft/aspnetcore:latest</strong>：
+                    <ul>
+                        <li>必须作为第一条指令，指定基础镜像</li>
+                        <li>使用ASP.NET Core官方镜像确保运行时环境</li>
+                    </ul>
+                </li>
+                <li><strong>WORKDIR /apps/ContosoApp</strong>：
+                    <ul>
+                        <li>设置工作目录，后续命令都在此目录执行</li>
+                        <li>保持路径一致性，避免硬编码绝对路径</li>
+                    </ul>
+                </li>
+                <li><strong>COPY ["./dotnet", "ContosoApp.dll"]</strong>：
+                    <ul>
+                        <li>将应用程序文件复制到镜像中</li>
+                        <li>先复制文件再执行脚本，确保脚本可以操作这些文件</li>
+                    </ul>
+                </li>
+                <li><strong>RUN powershell ./setupScript.ps1</strong>：
+                    <ul>
+                        <li>在构建时执行安装脚本</li>
+                        <li>使用powershell命令运行PS1脚本</li>
+                    </ul>
+                </li>
+                <li><strong>CMD ["./dotnet", "ContosoApp.dll"]</strong>：
+                    <ul>
+                        <li>定义容器启动时执行的命令</li>
+                        <li>必须放在最后，作为容器的入口点</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>完整Dockerfile示例：</strong></p>
+            <pre>
+# 使用ASP.NET Core官方镜像作为基础
+FROM microsoft/aspnetcore:latest
+
+# 设置工作目录
+WORKDIR /apps/ContosoApp
+
+# 复制应用程序文件
+COPY ["./dotnet", "ContosoApp.dll"]
+
+# 运行安装脚本
+RUN powershell ./setupScript.ps1
+
+# 定义容器启动命令
+CMD ["./dotnet", "ContosoApp.dll"]
+            </pre>
+            
+            <p><strong>最佳实践：</strong></p>
+            <ul>
+                <li>将频繁变化的指令（如RUN）放在后面，利用Docker缓存</li>
+                <li>使用明确的文件路径，避免歧义</li>
+                <li>对于生产环境，考虑使用特定版本标签而非latest</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能实现（支持桌面和移动端）
+        document.addEventListener('DOMContentLoaded', function() {
+            const commands = document.querySelectorAll('.command-item');
+            const answerBox = document.getElementById('answerBox');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            commands.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            answerBox.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e1f5fe';
+            });
+            
+            answerBox.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            answerBox.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                if (draggedItem) {
+                    const clone = draggedItem.cloneNode(true);
+                    clone.style.opacity = '1';
+                    this.appendChild(clone);
+                }
+            });
+            
+            // 移动端触摸事件
+            commands.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.4';
+                    e.preventDefault();
+                }, {passive: false});
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            answerBox.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, {passive: false});
+            
+            answerBox.addEventListener('touchend', function(e) {
+                if (draggedItem) {
+                    const clone = draggedItem.cloneNode(true);
+                    clone.style.opacity = '1';
+                    this.appendChild(clone);
+                    draggedItem.style.opacity = '1';
+                    draggedItem = null;
+                }
+                e.preventDefault();
+            }, {passive: false});
+            
+            // 显示答案
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                document.getElementById('answerSection').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

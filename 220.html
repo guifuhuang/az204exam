@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Copy Solution</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 220</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop an app that allows users to upload photos and videos to Azure storage. The app uses a storage REST API call to upload the media to a blob storage account named Account1.</p>
+        
+        <p><strong>Current Setup:</strong></p>
+        <p>You have blob storage containers named Container1 and Container2.</p>
+        <p>Uploading of videos occurs on an irregular basis.</p>
+        
+        <p><strong>Requirement:</strong></p>
+        <p>You need to copy specific blobs from Container1 to Container2 when a new video is uploaded.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Copy blobs to Container2 by using the Put Blob operation of the Blob Service REST API</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Create an Event Grid topic that uses the Start-AzureStorageBlobCopy cmdlet</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Use AzCopy with the Snapshot switch to copy blobs to Container2</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Download the blob to a virtual machine and then upload the blob to Container2</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">B. Create an Event Grid topic that uses the Start-AzureStorageBlobCopy cmdlet</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确答案是B，原因如下：</p>
+            
+            <ol>
+                <li><strong>事件驱动架构最适合</strong>：题目要求在新视频上传时触发复制操作，这正是事件驱动架构的典型应用场景[6](@ref)[8](@ref)</li>
+                <li><strong>Event Grid自动检测新上传</strong>：Azure Event Grid可以监听Blob存储事件（如新Blob创建），无需轮询检查[6](@ref)[8](@ref)</li>
+                <li><strong>Start-AzureStorageBlobCopy高效可靠</strong>：该cmdlet专门用于Blob复制操作，支持异步处理且不占用本地资源[9](@ref)[10](@ref)</li>
+                <li><strong>其他选项的不足</strong>：
+                    <ul>
+                        <li>A选项(Put Blob)需要手动触发且效率低[1](@ref)</li>
+                        <li>C选项(AzCopy)需要手动执行，无法自动响应上传事件[11](@ref)</li>
+                        <li>D选项(使用VM)成本高且效率最低[10](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>实现方案示例：</strong></p>
+            <pre>
+1. 创建Event Grid订阅，监听Container1的Blob创建事件
+2. 配置事件处理器（如Azure Function）
+3. 在处理器中使用Start-AzureStorageBlobCopy命令将新Blob复制到Container2
+4. 可添加过滤条件只处理视频文件（如.mp4/.mov等）
+            </pre>
+            
+            <p><strong>最佳实践建议：</strong></p>
+            <ul>
+                <li>为视频文件添加特定元数据或使用特定命名规则，便于过滤识别[10](@ref)</li>
+                <li>考虑使用Azure Function作为事件处理器，实现更复杂的处理逻辑[6](@ref)[7](@ref)</li>
+                <li>对于大量视频文件，建议监控复制操作状态[9](@ref)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

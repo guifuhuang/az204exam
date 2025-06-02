@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 298 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+        .config-table th, .config-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .config-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .select-dropdown {
+            display: inline-block;
+            position: relative;
+            margin: 0 5px;
+        }
+        .select-dropdown select {
+            padding: 8px 12px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 200px;
+        }
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            color: #d4d4d4;
+            font-family: Consolas, monospace;
+            margin: 15px 0;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 298 HOTSPOT</h2>
+        <p>You are developing an ASP.NET Core app that includes feature flags which are managed by Azure App Configuration. You create an Azure App Configuration store named AppFeatureFlagStore as shown in the exhibit:</p>
+        
+        <h3>Configuration Store:</h3>
+        <table class="config-table">
+            <tr>
+                <th>Key</th>
+                <th>Label</th>
+                <th>State</th>
+                <th>Description</th>
+                <th>Last modified</th>
+            </tr>
+            <tr>
+                <td>Export</td>
+                <td>Export</td>
+                <td>On</td>
+                <td>Ability to export data.</td>
+                <td>6/11/2020, 9:13:26 AM</td>
+            </tr>
+        </table>
+        <p>You must be able to use the feature in the app by using the following markup:</p>
+        <h3>HTML Markup:</h3>
+        <div class="code-snippet">
+&lt;feature name="export"&gt;
+&lt;li class="export-item"&gt;
+  &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Export" href="/export/Index"&gt;
+    (Export data)
+  &lt;/a&gt;
+&lt;/li&gt;
+&lt;/feature&gt;
+        </div>
+        <p>You went to update the app to use the feature flag. Which values should you use? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.</p>
+        <h3>Feature Flag Configuration:</h3>
+        <table class="config-table">
+            <tr>
+                <td>Controller attribute</td>
+                <td>
+                    <span class="select-dropdown">
+                        <select id="controllerAttribute">
+                            <option value="">Select an option</option>
+                            <option value="FeatureGate">FeatureGate</option>
+                            <option value="Route">Route</option>
+                            <option value="ServiceFilter">ServiceFilter</option>
+                            <option value="TypeFilter">TypeFilter</option>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Startup method</td>
+                <td>
+                    <span class="select-dropdown">
+                        <select id="startupMethod">
+                            <option value="">Select an option</option>
+                            <option value="AddAzureAppConfiguration">AddAzureAppConfiguration</option>
+                            <option value="AddConeredentsWithViews">AddConeredentsWithViews</option>
+                            <option value="AddUserSecrets">AddUserSecrets</option>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>AppConfig endpoint setting</td>
+                <td>
+                    <span class="select-dropdown">
+                        <select id="appConfigEndpoint">
+                            <option value="">Select an option</option>
+                            <option value="https://appfeatureflagstore.azconfig.io">https://appfeatureflagstore.azconfig.io</option>
+                            <option value="https://appconfiguration.vaultazure.net">https://appconfiguration.vaultazure.net</option>
+                            <option value="https://export.azconfig.io">https://export.azconfig.io</option>
+                            <option value="https://export.vaultazure.net">https://export.vaultazure.net</option>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <table class="answer-table">
+            <tr>
+                <th>配置项</th>
+                <th>正确选项</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td>Controller attribute</td>
+                <td class="correct-answer">FeatureGate</td>
+                <td>FeatureGate是专门用于功能开关控制的特性</td>
+            </tr>
+            <tr>
+                <td>Startup method</td>
+                <td class="correct-answer">AddAzureAppConfiguration</td>
+                <td>需要添加Azure应用配置服务以使用功能标志</td>
+            </tr>
+            <tr>
+                <td>AppConfig endpoint setting</td>
+                <td class="correct-answer">https://appfeatureflagstore.azconfig.io</td>
+                <td>应使用配置存储的实际端点(azconfig.io域名)</td>
+            </tr>
+        </table>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>Controller attribute</strong>：选择"FeatureGate"因为这是ASP.NET Core中专门用于功能开关控制的特性，它会检查Azure App Configuration中的功能标志状态。</p>
+            <p>2. <strong>Startup method</strong>：选择"AddAzureAppConfiguration"因为这是将Azure应用配置服务集成到ASP.NET Core应用的标准方法。</p>
+            <p>3. <strong>AppConfig endpoint setting</strong>：选择"https://appfeatureflagstore.azconfig.io"因为这是Azure App Configuration的标准端点格式，且与题目中提到的配置存储名称一致。</p>
+            <p>这些配置组合确保：</p>
+            <ul>
+                <li>应用能够正确连接到Azure App Configuration</li>
+                <li>功能标志状态能够被正确读取和应用</li>
+                <li>HTML中的feature标签能够正常工作</li>
+                <li>Export功能可以根据配置动态开启或关闭</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

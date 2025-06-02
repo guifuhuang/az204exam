@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 304</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 3px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 304</h2>
+        <p>You are developing an Azure Function App that runs in an App Service Plan. The Azure Function is triggered by a Timer object.</p>
+        <p>You observe that the Azure Function does not reliably trigger when scheduled.</p>
+        <p>Which two actions should you perform?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options" value="A">
+                <label for="optionA">A. Verify that Always On is enabled.</label>
+            </div>
+            
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options" value="B">
+                <label for="optionB">B. Modify the trigger to use a SignalR trigger.</label>
+            </div>
+            
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options" value="C">
+                <label for="optionC">C. Ensure that the function has a retry configured.</label>
+            </div>
+            
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options" value="D">
+                <label for="optionD">D. Modify the trigger to use Consumption mode instead of the App Service plan.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p class="correct">A. Verify that Always On is enabled.</p>
+        <p class="correct">D. Modify the trigger to use Consumption mode instead of the App Service plan.</p>
+        
+        <h3>说明:</h3>
+        <p>1. 对于在App Service Plan中运行的Azure Functions，需要启用"Always On"设置以确保定时触发器可靠执行。因为App Service Plan在空闲时会卸载应用以节省资源，导致定时触发器可能无法按时触发。</p>
+        <p>2. 另一个解决方案是将函数改为使用消费计划(Consumption mode)，因为消费计划会自动管理函数的执行环境，确保定时触发器可靠触发。</p>
+        <p>选项B改为SignalR触发器不相关，选项C配置重试对于定时触发器不可靠的问题没有帮助。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

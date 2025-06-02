@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Web App Deployment Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown {
+            margin: 10px 0;
+        }
+        select {
+            padding: 5px;
+            margin-left: 5px;
+            min-width: 180px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .code-line {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .code-text {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 166 HOTSPOT</h2>
+        <p>A company is developing a Java web app. The web app code is hosted in a GitHub repository located at https://github.com/Contoso/webapp.</p>
+        <p>The web app must be evaluated before it is moved to production. You must deploy the initial code release to a deployment slot named staging.</p>
+        <p>You need to create the web app and deploy the code.</p>
+        <p>How should you complete the commands? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="code-block">
+<div class="code-line">
+    <span class="code-text"># Create resource group</span>
+</div>
+<div class="code-line">
+    <div class="dropdown">
+        <select id="command1">
+            <option value="">Select an option</option>
+            <option value="group">group</option>
+            <option value="webapp">webapp</option>
+            <option value="appservice plan">appservice plan</option>
+            <option value="webapp deployment slot">webapp deployment slot</option>
+            <option value="webapp deployment source">webapp deployment source</option>
+        </select>
+    </div>
+    <span class="code-text"> create --location centralus --name AppResourceGroup</span>
+</div>
+<div class="code-line">
+    <span class="code-text"># Create app service plan</span>
+</div>
+<div class="code-line">
+    <div class="dropdown">
+        <select id="command2">
+            <option value="">Select an option</option>
+            <option value="group">group</option>
+            <option value="webapp">webapp</option>
+            <option value="appservice plan">appservice plan</option>
+            <option value="webapp deployment slot">webapp deployment slot</option>
+            <option value="webapp deployment source">webapp deployment source</option>
+        </select>
+    </div>
+    <span class="code-text"> create --name ASP-AppResourceGroup --resource-group AppResourceGroup --sku S1</span>
+</div>
+<div class="code-line">
+    <span class="code-text"># Create web app</span>
+</div>
+<div class="code-line">
+    <div class="dropdown">
+        <select id="command3">
+            <option value="">Select an option</option>
+            <option value="group">group</option>
+            <option value="webapp">webapp</option>
+            <option value="appservice plan">appservice plan</option>
+            <option value="webapp deployment slot">webapp deployment slot</option>
+            <option value="webapp deployment source">webapp deployment source</option>
+        </select>
+    </div>
+    <span class="code-text"> create --name businesswebapp --resource-group AppResourceGroup --plan ASP-AppResourceGroup --runtime "JAVA:11-java11"</span>
+</div>
+<div class="code-line">
+    <span class="code-text"># Create deployment slot</span>
+</div>
+<div class="code-line">
+    <div class="dropdown">
+        <select id="command4">
+            <option value="">Select an option</option>
+            <option value="group">group</option>
+            <option value="webapp">webapp</option>
+            <option value="appservice plan">appservice plan</option>
+            <option value="webapp deployment slot">webapp deployment slot</option>
+            <option value="webapp deployment source">webapp deployment source</option>
+        </select>
+    </div>
+    <span class="code-text"> create --name businesswebapp --resource-group AppResourceGroup --slot staging</span>
+</div>
+<div class="code-line">
+    <span class="code-text"># Configure deployment source</span>
+</div>
+<div class="code-line">
+    <div class="dropdown">
+        <select id="command5">
+            <option value="">Select an option</option>
+            <option value="group">group</option>
+            <option value="webapp">webapp</option>
+            <option value="appservice plan">appservice plan</option>
+            <option value="webapp deployment slot">webapp deployment slot</option>
+            <option value="webapp deployment source">webapp deployment source</option>
+        </select>
+    </div>
+    <span class="code-text"> config --name businesswebapp --resource-group AppResourceGroup --slot staging --repo-url https://github.com/Contoso/webapp --branch master --manual-integration</span>
+</div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <ol>
+            <li><strong>Create resource group:</strong> group</li>
+            <li><strong>Create app service plan:</strong> appservice plan</li>
+            <li><strong>Create web app:</strong> webapp</li>
+            <li><strong>Create deployment slot:</strong> webapp deployment slot</li>
+            <li><strong>Configure deployment source:</strong> webapp deployment source</li>
+        </ol>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure CLI命令规范：</p>
+        <ol>
+            <li><strong>创建资源组</strong>：
+                <ul>
+                    <li>使用命令：<code>group create</code></li>
+                    <li>这是Azure CLI中创建资源组的命令前缀</li>
+                    <li>完整命令：<code>az group create</code></li>
+                </ul>
+            </li>
+            <li><strong>创建应用服务计划</strong>：
+                <ul>
+                    <li>使用命令：<code>appservice plan create</code></li>
+                    <li>这是创建应用服务计划的命令前缀</li>
+                    <li>完整命令：<code>az appservice plan create</code></li>
+                </ul>
+            </li>
+            <li><strong>创建Web应用</strong>：
+                <ul>
+                    <li>使用命令：<code>webapp create</code></li>
+                    <li>这是创建Web应用的命令前缀</li>
+                    <li>完整命令：<code>az webapp create</code></li>
+                    <li>指定Java 11运行时环境</li>
+                </ul>
+            </li>
+            <li><strong>创建部署槽</strong>：
+                <ul>
+                    <li>使用命令：<code>webapp deployment slot create</code></li>
+                    <li>这是创建部署槽的命令前缀</li>
+                    <li>完整命令：<code>az webapp deployment slot create</code></li>
+                </ul>
+            </li>
+            <li><strong>配置部署源</strong>：
+                <ul>
+                    <li>使用命令：<code>webapp deployment source config</code></li>
+                    <li>这是配置部署源的命令前缀</li>
+                    <li>完整命令：<code>az webapp deployment source config</code></li>
+                    <li>连接到GitHub仓库并指定master分支</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>完整工作流程说明：</p>
+        <ol>
+            <li>首先创建资源组作为资源容器</li>
+            <li>然后创建应用服务计划定义计算资源</li>
+            <li>接着创建Web应用并指定Java运行时</li>
+            <li>创建staging部署槽用于预生产测试</li>
+            <li>最后配置从GitHub仓库的代码部署</li>
+        </ol>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Set the correct answers in dropdowns
+            document.getElementById('command1').value = 'group';
+            document.getElementById('command2').value = 'appservice plan';
+            document.getElementById('command3').value = 'webapp';
+            document.getElementById('command4').value = 'webapp deployment slot';
+            document.getElementById('command5').value = 'webapp deployment source';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos DB Test Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .question-container {
+            margin-bottom: 20px;
+        }
+        .statement {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .statement-text {
+            flex: 1;
+        }
+        .options {
+            display: flex;
+            gap: 15px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 5px;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 279 HOTSPOT</h2>
+    <p>You have an Azure Web app that uses Cosmos DB as a data store. You create a CosmosDB container by running the following PowerShell script:</p>
+    
+    <pre>
+$resourceGroupName = "testResourceGroup"
+$accountName = "testCosmosAccount"
+$databaseName = "testDatabase"
+$containerName = "testContainer"
+$partitionKeyPath = "/EmployeeId"
+$autoscaleMaxThroughput = 5000
+New-AzCosmosDBSqlContainer
+-ResourceGroupName $resourceGroupName
+-AccountName $accountName
+-DatabaseName $databaseName
+-Name $containerName
+-PartitionKeyKind Hash
+-PartitionKeyPath $partitionKeyPath
+-AutoscaleMaxThroughput $autoscaleMaxThroughput
+    </pre>
+    
+    <p>You create the following queries that target the container:</p>
+    <pre>
+SELECT * FROM c WHERE c.EmployeeId > '12345'
+SELECT * FROM c WHERE c.UserID = '12345'
+    </pre>
+    
+    <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+
+    <div class="question-container">
+        <div class="statement">
+            <div class="statement-text">The minimum throughput for the container is 400 R/Us.</div>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" name="statement1" id="statement1-yes" value="yes">
+                    <label for="statement1-yes">Yes</label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="statement1" id="statement1-no" value="no">
+                    <label for="statement1-no">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="statement">
+            <div class="statement-text">The first query statement is an in-partition query.</div>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" name="statement2" id="statement2-yes" value="yes">
+                    <label for="statement2-yes">Yes</label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="statement2" id="statement2-no" value="no">
+                    <label for="statement2-no">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="statement">
+            <div class="statement-text">The second query statement is a cross-partition query.</div>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" name="statement3" id="statement3-yes" value="yes">
+                    <label for="statement3-yes">Yes</label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="statement3" id="statement3-no" value="no">
+                    <label for="statement3-no">No</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="showAnswer" class="button">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <div class="correct-answer">1. No</div>
+        <div class="explanation">容器的最小吞吐量不是400 RU/s。当使用自动缩放时，最小吞吐量是最大吞吐量的10%，所以5000 RU/s的最大吞吐量对应的最小吞吐量是500 RU/s。</div>
+        
+        <div class="correct-answer">2. No</div>
+        <div class="explanation">第一个查询不是分区内查询。虽然它使用了分区键(EmployeeId)，但使用了范围查询(>操作符)，这会导致跨分区查询。</div>
+        
+        <div class="correct-answer">3. Yes</div>
+        <div class="explanation">第二个查询是跨分区查询，因为它没有使用分区键(EmployeeId)进行过滤，而是使用了UserID字段。</div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

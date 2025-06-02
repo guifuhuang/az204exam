@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 289 DRAG DROP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .actions-area, .answer-area {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .action {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            cursor: move;
+            transition: transform 0.2s;
+        }
+        .action:hover {
+            transform: translateX(5px);
+        }
+        .drop-zone {
+            min-height: 50px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 4px;
+        }
+        .answer-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+        }
+        .check-answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .check-answer-btn:hover {
+            background: #0056b3;
+        }
+        .step-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2 style="color: red;">QUESTION NO: 289 DRAG DROP</h2>
+    <p>You provision virtual machines (VMs) as development environments.</p>
+    <p>One VM does not have host.</p>
+    <p>The VM is stuck in a Windows update process. You attach the OS disk for the affected VM to a recovery VM.</p>
+    <p>You need to correct the issue.</p>
+    <p>In which order should you perform the actions? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+    
+    <div class="container">
+        <div class="actions-area">
+            <h3>Available Actions</h3>
+            <div class="action" draggable="true" data-action="check-package">Check if the update package is placed in the correct directory</div>
+            <div class="action" draggable="true" data-action="verify-command">Verify that the command is entered correctly</div>
+            <div class="action" draggable="true" data-action="restart">Restart the application or computer</div>
+            <div class="action" draggable="true" data-action="reinstall">Reinstall the software after backing up data</div>
+        </div>
+
+        <div class="answer-area">
+            <h3>Solution Steps</h3>
+            <div class="step-number">Step 1:</div>
+            <div class="drop-zone" data-step="1"></div>
+            <div class="step-number">Step 2:</div>
+            <div class="drop-zone" data-step="2"></div>
+            <div class="step-number">Step 3:</div>
+            <div class="drop-zone" data-step="3"></div>
+            <div class="step-number">Step 4:</div>
+            <div class="drop-zone" data-step="4"></div>
+        </div>
+    </div>
+
+    <button class="check-answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <table class="answer-table">
+            <tr>
+                <th>Step</th>
+                <th>Correct Action</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Check if the update package is placed in the correct directory</td>
+                <td>First verify the update package location as this is the most common cause of update failures</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Verify that the command is entered correctly</td>
+                <td>Ensure the update command syntax is correct before proceeding</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Restart the application or computer</td>
+                <td>A restart can resolve temporary issues with the update process</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Reinstall the software after backing up data</td>
+                <td>As a last resort, reinstall the software after ensuring data safety</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const actions = document.querySelectorAll('.action');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // Drag start
+            actions.forEach(action => {
+                action.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.action);
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+                
+                action.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Drag over
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e9ecef';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#f8f9fa';
+                    
+                    const actionId = e.dataTransfer.getData('text/plain');
+                    const action = document.querySelector(`.action[data-action="${actionId}"]`);
+                    
+                    // Clear any existing content
+                    this.innerHTML = '';
+                    
+                    // Create a clone of the dragged item
+                    const clone = action.cloneNode(true);
+                    clone.style.opacity = '1';
+                    clone.style.cursor = 'default';
+                    clone.draggable = false;
+                    
+                    // Add remove button
+                    const removeBtn = document.createElement('span');
+                    removeBtn.textContent = ' ×';
+                    removeBtn.style.color = 'red';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.marginLeft = '10px';
+                    removeBtn.onclick = function() {
+                        this.parentElement.remove();
+                    };
+                    
+                    clone.appendChild(removeBtn);
+                    this.appendChild(clone);
+                });
+            });
+        });
+        
+        // Show answer
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

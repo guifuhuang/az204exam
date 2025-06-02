@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Website Deployment Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            border-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 154</h2>
+        <p>You develop a website. You plan to host the website in Azure. You expect the website to experience high traffic volumes after it is published. You must ensure that the website remains available and responsive while minimizing cost. You need to deploy the website. What should you do?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Deploy the website to an App Service that uses the Shared service tier. Configure the App Service plan to automatically scale when the CPU load is high.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. Deploy the website to a virtual machine. Configure the virtual machine to automatically scale when the CPU load is high.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="answer" value="C">
+            <label for="optionC">C. Deploy the website to an App Service that uses the Standard service tier. Configure the App Service plan to automatically scale when the CPU load is high.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="answer" value="D">
+            <label for="optionD">D. Deploy the website to a virtual machine. Configure a Scale Set to increase the virtual machine instance count when the CPU load is high.</label>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案: C</h3>
+        <p><strong>C. Deploy the website to an App Service that uses the Standard service tier. Configure the App Service plan to automatically scale when the CPU load is high.</strong></p>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure最佳实践：</p>
+        <ol>
+            <li><strong>App Service vs Virtual Machine</strong>：对于高流量网站，Azure App Service是更好的选择，因为它提供内置的自动扩展、负载均衡和高可用性功能，而虚拟机需要更多的手动配置和管理[2](@ref)[5](@ref)。</li>
+            <li><strong>服务层级选择</strong>：Shared服务层级不适合高流量场景，因为它有严格的资源限制且不支持自动扩展。Standard服务层级提供更好的性能和自动扩展能力，同时保持成本效益[5](@ref)[6](@ref)。</li>
+            <li><strong>自动扩展配置</strong>：在Standard服务层级上配置基于CPU负载的自动扩展可以确保网站在高流量时保持响应，同时在流量降低时自动缩减资源以节省成本[2](@ref)[5](@ref)。</li>
+            <li><strong>成本优化</strong>：相比虚拟机规模集（选项D），App Service的Standard层级提供了更好的性价比，因为它消除了管理基础设施的开销，同时提供类似的扩展能力[5](@ref)[6](@ref)。</li>
+        </ol>
+        
+        <p>其他选项分析：</p>
+        <ul>
+            <li><strong>选项A</strong>：Shared服务层级不支持自动扩展，不适合高流量场景</li>
+            <li><strong>选项B</strong>：单个虚拟机无法自动扩展，且管理成本高</li>
+            <li><strong>选项D</strong>：虽然虚拟机规模集支持扩展，但相比App Service需要更多管理且成本更高</li>
+        </ul>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Highlight the correct answer
+            document.querySelectorAll('.option').forEach(opt => {
+                if (opt.querySelector('input').value === 'C') {
+                    opt.classList.add('correct');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

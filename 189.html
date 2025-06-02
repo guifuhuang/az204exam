@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKS Cluster Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 189</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this question, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p>You are developing a solution that will be deployed to an Azure Kubernetes Service (AKS) cluster. The solution will include a custom VNet, Azure Container Registry images, and an Azure Storage account.</p>
+        
+        <p>The solution must allow dynamic creation and management of all Azure resources within the AKS cluster.</p>
+        
+        <p>You need to configure an AKS cluster for use with the Azure APIs.</p>
+        
+        <p><strong>Solution:</strong> Create an AKS cluster that supports network policy. Create and apply a network to allow traffic only from within a defined namespace.</p>
+        
+        <p>Does the solution meet the goal?</p>
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Yes</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. No</label>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answerSection" class="answer">
+        <h3>正确答案: B. No</h3>
+        
+        <h3>说明:</h3>
+        <p>该解决方案<strong>不符合</strong>题目要求的目标，原因如下：</p>
+        
+        <ol>
+            <li><strong>网络策略的功能不匹配</strong>：
+                <ul>
+                    <li>网络策略(Network Policy)仅用于控制Pod之间的网络流量，无法实现Azure资源的动态创建和管理[1](@ref)[6](@ref)</li>
+                    <li>题目要求的是让AKS集群能够动态创建和管理Azure资源（如Storage账户、VNet配置等），这属于资源管理权限范畴</li>
+                </ul>
+            </li>
+            
+            <li><strong>解决方案的错误方向</strong>：
+                <ul>
+                    <li>创建支持网络策略的AKS集群只能控制Pod间通信，与Azure API访问权限无关[8](@ref)</li>
+                    <li>限制命名空间内的流量是网络安全措施，不能提供Azure资源管理能力[3](@ref)</li>
+                </ul>
+            </li>
+            
+            <li><strong>正确的解决方案方向</strong>：
+                <ul>
+                    <li>应配置AKS集群的<strong>托管身份(Managed Identity)</strong>或<strong>服务主体(Service Principal)</strong>，授予适当的Azure RBAC权限[5](@ref)</li>
+                    <li>考虑使用<strong>Azure RBAC</strong>与<strong>Kubernetes RBAC</strong>集成，为集群配置足够的Azure资源操作权限[7](@ref)</li>
+                    <li>可能需要使用<strong>Azure Policy for AKS</strong>来管理资源创建规范，但这需要额外配置[4](@ref)</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>网络策略虽然能增强集群内部网络安全，但完全无法满足题目要求的动态资源管理需求[2](@ref)[8](@ref)。</p>
+    </div>
+    
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

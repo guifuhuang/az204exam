@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Management Caching Policy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .targets-box {
+            flex: 1;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .answer-box {
+            flex: 2;
+            min-height: 200px;
+        }
+        .target-item {
+            background-color: #e7f3fe;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #0078d4;
+        }
+        .policy-code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+        .drop-target {
+            min-height: 20px;
+            background-color: #f9f9f9;
+            margin: 5px 0;
+            padding: 5px;
+            border: 1px dashed #666;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 224 DRAG DROP</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>A web service provides customer summary information for e-commerce partners. The web service is implemented as an Azure Function app with an HTTP trigger. Access to the API is provided by an Azure API Management instance. The API Management instance is configured in consumption plan mode. All API calls are authenticated by using OAuth.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>API calls must be cached</li>
+            <li>Customers must not be able to view cached data for other customers</li>
+        </ul>
+        
+        <p><strong>Task:</strong></p>
+        <p>You need to configure API Management policies for caching. How should you complete the policy statement?</p>
+        
+        <div class="drag-container">
+            <div class="targets-box" id="targetsBox">
+                <div class="target-item" draggable="true" data-target="Expact">Expact</div>
+                <div class="target-item" draggable="true" data-target="Public">Public</div>
+                <div class="target-item" draggable="true" data-target="Private">Private</div>
+                <div class="target-item" draggable="true" data-target="Internal">Internal</div>
+                <div class="target-item" draggable="true" data-target="External">External</div>
+                <div class="target-item" draggable="true" data-target="Authorization">Authorization</div>
+            </div>
+            
+            <div class="answer-box">
+                <div class="policy-code">
+                    &lt;policies&gt;<br>
+                    &nbsp;&nbsp;&lt;inbound&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;base /&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;cache-lookup caching-type="<span class="drop-target" data-placeholder="caching-type"></span>" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;downstream-caching-type="<span class="drop-target" data-placeholder="downstream-caching-type"></span>"&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;vary-by-header&gt;<span class="drop-target" data-placeholder="vary-by-header"></span>&lt;/vary-by-header&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;/cache-lookup&gt;<br>
+                    &nbsp;&nbsp;&lt;/inbound&gt;<br>
+                    &lt;/policies&gt;
+                </div>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <div class="policy-code correct">
+                &lt;cache-lookup caching-type="<span class="correct">internal</span>"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;downstream-caching-type="<span class="correct">private</span>"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;vary-by-header&gt;<span class="correct">Authorization</span>&lt;/vary-by-header&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;vary-by-header&gt;Accept&lt;/vary-by-header&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;vary-by-header&gt;Accept-Charset&lt;/vary-by-header&gt;<br>
+                &lt;/cache-lookup&gt;
+            </div>
+            
+            <p><strong>Explanation:</strong></p>
+            <ol>
+                <li><strong>caching-type="internal"</strong>：
+                    <ul>
+                        <li>表示使用内置的API管理缓存[8](@ref)</li>
+                        <li>确保缓存响应不会泄露给其他客户[4](@ref)</li>
+                        <li>在消费计划模式下，这是推荐的缓存类型[12](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>downstream-caching-type="private"</strong>：
+                    <ul>
+                        <li>允许下游专用缓存[8](@ref)</li>
+                        <li>防止缓存数据被共享给其他用户[4](@ref)</li>
+                        <li>与OAuth认证配合使用时特别重要[6](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>&lt;vary-by-header&gt;Authorization&lt;/vary-by-header&gt;</strong>：
+                    <ul>
+                        <li>根据Authorization头区分不同用户的缓存[8](@ref)</li>
+                        <li>确保每个用户只能访问自己的缓存数据[10](@ref)</li>
+                        <li>当allow-private-response-caching为"true"时必须包含此头[8](@ref)</li>
+                        <li>防止缓存混淆攻击[6](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>配置说明：</strong></p>
+            <ul>
+                <li>此配置确保API响应被安全缓存，且不同用户只能访问自己的缓存数据[8](@ref)[12](@ref)</li>
+                <li>Accept和Accept-Charset头是大多数情况下应该包含的标准头[8](@ref)</li>
+                <li>内置缓存是易失性的，由同一API管理服务中同一区域的所有单元共享[8](@ref)[9](@ref)</li>
+            </ul>
+            
+            <p><strong>安全考虑：</strong></p>
+            <ul>
+                <li>永远不要缓存包含敏感数据的响应[6](@ref)</li>
+                <li>设置适当的缓存过期时间[9](@ref)</li>
+                <li>考虑使用<code>vary-by-query-parameter</code>进一步细分缓存[10](@ref)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能实现（支持桌面和移动端）
+        document.addEventListener('DOMContentLoaded', function() {
+            const targets = document.querySelectorAll('.target-item');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            targets.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e1f5fe';
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '';
+                    
+                    if (draggedItem) {
+                        this.innerHTML = draggedItem.getAttribute('data-target');
+                        this.setAttribute('data-value', draggedItem.getAttribute('data-target'));
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            targets.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.4';
+                    e.preventDefault();
+                }, {passive: false});
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                target.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        this.innerHTML = draggedItem.getAttribute('data-target');
+                        this.setAttribute('data-value', draggedItem.getAttribute('data-target'));
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                    e.preventDefault();
+                }, {passive: false});
+            });
+            
+            // 显示答案
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                document.getElementById('answerSection').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

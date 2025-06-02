@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB 变更馈送处理器错误处理</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        header {
+            background: #0067b8;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .question-container {
+            padding: 30px;
+            background: #e6f7ff;
+            border-bottom: 2px solid #cce6ff;
+        }
+        .question {
+            font-size: 19px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .requirements {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .requirements ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .requirements li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #0067b8;
+        }
+        .answer-area {
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .answer-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .answer-title {
+            font-size: 24px;
+            color: #0067b8;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #bbdefb;
+            font-weight: 600;
+        }
+        .feature-list {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .feature-item {
+            padding: 15px;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #0067b8;
+        }
+        .feature-select {
+            width: 100%;
+            background: white;
+            color: #333;
+            border: 2px solid #0067b8;
+            border-radius: 6px;
+            padding: 12px 15px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230067b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        .feature-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 103, 184, 0.3);
+        }
+        .controls {
+            padding: 25px;
+            text-align: center;
+            background: #e6f7ff;
+        }
+        .btn {
+            background: #0067b8;
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            font-size: 19px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 6px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 6px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            font-size: 15px;
+        }
+        .answer-section {
+            margin-top: 20px;
+        }
+        .answer-section h3 {
+            color: #0067b8;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .answer-row {
+            display: flex;
+            margin: 18px 0;
+            padding: 15px;
+            background: #f5f9ff;
+            border-radius: 8px;
+            align-items: flex-start;
+        }
+        .answer-label {
+            font-weight: bold;
+            min-width: 250px;
+            color: #0067b8;
+            font-size: 18px;
+        }
+        .azure-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.1;
+        }
+        .scenario {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ff9800;
+        }
+        .feature-name {
+            font-weight: bold;
+            color: #0067b8;
+            margin-bottom: 5px;
+        }
+        @media (max-width: 768px) {
+            .answer-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Cosmos DB 变更馈送处理器错误处理</h1>
+            <div class="subtitle">QUESTION NO: 367 HOTSPOT</div>
+            <div class="azure-icon">☁️</div>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您正在实现一个包含 Azure Cosmos DB、最新的 Azure Cosmos DB SDK 和 Azure Cosmos DB for NoSQL API 的 Azure 解决方案。</p>
+                <p>您还使用 Azure Functions 的 Azure Cosmos DB 触发器在新容器实例上实现了变更馈送处理器。</p>
+                
+                <div class="scenario">
+                    <p><strong>问题场景：</strong></p>
+                    <p>当读取一批文档中的一个文档时，该批文档持续失败。触发的函数会不断重试同一批文档，导致无法读取新的文档批次。</p>
+                </div>
+                
+                <div class="requirements">
+                    <p><strong>需求：</strong></p>
+                    <ul>
+                        <li>在跟踪失败文档批次的同时读取新的文档批次</li>
+                        <li>在变更馈送处理器中处理错误</li>
+                    </ul>
+                    <p>您需要实现变更馈送处理器以正确读取文档。</p>
+                    <p>应该实现哪些功能？请选择答案区域中的适当选项。</p>
+                    <p>注意：每个正确选项值1分。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <div class="answer-column">
+                <div class="answer-title">需求 (Requirement)</div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-name">读取新文档批次同时跟踪失败批次</div>
+                        <select class="feature-select" id="requirement1">
+                            <option value="">选择功能...</option>
+                            <option value="Lease container">Lease container</option>
+                            <option value="Change feed estimator">Change feed estimator</option>
+                            <option value="Lifecycle notifications">Lifecycle notifications</option>
+                            <option value="Dead-letter queue">Dead-letter queue</option>
+                        </select>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-name">在变更馈送处理器中处理错误</div>
+                        <select class="feature-select" id="requirement2">
+                            <option value="">选择功能...</option>
+                            <option value="Lease container">Lease container</option>
+                            <option value="Change feed estimator">Change feed estimator</option>
+                            <option value="Lifecycle notifications">Lifecycle notifications</option>
+                            <option value="Dead-letter queue">Dead-letter queue</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="answer-column">
+                <div class="answer-title">功能 (Feature)</div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-name">Lease container</div>
+                        <p>用于跟踪变更馈送处理进度的容器</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-name">Change feed estimator</div>
+                        <p>估算变更馈送处理器延迟的工具</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-name">Lifecycle notifications</div>
+                        <p>容器生命周期事件的通知机制</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-name">Dead-letter queue</div>
+                        <p>存储无法处理的消息或文档的队列</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">需求1：读取新文档批次同时跟踪失败批次</div>
+                            <div>Dead-letter queue</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">需求2：在变更馈送处理器中处理错误</div>
+                            <div>Dead-letter queue</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>问题分析：</h4>
+                    <p>当前系统的问题是：</p>
+                    <ul>
+                        <li>当一批文档中有一个文档处理失败时，整个批次会持续失败</li>
+                        <li>变更馈送处理器会不断重试同一批文档</li>
+                        <li>新批次的文档无法被处理，导致系统阻塞</li>
+                    </ul>
+                    
+                    <h4>死信队列 (Dead-letter queue) 解决方案：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">工作原理：</div>
+                            <div>
+                                <p>死信队列是一种错误处理机制，用于存储无法成功处理的消息或文档</p>
+                                <p>当变更馈送处理器遇到无法处理的文档时，会将其移至死信队列</p>
+                                <p>处理器会继续处理后续文档，而不会阻塞整个处理流程</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">如何满足需求：</div>
+                            <div>
+                                <ul>
+                                    <li><span class="highlight">读取新文档批次同时跟踪失败批次</span>：死信队列允许处理器继续处理新文档，同时将失败文档存储在单独队列中供后续分析</li>
+                                    <li><span class="highlight">在变更馈送处理器中处理错误</span>：死信队列是专门为错误处理设计的机制，可以捕获并隔离错误文档</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>为什么其他选项不合适？</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">Lease container：</div>
+                            <div>
+                                <p>用于跟踪变更馈送处理进度的容器</p>
+                                <p><span class="highlight">不解决错误处理问题</span>：租约容器仅用于记录处理位置，无法处理失败文档或防止阻塞</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">Change feed estimator：</div>
+                            <div>
+                                <p>用于估算变更馈送处理器延迟的工具</p>
+                                <p><span class="highlight">与错误处理无关</span>：仅提供监控信息，无法解决文档处理失败问题</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">Lifecycle notifications：</div>
+                            <div>
+                                <p>提供容器生命周期事件的通知</p>
+                                <p><span class="highlight">不适用于文档处理错误</span>：用于容器创建、删除等事件，与文档处理流程无关</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>死信队列实施步骤：</h4>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; font-family: 'Consolas', monospace;">
+                        // 在Azure Function中配置死信队列<br>
+                        [FunctionName("CosmosChangeFeed")]<br>
+                        public static async Task Run(<br>
+                        &nbsp;&nbsp;[CosmosDBTrigger(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;databaseName: "database",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;collectionName: "sourceContainer",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;ConnectionStringSetting = "CosmosDBConnection",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">LeaseCollectionName = "leases",</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">CreateLeaseCollectionIfNotExists = true,</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">DeadLetterContainerName = "deadletter"</span> // 死信队列容器<br>
+                        &nbsp;&nbsp;)]IReadOnlyList&lt;Document&gt; documents,<br>
+                        &nbsp;&nbsp;ILogger logger)<br>
+                        {<br>
+                        &nbsp;&nbsp;// 处理文档逻辑<br>
+                        &nbsp;&nbsp;// 当文档处理失败时，会自动移至死信队列<br>
+                        }
+                    </div>
+                    
+                    <h4>死信队列的优势：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">系统可靠性：</div>
+                            <div>防止单个失败文档阻塞整个处理流程</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">错误隔离：</div>
+                            <div>将问题文档隔离到专用容器，便于后续分析</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">处理连续性：</div>
+                            <div>确保变更馈送处理器可以持续处理新文档</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">简化调试：</div>
+                            <div>所有失败文档集中存储，便于排查问题原因</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Cosmos DB 变更馈送处理器错误处理测试 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

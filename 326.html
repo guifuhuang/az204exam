@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 326 DRAG DROP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+        .policy-options {
+            width: 150px;
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 2px dashed #b3d7ff;
+        }
+        .policy-option {
+            background: #e1f0ff;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            cursor: grab;
+            border: 1px solid #b3d7ff;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .policy-option:hover {
+            background: #cce5ff;
+        }
+        .requirements {
+            flex-grow: 1;
+            background: #fffaf0;
+            padding: 15px;
+            border-radius: 5px;
+            border: 2px dashed #ffd8b3;
+        }
+        .requirement {
+            background: #fff0e1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            min-height: 20px;
+            border: 1px solid #ffd8b3;
+            transition: all 0.3s;
+        }
+        .requirement.highlight {
+            background: #ffebcd;
+            border-color: #ffc266;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .drag-container {
+                flex-direction: column;
+            }
+            .policy-options {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 326 DRAG DROP</h2>
+        <p>You have an application that provides weather forecasting data to external partners. You use Azure API Management to publish APIs.</p>
+        <p>You must change the behavior of the API to meet the following requirements:</p>
+        <p>• Support alternative input parameters.</p>
+        <p>• Remove formatting text from responses.</p>
+        <p>• Provide additional context to back-end services.</p>
+        <p>Which types of policies should you implement? To answer, drag the policy types to the correct scenarios. Each policy type may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="drag-container">
+            <div class="policy-options" id="policyOptions">
+                <div class="policy-option" draggable="true" data-policy="inbound">inbound</div>
+                <div class="policy-option" draggable="true" data-policy="outbound">outbound</div>
+                <div class="policy-option" draggable="true" data-policy="backend">backend</div>
+            </div>
+            
+            <div class="requirements">
+                <div class="requirement" data-requirement="input-formats">Support alternative input parameters</div>
+                <div class="requirement" data-requirement="remove-formatting">Remove formatting text from responses</div>
+                <div class="requirement" data-requirement="add-context">Provide additional context to back-end services</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <div class="correct-answer">
+            <p>Support alternative input parameters → <strong>inbound</strong></p>
+            <p>Remove formatting text from responses → <strong>outbound</strong></p>
+            <p>Provide additional context to back-end services → <strong>backend</strong></p>
+        </div>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>策略类型与需求匹配</strong>：</p>
+            <table border="1">
+                <tr>
+                    <th>需求</th>
+                    <th>策略类型</th>
+                    <th>执行阶段</th>
+                </tr>
+                <tr>
+                    <td>支持多种输入参数</td>
+                    <td>inbound</td>
+                    <td>请求进入API网关时处理</td>
+                </tr>
+                <tr>
+                    <td>移除响应格式</td>
+                    <td>outbound</td>
+                    <td>响应返回客户端前处理</td>
+                </tr>
+                <tr>
+                    <td>提供后端上下文</td>
+                    <td>backend</td>
+                    <td>请求转发到后端服务前处理</td>
+                </tr>
+            </table>
+            
+            <p>2. <strong>策略执行流程</strong>：</p>
+            <pre>
+客户端请求 → [inbound策略] → 后端服务 → [backend策略] → 
+后端处理 → [outbound策略] → 客户端响应
+            </pre>
+            
+            <p>3. <strong>典型配置示例</strong>：</p>
+            <ul>
+                <li><strong>inbound策略</strong>：参数转换
+                    <pre>
+&lt;inbound&gt;
+    &lt;set-query-parameter name="location" exists-action="override"&gt;
+        &lt;value&gt;{{context.Request.OriginalUrl.Query.city}}&lt;/value&gt;
+    &lt;/set-query-parameter&gt;
+&lt;/inbound&gt;
+                    </pre>
+                </li>
+                <li><strong>outbound策略</strong>：响应格式化
+                    <pre>
+&lt;outbound&gt;
+    &lt;json-to-xml apply="always" consider-accept-header="false"/&gt;
+&lt;/outbound&gt;
+                    </pre>
+                </li>
+                <li><strong>backend策略</strong>：添加上下文
+                    <pre>
+&lt;backend&gt;
+    &lt;set-header name="X-Api-Version" exists-action="override"&gt;
+        &lt;value&gt;2.0&lt;/value&gt;
+    &lt;/set-header&gt;
+&lt;/backend&gt;
+                    </pre>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能增强实现
+        let draggedItem = null;
+
+        // 为所有可拖拽项添加事件监听
+        document.querySelectorAll('.policy-option').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                e.dataTransfer.setData('text/plain', this.dataset.policy);
+                this.classList.add('dragging');
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            });
+
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+                this.classList.remove('dragging');
+            });
+        });
+
+        // 为所有放置区域添加事件监听
+        document.querySelectorAll('.requirement').forEach(item => {
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            });
+
+            item.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            });
+
+            item.addEventListener('dragleave', function() {
+                this.classList.remove('highlight');
+            });
+
+            item.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                // 如果已有放置项，先移除
+                if (this.querySelector('.dropped-item')) {
+                    this.removeChild(this.querySelector('.dropped-item'));
+                }
+                
+                // 创建新的放置项
+                const policyDiv = document.createElement('div');
+                policyDiv.textContent = draggedItem.textContent;
+                policyDiv.className = 'dropped-item';
+                policyDiv.style.padding = '5px';
+                policyDiv.style.background = '#e1f0ff';
+                policyDiv.style.borderRadius = '3px';
+                policyDiv.style.marginTop = '5px';
+                policyDiv.style.textAlign = 'center';
+                
+                this.appendChild(policyDiv);
+                
+                // 重置拖拽项状态
+                draggedItem.style.opacity = '1';
+                draggedItem.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+
+        // 显示正确答案
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+            
+            // 清除现有放置项
+            document.querySelectorAll('.requirement').forEach(item => {
+                if (item.querySelector('.dropped-item')) {
+                    item.removeChild(item.querySelector('.dropped-item'));
+                }
+            });
+            
+            // 显示正确答案
+            const answers = {
+                'input-formats': 'inbound',
+                'remove-formatting': 'outbound',
+                'add-context': 'backend'
+            };
+            
+            Object.entries(answers).forEach(([key, value]) => {
+                const element = document.querySelector(`[data-requirement="${key}"]`);
+                const policyDiv = document.createElement('div');
+                policyDiv.textContent = value;
+                policyDiv.className = 'dropped-item';
+                policyDiv.style.padding = '5px';
+                policyDiv.style.background = '#d4edda';
+                policyDiv.style.borderRadius = '3px';
+                policyDiv.style.marginTop = '5px';
+                policyDiv.style.textAlign = 'center';
+                policyDiv.style.fontWeight = 'bold';
+                
+                element.appendChild(policyDiv);
+            });
+        }
+    </script>
+</body>
+</html>

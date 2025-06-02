@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Redis功能匹配测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .features-area, .requirements-area {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .feature {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            cursor: move;
+            transition: transform 0.2s;
+        }
+        .feature:hover {
+            transform: translateX(5px);
+        }
+        .requirement-item {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+        }
+        .drop-zone {
+            min-height: 50px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 4px;
+        }
+        .answer-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+        }
+        .check-answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+<h2>QUESTION NO: 287 DRAG DROP</h2>
+    <p>You develop and deploy an Azure App Service web app. The web app accesses data in an Azure SQL database.</p>
+    <p>You must update the web app to store frequently used data in a new Azure Cache for Redis Premium instance.</p>
+    <p>You need to implement the Azure Cache for Redis features.</p>
+    <p>Which feature should you implement? To answer, drag the appropriate feature to the correct requirements. Each feature may be used once, more than once, or not at all.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+    <div class="container">
+        <div class="features-area">
+            <h3>可用功能</h3>
+            <div class="feature" draggable="true" data-feature="sorted set">Sorted Set</div>
+            <div class="feature" draggable="true" data-feature="channel">Channel</div>
+            <div class="feature" draggable="true" data-feature="list">List</div>
+            <div class="feature" draggable="true" data-feature="set">Set</div>
+        </div>
+
+        <div class="requirements-area">
+            <h3>需求匹配</h3>
+            <div class="requirement-item">
+                <p>1. 创建存储相关项集合的数据结构</p>
+                <div class="drop-zone" data-target="collection"></div>
+            </div>
+            <div class="requirement-item">
+                <p>2. 创建最近访问缓存项的数据结构</p>
+                <div class="drop-zone" data-target="recent"></div>
+            </div>
+            <div class="requirement-item">
+                <p>3. 实现高性能发布/订阅机制</p>
+                <div class="drop-zone" data-target="pubsub"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="check-answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <table class="answer-table">
+            <tr>
+                <th>需求描述</th>
+                <th>正确答案</th>
+                <th>技术说明</th>
+            </tr>
+            <tr>
+                <td>存储相关项集合</td>
+                <td>Set</td>
+                <td>Redis Set自动保证元素唯一性，支持集合操作</td>
+            </tr>
+            <tr>
+                <td>最近访问缓存项</td>
+                <td>List</td>
+                <td>使用LPUSH/RPOP维护访问顺序，LTRIM控制长度</td>
+            </tr>
+            <tr>
+                <td>发布订阅机制</td>
+                <td>Channel</td>
+                <td>Redis通过Channel实现Pub/Sub消息模式</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // 拖拽功能实现
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.classList.contains('feature')) {
+                e.dataTransfer.setData('text/plain', e.target.dataset.feature);
+            }
+        });
+
+        document.addEventListener('dragover', function(e) {
+            if (e.target.classList.contains('drop-zone')) {
+                e.preventDefault();
+                e.target.style.backgroundColor = '#e9ecef';
+            }
+        });
+
+        document.addEventListener('dragleave', function(e) {
+            if (e.target.classList.contains('drop-zone')) {
+                e.target.style.backgroundColor = '#f8f9fa';
+            }
+        });
+
+        document.addEventListener('drop', function(e) {
+            if (e.target.classList.contains('drop-zone')) {
+                e.preventDefault();
+                const feature = e.dataTransfer.getData('text/plain');
+                e.target.innerHTML = `<div class="feature">${feature}</div>`;
+                e.target.style.backgroundColor = '#f8f9fa';
+            }
+        });
+
+        // 显示答案
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

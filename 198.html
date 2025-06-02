@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Restorability Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .restorability-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .restorability-table th, .restorability-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .restorability-table th {
+            background-color: #f0f7ff;
+        }
+        .dropdown {
+            padding: 5px;
+            margin: 0 5px;
+            min-width: 150px;
+        }
+        #answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 198 HOTSPOT</h2>
+        <p>You are developing an application that use an Azure blob named data to store application data.</p>
+        <p>The application creates blob snapshots to allow application state to be reverted to an earlier state.</p>
+        <p>The Azure storage account has soft deleted enabled.</p>
+        <p>The system performs the following operations in order:</p>
+        <ul>
+            <li>The blob is updated</li>
+            <li>Snapshot 1 is created</li>
+            <li>Snapshot 2 is created</li>
+            <li>Snapshot 1 is deleted</li>
+        </ul>
+        <p>A system error then deletes the data blob and all snapshots.</p>
+        <p>You need to determine which application states can be restored.</p>
+        <p>What is the restorability of the application data? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <table class="restorability-table">
+            <thead>
+                <tr>
+                    <th>Application State</th>
+                    <th>Restorability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Data blob</td>
+                    <td>
+                        <select id="dataBlob" class="dropdown">
+                            <option value="">Select...</option>
+                            <option value="Can be restored">Can be restored</option>
+                            <option value="Cannot be restored">Cannot be restored</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Snapshot 1</td>
+                    <td>
+                        <select id="snapshot1" class="dropdown">
+                            <option value="">Select...</option>
+                            <option value="Can be restored">Can be restored</option>
+                            <option value="Cannot be restored">Cannot be restored</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Snapshot 2</td>
+                    <td>
+                        <select id="snapshot2" class="dropdown">
+                            <option value="">Select...</option>
+                            <option value="Can be restored">Can be restored</option>
+                            <option value="Cannot be restored">Cannot be restored</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <table class="restorability-table">
+            <thead>
+                <tr>
+                    <th>Application State</th>
+                    <th>Restorability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Data blob</td>
+                    <td><strong>Can be restored</strong></td>
+                </tr>
+                <tr>
+                    <td>Snapshot 1</td>
+                    <td><strong>Cannot be restored</strong></td>
+                </tr>
+                <tr>
+                    <td>Snapshot 2</td>
+                    <td><strong>Can be restored</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>说明:</h3>
+        <p>在启用了软删除的Azure存储账户中，删除操作的行为如下：</p>
+        
+        <ol>
+            <li><strong>Data blob:</strong>
+                <ul>
+                    <li>可以被恢复（Can be restored）</li>
+                    <li>虽然被系统错误删除，但由于启用了软删除，主blob会被保留在软删除状态</li>
+                    <li>可以在软删除保留期内恢复</li>
+                </ul>
+            </li>
+            
+            <li><strong>Snapshot 1:</strong>
+                <ul>
+                    <li>无法恢复（Cannot be restored）</li>
+                    <li>在系统错误发生前已被显式删除</li>
+                    <li>当快照被显式删除时，它会被永久删除（即使启用了软删除）</li>
+                </ul>
+            </li>
+            
+            <li><strong>Snapshot 2:</strong>
+                <ul>
+                    <li>可以被恢复（Can be restored）</li>
+                    <li>虽然被系统错误删除，但因为它没有被显式删除</li>
+                    <li>快照会被软删除保留，可以在保留期内恢复</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p><strong>关键点:</strong></p>
+        <ul>
+            <li>软删除保护只适用于未显式删除的项目</li>
+            <li>显式删除的快照无法恢复</li>
+            <li>系统错误导致的删除会被软删除保护</li>
+            <li>主blob和未被显式删除的快照可以在软删除保留期内恢复</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 314</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 314</h2>
+        <p>You deploy an API to API Management.</p>
+        <p>Requirements:</p>
+        <ul>
+            <li>Secure all operations on the API by using a client certificate</li>
+            <li>Secure access to the backend service of the API by using client certificates</li>
+        </ul>
+        <p>Which two security features can you use?</p>
+    </div>
+
+    <div class="options-container">
+        <label class="option">
+            <input type="checkbox" name="securityFeature" value="AzureAD"> A. Azure AD token
+        </label>
+        <label class="option">
+            <input type="checkbox" name="securityFeature" value="SelfSigned"> B. Self-signed certificate
+        </label>
+        <label class="option">
+            <input type="checkbox" name="securityFeature" value="CA"> C. Certificate Authority (CA) certificate
+        </label>
+        <label class="option">
+            <input type="checkbox" name="securityFeature" value="3DES"> D. Triple DES (3DES) cipher
+        </label>
+        <label class="option">
+            <input type="checkbox" name="securityFeature" value="SubscriptionKey"> E. Subscription key
+        </label>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <p class="correct-answer">B. Self-signed certificate</p>
+        <p class="correct-answer">C. Certificate Authority (CA) certificate</p>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>自签名证书和CA证书的正确性</strong>：</p>
+            <ul>
+                <li>Azure API Management支持两种客户端证书验证方式：
+                    <ul>
+                        <li><strong>自签名证书</strong>：适用于测试环境或内部系统，需在API Management中禁用证书链验证[5](@ref)[9](@ref)</li>
+                        <li><strong>CA签发证书</strong>：生产环境推荐方案，需配置CRL检查策略确保证书有效性[3](@ref)</li>
+                    </ul>
+                </li>
+                <li>证书必须采用PFX格式，通过Azure门户或Key Vault管理[2](@ref)[5](@ref)</li>
+            </ul>
+            
+            <p>2. 实现方案：</p>
+            <ul>
+                <li><strong>上传证书</strong>：
+                    <ul>
+                        <li>导航至API Management实例 → 安全性 → 证书 → 添加[5](@ref)</li>
+                        <li>选择"自定义"上传PFX文件，或通过Key Vault引用证书[2](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>配置API后端</strong>：
+                    <ul>
+                        <li>在API设计选项卡 → 后端 → 网关凭据中选择客户端证书[9](@ref)</li>
+                        <li>使用策略编辑器添加authentication-certificate策略[4](@ref)</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p>3. 其他选项的限制：</p>
+            <ul>
+                <li><strong>A. Azure AD令牌</strong>：用于前端身份验证，不适用于后端服务认证[6](@ref)</li>
+                <li><strong>D. 3DES加密</strong>：传输层加密算法，与客户端证书认证无关[7](@ref)</li>
+                <li><strong>E. 订阅密钥</strong>：API访问控制机制，不能替代证书认证[6](@ref)</li>
+            </ul>
+            
+            <p>4. 关键配置示例：</p>
+            <pre>
+&lt;!-- CA证书验证策略 --&gt;
+&lt;authentication-certificate 
+    thumbprint="CA06F56B258B7A0D4F2B05470939478651151984" /&gt;
+
+&lt;!-- 自签名证书策略(需禁用链验证) --&gt;
+&lt;authentication-certificate 
+    certificate-id="my-selfsigned-cert" 
+    skip-certificate-chain-validation="true" /&gt;
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

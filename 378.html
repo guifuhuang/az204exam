@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Graph Azure AD 组查询测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d4, #50e6ff, #0078d4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #50e6ff;
+            text-shadow: 0 0 10px rgba(80, 230, 255, 0.5);
+        }
+        .question-no {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .requirements {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .requirements p {
+            margin-bottom: 15px;
+        }
+        .note {
+            color: #50e6ff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .graph-container {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .graph-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #1e3c72;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #50e6ff;
+        }
+        .graph-url {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 18px;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #4ec9b0;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .query-builder {
+            background: #252526;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        .query-part {
+            display: flex;
+            flex-direction: column;
+            min-width: 250px;
+        }
+        .query-label {
+            margin-bottom: 8px;
+            color: #9cdcfe;
+            font-size: 14px;
+            text-align: center;
+        }
+        .dropdown {
+            position: relative;
+            display: block;
+        }
+        .dropdown select {
+            background: #333;
+            color: white;
+            border: 2px solid #555;
+            padding: 12px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+        }
+        .dropdown select:hover {
+            border-color: #50e6ff;
+            background-color: #3a3a3a;
+        }
+        .dropdown select:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.3);
+        }
+        .answer-btn {
+            background: linear-gradient(90deg, #0078d4, #50e6ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.4);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.6);
+        }
+        .answer-btn:active {
+            transform: translateY(1px);
+        }
+        .answer-section {
+            background: rgba(30, 30, 46, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #444;
+        }
+        .answer-section h2 {
+            color: #50e6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .correct-answer {
+            font-size: 18px;
+            font-family: 'Consolas', monospace;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #50e6ff;
+            border-left: 4px solid #4ec9b0;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .explanation h3 {
+            color: #50e6ff;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: rgba(0, 120, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .graph-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #50e6ff, transparent);
+            animation: graphWave 3s infinite linear;
+        }
+        @keyframes graphWave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @media (max-width: 768px) {
+            .query-builder {
+                flex-direction: column;
+                align-items: center;
+            }
+            .query-part {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Microsoft Graph Azure AD 组查询测试</h1>
+            <div class="question-no">QUESTION NO: 378 HOTSPOT</div>
+        </div>
+        
+        <div class="requirements">
+            <p>您正在开发一个使用Microsoft Graph与Azure Active Directory (Azure AD)组交互的Web应用程序。</p>
+            <p>您构建了一个网页，用于显示所有类型不是"Unified"的Azure AD组。</p>
+            <p>您需要为页面构建Microsoft Graph查询。</p>
+            <p>如何完成查询？请在答案区域选择适当的选项。</p>
+            <p class="note">注意：每个正确选项得一分。</p>
+        </div>
+        
+        <div class="graph-container">
+            <div class="graph-title">Microsoft Graph 查询</div>
+            <div class="graph-url">https://graph.microsoft.com/v1.0/groups?{下拉框1}={下拉框2}&{下拉框3}</div>
+            
+            <div class="query-builder">
+                <div class="query-part">
+                    <div class="query-label">下拉框1</div>
+                    <div class="dropdown">
+                        <select id="dropdown1">
+                            <option value="">-- select --</option>
+                            <option value="filter">filter</option>
+                            <option value="search">search</option>
+                            <option value="contains">contains</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="query-part">
+                    <div class="query-label">下拉框2</div>
+                    <div class="dropdown">
+                        <select id="dropdown2">
+                            <option value="">-- select --</option>
+                            <option value="groupTypes/any(c:c ne 'Unified')">groupTypes/any(c:c ne 'Unified')</option>
+                            <option value="not groupTypes/contains('Unified')">not groupTypes/contains('Unified')</option>
+                            <option value="not groupTypes/any(c:c ne 'Unified')">not groupTypes/any(c:c ne 'Unified')</option>
+                            <option value="groupTypes/contains('Unified') eq false">groupTypes/contains('Unified') eq false</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="query-part">
+                    <div class="query-label">下拉框3</div>
+                    <div class="dropdown">
+                        <select id="dropdown3">
+                            <option value="">-- select --</option>
+                            <option value="$top=true">$top=true</option>
+                            <option value="$count=true">$count=true</option>
+                            <option value="$filter=nested">$filter=nested</option>
+                            <option value="$consistencylevel=eventual">$consistencylevel=eventual</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="showAnswer" class="answer-btn">查看答案</button>
+        
+        <div id="answerSection" class="answer-section">
+            <h2>正确答案及说明</h2>
+            
+            <div class="correct-answer">
+                https://graph.microsoft.com/v1.0/groups?<br>
+                <span class="highlight">filter=groupTypes/any(c:c ne 'Unified')</span>&<br>
+                <span class="highlight">$count=true</span>&<br>
+                <span class="highlight">$consistencylevel=eventual</span>
+            </div>
+            
+            <div class="explanation">
+                <h3>查询解析：</h3>
+                <p>此Microsoft Graph查询用于获取所有类型不是"Unified"的Azure AD组：</p>
+                
+                <ul>
+                    <li><span class="highlight">filter=groupTypes/any(c:c ne 'Unified')</span> - 筛选条件：
+                        <ul>
+                            <li><strong>filter</strong> - 指定查询筛选参数</li>
+                            <li><strong>groupTypes/any(c:c ne 'Unified')</strong> - 检查groupTypes集合中是否有任何元素不等于'Unified'</li>
+                            <li>正确筛选出非Unified类型的组</li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="highlight">$count=true</span> - 返回结果计数：
+                        <ul>
+                            <li>启用$count系统查询选项</li>
+                            <li>在响应中包含匹配项的总数</li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="highlight">$consistencylevel=eventual</span> - 一致性级别：
+                        <ul>
+                            <li>支持高级查询功能（如any()运算符）</li>
+                            <li>提供最终一致性而非强一致性</li>
+                            <li>对于大型目录查询是必需的</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>为什么其他选项不正确：</h3>
+                <ul>
+                    <li><strong>search/contains</strong> - 不适用于集合属性的高级筛选</li>
+                    <li><strong>not groupTypes/contains('Unified')</strong> - 语法无效，Microsoft Graph不支持这种否定形式</li>
+                    <li><strong>not groupTypes/any(c:c ne 'Unified')</strong> - 逻辑错误，会筛选出所有Unified组</li>
+                    <li><strong>groupTypes/contains('Unified') eq false</strong> - 语法无效，不能对contains函数使用eq比较</li>
+                    <li><strong>$top/$filter</strong> - 不适用于此场景的高级查询需求</li>
+                </ul>
+                
+                <h3>技术说明：</h3>
+                <p>在Microsoft Graph中：</p>
+                <ol>
+                    <li>Azure AD组的类型存储在<code>groupTypes</code>属性中，这是一个字符串集合</li>
+                    <li>"Unified"类型表示Microsoft 365组（以前称为统一组）</li>
+                    <li><code>any()</code>运算符用于检查集合中是否存在满足条件的元素</li>
+                    <li><code>ne</code>运算符表示"不等于"</li>
+                    <li>组合使用<code>$count=true</code>和<code>$consistencylevel=eventual</code>是执行此类高级查询的必要条件</li>
+                </ol>
+                
+                <h3>完整查询示例：</h3>
+                <p>https://graph.microsoft.com/v1.0/groups?<br>
+                   filter=groupTypes/any(c:c ne 'Unified')&<br>
+                   $count=true&<br>
+                   $consistencylevel=eventual</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Microsoft Graph 测试题 | Azure AD 组查询解决方案</p>
+        </div>
+        
+        <div class="graph-animation"></div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('dropdown1').value = 'filter';
+            document.getElementById('dropdown2').value = 'groupTypes/any(c:c ne \'Unified\')';
+            document.getElementById('dropdown3').value = '$consistencylevel=eventual';
+            
+            // 禁用下拉框
+            document.getElementById('dropdown1').disabled = true;
+            document.getElementById('dropdown2').disabled = true;
+            document.getElementById('dropdown3').disabled = true;
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

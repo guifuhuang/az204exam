@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Grid 配置测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+        }
+        .question {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .question p {
+            margin-bottom: 12px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 15px 0;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            background: #f0f7ff;
+            border-color: #0078d7;
+        }
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        .option label {
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .controls {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .answer-panel {
+            display: none;
+            padding: 25px;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+        }
+        .answer-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0078d7;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0078d7;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+        .explanation {
+            line-height: 1.7;
+        }
+        .explanation h3 {
+            color: #0078d7;
+            margin: 15px 0 10px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 10px 0;
+        }
+        .explanation li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Event Grid 配置测试</h1>
+            <p>QUESTION NO: 400</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p><em>注意：本题属于一系列问题中的一部分，这些问题都基于相同的场景。每个问题提供了一个独特的解决方案，可能满足也可能不满足所述目标。有些问题可能有多个正确解决方案，而有些可能没有正确解决方案。</em></p>
+                <p><em>在回答本部分的问题后，您将无法返回。因此，这些问题不会出现在复习屏幕上。</em></p>
+                
+                <p>您正在使用Azure Event Grid实现一个应用程序，以将近实时信息推送给客户。</p>
+                <p>您有以下要求：</p>
+                <ul>
+                    <li>必须向数千名客户发送包含数百种不同事件类型的事件</li>
+                    <li>事件在处理前必须按事件类型进行过滤</li>
+                    <li>必须使用Microsoft Entra ID处理身份验证和授权</li>
+                    <li>事件必须发布到单个端点</li>
+                </ul>
+                
+                <p>您需要实现Azure Event Grid。</p>
+                <p><strong>解决方案：</strong>将事件发布到自定义主题。为每个客户创建一个事件订阅。</p>
+                <p>这个解决方案是否满足目标？</p>
+            </div>
+            
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="optionA" name="answer" value="A">
+                    <label for="optionA">A. 是</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="optionB" name="answer" value="B">
+                    <label for="optionB">B. 否</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            
+            <div class="correct-answer">
+                <h3>正确答案：B. 否</h3>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析：</h3>
+                
+                <p>题目中的解决方案（为每个客户创建单独的事件订阅）无法满足所有要求，原因如下：</p>
+                
+                <h4>1. 扩展性问题</h4>
+                <ul>
+                    <li>为数千名客户创建单独的事件订阅会导致管理复杂性和性能问题</li>
+                    <li>每个事件订阅都需要单独配置和维护，这在客户数量庞大时不可行</li>
+                    <li>事件网格对每个主题的事件订阅数量有限制（默认为500个）</li>
+                </ul>
+                
+                <h4>2. 过滤要求未满足</h4>
+                <ul>
+                    <li>题目要求"事件在处理前必须按事件类型进行过滤"</li>
+                    <li>在自定义主题方案中，事件过滤需要在每个订阅中单独配置</li>
+                    <li>当有数百种事件类型时，为每个客户配置过滤规则极其复杂</li>
+                </ul>
+                
+                <h4>3. 身份验证要求</h4>
+                <ul>
+                    <li>题目要求使用Microsoft Entra ID处理身份验证和授权</li>
+                    <li>为每个客户创建单独订阅会增加身份验证配置的复杂性</li>
+                </ul>
+                
+                <h4>4. 正确的解决方案</h4>
+                <p>应该使用<span class="highlight">事件域（Event Domains）</span>：</p>
+                <ul>
+                    <li>事件域是管理大量主题和订阅的顶级资源</li>
+                    <li>允许通过单个端点处理所有事件</li>
+                    <li>支持基于租户（客户）自动分区事件</li>
+                    <li>提供集中管理身份验证和授权的能力</li>
+                    <li>支持按事件类型进行高效过滤</li>
+                </ul>
+                
+                <h4>架构对比</h4>
+                <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">要求</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">自定义主题方案</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">事件域方案</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">单个端点</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">❌ 每个订阅有单独端点</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">✅ 单个域端点</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">事件过滤</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">❌ 每个订阅单独配置</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">✅ 集中配置</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">大规模客户</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">❌ 扩展性差</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">✅ 专为大规模设计</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">身份验证</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">❌ 复杂</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">✅ 集成Microsoft Entra ID</td>
+                    </tr>
+                </table>
+                
+                <h4>总结</h4>
+                <p>自定义主题方案无法满足题目中的大规模事件分发、集中过滤和身份验证要求。事件域是处理此类场景的推荐解决方案。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure 认证测试题 | 基于真实考试场景设计</p>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

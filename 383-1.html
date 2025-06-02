@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management 配置测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f5ff;
+            border-color: #c2d6ff;
+        }
+        .option.selected {
+            background-color: #e1ebff;
+            border-color: #0078d4;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .explanation {
+            background-color: #f3f9ff;
+            border-left: 4px solid #0078d4;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .incorrect-answer {
+            color: #d83b01;
+        }
+        h1 {
+            color: #004578;
+            border-bottom: 2px solid #e1ebff;
+            padding-bottom: 10px;
+        }
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            background-color: #f8f9fc;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1>Azure API Management 配置测试题</h1>
+        
+        <div class="question-text">
+            <p><strong>问题:</strong> 您正在开发多个托管在Azure API Management (APIM)上的API。</p>
+            <p>API有以下要求：</p>
+            <ul>
+                <li>所有API都需要订阅密钥才能访问。</li>
+                <li>包含订阅者必须接受的条款和条件。</li>
+                <li>管理员必须审核并接受或拒绝订阅尝试。</li>
+                <li>限制多个同时订阅的数量。</li>
+            </ul>
+            <p>您需要实现这些API。应该怎么做？</p>
+        </div>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">A. 创建并发布一个产品。</div>
+            <div class="option" onclick="selectOption(this)">B. 配置并应用基于查询字符串的版本控制。</div>
+            <div class="option" onclick="selectOption(this)">C. 配置并应用基于标头的版本控制。</div>
+            <div class="option" onclick="selectOption(this)">D. 为所有API添加一个新修订版。将修订版设为当前版本并添加更改日志条目。</div>
+        </div>
+        
+        <button class="answer-button" onclick="showAnswer()">查看答案</button>
+        
+        <div class="explanation" id="explanation">
+            <h3>答案及解析</h3>
+            <p><span class="correct-answer">正确答案: A. 创建并发布一个产品。</span></p>
+            <p><strong>解析:</strong></p>
+            <ul>
+                <li><strong>创建并发布一个产品</strong>：产品是API的组合，可以设置订阅密钥、条款和条件、订阅审批等。这满足了所有API需要订阅密钥、包含条款和条件、管理员审核订阅尝试的要求。</li>
+                <li><strong>基于查询字符串的版本控制</strong>：这与版本控制相关，但不涉及订阅密钥、条款和条件、订阅审批等要求。</li>
+                <li><strong>基于标头的版本控制</strong>：这也与版本控制相关，但不涉及订阅密钥、条款和条件、订阅审批等要求。</li>
+                <li><strong>为新修订版添加更改日志条目</strong>：这与API版本控制和更改日志相关，但不涉及订阅密钥、条款和条件、订阅审批等要求。</li>
+            </ul>
+            <p>因此，创建并发布一个产品是最符合要求的解决方案。</p>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // 移除之前的选择
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 添加当前选择
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            const explanation = document.getElementById('explanation');
+            explanation.style.display = 'block';
+            
+            // 滚动到解释部分
+            explanation.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

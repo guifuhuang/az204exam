@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Batch Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fffacd;
+            padding: 10px;
+            border-left: 3px solid #ffeb3b;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 125</h2>
+        <div class="scenario">
+            <p>You are developing a software solution for an autonomous transportation system. The solution
+            uses large data sets and Azure Batch processing to simulate navigation sets for entire fleets of
+            vehicles.</p>
+            <p>You need to create compute nodes for the solution on Azure Batch.</p>
+            <p>What should you do?</p>
+        </div>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. In Python, implement the class: TaskAddParameter</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. In Python, implement the class: JobAddParameter</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. In the Azure portal, create a Batch account</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. In a .NET method, call the method: BatchClient.PoolOperations.CreateJob</label>
+            </div>
+        </div>
+        
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct-answer">D. In a .NET method, call the method: BatchClient.PoolOperations.CreateJob</span></p>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p>在Azure Batch中创建计算节点的正确流程是：</p>
+                <ol>
+                    <li><strong>创建计算节点池(Pool)</strong> - 指定节点数量、大小和操作系统</li>
+                    <li><strong>创建工作(Job)</strong> - 使用BatchClient.PoolOperations.CreateJob方法（选项D正确）</li>
+                    <li><strong>添加任务(Task)</strong> - 每个任务执行应用程序处理数据</li>
+                </ol>
+                
+                <div class="note">
+                    <p><strong>关键说明:</strong></p>
+                    <p>Batch作业(Job)是一个或多个任务的逻辑分组。作业包含任务共有的设置，如优先级和运行任务的池。应用程序使用BatchClient.JobOperations.CreateJob方法在池上创建作业。</p>
+                </div>
+                
+                <p><strong>各选项分析:</strong></p>
+                <ul>
+                    <li><strong>选项A</strong>：TaskAddParameter用于定义任务，不是创建计算节点</li>
+                    <li><strong>选项B</strong>：JobAddParameter是Python中的作业创建类，但题目明确要求使用.NET方法</li>
+                    <li><strong>选项C</strong>：创建Batch账户是前提条件，但不是直接创建计算节点</li>
+                    <li><strong>选项D</strong>：CreateJob方法用于在指定池上创建作业，是创建计算节点工作流的关键步骤</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || answerContainer.style.display === '') {
+                answerContainer.style.display = 'block';
+                // Set correct answer
+                document.getElementById('optionD').checked = true;
+            } else {
+                answerContainer.style.display = 'none';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

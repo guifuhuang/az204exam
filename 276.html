@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos DB Change Feed Processor Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .components-area, .answer-area {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .components-title, .answer-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .component {
+            background-color: #e6f2ff;
+            border: 1px solid #b3d1ff;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: move;
+            display: inline-block;
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #f2f2f2;
+        }
+        .drop-target {
+            min-height: 40px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .drop-target.highlight {
+            border-color: #0078d4;
+            background-color: #f0f7ff;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .component {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 276 DRAG DROP</h2>
+    <p>You develop an Azure solution that uses Cosmos DB.</p>
+    <p>The current Cosmos DB container must be replicated and must use a partition key that is optimized for queries.</p>
+    <p>You need to implement a change feed processor solution.</p>
+    <p>Which change feed processor components should you use? To answer, drag the appropriate components to the correct requirements. Each component may be used once, more than once, or not at all.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+
+    <div class="container">
+        <div class="components-area">
+            <div class="components-title">Components</div>
+            <div class="component" draggable="true" data-component="Host">Host</div>
+            <div class="component" draggable="true" data-component="Delegate">Delegate</div>
+            <div class="component" draggable="true" data-component="Lease container">Lease container</div>
+            <div class="component" draggable="true" data-component="Monitored container">Monitored container</div>
+        </div>
+
+        <div class="answer-area">
+            <div class="answer-title">Answer Area</div>
+            <table class="answer-table">
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Component</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Store the data from which the change feed is generated.</td>
+                        <td class="drop-target" data-requirement="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Coordinate processing of the change feed across multiple workers.</td>
+                        <td class="drop-target" data-requirement="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Use the change feed processor to listen for changes.</td>
+                        <td class="drop-target" data-requirement="3"></td>
+                    </tr>
+                    <tr>
+                        <td>Handle each batch of changes.</td>
+                        <td class="drop-target" data-requirement="4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <button id="showAnswer" class="button">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <table>
+            <tr>
+                <td class="correct-answer">Store the data from which the change feed is generated.</td>
+                <td class="correct-answer">Monitored container</td>
+            </tr>
+            <tr>
+                <td class="correct-answer">Coordinate processing of the change feed across multiple workers.</td>
+                <td class="correct-answer">Lease container</td>
+            </tr>
+            <tr>
+                <td class="correct-answer">Use the change feed processor to listen for changes.</td>
+                <td class="correct-answer">Host</td>
+            </tr>
+            <tr>
+                <td class="correct-answer">Handle each batch of changes.</td>
+                <td class="correct-answer">Delegate</td>
+            </tr>
+        </table>
+        
+        <h3>说明:</h3>
+        <p>Azure Cosmos DB 变更源处理器由以下主要组件组成：</p>
+        <ol>
+            <li><strong>Monitored container</strong>: 被监视的容器，存储生成变更源的数据。变更源从此容器读取。</li>
+            <li><strong>Lease container</strong>: 租赁容器，用于协调多个工作线程对变更源的处理，并存储状态信息。</li>
+            <li><strong>Host</strong>: 主机是使用变更源处理器监听变更的应用程序实例。</li>
+            <li><strong>Delegate</strong>: 委托是处理每批变更的代码，当变更发生时由处理器调用。</li>
+        </ol>
+        <p>这种架构允许您构建可扩展的事件驱动应用程序，能够高效处理Cosmos DB中的数据变更。</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const components = document.querySelectorAll('.component');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerDiv = document.getElementById('answer');
+            
+            // Store dragged component
+            let draggedItem = null;
+            
+            // Add event listeners for components
+            components.forEach(component => {
+                component.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                component.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Add event listeners for drop targets
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clonedComponent = draggedItem.cloneNode(true);
+                        clonedComponent.style.opacity = '1';
+                        clonedComponent.style.cursor = 'default';
+                        clonedComponent.draggable = false;
+                        this.appendChild(clonedComponent);
+                        
+                        // Store data attribute for answer checking
+                        this.setAttribute('data-answer', draggedItem.getAttribute('data-component'));
+                    }
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerDiv.style.display = 'block';
+                
+                // Highlight correct answers
+                const correctAnswers = {
+                    '1': 'Monitored container',
+                    '2': 'Lease container',
+                    '3': 'Host',
+                    '4': 'Delegate'
+                };
+                
+                dropTargets.forEach(target => {
+                    const requirement = target.getAttribute('data-requirement');
+                    const userAnswer = target.getAttribute('data-answer');
+                    const correctAnswer = correctAnswers[requirement];
+                    
+                    if (userAnswer === correctAnswer) {
+                        target.style.backgroundColor = '#e6ffe6'; // Light green for correct
+                    } else if (userAnswer) {
+                        target.style.backgroundColor = '#ffe6e6'; // Light red for incorrect
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

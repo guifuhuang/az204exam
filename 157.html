@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Custom Role Creation Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown {
+            margin: 10px 0;
+        }
+        select {
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 157 HOTSPOT</h2>
+        <p>Your company is migrating applications to Azure. The IT department must allow internal developers to communicate with Microsoft support.</p>
+        <p>The service agents of the IT department must only have view resources and create support ticket permissions to all subscriptions. A new custom role must be created by reusing a default role definition and changing the permissions.</p>
+        <p>You need to create the custom role.</p>
+        <p>To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Powershell command</td>
+            <td>
+                <div class="dropdown">
+                    <select id="powershell">
+                        <option value="">Select an option</option>
+                        <option value="1">Get-AzureRmRoleDefinition -Name Reader | ConvertTo-Json | Out-File C:\SupportRole.json</option>
+                        <option value="2">Get-AzureRmRoleDefinition -Name Operator | ConvertTo-Json | Out-File C:\SupportRole.json</option>
+                        <option value="3">Set-AzureRmRoleDefinition -Name Reader | Input-File C:\SupportRole.json</option>
+                        <option value="4">Set-AzureRmRoleDefinition -InputFile C:\SupportRole.json</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Actions section</td>
+            <td>
+                <div class="dropdown">
+                    <select id="actions">
+                        <option value="">Select an option</option>
+                        <option value="1">"*/read", "Microsoft.Support/*"</option>
+                        <option value="2">"*/read"</option>
+                        <option value="3">"*MicrosoftSupport/*"</optio  n>
+                        <option value="4">"/*"</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><strong>Powershell command:</strong> Set-AzureRmRoleDefinition -InputFile C:\SupportRole.json</p>
+        <p><strong>Actions section:</strong> "*/read", "Microsoft.Support/*"</p>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure RBAC最佳实践：</p>
+        <ol>
+            <li><strong>PowerShell命令选择</strong>：
+                <ul>
+                    <li>正确命令是<code>Set-AzureRmRoleDefinition -InputFile C:\SupportRole.json</code></li>
+                    <li>Set-AzureRmRoleDefinition用于更新现有的自定义角色定义[3](@ref)</li>
+                    <li>该命令需要包含角色ID和其他必需属性（DisplayName, Description, Actions, AssignableScope）的JSON文件作为输入[3](@ref)</li>
+                    <li>其他选项要么用于获取角色定义（Get），要么用于创建新角色（New），而不是更新现有角色</li>
+                </ul>
+            </li>
+            <li><strong>Actions部分配置</strong>：
+                <ul>
+                    <li>正确配置是<code>"*/read", "Microsoft.Support/*"</code></li>
+                    <li><code>"*/read"</code>提供对所有资源的查看权限（Reader角色的基本权限）[4](@ref)[5](@ref)</li>
+                    <li><code>"Microsoft.Support/*"</code>提供创建和管理支持票证的权限[3](@ref)</li>
+                    <li>通配符格式需要正确使用，<code>"*/read*"</code>或<code>"*Microsoft.Support/*"</code>格式不正确</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>完整的工作流程：</p>
+        <ol>
+            <li>从Reader角色开始：<code>Get-AzureRmRoleDefinition -Name Reader | ConvertTo-Json | Out-File C:\SupportRole.json</code></li>
+            <li>编辑JSON文件：
+                <ul>
+                    <li>修改DisplayName和Description</li>
+                    <li>在Actions部分添加<code>"Microsoft.Support/*"</code></li>
+                    <li>确保包含所有必需属性（Id, AssignableScopes等）</li>
+                </ul>
+            </li>
+            <li>更新角色定义：<code>Set-AzureRmRoleDefinition -InputFile C:\SupportRole.json</code></li>
+        </ol>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Set the correct answers in dropdowns
+            document.getElementById('powershell').value = '4';
+            document.getElementById('actions').value = '1';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus Filter Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .property-table, .subscription-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .property-table th, .property-table td,
+        .subscription-table th, .subscription-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .property-table th, .subscription-table th {
+            background-color: #e6f7ff;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        @media (min-width: 768px) {
+            .drag-drop-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        .filter-types, .answer-area {
+            width: 100%;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: white;
+            margin-bottom: 15px;
+        }
+        @media (min-width: 768px) {
+            .filter-types, .answer-area {
+                width: 48%;
+                min-height: 300px;
+                margin-bottom: 0;
+            }
+        }
+        .drag-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #ddd;
+            touch-action: none;
+            user-select: none;
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+        .answer-area .drag-item {
+            background-color: #dff0d8;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .correct-order {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .drag-hint {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .drag-hint {
+                display: none;
+            }
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #e6f7ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 132 DRAG DROP</h2>
+        <p>You are implementing an order processing system. A point of sale application publishes orders to topics in an Azure Service Bus queue. The label property for the topic includes the following data:</p>
+        
+        <table class="property-table">
+            <tr>
+                <th>Property</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>ShipLocation</td>
+                <td>the county/region where the order will be shipped</td>
+            </tr>
+            <tr>
+                <td>CorrelationId</td>
+                <td>a priority value for the order</td>
+            </tr>
+            <tr>
+                <td>Quantity</td>
+                <td>a user-defined field that stores the quantity of items in an order</td>
+            </tr>
+            <tr>
+                <td>AuditedAt</td>
+                <td>a user-defined field that records the date an order is audited</td>
+            </tr>
+        </table>
+        
+        <p>The system has the following requirements for subscriptions:</p>
+        
+        <table class="subscription-table">
+            <tr>
+                <th>Subscription type</th>
+                <th>Comments</th>
+            </tr>
+            <tr>
+                <td>FutureOrders</td>
+                <td>This subscription is reserved for future use and must not receive any orders</td>
+            </tr>
+            <tr>
+                <td>HighPriorityOrders</td>
+                <td>Handle all high priority orders and international orders</td>
+            </tr>
+            <tr>
+                <td>InternationalOrders</td>
+                <td>Handle all orders where the country/region is not United States</td>
+            </tr>
+            <tr>
+                <td>HighQuantityOrders</td>
+                <td>Handle only orders with quantities greater than 100</td>
+            </tr>
+            <tr>
+                <td>AllOrders</td>
+                <td>This subscription is used for auditing purposes. AllOrders has an Action defined to include the date and time that updates the AuditedAt property. AllOrders has an Action defined to include the date and time it was received by the subscription</td>
+            </tr>
+        </table>
+        
+        <p>You need to implement filtering and maximize throughput while evaluating filters. Which filter types should you implement? To answer, drag the appropriate filter types to the correct subscriptions. Each filter type may be used once, more than once, or not at all.</p>
+        
+        <span class="drag-hint">(Touch and hold to drag items)</span>
+        
+        <div class="drag-drop-container">
+            <div class="filter-types" id="filterTypes">
+                <div class="drag-item" data-id="SQLFilter">SQLFilter</div>
+                <div class="drag-item" data-id="CorrelationFilter">CorrelationFilter</div>
+                <div class="drag-item" data-id="NoFilter">No Filter</div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <table class="answer-table">
+                    <tr>
+                        <th>Subscription</th>
+                        <th>Filter type</th>
+                    </tr>
+                    <tr>
+                        <td>FutureOrders</td>
+                        <td class="drop-zone" data-sub="FutureOrders"></td>
+                    </tr>
+                    <tr>
+                        <td>HighPriorityOrders</td>
+                        <td class="drop-zone" data-sub="HighPriorityOrders"></td>
+                    </tr>
+                    <tr>
+                        <td>InternationalOrders</td>
+                        <td class="drop-zone" data-sub="InternationalOrders"></td>
+                    </tr>
+                    <tr>
+                        <td>HighQuantityOrders</td>
+                        <td class="drop-zone" data-sub="HighQuantityOrders"></td>
+                    </tr>
+                    <tr>
+                        <td>AllOrders</td>
+                        <td class="drop-zone" data-sub="AllOrders"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <button class="check-answer" id="checkAnswer">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <div class="correct-order">
+                <table class="answer-table">
+                    <tr>
+                        <th>Subscription</th>
+                        <th>Filter type</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td>FutureOrders</td>
+                        <td><span class="correct-answer">SQLFilter (False condition)</span></td>
+                        <td>需要确保不接收任何消息，使用SQLFilter并设置永远为假的条件</td>
+                    </tr>
+                    <tr>
+                        <td>HighPriorityOrders</td>
+                        <td><span class="correct-answer">CorrelationFilter</span></td>
+                        <td>处理高优先级和国际订单，适合使用相关过滤器检查CorrelationId和ShipLocation</td>
+                    </tr>
+                    <tr>
+                        <td>InternationalOrders</td>
+                        <td><span class="correct-answer">SQLFilter</span></td>
+                        <td>需要检查ShipLocation不等于"United States"，适合使用SQLFilter</td>
+                    </tr>
+                    <tr>
+                        <td>HighQuantityOrders</td>
+                        <td><span class="correct-answer">SQLFilter</span></td>
+                        <td>需要检查Quantity > 100，适合使用SQLFilter</td>
+                    </tr>
+                    <tr>
+                        <td>AllOrders</td>
+                        <td><span class="correct-answer">No Filter</span></td>
+                        <td>需要接收所有消息进行审计，因此不使用过滤器</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p><strong>Azure Service Bus 过滤器类型选择依据:</strong></p>
+                <ul>
+                    <li><strong>SQLFilter</strong> - 使用SQL-like语法进行复杂条件过滤，适合基于消息属性的条件判断（如Quantity > 100或ShipLocation != 'United States'）</li>
+                    <li><strong>CorrelationFilter</strong> - 基于相关ID进行高效匹配，适合处理特定优先级或分类的消息</li>
+                    <li><strong>No Filter</strong> - 当需要接收所有消息时使用，性能最佳但无过滤能力</li>
+                </ul>
+                
+                <p><strong>性能考虑:</strong></p>
+                <ul>
+                    <li>CorrelationFilter性能优于SQLFilter，应优先用于简单匹配场景</li>
+                    <li>SQLFilter虽然功能强大但性能较低，应仅用于需要复杂条件的场景</li>
+                    <li>False条件的SQLFilter可用于完全阻止消息传递</li>
+                </ul>
+                
+                <p><strong>各订阅过滤器选择理由:</strong></p>
+                <ol>
+                    <li><strong>FutureOrders</strong>: 需要阻止所有消息，使用SQLFilter并设置永远为假的条件（如1=0）</li>
+                    <li><strong>HighPriorityOrders</strong>: 需要同时匹配高优先级(CorrelationId)和国际订单(ShipLocation)，使用CorrelationFilter可以高效处理</li>
+                    <li><strong>InternationalOrders</strong>: 需要检查ShipLocation不等于"United States"，必须使用SQLFilter</li>
+                    <li><strong>HighQuantityOrders</strong>: 需要数值比较(Quantity > 100)，必须使用SQLFilter</li>
+                    <li><strong>AllOrders</strong>: 审计需要所有消息，不使用过滤器以获得最佳性能</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮功能
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || !answerContainer.style.display) {
+                answerContainer.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerContainer.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 移动端拖拽实现
+        let draggedItem = null;
+        let touchStartY = 0;
+        let originalParent = null;
+        let placeholder = document.createElement('div');
+        placeholder.className = 'drag-item placeholder';
+        placeholder.style.visibility = 'hidden';
+        
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.addEventListener('mousedown', startDrag);
+            item.addEventListener('touchstart', touchStart, { passive: false });
+        });
+        
+        function startDrag(e) {
+            if (e.button !== 0) return;
+            draggedItem = e.target;
+            originalParent = draggedItem.parentNode;
+            touchStartY = e.clientY;
+            
+            draggedItem.classList.add('dragging');
+            placeholder.style.height = draggedItem.offsetHeight + 'px';
+            originalParent.insertBefore(placeholder, draggedItem);
+            
+            const rect = draggedItem.getBoundingClientRect();
+            draggedItem.style.position = 'absolute';
+            draggedItem.style.left = rect.left + 'px';
+            draggedItem.style.top = rect.top + 'px';
+            draggedItem.style.width = rect.width + 'px';
+            
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+        }
+        
+        function touchStart(e) {
+            if (e.touches.length !== 1) return;
+            e.preventDefault();
+            draggedItem = e.target;
+            originalParent = draggedItem.parentNode;
+            touchStartY = e.touches[0].clientY;
+            
+            draggedItem.classList.add('dragging');
+            placeholder.style.height = draggedItem.offsetHeight + 'px';
+            originalParent.insertBefore(placeholder, draggedItem);
+            
+            const rect = draggedItem.getBoundingClientRect();
+            draggedItem.style.position = 'absolute';
+            draggedItem.style.left = rect.left + 'px';
+            draggedItem.style.top = rect.top + 'px';
+            draggedItem.style.width = rect.width + 'px';
+            
+            document.addEventListener('touchmove', touchMove, { passive: false });
+            document.addEventListener('touchend', touchEnd);
+        }
+        
+        function dragMove(e) {
+            if (!draggedItem) return;
+            draggedItem.style.left = (e.clientX - draggedItem.offsetWidth / 2) + 'px';
+            draggedItem.style.top = (e.clientY - draggedItem.offsetHeight / 2) + 'px';
+            
+            const dropZone = document.elementFromPoint(e.clientX, e.clientY);
+            handleDropZone(dropZone);
+        }
+        
+        function touchMove(e) {
+            if (!draggedItem || e.touches.length !== 1) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            draggedItem.style.left = (touch.clientX - draggedItem.offsetWidth / 2) + 'px';
+            draggedItem.style.top = (touch.clientY - draggedItem.offsetHeight / 2) + 'px';
+            
+            const dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
+            handleDropZone(dropZone);
+        }
+        
+        function handleDropZone(dropZone) {
+            if (!dropZone) return;
+            
+            // 检查是否是放置区域单元格
+            if (dropZone.classList.contains('drop-zone')) {
+                // 清除该放置区域已有的内容
+                while (dropZone.firstChild) {
+                    dropZone.removeChild(dropZone.firstChild);
+                }
+                
+                // 创建拖拽项的副本并放入放置区域
+                const clone = draggedItem.cloneNode(true);
+                clone.classList.remove('dragging');
+                clone.style.position = '';
+                clone.style.left = '';
+                clone.style.top = '';
+                clone.style.width = '';
+                dropZone.appendChild(clone);
+            }
+        }
+        
+        function dragEnd(e) {
+            if (!draggedItem) return;
+            const dropZone = document.elementFromPoint(e.clientX, e.clientY);
+            
+            if (dropZone && dropZone.classList.contains('drop-zone')) {
+                // 放置区域已处理，只需重置原始拖拽项
+            } else {
+                // 未放置到有效区域，恢复原始位置
+                originalParent.insertBefore(draggedItem, placeholder);
+            }
+            resetDrag();
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', dragEnd);
+        }
+        
+        function touchEnd(e) {
+            if (!draggedItem) return;
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            const dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if (dropZone && dropZone.classList.contains('drop-zone')) {
+                // 放置区域已处理，只需重置原始拖拽项
+            } else {
+                // 未放置到有效区域，恢复原始位置
+                originalParent.insertBefore(draggedItem, placeholder);
+            }
+            resetDrag();
+            document.removeEventListener('touchmove', touchMove);
+            document.removeEventListener('touchend', touchEnd);
+        }
+        
+        function resetDrag() {
+            if (!draggedItem) return;
+            draggedItem.classList.remove('dragging');
+            draggedItem.style.position = '';
+            draggedItem.style.left = '';
+            draggedItem.style.top = '';
+            draggedItem.style.width = '';
+            if (placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+            draggedItem = null;
+            originalParent = null;
+        }
+    </script>
+</body>
+</html>

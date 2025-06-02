@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Vault 配置测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7f9;
+        }
+        .question-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #0050C7;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        .option.selected {
+            background: #d1e7ff;
+            border-color: #86b7fe;
+        }
+        .option input {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            background: #0050C7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .check-answer:hover {
+            background: #003d9c;
+        }
+        .answer {
+            display: none;
+            background: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 4px;
+        }
+        .answer h3 {
+            color: #1890ff;
+            margin-top: 0;
+        }
+        .correct {
+            color: #52c41a;
+            font-weight: 600;
+        }
+        .explanation {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1>Azure Key Vault 配置测试题</h1>
+        
+        <div class="question">
+            You are creating an Azure key vault using PowerShell. Objects deleted from the key vault must be kept for a set period of 90 days.<br>
+            Which two of the following parameters must be used in conjunction to meet the requirement?
+        </div>
+        
+        <div class="options">
+            <label class="option">
+                <input type="checkbox" name="option" value="A"> 
+                A. EnabledForDeployment
+            </label>
+            <label class="option">
+                <input type="checkbox" name="option" value="B"> 
+                B. EnablePurgeProtection
+            </label>
+            <label class="option">
+                <input type="checkbox" name="option" value="C"> 
+                C. EnabledForTemplateDeployment
+            </label>
+            <label class="option">
+                <input type="checkbox" name="option" value="D"> 
+                D. EnableSoftDelete
+            </label>
+        </div>
+        
+        <div class="button-container">
+            <button class="check-answer" onclick="showAnswer()">查看答案</button>
+        </div>
+        
+        <div id="answer" class="answer">
+            <h3>正确答案</h3>
+            <p class="correct">B. EnablePurgeProtection 和 D. EnableSoftDelete</p>
+            
+            <div class="explanation">
+                <h4>解释说明：</h4>
+                <p>要满足题目要求（删除的对象必须保留90天），需要同时启用以下两个功能：</p>
+                
+                <p><strong>D. EnableSoftDelete（软删除）</strong>：</p>
+                <ul>
+                    <li>启用软删除后，删除的密钥保管库对象（密钥、机密、证书）会被保留90天（默认保留期）</li>
+                    <li>在此期间，可以恢复已删除的对象</li>
+                    <li>使用 PowerShell 参数：<code>-EnableSoftDelete $true</code></li>
+                </ul>
+                
+                <p><strong>B. EnablePurgeProtection（清除保护）</strong>：</p>
+                <ul>
+                    <li>防止在保留期内永久删除对象（即使有权限的用户也无法清除）</li>
+                    <li>确保对象完整保留90天，防止意外或恶意删除</li>
+                    <li>使用 PowerShell 参数：<code>-EnablePurgeProtection $true</code></li>
+                </ul>
+                
+                <p>其他选项说明：</p>
+                <ul>
+                    <li><strong>A. EnabledForDeployment</strong>：允许虚拟机从保管库检索证书</li>
+                    <li><strong>C. EnabledForTemplateDeployment</strong>：允许资源管理器模板从保管库检索机密</li>
+                </ul>
+                
+                <p class="note">注意：启用清除保护前必须先启用软删除，两者配合使用才能确保对象完整保留90天。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加选项选择效果
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const checkbox = this.querySelector('input');
+                checkbox.checked = !checkbox.checked;
+                this.classList.toggle('selected', checkbox.checked);
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Cosmos DB 索引策略测试</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .question { background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .options { margin: 15px 0; }
+        .option { margin: 10px 0; }
+        button { background: #0078d4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        .answer { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>测试题：Azure Cosmos DB 索引更新配置</h2>
+        <p>某组织部署了 Azure Cosmos DB，需要确保在创建、更新或删除项目时索引能实时更新。</p>
+        <p>应该采取什么措施？</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer">
+                <label for="optionA">A. 将 EnableScanInQuery 选项的值设置为 True</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer">
+                <label for="optionB">B. 将索引模式设置为 Consistent</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer">
+                <label for="optionC">C. 将索引模式设置为 Lazy</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer">
+                <label for="optionD">D. 将索引策略的 automatic 属性设置为 False</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>正确答案：B</h3>
+            <p><strong>解析说明：</strong></p>
+            <p>根据 Azure Cosmos DB 文档：</p>
+            <ul>
+                <li>索引模式（indexingMode）控制索引更新行为：</li>
+                <li><strong>Consistent 模式</strong>：索引会<strong>实时更新</strong>（在创建/更新/删除项目时同步更新索引），确保查询结果始终最新（文档示例：<code>"indexingMode":"Consistent"</code>）。</li>
+                <li>Lazy 模式：索引异步更新，可能导致延迟（不满足实时要求）。</li>
+                <li>将 automatic 设为 False 会禁用自动索引（导致索引完全不更新）。</li>
+                <li>EnableScanInQuery 与索引更新机制无关，它控制是否允许全表扫描。</li>
+            </ul>
+            <p>因此，<strong>B 选项</strong>是唯一能确保索引实时更新的正确配置。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

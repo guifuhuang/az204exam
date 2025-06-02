@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .statement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .statement-table th, .statement-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .statement-table th {
+            background-color: #f2f2f2;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 263 HOTSPOT</h1>
+    
+    <div class="question-container">
+        <p>You are developing an Azure-hosted e-commerce web application. The application will use Azure Cosmos DB to store sales orders. You are using the latest SDK to manage the sales orders in the database.</p>
+        <p>You create a new Azure Cosmos DB instance. You include a valid endpoint and valid authorization key to an appSettings.json file in the code project.</p>
+        <p>You are evaluating the following application code: (Line numbers are included for reference only.)</p>
+        <div class="code-container">
+using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Documents;
+using Microsoft.Extensions.Configuration;
+
+namespace SalesOrders
+{
+    public class SalesOrders
+    {
+        // ...
+
+        internal class ManageSalesOrders
+        {
+            private static async Task GenerateSalesOrders()
+            {
+                IConfiguration config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
+                string endpoint = config["EndPointUrl"];
+                string authKey = config["AuthorizationKey"];
+                using CosmosClient client = new CosmosClient(endpoint, authKey);
+                {
+                    database = await client.CreateDatabaseIfNotExistsAsync("SalesOrders");
+                    ContainerResponse containerResponse1 = await database.CreateContainerIfNotExistsAsync("Container1", "/AccountNumber");
+                    Container container1 = containerResponse1.Container;
+                    ContainerResponse containerResponse2 = await database.CreateContainerIfNotExistsAsync("Container2", "/AccountNumber");
+                    Container container2 = containerResponse2.Container;
+
+                    dynamic salesOrder1 = new
+                    {
+                        AccountNumber = "123456",
+                        // Other properties...
+                    };
+                    dynamic salesOrder2 = new
+                    {
+                        AccountNumber = "123456",
+                        // Other properties...
+                    };
+                    dynamic salesOrder3 = new
+                    {
+                        AccountNumber = "987654",
+                        // Other properties...
+                    };
+
+                    await container1.CreateItemAsync(salesOrder1, new PartitionKey(salesOrder1.AccountNumber));
+                    await container1.CreateItemAsync(salesOrder2, new PartitionKey(salesOrder2.AccountNumber));
+                    await container2.CreateItemAsync(salesOrder3, new PartitionKey(salesOrder3.AccountNumber));
+                }
+            }
+        }
+    }
+}
+        </div>
+        <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <table class="statement-table">
+        <thead>
+            <tr>
+                <th>Statements</th>
+                <th>Yes</th>
+                <th>No</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A database named SalesOrders is created. The database will include two containers.</td>
+                <td><input type="radio" name="statement1" value="yes"></td>
+                <td><input type="radio" name="statement1" value="no"></td>
+            </tr>
+            <tr>
+                <td>Container1 will contain two items.</td>
+                <td><input type="radio" name="statement2" value="yes"></td>
+                <td><input type="radio" name="statement2" value="no"></td>
+            </tr>
+            <tr>
+                <td>Container2 will contain one item.</td>
+                <td><input type="radio" name="statement3" value="yes"></td>
+                <td><input type="radio" name="statement3" value="no"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Answers:</strong></p>
+            <ol>
+                <li>Yes - Database with two containers</li>
+                <li>Yes - Container1 with two items</li>
+                <li>Yes - Container2 with one item</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>将创建一个名为SalesOrders的数据库，该数据库将包含两个容器。</strong></p>
+            <ul>
+                <li>答案: Yes</li>
+                <li>原因: 代码中明确调用了CreateDatabaseIfNotExistsAsync创建了SalesOrders数据库</li>
+                <li>然后创建了两个容器Container1和Container2</li>
+                <li>两个容器都使用/AccountNumber作为分区键</li>
+            </ul>
+            
+            <p>2. <strong>Container1将包含两个项目。</strong></p>
+            <ul>
+                <li>答案: Yes</li>
+                <li>原因: 代码中向Container1插入了两个销售订单(salesOrder1和salesOrder2)</li>
+                <li>两个订单的AccountNumber都是"123456"</li>
+                <li>使用相同的分区键(AccountNumber)将它们存储在同一个逻辑分区中</li>
+            </ul>
+            
+            <p>3. <strong>Container2将包含一个项目。</strong></p>
+            <ul>
+                <li>答案: Yes</li>
+                <li>原因: 代码中只向Container2插入了一个销售订单(salesOrder3)</li>
+                <li>该订单的AccountNumber是"987654"</li>
+                <li>使用不同的分区键(AccountNumber)存储在Container2中</li>
+            </ul>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>数据库创建: 使用CreateDatabaseIfNotExistsAsync确保数据库存在</li>
+                <li>容器创建: 两个容器都配置了相同的分区键路径/AccountNumber</li>
+                <li>数据插入: 
+                    <ul>
+                        <li>Container1: 两个文档(AccountNumber="123456")</li>
+                        <li>Container2: 一个文档(AccountNumber="987654")</li>
+                    </ul>
+                </li>
+                <li>分区策略: 使用AccountNumber作为分区键实现数据分布</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

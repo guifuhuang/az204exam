@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD Application Manifest Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .code-line {
+            margin-bottom: 10px;
+        }
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .dropdown {
+            margin: 0 10px;
+            padding: 5px;
+            border-radius: 4px;
+            min-width: 200px;
+            background-color: #3c3c3c;
+            color: #d4d4d4;
+            border: 1px solid #666;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 249 HOTSPOT</h1>
+    
+    <div class="question-container">
+        <p>You have a single page application (SPA) web application that manages information based on data returned by Microsoft Graph from another company's Azure Active Directory (Azure AD) instance.</p>
+        <p>Users must be able to authenticate and access Microsoft Graph by using their own company's Azure AD instance.</p>
+        <p>You need to configure the application manifest for the app registration.</p>
+        <p>How should you complete the manifest? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="code-container">
+        <div class="code-line">{</div>
+        <div class="code-line">    "oauth2AllowImplicitFlow": <select id="dropdown1" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="add">add</option>
+            <option value="false">false</option>
+            <option value="spa">spa</option>
+            <option value="true">true</option>
+        </select>,</div>
+        <div class="code-line">    "<select id="dropdown2" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="addIns">addIns</option>
+            <option value="orgRestrictions">orgRestrictions</option>
+            <option value="availableToOtherTenants">availableToOtherTenants</option>
+            <option value="requiredResourceAccess">requiredResourceAccess</option>
+        </select>": [{</div>
+        <div class="code-line">    "resourceAppId": "00000000-0000-0000-0000-000000000000",</div>
+        <div class="code-line">    "resourceAccess": [{</div>
+            <div class="code-line">    "id": "24a6cdd6-fabl-4aaf-0168-3cc8225e90d0",</div>
+            <div class="code-line">    "type": "Scope",</div>
+        <div class="code-line">}]}]</div>
+        <div class="code-line">    "signInAudience": "<select id="dropdown3" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="AzureADMyOrg">AzureADMyOrg</option>
+            <option value="AzureADMultipleOrgs">AzureADMultipleOrgs</option>
+            <option value="AzureADandPersonalMicrosoftAccount">AzureADandPersonalMicrosoftAccount</option>
+        </select>"</div>
+        <div class="code-line">}</div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Selections:</strong></p>
+            <ol>
+                <li>oauth2AllowImplicitFlow: true</li>
+                <li>requiredResourceAccess</li>
+                <li>signInAudience: AzureADMyOrg</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>oauth2AllowImplicitFlow: true</strong>：</p>
+            <ul>
+                <li>启用隐式授权流</li>
+                <li>允许SPA应用直接从授权端点获取令牌</li>
+                <li>这是单页应用(SPA)的常见认证模式</li>
+                <li>参考文档：<a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-implicit-grant-flow" target="_blank">Microsoft隐式授权流文档</a></li>
+            </ul>
+            
+            <p>2. <strong>requiredResourceAccess</strong>：</p>
+            <ul>
+                <li>指定应用需要访问的资源(Microsoft Graph)</li>
+                <li>包含resourceAppId和所需的权限范围(Scope)</li>
+                <li>resourceAppId "00000000-0000-0000-0000-000000000000"代表Microsoft Graph</li>
+            </ul>
+            
+            <p>3. <strong>signInAudience: AzureADMyOrg</strong>：</p>
+            <ul>
+                <li>只允许本组织的Azure AD用户登录</li>
+                <li>单租户场景</li>
+                <li>虽然题目提到"其他公司"，但实际配置应为AzureADMyOrg，因为应用是注册在"另一个公司"的Azure AD中</li>
+                <li>参考文档：<a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest" target="_blank">Microsoft应用清单参考</a></li>
+            </ul>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>隐式流适用于SPA应用，因为它们在浏览器中运行且无法安全存储客户端密钥</li>
+                <li>requiredResourceAccess配置确保应用有权访问Microsoft Graph API</li>
+                <li>AzureADMyOrg设置限制登录用户必须来自应用注册所在的Azure AD租户</li>
+                <li>resourceAccess中的type为Scope表示委托权限</li>
+            </ul>
+            
+            <p><strong>完整配置示例：</strong></p>
+            <pre>{
+  "oauth2AllowImplicitFlow": true,
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "00000003-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+          "type": "Scope"
+        }
+      ]
+    }
+  ],
+  "signInAudience": "AzureADMyOrg"
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 294 DRAG DROP - Azure SAS Types</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .sas-types-area, .requirements-area {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sas-type {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            cursor: move;
+            transition: transform 0.2s;
+            border: 1px solid #90caf9;
+        }
+        .sas-type:hover {
+            transform: translateX(5px);
+            background: #bbdefb;
+        }
+        .requirement-item {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+        .drop-zone {
+            min-height: 50px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 4px;
+        }
+        .answer-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+        }
+        .check-answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .check-answer-btn:hover {
+            background: #0056b3;
+        }
+        .area-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>QUESTION NO: 294 DRAG DROP</h2>
+        <p>An organization plans to deploy Azure storage services.</p>
+        <p>You need to configure shared access signature (SAS) for granting access to Azure Storage.</p>
+        <p>Which SAS types should you use? To answer, drag the appropriate SAS types to the correct requirements. Each SAS type may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="container">
+        <div class="sas-types-area">
+            <div class="area-title">SAS Types</div>
+            <div class="sas-type" draggable="true" data-type="account">Account-level</div>
+            <div class="sas-type" draggable="true" data-type="service">Service-level</div>
+            <div class="sas-type" draggable="true" data-type="user">User delegation</div>
+        </div>
+
+        <div class="requirements-area">
+            <div class="area-title">Requirements</div>
+            <div class="requirement-item">
+                <p>Delegate access to resources in one or more of the storage services</p>
+                <div class="drop-zone" data-requirement="multi-service"></div>
+            </div>
+            <div class="requirement-item">
+                <p>Delegate access to a resource in a single storage service</p>
+                <div class="drop-zone" data-requirement="single-service"></div>
+            </div>
+            <div class="requirement-item">
+                <p>Secure a resource by using Azure AD credentials</p>
+                <div class="drop-zone" data-requirement="aad"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="check-answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <table class="answer-table">
+            <tr>
+                <th>Requirement</th>
+                <th>Correct SAS Type</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td>Delegate access to resources in one or more of the storage services</td>
+                <td>Account-level</td>
+                <td>Account SAS provides access to resources in one or more storage services (blob, file, queue, table)</td>
+            </tr>
+            <tr>
+                <td>Delegate access to a resource in a single storage service</td>
+                <td>Service-level</td>
+                <td>Service SAS provides access to a resource in just one storage service (e.g., blob service only)</td>
+            </tr>
+            <tr>
+                <td>Secure a resource by using Azure AD credentials</td>
+                <td>User delegation</td>
+                <td>User delegation SAS uses Azure AD credentials and provides superior security with OAuth 2.0 tokens</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sasTypes = document.querySelectorAll('.sas-type');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // Drag start
+            sasTypes.forEach(type => {
+                type.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.type);
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+                
+                type.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Drag over
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e9ecef';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#f8f9fa';
+                    
+                    const typeId = e.dataTransfer.getData('text/plain');
+                    const type = document.querySelector(`.sas-type[data-type="${typeId}"]`);
+                    
+                    // Clear any existing content
+                    this.innerHTML = '';
+                    
+                    // Create a clone of the dragged item
+                    const clone = type.cloneNode(true);
+                    clone.style.opacity = '1';
+                    clone.style.cursor = 'default';
+                    clone.draggable = false;
+                    
+                    // Add remove button
+                    const removeBtn = document.createElement('span');
+                    removeBtn.textContent = ' ×';
+                    removeBtn.style.color = 'red';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.marginLeft = '10px';
+                    removeBtn.onclick = function() {
+                        this.parentElement.remove();
+                    };
+                    
+                    clone.appendChild(removeBtn);
+                    this.appendChild(clone);
+                });
+            });
+        });
+        
+        // Show answer
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

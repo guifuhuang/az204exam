@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Durable Function 监控应用测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #005A9E;
+            font-size: 24px;
+            margin-top: 0;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .requirements {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid #0078d4;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            position: relative;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .csharp-keyword {
+            color: #569cd6;
+        }
+        .csharp-class {
+            color: #4ec9b0;
+        }
+        .csharp-string {
+            color: #ce9178;
+        }
+        .csharp-comment {
+            color: #6a9955;
+        }
+        .dropdown {
+            display: inline-block;
+            position: relative;
+            margin: 0 5px;
+        }
+        .dropdown select {
+            background-color: #3c3c3c;
+            color: white;
+            border: 1px solid #6a6a6a;
+            padding: 5px 10px;
+            border-radius: 4px;
+            min-width: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dropdown select:hover {
+            background-color: #4a4a4a;
+            border-color: #0078d4;
+        }
+        .btn {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .answer h2 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #F44336;
+            font-weight: bold;
+            text-decoration: line-through;
+        }
+        .explanation {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            border-left: 3px solid #4CAF50;
+        }
+        .code-line {
+            display: block;
+            margin: 5px 0;
+        }
+        .highlight {
+            background-color: #3a3a3a;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1>QUESTION NO: 374 HOTSPOT</h1>
+        
+        <div class="requirements">
+            <p>You are developing an Azure Durable Function based application that processes a list of input values. The application is monitored using a console application that retrieves JSON data from an Azure Function diagnostic endpoint.</p>
+            <p>During processing a single instance of invalid input does not cause the function to fail. Invalid input must be available to the monitoring application.</p>
+            <p>You need to implement the Azure Durable Function and the monitoring console application.</p>
+            <p>How should you complete the code segments? To answer, select the appropriate options in the answer area.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <div class="warning">
+            <p><strong>注意：原始参考答案有误</strong></p>
+            <p>原始参考答案：</p>
+            <ul>
+                <li>下拉框1: await context.CallEntityAsync(input[errIndex], "error")</li>
+                <li>下拉框2: Failed</li>
+            </ul>
+            <p>此答案不符合题目要求"单个无效输入不会导致函数失败"，因为CallEntityAsync会使编排函数等待实体函数完成，如果实体函数失败，整个编排也会失败。</p>
+        </div>
+        
+        <div class="code-block">
+            <pre><span class="csharp-keyword">[FunctionName(</span><span class="csharp-string">"App"</span><span class="csharp-keyword">)]</span>
+<span class="csharp-keyword">public static async</span> <span class="csharp-class">Task&lt;List&lt;string&gt;&gt;</span> <span class="csharp-class">RunOrchestrator</span>(
+    <span class="csharp-keyword">[OrchestrationTrigger]</span> <span class="csharp-class">DurableOrchestrationContext</span> context){
+    <span class="csharp-class">EntityId</span>[] input = ...;
+    <span class="csharp-keyword">int</span> errIndex = ...;
+    <span class="dropdown"><select id="dropdown1">
+        <option value="">--select--</option>
+        <option value="SetOutput">context.SetOutput(input[errIndex])</option>
+        <option value="SetCustomStatus">context.SetCustomStatus(input[errIndex])</option>
+        <option value="SignalEntity">context.SignalEntity(input[errIndex], "error")</option>
+        <option value="CallEntityAsync">await context.CallEntityAsync(input[errIndex], "error")</option>
+    </select>;</span>
+    }
+    <span class="csharp-keyword">using</span> (<span class="csharp-keyword">var</span> client = <span class="csharp-keyword">new</span> <span class="csharp-class">HttpClient</span>())
+    {
+        <span class="csharp-keyword">while</span> (<span class="csharp-keyword">true</span>)
+        {
+            <span class="csharp-keyword">var</span> response = <span class="csharp-keyword">await</span> client.GetAsync(<span class="csharp-string">"..."</span>);
+            response.EnsureSuccessStatusCode();
+            <span class="csharp-keyword">var</span> json = <span class="csharp-keyword">await</span> response.Content.ReadAsStringAsync();
+            <span class="csharp-keyword">dynamic</span> result = <span class="csharp-class">JsonConvert</span>.DeserializeObject(json);
+            <span class="csharp-keyword">if</span> (result.runtimeStatus == <span class="csharp-string">"<span class="dropdown"><select id="dropdown2">
+                    <option value="">--select--</option>
+                    <option value="Failed">Failed</option>
+                    <option value="Awaited">Awaited</option>
+                    <option value="Listening">Listening</option>
+                    <option value="Completed">Completed</option>
+                </select></span>"</span>)
+            {
+                <span class="csharp-comment">// 获取输入信息</span>
+            }
+        }
+    }
+}</pre>
+        </div>
+        
+        <button id="showAnswer" class="btn">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h2>正确答案及说明</h2>
+            <p><strong>下拉框1:</strong> <span class="correct">context.SetCustomStatus(input[errIndex])</span></p>
+            <p><strong>下拉框2:</strong> <span class="correct">Completed</span></p>
+            
+            <div class="explanation">
+                <h3>说明:</h3>
+                <p>在Azure Durable Functions中，处理无效输入并使其对监控应用可用的正确方法是：</p>
+                
+                <h4>1. 使用SetCustomStatus记录无效输入</h4>
+                <p><code>SetCustomStatus</code>方法允许设置自定义状态对象，该对象会被持久化并可通过诊断端点访问：</p>
+                <ul>
+                    <li>单个无效输入不会导致整个函数失败（符合题目要求）</li>
+                    <li>自定义状态可以包含任意JSON数据，适合存储无效输入信息</li>
+                    <li>状态信息可通过诊断端点获取，供监控应用使用</li>
+                </ul>
+                
+                <h4>2. 监控应用检测"Completed"状态</h4>
+                <p>监控应用需要检查<code>runtimeStatus</code>为"Completed"的情况：</p>
+                <ul>
+                    <li>当检测到"Completed"状态时，监控应用应检查<code>customStatus</code>属性</li>
+                    <li><code>customStatus</code>包含编排函数设置的无效输入信息</li>
+                    <li>这样即使函数成功完成，无效输入信息仍然可用</li>
+                </ul>
+                
+                <h4>为什么原始参考答案不正确：</h4>
+                <ul>
+                    <li><span class="incorrect">await context.CallEntityAsync(input[errIndex], "error")</span>：
+                        <ul>
+                            <li>会使编排函数等待实体函数完成</li>
+                            <li>如果实体函数失败，整个编排也会失败</li>
+                            <li>违反题目要求"单个无效输入不会导致函数失败"</li>
+                        </ul>
+                    </li>
+                    <li><span class="incorrect">Failed</span>：
+                        <ul>
+                            <li>当函数失败时获取信息，但题目要求函数不应失败</li>
+                            <li>成功完成的函数不会触发"Failed"状态</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h4>为什么其他选项不正确：</h4>
+                <ul>
+                    <li><strong>SetOutput</strong>：用于设置函数最终输出，不适合存储中间状态</li>
+                    <li><strong>SignalEntity</strong>：用于与实体函数交互，不直接暴露给监控应用</li>
+                    <li><strong>Awaited/Listening</strong>：这些是中间状态，不表示处理完成</li>
+                </ul>
+                
+                <p>此解决方案满足题目要求：</p>
+                <ol>
+                    <li>单个无效输入不会导致整个函数失败</li>
+                    <li>无效输入信息通过<code>SetCustomStatus</code>存储</li>
+                    <li>监控应用在函数完成时通过<code>customStatus</code>获取无效输入</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('dropdown1').value = 'SetCustomStatus';
+            document.getElementById('dropdown2').value = 'Completed';
+            
+            // 禁用下拉框
+            document.getElementById('dropdown1').disabled = true;
+            document.getElementById('dropdown2').disabled = true;
+        });
+    </script>
+</body>
+</html>

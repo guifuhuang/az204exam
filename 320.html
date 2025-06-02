@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 320</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+        }
+        .correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 320</h2>
+        <p>Your company is designing an application named App1 that will use data from Azure SQL Database. App1 will be accessed over the internet by many users.</p>
+        <p>You need to recommend a solution for improving the performance of App1.</p>
+        <p>What should you include in the recommendation?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="q320" id="q320a">
+                <label for="q320a">A. Azure HPC cache</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q320" id="q320b">
+                <label for="q320b">B. ExpressRoute</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q320" id="q320c">
+                <label for="q320c">C. a CDN profile</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q320" id="q320d">
+                <label for="q320d">D. Azure Cache for Redis</label>
+            </div>
+        </div>
+        
+        <button id="viewAnswerBtn">查看答案</button>
+        
+        <div class="answer" id="answer">
+            <p><span class="correct">正确答案: D. Azure Cache for Redis</span></p>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>1. <strong>问题分析</strong>：题目描述的是一个需要从Azure SQL数据库获取数据并被大量用户访问的互联网应用，需要提升性能。</p>
+                
+                <p>2. <strong>为什么选择Redis</strong>：</p>
+                <ul>
+                    <li>Redis作为内存缓存可以显著减少数据库查询次数，提高响应速度</li>
+                    <li>支持缓存常用查询结果，减轻SQL数据库负载</li>
+                    <li>适用于高并发场景，能够处理大量用户请求</li>
+                    <li>提供数据分片和复制功能，可水平扩展</li>
+                </ul>
+                
+                <p>3. <strong>其他选项分析</strong>：</p>
+                <ul>
+                    <li>A. Azure HPC缓存：用于高性能计算工作负载，不适合常规Web应用</li>
+                    <li>B. ExpressRoute：提供专用网络连接，不直接提高应用性能</li>
+                    <li>C. CDN：适用于静态内容分发，不适用于动态数据库查询</li>
+                </ul>
+                
+                <p>4. <strong>典型应用场景</strong>：</p>
+                <p>Redis特别适合缓存数据库查询结果、会话状态和频繁访问的数据，能有效提升应用响应速度并降低数据库负载。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('viewAnswerBtn').addEventListener('click', function() {
+            const answer = document.getElementById('answer');
+            const button = document.getElementById('viewAnswerBtn');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                button.textContent = '查看答案';
+            } else {
+                answer.style.display = 'block';
+                button.textContent = '隐藏答案';
+            }
+        });
+    </script>
+</body>
+</html>

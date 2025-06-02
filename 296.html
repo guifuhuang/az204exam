@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Question 296</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 296</h2>
+        <p>You are developing a web application that uses Azure Cache for Redis. You anticipate that the cache will frequently fill and that you will need to evict keys.</p>
+        <p>You must configure Azure Cache for Redis based on the following predicted usage pattern: A small subset of elements will be accessed much more often than the rest.</p>
+        <p>You need to configure the Azure Cache for Redis to optimize performance for the predicted usage pattern.</p>
+        <p>Which two eviction policies will achieve the goal?</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="optionA">
+                <label for="optionA">A. noeviction</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="optionB">
+                <label for="optionB">B. allkeys-lru</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="optionC">
+                <label for="optionC">C. volatile-lru</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="optionD">
+                <label for="optionD">D. allkeys-random</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="optionE">
+                <label for="optionE">E. volatile-ttl</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionF" name="optionF">
+                <label for="optionF">F. volatile-random</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><span class="correct">正确答案: B, C</span></p>
+            <p><strong>说明:</strong></p>
+            <p>根据题目描述，缓存使用模式的特点是：少量元素会被频繁访问，而其他元素访问较少。为了优化这种模式下的性能，应该选择以下两种驱逐策略：</p>
+            <ul>
+                <li><strong>B. allkeys-lru</strong> - 在所有键中淘汰最近最少使用的键，这可以确保频繁访问的键保留在缓存中</li>
+                <li><strong>C. volatile-lru</strong> - 在设置了过期时间的键中淘汰最近最少使用的键，同样可以保留频繁访问的键</li>
+            </ul>
+            <p>其他选项分析：</p>
+            <ul>
+                <li>A. noeviction - 不淘汰任何键，会导致缓存填满后写入操作失败</li>
+                <li>D. allkeys-random - 随机淘汰键，无法保证保留频繁访问的键</li>
+                <li>E. volatile-ttl - 淘汰即将过期的键，与访问频率无关</li>
+                <li>F. volatile-random - 随机淘汰设置了过期时间的键，无法保证保留频繁访问的键</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            var answer = document.getElementById("answer");
+            if (answer.style.display === "none") {
+                answer.style.display = "block";
+            } else {
+                answer.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

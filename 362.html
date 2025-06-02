@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Durable Functions 测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0078d4, #005a9e);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .question-container {
+            padding: 30px;
+        }
+        
+        .question {
+            background-color: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .question p {
+            font-size: 18px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .option {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #e3f2fd;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: #bbdefb;
+            border-color: #0078d4;
+            box-shadow: 0 4px 8px rgba(0, 120, 212, 0.2);
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #0078d4, #005a9e);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 90, 158, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 90, 158, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .explanation {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .correct {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Durable Functions 测试题</h1>
+            <p>根据文档内容选择正确答案</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p><strong>问题：</strong> 你正在开发用于管理车辆贷款的 Azure Durable Functions。贷款流程包括多个必须按指定顺序运行的操作。其中一个操作是客户信用检查流程，可能需要多天才能完成。你需要为贷款流程实施 Azure Durable Functions。应该使用哪种 Azure Durable Functions 类型？</p>
+            </div>
+            
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'A')">
+                    <input type="radio" name="durable-option" id="optionA" value="A">
+                    <label for="optionA">A. orchestrator</label>
+                </div>
+                
+                <div class="option" onclick="selectOption(this, 'B')">
+                    <input type="radio" name="durable-option" id="optionB" value="B">
+                    <label for="optionB">B. client</label>
+                </div>
+                
+                <div class="option" onclick="selectOption(this, 'C')">
+                    <input type="radio" name="durable-option" id="optionC" value="C">
+                    <label for="optionC">C. activity</label>
+                </div>
+                
+                <div class="option" onclick="selectOption(this, 'D')">
+                    <input type="radio" name="durable-option" id="optionD" value="D">
+                    <label for="optionD">D. entity</label>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button class="btn" onclick="showAnswer()">查看答案</button>
+            </div>
+            
+            <div class="answer" id="answerSection">
+                <h3>答案与解析</h3>
+                <div class="correct">正确答案：A. orchestrator</div>
+                <div class="explanation">
+                    <p><strong>解析：</strong></p>
+                    <p>根据文档内容：</p>
+                    <ul>
+                        <li>Durable Functions 的 orchestrator 函数专门用于协调多个活动函数的执行顺序</li>
+                        <li>文档明确说明 orchestrator 函数适用于"构建无服务器工作流"和"创建长时间运行的无服务器工作流"</li>
+                        <li>贷款流程需要按指定顺序运行多个操作（包括可能耗时多天的信用检查），这符合 orchestrator 函数的应用场景</li>
+                        <li>orchestrator 函数可以管理长时间运行的流程状态、检查点和重启，而开发者只需关注业务逻辑</li>
+                        <li>其他选项分析：
+                            <ul>
+                                <li>B. client：用于启动业务流程，但不管理流程本身</li>
+                                <li>C. activity：执行单个任务，但不协调多个任务的顺序</li>
+                                <li>D. entity：用于管理特定状态，不适合协调工作流</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>因此，对于需要按顺序执行多个步骤（包括长时间运行任务）的贷款流程，应该使用 orchestrator 函数。</p>
+                </div>
+            </div>
+            
+            <div class="feedback">
+                <p>内容基于提供的 Azure Functions 文档</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element, value) {
+            // 移除所有选项的选中状态
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 添加当前选项的选中状态
+            element.classList.add('selected');
+            
+            // 设置选中的值
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelector(`input[value="${value}"]`).checked = true;
+        }
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

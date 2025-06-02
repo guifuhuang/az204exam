@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Scaling Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .scale-rule {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-group label {
+            width: 200px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            min-width: 250px;
+        }
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 165 HOTSPOT</h2>
+        <p>You are developing a back-end Azure App Service that scales based on the number of messages contained in a Service Bus queue.</p>
+        <p>A rule already exists to scale up the App Service when the average queue length of unprocessed and valid queue messages is greater than 1000.</p>
+        <p>You need to add a new rule that will continuously scale down the App Service as long as the scale up condition is not met.</p>
+        <p>How should you configure the Scale rule? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="scale-rule">
+        <label><strong>【Scale rule】</strong></label>
+        <div class="form-group">
+            <label class="required">Metrics source</label>
+            <select id="metricsSource">
+                <option value="">Select an option</option>
+                <option value="Storage queue">Storage queue</option>
+                <option value="Service Bus queue">Service Bus queue</option>
+                <option value="Current resource">Current resource</option>
+                <option value="Storage queue (classic)">Storage queue (classic)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="required">Resource type</label>
+
+            <select id="resourceType">
+                <option value="Service Bus Namespaces" selected>Service Bus Namespaces</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="required">Resource</label>
+            <select id="resource">
+                <option value="MessageQueue1103" selected>MessageQueue1103</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="required">Queues</label>
+            <select id="queues">
+                <option value="itemqueue" selected>itemqueue</option>
+            </select>
+        </div>
+            <label><strong>【Criteria】</strong></label></br>
+        <div class="form-group">
+            <label class="required">Metric name</label>
+            <select id="metricName">
+                <option value="">Select an option</option>
+                <option value="Message Count">Message Count</option>
+                <option value="Active Message Count">Active Message Count</option>
+            </select>
+        </div></br>
+            <label>1 minute time again</label>
+        <div class="form-group">
+            <label class="required">Time grain statistic</label>
+            <select id="timeGrain">
+                <option value="">Select an option</option>
+                <option value="Total">Total</option>
+                <option value="Maximum">Maximum</option>
+                <option value="Average">Average</option>
+                <option value="Count">Count</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <select id="operator">
+                <option value="">Select an option</option>
+                <option value="Greater than">Greater than</option>
+                <option value="Greater than or equal to">Greater than or equal to</option>
+                <option value="Less than">Less than</option>
+                <option value="Less than or equal to">Less than or equal to</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="required">Threshold</label>
+            <input type="number" id="threshold" value="1000">
+        </div>
+        <label><strong>【Action】</strong></label>
+        <div class="form-group">
+            <label class="required">Operation</label>
+            <select id="action">
+                <option value="">Select an option</option>
+                <option value="Increase count by">Increase count by</option>
+                <option value="Increase count to">Increase count to</option>
+                <option value="Decrease count by">Decrease count by</option>
+                <option value="Decrease count to">Decrease count to</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <ul>
+            <li><strong>Metrics source:</strong> Service Bus queue</li>
+            <li><strong>Metric name:</strong> Active Message Count</li>
+            <li><strong>Time grain statistic:</strong> Average</li>
+            <li><strong>Operator:</strong> Less than</li>
+            <li><strong>Threshold:</strong> 1000</li>
+            <li><strong>Operation:</strong> Decrease count by</li>
+        </ul>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求和Azure自动缩放最佳实践：</p>
+        <ol>
+            <li><strong>指标源选择</strong>：
+                <ul>
+                    <li>必须选择"Service Bus queue"，因为应用服务是基于Service Bus队列消息数量进行缩放的</li>
+                </ul>
+            </li>
+            <li><strong>指标名称</strong>：
+                <ul>
+                    <li>选择"Active Message Count"（活动消息计数），这表示队列中待处理的有效消息数量</li>
+                    <li>这与题目中描述的"unprocessed and valid queue messages"要求一致</li>
+                </ul>
+            </li>
+            <li><strong>时间粒度统计</strong>：
+                <ul>
+                    <li>选择"Average"（平均值），与现有的扩容规则保持一致</li>
+                    <li>使用平均值可以避免因瞬时波动导致的频繁缩放</li>
+                </ul>
+            </li>
+            <li><strong>操作符</strong>：
+                <ul>
+                    <li>选择"Less than"（小于），因为这是缩容规则（当条件不满足扩容时执行）</li>
+                    <li>题目要求"as long as the scale up condition is not met"，即当不满足扩容条件（大于1000）时执行缩容</li>
+                </ul>
+            </li>
+            <li><strong>阈值</strong>：
+                <ul>
+                    <li>设置为1000，与扩容规则使用相同的阈值</li>
+                    <li>这样当平均消息数小于1000时触发缩容</li>
+                </ul>
+            </li>
+            <li><strong>操作</strong>：
+                <ul>
+                    <li>选择"Decrease count by"（按数量减少），这是最常见的缩容方式</li>
+                    <li>这样可以逐步减少实例数量，而不是直接设置到特定数量</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>配置要点：</p>
+        <ul>
+            <li>缩容规则应与扩容规则使用相同的指标和时间粒度，但相反的操作符</li>
+            <li>阈值应与扩容规则相同，确保无缝切换</li>
+            <li>使用"Decrease count by"可以更平滑地调整实例数量</li>
+            <li>确保冷却时间设置合理，避免过于频繁的缩放操作</li>
+        </ul>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Set the correct answers in dropdowns
+            document.getElementById('metricsSource').value = 'Service Bus queue';
+            document.getElementById('metricName').value = 'Active Message Count';
+            document.getElementById('timeGrain').value = 'Average';
+            document.getElementById('operator').value = 'Less than';
+            document.getElementById('threshold').value = '1000';
+            document.getElementById('action').value = 'Decrease count by';
+        }
+    </script>
+</body>
+</html>

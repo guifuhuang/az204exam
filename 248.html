@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Management Backend Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .column {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .column h3 {
+            margin-top: 0;
+            color: #0078d4;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .draggable-item {
+            background-color: #e5f5ff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #b3d9ff;
+            transition: background-color 0.2s;
+        }
+        .draggable-item:hover {
+            background-color: #ccebff;
+        }
+        .drop-zone {
+            min-height: 200px;
+            border: 2px dashed #0078d4;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .parameter-group {
+            margin-bottom: 20px;
+        }
+        .parameter-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .parameter-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            min-height: 50px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        @media (max-width: 600px) {
+            .columns {
+                flex-direction: column;
+            }
+            .draggable-item {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 248 DRAG DROP</h1>
+    
+    <div class="question-container">
+        <p>You develop a gateway solution for a public facing news API.</p>
+        <p>The news API back end is implemented as a RESTful service and hosted in an Azure App Service instance.</p>
+        <p>You need to configure back-end authentication for the API Management service instance.</p>
+        <p>Which target and gateway credential type should you use? To answer, drag the appropriate values to the correct parameters. Each value may be used once, more than once, or not at all.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="columns">
+        <div class="column">
+            <h3>Values</h3>
+            <div id="values-list">
+                <div class="draggable-item" draggable="true" data-id="1">Azure Resource</div>
+                <div class="draggable-item" draggable="true" data-id="2">HTTP(s) endpoint</div>
+                <div class="draggable-item" draggable="true" data-id="3">Basic</div>
+                <div class="draggable-item" draggable="true" data-id="4">Client cert</div>
+            </div>
+        </div>
+        
+        <div class="column">
+            <h3>Answer Area</h3>
+            <div class="parameter-group">
+                <div class="parameter-label">Configuration parameter: Target</div>
+                <div id="target-drop-zone" class="parameter-box drop-zone">
+                    <p>Drag value here</p>
+                </div>
+            </div>
+            <div class="parameter-group">
+                <div class="parameter-label">Configuration parameter: Gateway credentials</div>
+                <div id="credentials-drop-zone" class="parameter-box drop-zone">
+                    <p>Drag value here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+        <button id="reset">Reset</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Answer:</strong></p>
+            <ul>
+                <li><strong>Target:</strong> Azure Resource</li>
+                <li><strong>Gateway credentials:</strong> Client cert</li>
+            </ul>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>目标(Target)应选择"Azure Resource"</strong>：</p>
+            <ul>
+                <li>因为后端服务托管在Azure App Service中，属于Azure资源</li>
+                <li>选择Azure Resource可以更好地与Azure身份验证系统集成</li>
+                <li>参考文档明确指出API Management支持使用Azure Resource作为目标</li>
+            </ul>
+            
+            <p>2. <strong>网关凭证(Gateway credentials)应选择"Client cert"</strong>：</p>
+            <ul>
+                <li>客户端证书认证提供更高级别的安全性</li>
+                <li>适合面向公众的API网关场景</li>
+                <li>Microsoft官方文档明确说明API Management支持使用客户端证书保护后端服务访问</li>
+                <li>比Basic认证更安全，适合生产环境</li>
+            </ul>
+            
+            <p><strong>技术实现说明：</strong></p>
+            <ol>
+                <li>在API Management中配置后端目标为Azure Resource</li>
+                <li>上传客户端证书到API Management</li>
+                <li>在App Service中配置要求客户端证书认证</li>
+                <li>API Management在调用后端API时会自动附加客户端证书</li>
+            </ol>
+            
+            <p><strong>参考配置示例：</strong></p>
+            <pre>// Backend configuration in API Management
+{
+  "name": "news-api-backend",
+  "properties": {
+    "resourceId": "/subscriptions/{sub-id}/resourceGroups/{rg}/providers/Microsoft.Web/sites/{app-name}",
+    "credentials": {
+      "certificate": ["{{client-certificate-name}}"]
+    },
+    "protocol": "http"
+  }
+}</pre>
+            
+            <p><strong>参考文档：</strong> <a href="https://docs.microsoft.com/en-us/rest/api/apimanagement/apimanagementrest/azure-apimanagement-rest-api-backend-entity" target="_blank">API Management Backend Entity</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const targetDropZone = document.getElementById('target-drop-zone');
+            const credentialsDropZone = document.getElementById('credentials-drop-zone');
+            const valuesList = document.getElementById('values-list');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const resetBtn = document.getElementById('reset');
+            const answerSection = document.getElementById('answer-section');
+            
+            let draggedItem = null;
+            
+            // Add event listeners for draggable items
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                    e.dataTransfer.effectAllowed = 'copy';
+                    e.dataTransfer.setData('text/html', this.innerHTML);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Dragover for both drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                    e.dataTransfer.dropEffect = 'copy';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    // Remove any existing content
+                    this.innerHTML = '';
+                    
+                    // Create and append the dropped item
+                    const clone = draggedItem.cloneNode(true);
+                    clone.style.opacity = '1';
+                    clone.style.cursor = 'default';
+                    clone.draggable = false;
+                    this.appendChild(clone);
+                });
+            });
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Reset button
+            resetBtn.addEventListener('click', function() {
+                targetDropZone.innerHTML = '<p>Drag value here</p>';
+                credentialsDropZone.innerHTML = '<p>Drag value here</p>';
+                answerSection.style.display = 'none';
+            });
+            
+            // Touch device support
+            if ('ontouchstart' in window) {
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.addEventListener('touchstart', function(e) {
+                        draggedItem = this;
+                        e.preventDefault();
+                    }, { passive: false });
+                });
+                
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.addEventListener('touchenter', function(e) {
+                        e.preventDefault();
+                        this.classList.add('highlight');
+                    });
+                    
+                    zone.addEventListener('touchleave', function() {
+                        this.classList.remove('highlight');
+                    });
+                    
+                    zone.addEventListener('touchmove', function(e) {
+                        e.preventDefault();
+                    }, { passive: false });
+                    
+                    zone.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        this.classList.remove('highlight');
+                        
+                        if (draggedItem && !this.querySelector('.draggable-item')) {
+                            this.innerHTML = '';
+                            const clone = draggedItem.cloneNode(true);
+                            clone.style.cursor = 'default';
+                            this.appendChild(clone);
+                        }
+                    }, { passive: false });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

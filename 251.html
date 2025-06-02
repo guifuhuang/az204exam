@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Logic App Security Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 251</h2>
+        <p>You develop and deploy an Azure Logic app that calls an Azure Function app. The Azure Function app includes an OpenAPI (Swagger) definition and uses an Azure Blob storage account. All resources are secured by using Azure Active Directory (Azure AD).</p>
+        <p>The Azure Logic app must securely access the Azure Blob storage account. Azure AD resources must remain if the Azure Logic app is deleted.</p>
+        <p>You need to secure the Azure Logic app.</p>
+        <p>What should you do?</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="question" value="A">
+            <label for="optionA">A. Create an Azure AD custom role and assign role-based access controls.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="question" value="B">
+            <label for="optionB">B. Create an Azure AD custom role and assign the role to the Azure Blob storage account.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionC" name="question" value="C">
+            <label for="optionC">C. Create an Azure Key Vault and issue a client certificate.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionD" name="question" value="D">
+            <label for="optionD">D. Create a user-assigned managed identity and assign role-based access controls.</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionE" name="question" value="E">
+            <label for="optionE">E. Create a system-assigned managed identity and issue a client certificate.</label>
+        </div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div class="answer" id="answer">
+        <h3>正确答案: D</h3>
+        <p><strong>说明:</strong></p>
+        <p>正确答案是D - 创建用户分配的托管标识并分配基于角色的访问控制。</p>
+        <p>原因如下：</p>
+        <ol>
+            <li>题目要求即使Logic App被删除，Azure AD资源仍需保留，这排除了系统分配的托管身份（选项E），因为系统分配的托管身份与资源生命周期绑定。</li>
+            <li>用户分配的托管身份（选项D）独立于资源存在，可以分配给多个资源，符合题目要求。</li>
+            <li>基于角色的访问控制（RBAC）是Azure推荐的授权方式，可以直接授予托管身份访问Blob存储的权限。</li>
+            <li>创建自定义角色（选项A和B）不是必要的，因为Azure内置角色（如存储Blob数据贡献者）已经能满足需求。</li>
+            <li>使用Key Vault和客户端证书（选项C）会增加不必要的复杂性，不是最佳解决方案。</li>
+        </ol>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Redis Cache 连接属性测试</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .question { background-color: #f5f9fc; border-left: 4px solid #0078d4; padding: 15px; margin-bottom: 20px; }
+        .options { margin: 15px 0; }
+        .option { margin: 8px 0; }
+        button { background-color: #0078d4; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; }
+        .answer { display: none; margin-top: 20px; padding: 15px; background-color: #e6f7ff; border-left: 4px solid #52c41a; }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>测试题：</h3>
+        <p><strong>问题描述：</strong>您正在开发一个 Azure App Service Web 应用。该 Web 应用必须将会话信息安全地存储在 Azure Redis Cache 中。您需要将 Web 应用连接到 Azure Redis Cache。</p>
+        <p><strong>问题：</strong>应该使用哪三个 Azure Redis Cache 属性？（每个正确答案得1分）</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA">
+                <label for="optionA">A. SSL 端口</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB">
+                <label for="optionB">B. 订阅名称</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC">
+                <label for="optionC">C. 位置</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD">
+                <label for="optionD">D. 主机名</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE">
+                <label for="optionE">E. 访问密钥</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionF">
+                <label for="optionF">F. 订阅 ID</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>答案与解析：</h3>
+            <p><strong>正确答案：A, D, E</strong></p>
+            <p><strong>解析：</strong></p>
+            <ul>
+                <li><strong>A. SSL 端口</strong>：用于建立加密连接，确保会话数据传输安全（默认端口6380）。</li>
+                <li><strong>D. 主机名</strong>：Redis 实例的唯一地址（格式：&lt;名称&gt;.redis.cache.windows.net）。</li>
+                <li><strong>E. 访问密钥</strong>：身份验证凭证，用于安全访问 Redis 实例。</li>
+            </ul>
+            <p><strong>错误选项说明：</strong></p>
+            <ul>
+                <li>B/F（订阅名称/ID）和 C（位置）：属于 Azure 资源管理属性，与连接 Redis 无关。</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

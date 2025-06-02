@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Function Key Vault Access Question</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #e1e4e8;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+        .question {
+            background: #f8f9fa;
+            border-left: 4px solid #0078d4;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        .options {
+            margin: 25px 0;
+        }
+        .option {
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+            border-color: #0078d4;
+        }
+        .option.selected {
+            background-color: #e6f7ff;
+            border: 2px solid #0078d4;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-radius: 5px;
+            border-left: 4px solid #0078d4;
+        }
+        .correct {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .option-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #0078d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Azure Function Key Vault Access Question</h1>
+        
+        <div class="question">
+            <p><strong>QUESTION NO: 393</strong></p>
+            <p>You are developing an Azure Function that calls external APIs by providing an access token for the API. The access token is stored in a secret named <code>token</code> in an Azure Key Vault named <code>mykeyvault</code>.</p>
+            <p>You need to ensure the Azure Function can access the token. Which value should you store in the Azure Function App configuration?</p>
+        </div>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">
+                <span class="option-label">A.</span> keyvault:mykeyvault;secret:token
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <span class="option-label">B.</span> APP:settings:secret:mykeyvault:token
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <span class="option-label">C.</span> @UERvcohsTR_https://mykeyvault.vault.azure.net/secrets/token/
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <span class="option-label">D.</span> @Microsoft.KeyVault(SecretUri=https://mykeyvault.vault.azure.net/secrets/token/)
+            </div>
+        </div>
+        
+        <button class="button" onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <p><strong>正确答案: <span class="correct">D</span></strong></p>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>在Azure Function App配置中访问Key Vault机密需要正确使用Key Vault引用格式：</p>
+                <p>选项D <code>@Microsoft.KeyVault(SecretUri=https://mykeyvault.vault.azure.net/secrets/token/)</code> 是正确格式，因为它：</p>
+                <ul>
+                    <li>使用Azure预定义的<code>@Microsoft.KeyVault</code>语法</li>
+                    <li>包含完整的Secret URI路径（vault名称+secret名称）</li>
+                    <li>符合Azure Key Vault引用标准格式</li>
+                </ul>
+                <p>其他选项不正确的原因：</p>
+                <ul>
+                    <li><strong>A:</strong> 使用了非标准分隔符，不符合Azure要求的语法</li>
+                    <li><strong>B:</strong> 使用了无效的前缀和结构，不是有效的Key Vault引用</li>
+                    <li><strong>C:</strong> 缺少必要的<code>@Microsoft.KeyVault</code>前缀，且包含无效字符</li>
+                </ul>
+                <p>使用此格式后，Azure Function在运行时会自动从Key Vault获取机密值，无需在配置中存储实际机密值。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // Remove selected class from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

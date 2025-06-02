@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AZ-204 Question 299</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .option label {
+            margin-left: 8px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 299</h2>
+        <p>You are developing a web application that uses the Microsoft identity platform to authenticate users and resources. The web application calls several REST APIs.</p>
+        <p>The APIs require an access token from the Microsoft identity platform.</p>
+        <p>You need to request a token.</p>
+        <p>Which three properties should you use? Each correct answer presents part of the solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="optionA">
+                <label for="optionA">A. Application secret</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="optionB">
+                <label for="optionB">B. Redirect URI/URL</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="optionC">
+                <label for="optionC">C. Application name</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="optionD">
+                <label for="optionD">D. Supported account type</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="optionE">
+                <label for="optionE">E. Application ID</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p class="correct-answer">正确答案: A, B, E</p>
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>在向Microsoft身份平台请求访问令牌时，需要以下三个关键属性：</p>
+                <ol>
+                    <li><strong>Application secret (A)</strong> - 用于验证应用程序身份的客户端密钥</li>
+                    <li><strong>Redirect URI/URL (B)</strong> - 身份验证后重定向的URI，必须与注册的URI匹配</li>
+                    <li><strong>Application ID (E)</strong> - 应用程序的唯一标识符</li>
+                </ol>
+                <p>其他选项：</p>
+                <ul>
+                    <li>Application name (C) - 仅用于显示目的，不影响令牌获取</li>
+                    <li>Supported account type (D) - 在应用注册时配置，但不需要在令牌请求中指定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            var answer = document.getElementById('answer');
+            if (answer.style.display === 'none') {
+                answer.style.display = 'block';
+            } else {
+                answer.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

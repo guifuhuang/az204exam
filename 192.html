@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD Authentication Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .manifest-editor {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .dropdown {
+            padding: 5px;
+            margin: 5px 0;
+        }
+        #answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 192 HOTSPOT</h2>
+    <p>You are building a website to access project data related to terms within your organization. The website does not allow anonymous access. Authentication performed using an Azure Active Directory (Azure AD) app named internal.</p>
+    
+    <p>The website has the following authentication requirements:</p>
+    <ul>
+        <li>Azure AD users must be able to login to the website.</li>
+        <li>Personalization of the website must be based on membership in Active Directory groups.</li>
+    </ul>
+    
+    <p>You need to configure the application's manifest to meet the authentication requirements.</p>
+    <p>How should you configure the manifest? To answer, select the appropriate options in the answer area.</p>
+    <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    
+    <div class="manifest-editor">
+        {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"appId": "d61126e3-089b-4adb-b721-d5023213df7d",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"<select id="groupMembershipClaims" class="dropdown">
+            <option value="">Select an option</option>
+            <option value="optionalClaims">optionalClaims</option>
+            <option value="SecurityGroup">groupMembershipClaims</option>
+        </select>": "All",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"<select id="allowPublicClient" class="dropdown">
+            <option value="">Select an option</option>
+            <option value="allowPublicClient">allowPublicClient</option>
+            <option value="oauth2Permissions">oauth2Permissions</option>
+            <option value="requiredResourceAccess">requiredResourceAccess</option>
+            <option value="oauth2AllowImplicitFlow">oauth2AllowImplicitFlow</option>
+        </select>": true<br>
+        }
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <p>第一个下拉框选择: <strong>groupMembershipClaims</strong></p>
+        <p>第二个下拉框选择: <strong>oauth2AllowImplicitFlow</strong></p>
+        
+        <h3>说明:</h3>
+        <p>1. <strong>groupMembershipClaims</strong>: 这个设置需要配置为"All"以启用组声明，这样应用程序就可以接收用户所属的所有安全组。这是满足"基于Active Directory组成员资格进行网站个性化"要求的关键配置。</p>
+        <p>2. <strong>oauth2AllowImplicitFlow</strong>: 需要设置为true以允许隐式授权流程，这对于网站认证是必要的。虽然现代应用推荐使用授权码流程，但隐式流程仍被广泛用于单页应用(SPA)等场景。</p>
+        <p>其他选项不正确的原因：</p>
+        <ul>
+            <li>optionalClaims: 这不是用于组声明的正确属性</li>
+            <li>allowPublicClient: 适用于移动应用等公共客户端，与题目中的网站场景不完全匹配</li>
+            <li>oauth2Permissions/requiredResourceAccess: 这些与组声明和认证流程设置无关</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

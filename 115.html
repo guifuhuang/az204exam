@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Policy Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            font-family: Consolas, monospace;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .statement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .statement-table th, .statement-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .statement-table th {
+            background-color: #f2f2f2;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 115 HOTSPOT</h2>
+        <p>You are working for Contoso, Ltd.</p>
+        <p>You define an API Policy object by using the following XML markup:</p>
+        
+        <div class="code-block">
+            &lt;get-variable name="bodysize" variable-name="Content-Length" default-value="0"/&gt;<br>
+            &lt;choose&gt;<br>
+            &nbsp;&nbsp;&lt;when condition="@(Convert.ToInt32(context.Variables["bodysize"]) &lt;= 52000)"&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;set-backend-service base-url="http://contosoapi/api/9.1/" /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;set-backend-uri-template method="PUT" template="put" /&gt;<br>
+            &nbsp;&nbsp;&lt;/when&gt;<br>
+            &lt;/choose&gt;
+        </div>
+        
+        <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <table class="statement-table">
+            <thead>
+                <tr>
+                    <th>Statement</th>
+                    <th>Yes / No</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The XML segment belongs in the &lt;inbound&gt; section of the policy.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement1" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement1" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>If the body size is &gt;256k, an error will occur.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement2" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement2" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>If the request is http://contoso.com/api/9.2, the policy will retain the higher version.</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="statement3" value="yes"> Yes
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="statement3" value="no"> No
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct-answer">1. The XML segment belongs in the &lt;inbound&gt; section of the policy: Yes</span></p>
+            <p><span class="correct-answer">2. If the body size is &gt;256k, an error will occur: No</span></p>
+            <p><span class="correct-answer">3. If the request is http://contoso.com/api/9.2, the policy will retain the higher version: No</span></p>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p><strong>1. XML片段是否属于策略的&lt;inbound&gt;部分？</strong></p>
+                <p>是的。这段XML处理的是请求内容（获取Content-Length，设置后端服务），属于入站(inbound)处理逻辑。</p>
+                
+                <p><strong>2. 如果body大小超过256k，是否会发生错误？</strong></p>
+                <p>不会。代码只检查body大小是否≤52000字节(约50.8KB)，对大于256KB的情况没有特殊处理，不会主动抛出错误。</p>
+                
+                <p><strong>3. 如果请求是http://contoso.com/api/9.2，策略是否会保留更高版本？</strong></p>
+                <p>不会。代码强制设置后端服务为9.1版本(contosoapi/api/9.1/)，会覆盖请求中的9.2版本。</p>
+                
+                <h3>关键点分析:</h3>
+                <ul>
+                    <li>入站(inbound)策略处理请求内容</li>
+                    <li>52000字节(≈50.8KB)限制，远小于256KB</li>
+                    <li>后端URL被硬编码为9.1版本，会覆盖请求中的版本</li>
+                    <li>没有错误处理逻辑</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || answerContainer.style.display === '') {
+                answerContainer.style.display = 'block';
+                // Set correct answers
+                document.querySelector('input[name="statement1"][value="yes"]').checked = true;
+                document.querySelector('input[name="statement2"][value="no"]').checked = true;
+                document.querySelector('input[name="statement3"][value="no"]').checked = true;
+            } else {
+                answerContainer.style.display = 'none';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

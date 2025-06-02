@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 297 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            color: #d4d4d4;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .select-dropdown {
+            display: inline-block;
+            position: relative;
+            margin: 0 5px;
+        }
+        .select-dropdown select {
+            padding: 6px 10px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+        .ps-command { color: #569cd6; }
+        .ps-parameter { color: #9cdcfe; }
+        .ps-string { color: #ce9178; }
+        .ps-number { color: #b5cea8; }
+        .ps-boolean { color: #569cd6; }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 297 HOTSPOT</h2>
+        <p>A software as a service (SaaS) company provides document management services. The company has a service that consists of several Azure web apps. All Azure web apps run in an Azure App Service Plan named PrimaryASP.</p>
+        <p>You are developing a new web service by using a web app named ExcelParser. The web app contains a third-party library for processing Microsoft Excel files. The license for the third-party library stipulates that you can only run a single instance of the library.</p>
+        <p>You need to configure the service.</p>
+        <p>How should you complete the script? To answer, select the appropriate options in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="code-container">
+<span class="ps-command">Set-AzAppServicePlan</span> `
+    <span class="ps-parameter">-ResourceGroupName</span> <span class="ps-string">$rg</span> `
+    <span class="ps-parameter">-Name</span> <span class="ps-string">"PrimaryASP"</span> `
+
+<span class="select-dropdown">
+    <select id="workerCount">
+        <option value="">Select an option</option>
+        <option value="1">NumberOfSites 1</option>
+        <option value="2">PersiteScaling $true</option>
+        <option value="3">TargetWorkerCount =  1</option>
+        <option value="4">SiteConfig.NumberOfWorkers =  1</option>
+    </select>
+</span>
+
+<span class="ps-command">$app</span> = <span class="ps-command">Get-AzWebApp</span> `
+    <span class="ps-parameter">-ResourceGroupName</span> <span class="ps-string">$rg</span> `
+    <span class="ps-parameter">-Name</span> <span class="ps-string">"ExcelParser"</span>
+
+<span class="ps-command">$app.</span><span class="select-dropdown">
+        <select id="scalingOption">
+            <option value="">Select an option</option>
+        <option value="">Select an option</option>
+        <option value="1">NumberOfSites 1</option>
+        <option value="2">PersiteScaling $true</option>
+        <option value="3">TargetWorkerCount =  1</option>
+        <option value="4">SiteConfig.NumberOfWorkers =  1</option>
+        </select>
+    </span>
+
+<span class="ps-command">Set-AzWebApp</span> <span class="ps-string">$app</span>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <table class="answer-table">
+            <tr>
+                <th>配置项</th>
+                <th>正确选项</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td>App Service Plan 配置</td>
+                <td class="correct-answer">PersiteScaling $true</td>
+                <td>在应用服务计划级别启用按站点缩放功能</td>
+            </tr>
+            <tr>
+                <td>Web App 配置</td>
+                <td class="correct-answer">SiteConfig.NumberOfWorkers = 1</td>
+                <td>在Web应用级别设置工作线程数为1，确保单实例运行</td>
+            </tr>
+        </table>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>App Service Plan 配置</strong>：选择"PersiteScaling $true"因为需要在应用服务计划级别启用按站点缩放功能，这样可以让ExcelParser应用独立于其他应用进行缩放。</p>
+            <p>2. <strong>Web App 配置</strong>：选择"SiteConfig.NumberOfWorkers = 1"因为需要在Web应用级别明确设置工作线程数为1，确保Excel处理库只运行在单个实例上，完全符合第三方库的许可证要求。</p>
+            <p>这种配置组合的优势：</p>
+            <ul>
+                <li>应用服务计划中的其他应用不受影响</li>
+                <li>ExcelParser应用严格运行在单实例模式下</li>
+                <li>系统仍保持一定的灵活性</li>
+                <li>完全符合第三方库的许可证限制</li>
+            </ul>
+            <p>注意：PersiteScaling和NumberOfWorkers需要配合使用才能达到最佳效果。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Search Restaurant Class Annotation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown {
+            margin: 10px 0;
+        }
+        select {
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 151 HOTSPOT</h2>
+        <p>A company runs an international travel and bookings management service. The company plans to begin offering restaurant bookings. You must develop a solution that uses Azure Search and meets the following requirements:</p>
+        <ul>
+            <li>Users must be able to search for restaurants by name, description, location, and cuisine.</li>
+            <li>Users must be able to narrow the results further by location, cuisine, rating, and family-friendliness.</li>
+            <li>All words in descriptions must be included in searches.</li>
+        </ul>
+        <p>You need to add annotations to the restaurant class.</p>
+        <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="code-block">
+[SerializePropertyNameAsCamelCase]
+public class Restaurant
+{
+    [Key, IsFilterable]
+    public int RestaurantId { get; set; }
+    [IsSearchable, IsFilterable, IsSortable]
+    public string Name { get; set; }
+
+    <div class="dropdown">
+        <select id="location">
+            <option value="">Select an option</option>
+            <option value="1">[IsSearchable, IsFilterable, IsSortable, IsFacetable]</option>
+            <option value="2">[IsFilterable, IsFacetable, Required]</option>
+            <option value="3">[IsSearchable]</option>
+            <option value="4">[IsSearchable, Required]</option>
+        </select>
+    </div>
+    public string location { get; set; }
+    public string Phone { get; set; }
+
+    <div class="dropdown">
+        <select id="description">
+            <option value="">Select an option</option>
+            <option value="1">[Required]</option>
+            <option value="2">[IsSearchable]</option>
+            <option value="3">[IsFilterable, IsFacetable, Required]</option>
+            <option value="4">[IsFilterable, IsSortable, IsSortable]</option>
+        </select>
+    </div>
+    public string Description { get; set; }
+
+    <div class="dropdown">
+        <select id="rating">
+            <option value="">Select an option</option>
+            <option value="1">[IsFilterable, IsSortable, IsSearchable]</option>
+            <option value="2">[IsFilterable, IsSortable, IsFacetable]</option>
+            <option value="3">[IsFilterable, IsSortable, Key]</option>
+            <option value="4">[IsFilterable, IsSortable, IsSearchable, Required]</option>
+        </select>
+    </div>
+    public double Rating { get; set; }
+
+    <div class="dropdown">
+        <select id="cuisines">
+            <option value="">Select an option</option>
+            <option value="1">[IsSearchable, IsFilterable, IsFacetable]</option>
+            <option value="2">[IsFilterable, IsSortable, Key]</option>
+            <option value="3">[IsFilterable, IsSortable, Key]</option>
+            <option value="4">[IsFilterable, IsSortable, Key, Required]</option>
+        </select>
+    </div>
+    public List&lt;string&gt; Cuisines { get; set; }
+
+    <div class="dropdown">
+        <select id="familyFriendly">
+            <option value="">Select an option</option>
+            <option value="1">[IsFilterable, IsSortable, Key, Required]</option>
+            <option value="2">[IsSearchable, IsSortable, IsFacetable]</option>
+            <option value="3">[IsFilterable, IsSortable, Key, IsSearchable]</option>
+            <option value="4">[IsFilterable, IsFacetable]</option>
+        </select>
+    </div>
+    public bool FamilyFriendly { get; set; }
+}
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><strong>location:</strong> [IsSearchable, IsFilterable, IsSortable, IsFacetable]</p>
+        <p><strong>Description:</strong> [IsSearchable]</p>
+        <p><strong>Rating:</strong> [IsFilterable, IsSortable, IsFacetable]</p>
+        <p><strong>Cuisines:</strong> [IsSearchable, IsFilterable, IsFacetable]</p>
+        <p><strong>FamilyFriendly:</strong> [IsFilterable, IsFacetable]</p>
+        
+        <h3>解析:</h3>
+        <p>根据题目要求：</p>
+        <ol>
+            <li><strong>location属性</strong>需要能被搜索(name, description, location, cuisine)和进一步筛选(location, cuisine, rating, family-friendliness)，因此需要[IsSearchable, IsFilterable, IsSortable, IsFacetable]</li>
+            <li><strong>Description属性</strong>需要包含所有单词在搜索中，只需要[IsSearchable]</li>
+            <li><strong>Rating属性</strong>需要能被筛选和排序，因此需要[IsFilterable, IsSortable, IsFacetable]</li>
+            <li><strong>Cuisines属性</strong>需要能被搜索和筛选，因此需要[IsSearchable, IsFilterable, IsFacetable]</li>
+            <li><strong>FamilyFriendly属性</strong>需要能被筛选，因此需要[IsFilterable, IsFacetable]</li>
+        </ol>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            // Set the correct answers in dropdowns
+            document.getElementById('location').value = '1';
+            document.getElementById('description').value = '2';
+            document.getElementById('rating').value = '2';
+            document.getElementById('cuisines').value = '1';
+            document.getElementById('familyFriendly').value = '4';
+        }
+    </script>
+</body>
+</html>

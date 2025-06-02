@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 307</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 307</h2>
+        <p>You are developing an application to manage shipping information for cargo ships. The application will use Azure Cosmos DB for storage.</p>
+        <p>The application must run offline when ships are at sea. The application must be connected to Azure when ships are in port.</p>
+        <p>Which Azure Cosmos DB API should you use for the application?</p>
+    </div>
+
+    <div class="options-container">
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Core"> A. Core (SQL)
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="MongoDB"> B. MongoDB
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Cassandra"> C. Cassandra
+        </label>
+        <label class="option">
+            <input type="radio" name="cosmosApi" value="Gremlin"> D. Gremlin
+        </label>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <p class="correct-answer">C. Cassandra</p>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>Cassandra API</strong> 最适合此场景的原因：</p>
+            <ul>
+                <li>Cassandra数据库设计时就考虑了分布式和离线场景</li>
+                <li>支持多主复制，非常适合需要在不同网络状态下工作的应用</li>
+                <li>当船舶在海上离线时，可以继续本地操作</li>
+                <li>靠港重新连接后，会自动同步数据变更</li>
+                <li>数据冲突解决机制完善</li>
+            </ul>
+            
+            <p>2. 其他API的限制：</p>
+            <ul>
+                <li><strong>Core (SQL)</strong>：虽然支持离线，但不如Cassandra在分布式场景下表现好</li>
+                <li><strong>MongoDB</strong>：离线支持有限，同步机制不如Cassandra完善</li>
+                <li><strong>Gremlin</strong>：专为图数据库设计，不适合此业务场景</li>
+            </ul>
+            
+            <p>3. Cassandra解决方案优势：</p>
+            <ul>
+                <li>为航运业的特殊需求（频繁离线）提供最佳支持</li>
+                <li>数据同步机制可靠，确保信息不丢失</li>
+                <li>高性能写入，适合记录大量航运数据</li>
+                <li>成熟的冲突解决策略</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

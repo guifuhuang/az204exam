@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 346 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .option.selected {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 346 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing an Azure Durable Function to manage an online ordering process.</p>
+            <p>The process must call an external API to gather product discount information.</p>
+            <p>You need to implement Azure Durable Function.</p>
+            <p>Which Azure Durable Function types should you use? Each correct answer presents part of the solution.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <div id="options-container">
+            <div class="option" data-value="A">
+                <input type="checkbox" id="optionA" name="option">
+                <label for="optionA">A. Orchestrator</label>
+            </div>
+            <div class="option" data-value="B">
+                <input type="checkbox" id="optionB" name="option">
+                <label for="optionB">B. Entity</label>
+            </div>
+            <div class="option" data-value="C">
+                <input type="checkbox" id="optionC" name="option">
+                <label for="optionC">C. Activity</label>
+            </div>
+            <div class="option" data-value="D">
+                <input type="checkbox" id="optionD" name="option">
+                <label for="optionD">D. Client</label>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">A. Orchestrator</p>
+            <p class="correct-answer">B. Entity</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>Orchestrator (业务流程协调程序函数)</strong> 是管理在线订购流程的核心组件。它负责定义操作的执行顺序和方式，可以协调多个活动函数和外部API调用[3](@ref)[5](@ref)。在这个场景中，Orchestrator函数将负责调用外部API获取产品折扣信息，并管理整个订单处理流程。</p>
+                <p>2. <strong>Entity (实体函数)</strong> 用于管理订单流程中的状态信息。实体函数允许你将状态显式地存储为对象，非常适合管理订单状态、折扣信息等需要持久化的数据[6](@ref)[7](@ref)。在这个场景中，Entity函数可以用来存储和管理从外部API获取的折扣信息。</p>
+                <p>其他选项不正确的原因：</p>
+                <ul>
+                    <li>C选项Activity函数虽然可以用于执行具体任务（如调用外部API），但它不负责管理整个流程</li>
+                    <li>D选项Client函数主要用于触发业务流程，而不是管理业务流程</li>
+                </ul>
+                <p>这两种函数类型(A和B)组合使用可以很好地满足题目中"管理在线订购流程并调用外部API获取折扣信息"的需求[3](@ref)[6](@ref)。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

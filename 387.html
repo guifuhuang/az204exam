@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management 策略配置测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7f9;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #0078d4;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e1e4e8;
+            padding-bottom: 10px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 25px;
+            background-color: #f1f8ff;
+            padding: 15px;
+            border-left: 4px solid #0078d4;
+            border-radius: 4px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 15px 0;
+            padding: 12px;
+            border: 1px solid #e1e4e8;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f1f8ff;
+            border-color: #a0d3ff;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            border-radius: 4px;
+            display: none;
+        }
+        .answer h3 {
+            color: #1890ff;
+            margin-top: 0;
+        }
+        .correct {
+            color: #52c41a;
+            font-weight: bold;
+        }
+        .explanation {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Azure API Management 策略配置测试题</h1>
+        
+        <div class="question">
+            <p><strong>问题：</strong> You are developing several Azure API Management (APIM) hosted APIs. You must transform the APIs to hide private backend information and obscure the technology stack used to implement the backend processing. You need to protect all APIs. What should you do?</p>
+        </div>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Configure and apply a new inbound policy scoped to a product.</label>
+            </div>
+            
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Configure and apply a new outbound policy scoped to the operation.</label>
+            </div>
+            
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Configure and apply a new outbound policy scoped to global.</label>
+            </div>
+            
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Configure and apply a new backend policy scoped to global.</label>
+            </div>
+        </div>
+        
+        <button class="button" onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>答案与解析</h3>
+            <p><strong>正确答案：</strong> <span class="correct">A</span></p>
+            <div class="explanation">
+                <p><strong>解析：</strong></p>
+                <p>在Azure API Management中，为了保护所有API并隐藏后端私有信息及技术栈，应该：</p>
+                <ol>
+                    <li>使用<strong>入站策略(inbound policy)</strong>来修改请求/响应，隐藏后端细节</li>
+                    <li>将策略作用域设置为<strong>产品(product)</strong>级别，确保该产品下的所有API都应用此策略</li>
+                </ol>
+                <p>其他选项分析：</p>
+                <ul>
+                    <li><strong>B选项</strong>：出站策略(outbound policy)主要用于修改响应，且作用在操作(operation)级别范围太小</li>
+                    <li><strong>C选项</strong>：出站策略作用在全局(global)级别，但修改响应不如入站策略适合隐藏后端信息</li>
+                    <li><strong>D选项</strong>：后端策略(backend policy)用于修改向后端发送的请求，但作用域为全局并不适合所有情况</li>
+                </ul>
+                <p>因此，配置产品级别的入站策略是最佳方案，可以统一保护该产品下的所有API。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

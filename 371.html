@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 托管磁盘选择测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeff5;
+        }
+        
+        .question-number {
+            background: #0078d4;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+        }
+        
+        .question-text p {
+            margin-bottom: 12px;
+        }
+        
+        .requirements {
+            background: #eef7ff;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+        }
+        
+        .requirements h3 {
+            color: #1e4a8e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirements h3 i {
+            margin-right: 10px;
+        }
+        
+        .requirement-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        .requirement-item i {
+            color: #4a90e2;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .selection-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .selection-table th {
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .selection-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .selection-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .select-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .select-container select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1rem;
+            color: #495057;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .select-container select:focus {
+            border-color: #0078d4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.2);
+        }
+        
+        .select-container::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            pointer-events: none;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn:hover {
+            background: linear-gradient(120deg, #0066b8 0%, #163a75 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            display: none;
+            background: linear-gradient(to right, #e6f7ff, #f0f9ff);
+            border-left: 5px solid #1890ff;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+        
+        .answer-header i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+        
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .correct-answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .correct-answer h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 25px;
+        }
+        
+        .explanation h3 {
+            color: #1e4a8e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        .solution-indicator {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .answer-table th, .answer-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .answer-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .answer-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .correct-selection {
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 托管磁盘选择测试题</h1>
+            <p class="subtitle">为SaaS应用选择合适的磁盘类型和冗余策略</p>
+        </header>
+        
+        <div class="card">
+            <div class="question-header">
+                <div class="question-number">371</div>
+                <div class="question-text">
+                    <p><strong>题目描述</strong></p>
+                    <p>您正在构建一个软件即服务(SaaS)应用程序，该应用程序分析DNA数据，并在可用性区域中的Azure虚拟机(VM)上运行。数据存储在附加到VM的托管磁盘上。分析性能取决于附加到VM的磁盘速度。</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3><i class="fas fa-tasks"></i> 需求</h3>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>应用程序必须能够快速恢复到前一天的数据（如果检测到系统性错误）</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>在Azure数据中心中断的情况下，应用程序必须最小化停机时间</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>需要为VM配置托管磁盘，以在满足需求的同时最大化性能</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 15px; color: #1e4a8e; display: flex; align-items: center;">
+                <i class="fas fa-table"></i> 磁盘配置选择
+            </h3>
+            
+            <table class="selection-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">需求 (Requirement)</th>
+                        <th style="width: 70%;">解决方案 (Solution)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>磁盘类型 (Disk type)</td>
+                        <td>
+                            <div class="select-container">
+                                <select id="disk-type">
+                                    <option value="">-- 请选择磁盘类型 --</option>
+                                    <option value="premium">Premium SSD（高级固态硬盘）</option>
+                                    <option value="standard-ssd">Standard SSD（标准固态硬盘）</option>
+                                    <option value="standard-hdd">Standard HDD（标准机械硬盘）</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>冗余 (Redundancy)</td>
+                        <td>
+                            <div class="select-container">
+                                <select id="redundancy">
+                                    <option value="">-- 请选择冗余策略 --</option>
+                                    <option value="grs">Geo-redundant storage (GRS)（异地冗余存储）</option>
+                                    <option value="grs2">Geo-redundant storage (GRS)（异地冗余存储）</option>
+                                    <option value="zrs">Zone-redundant storage (ZRS)（区域冗余存储）</option>
+                                    <option value="lrs">Locally-redundant storage (LRS)（本地冗余存储）</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="btn-container">
+                <button id="checkAnswer" class="btn">
+                    <i class="fas fa-check-circle"></i> 查看答案
+                </button>
+                <button id="resetBtn" class="btn" style="background:linear-gradient(120deg, #6c757d 0%, #495057 100%); margin-left:15px;">
+                    <i class="fas fa-redo"></i> 重置选择
+                </button>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <div class="answer-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>正确答案与解析</h2>
+                </div>
+                
+                <div class="correct-answer">
+                    <h3><i class="fas fa-check"></i> 正确答案</h3>
+                    <table class="answer-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">需求</th>
+                                <th style="width: 70%;">正确选择</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>磁盘类型 (Disk type)</td>
+                                <td><span class="correct-selection">Premium SSD（高级固态硬盘）</span></td>
+                            </tr>
+                            <tr>
+                                <td>冗余 (Redundancy)</td>
+                                <td><span class="correct-selection">Geo-redundant storage (GRS)（异地冗余存储）</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-book"></i> 解析说明</h3>
+                    
+                    <p><strong>为什么选择Premium SSD？</strong></p>
+                    <p>题目要求最大化磁盘性能，因为应用程序的性能取决于磁盘速度：</p>
+                    
+                    <ul style="padding-left: 25px; margin: 15px 0;">
+                        <li><span class="highlight">Premium SSD</span> 提供最高的IOPS和吞吐量，适合高性能需求</li>
+                        <li><span class="highlight">Standard SSD</span> 性能中等，适合常规工作负载</li>
+                        <li><span class="highlight">Standard HDD</span> 性能最低，仅适合不频繁访问的冷数据</li>
+                    </ul>
+                    
+                    <p>DNA数据分析属于计算密集型任务，需要高性能磁盘支持，因此选择Premium SSD。</p>
+                    
+                    <p><strong>为什么选择Geo-redundant storage (GRS)？</strong></p>
+                    <p>题目有两个关键需求：</p>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-check" style="color:#28a745"></i>
+                        <div><strong>快速恢复到前一天的数据</strong>：GRS支持时间点还原，可以快速恢复数据</div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-check" style="color:#28a745"></i>
+                        <div><strong>最小化数据中心中断的停机时间</strong>：GRS在异地维护数据的副本，当主区域发生故障时，可以快速故障转移到次要区域</div>
+                    </div>
+                    
+                    <p>其他冗余策略的比较：</p>
+                    <table class="answer-table">
+                        <thead>
+                            <tr>
+                                <th>冗余类型</th>
+                                <th>适用场景</th>
+                                <th>是否满足需求</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LRS（本地冗余）</td>
+                                <td>单个数据中心内的数据冗余</td>
+                                <td>❌ 无法应对数据中心级故障</td>
+                            </tr>
+                            <tr>
+                                <td>ZRS（区域冗余）</td>
+                                <td>单个区域内多个可用区的冗余</td>
+                                <td>❌ 无法应对区域级故障</td>
+                            </tr>
+                            <tr>
+                                <td>GRS（异地冗余）</td>
+                                <td>跨区域的数据冗余</td>
+                                <td>✅ 完全满足需求</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>完整解决方案说明：</strong></p>
+                    <p>选择<span class="highlight">Premium SSD</span> + <span class="highlight">GRS</span>的组合：</p>
+                    <ul style="padding-left: 25px; margin: 15px 0;">
+                        <li>提供最高磁盘性能，满足DNA数据分析需求</li>
+                        <li>支持时间点还原，可快速恢复到前一天的数据状态</li>
+                        <li>在主要区域发生故障时，可快速故障转移到次要区域，最小化停机时间</li>
+                        <li>满足应用程序在可用性区域运行的要求</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure 托管磁盘选择测试题 | 基于实际场景设计</p>
+            <p>© 2023 Azure 认证模拟测试</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const diskTypeSelect = document.getElementById('disk-type');
+            const redundancySelect = document.getElementById('redundancy');
+            const checkAnswerBtn = document.getElementById('checkAnswer');
+            const resetBtn = document.getElementById('resetBtn');
+            const answerSection = document.getElementById('answerSection');
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 重置按钮事件
+            resetBtn.addEventListener('click', function() {
+                diskTypeSelect.value = '';
+                redundancySelect.value = '';
+            });
+            
+            // 为选择框添加样式反馈
+            diskTypeSelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#28a745';
+                    this.style.backgroundColor = '#e8f5e9';
+                } else {
+                    this.style.borderColor = '#dee2e6';
+                    this.style.backgroundColor = 'white';
+                }
+            });
+            
+            redundancySelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#28a745';
+                    this.style.backgroundColor = '#e8f5e9';
+                } else {
+                    this.style.borderColor = '#dee2e6';
+                    this.style.backgroundColor = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

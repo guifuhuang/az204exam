@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Search Data Import Validation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+        }
+        .solution {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #d2d0ce;
+            border-radius: 4px;
+        }
+        .solution h3 {
+            margin-top: 0;
+            color: #323130;
+        }
+        .solution-steps {
+            margin-left: 20px;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #d2d0ce;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .option:hover {
+            background-color: #edebe9;
+        }
+        .option.selected {
+            background-color: #deecf9;
+            border-color: #0078d4;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f3f2f1;
+            border-radius: 8px;
+            border-left: 4px solid #0078d4;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d2d0ce;
+        }
+        .answer-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            color: #605e5c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .answer-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 178-Azure Search Data Import Validation</h1>
+    
+    <div class="question-container">
+        <div class="scenario">
+            <p><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</p>
+            <p>After you answer a question in this question, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</p>
+            <p><strong>Scenario:</strong> Margie's Travel is an international travel and bookings management service. The company is expanding into restaurant bookings. You are tasked with implementing Azure Search for the restaurants listed in their solution.</p>
+            <p>You create the index in Azure Search.</p>
+            <p><strong>Goal:</strong> You need to import the restaurant data into the Azure Search service by using the Azure Search .NET SDK.</p>
+        </div>
+        
+        <div class="solution">
+            <h3>Solution:</h3>
+            <div class="solution-steps">
+                <p>1. Create a SearchIndexClient object to connect to the search index.</p>
+                <p>2. Create a DataContainer that contains the documents which must be added.</p>
+                <p>3. Create a DataSource instance and set its Container property to the DataContainer.</p>
+                <p>4. Call the Documents.Suggest method of the SearchIndexClient and pass the DataSource.</p>
+            </div>
+        </div>
+        
+        <div class="options">
+            <p><strong>Does the solution meet the goal?</strong></p>
+            <div class="option" data-answer="A">A. Yes</div>
+            <div class="option" data-answer="B">B. No</div>
+        </div>
+        
+        <button class="answer-button" id="showAnswer">View Answer</button>
+        
+        <div class="answer-section" id="answerSection">
+            <h3>Correct Answer and Explanation:</h3>
+            <div class="answer-item">
+                <p class="correct-answer">Correct Answer: B. No</p>
+                <p class="explanation">The solution does not meet the goal for several reasons:</p>
+                <p class="explanation">1. The Documents.Suggest method is used for autocomplete/suggestion functionality, not for importing documents into an index.</p>
+                <p class="explanation">2. The correct approach would be to use either the IndexDocuments method or create an Indexer to import data.</p>
+                <p class="explanation">3. The DataSource concept is typically used with Indexers, not with direct document uploads.</p>
+                <p class="explanation">4. For importing documents using the .NET SDK, you should use SearchClient (not SearchIndexClient) and its UploadDocuments, MergeDocuments, or MergeOrUploadDocuments methods.</p>
+                <p class="explanation">A correct solution would involve creating a SearchClient instance and using its document upload methods to import the restaurant data directly into the index.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerSection = document.getElementById('answerSection');
+            
+            // Handle option selection
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = answerSection.style.display === 'block' ? 'none' : 'block';
+                this.textContent = answerSection.style.display === 'block' ? 'Hide Answer' : 'View Answer';
+            });
+        });
+    </script>
+</body>
+</html>

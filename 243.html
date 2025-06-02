@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Push Notification Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .code-line {
+            margin-bottom: 10px;
+        }
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .dropdown {
+            margin: 0 10px;
+            padding: 5px;
+            border-radius: 4px;
+            min-width: 200px;
+            background-color: #3c3c3c;
+            color: #d4d4d4;
+            border: 1px solid #666;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 243 HOTSPOT</h1>
+    
+    <div class="question-container">
+        <p><strong>Question:</strong></p>
+        <p>You develop a news and blog content app for Windows devices.</p>
+        <p>A notification must arrive on a user's device when there is a new article available for them to view.</p>
+        <p>You need to implement push notifications.</p>
+        <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+    
+    <div class="code-container">
+        <div class="code-line">string notificationHubName = "contoso_hub";</div>
+        <div class="code-line">string notificationHubConnectionString = "connection_string";</div>
+        <div class="code-line"><select id="dropdown0" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="NotificationHubClient">NotificationHubClient</option>
+            <option value="NotificationHubClientSettings">NotificationHubClientSettings</option>
+            <option value="NotificationHubJob">NotificationHubJob</option>
+            <option value="NotificationDetails">NotificationDetails</option>
+        </select> hub = <select id="dropdown1" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="NotificationHubClient">NotificationHubClient</option>
+            <option value="NotificationHubClientSettings">NotificationHubClientSettings</option>
+            <option value="NotificationHubJob">NotificationHubJob</option>
+            <option value="NotificationDetails">NotificationDetails</option>
+        </select>.<select id="dropdown2" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="GetInstallation">GetInstallation</option>
+            <option value="CreateClientFromConnectionString">CreateClientFromConnectionString</option>
+            <option value="CreateFromConnectionString">CreateFromConnectionString</option>
+            <option value="PatchInstallation">PatchInstallation</option>
+        </select>(notificationHubConnectionString, notificationHubName);</div>
+        <div class="code-line">string windowsToastPayload =</div>
+        <div class="code-line">  @"<toast><visual><binding template='ToastText01'><text id='1'>" +</div>
+        <div class="code-line">    @"New item to view" +@"</text></binding></visual></toast>;"</div>
+        
+        <div class="code-line">try</div>
+        <div class="code-line">{</div>
+        <div class="code-line">var result = await hub.<select id="dropdown3" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="SendWindowsNativeNotificationAsync">SendWindowsNativeNotificationAsync</option>
+            <option value="SubmitNotificationHubJobAsync">SubmitNotificationHubJobAsync</option>
+            <option value="ScheduleNotificationAsync">ScheduleNotificationAsync</option>
+            <option value="SendAppleNativeNotificationAsync">SendAppleNativeNotificationAsync</option>
+        </select>(windowsToastPayload);</div>
+        <div class="code-line">...</div>
+        <div class="code-line">}</div>
+        <div class="code-line">catch (System.Exception ex)</div>
+        <div class="code-line">{</div>
+        <div class="code-line">    // Handle exception</div>
+        <div class="code-line">}</div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Selections:</strong></p>
+            <ol>
+                <li>NotificationHubClient (first dropdown)</li>
+                <li>NotificationHubClient (second dropdown)</li>
+                <li>CreateClientFromConnectionString</li>
+                <li>SendWindowsNativeNotificationAsync</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>第一个下拉框选择 NotificationHubClient</strong>: 这是声明hub变量的正确类型。</p>
+            <p>2. <strong>第二个下拉框选择 NotificationHubClient</strong>: 这是调用静态方法的正确类名。</p>
+            <p>3. <strong>CreateClientFromConnectionString</strong>: 这是NotificationHubClient类中用于创建实例的正确静态方法。</p>
+            <p>4. <strong>SendWindowsNativeNotificationAsync</strong>: 这是向Windows设备发送原生通知的正确异步方法。</p>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>NotificationHubClient是Azure通知中心的主要客户端类</li>
+                <li>CreateClientFromConnectionString方法需要连接字符串和中心名称作为参数</li>
+                <li>SendWindowsNativeNotificationAsync专门用于发送Windows原生通知</li>
+                <li>整个流程使用try-catch块来处理可能出现的异常</li>
+            </ul>
+            
+            <p><strong>工作流程：</strong></p>
+            <ol>
+                <li>配置通知中心名称和连接字符串</li>
+                <li>创建NotificationHubClient实例</li>
+                <li>构建Windows Toast通知负载</li>
+                <li>使用try-catch块发送通知并处理异常</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

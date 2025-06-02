@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 177 HOTSPOT-ASP.NET Core API Authentication Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+        }
+        .configuration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .configuration-table th, .configuration-table td {
+            border: 1px solid #d2d0ce;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        .configuration-table th {
+            background-color: #0078d4;
+            color: white;
+        }
+        .configuration-table tr:nth-child(even) {
+            background-color: #f3f2f1;
+        }
+        .configuration-table select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #d2d0ce;
+            background-color: white;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f3f2f1;
+            border-radius: 8px;
+            border-left: 4px solid #0078d4;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d2d0ce;
+        }
+        .answer-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .answer-item strong {
+            color: #323130;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            color: #605e5c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .configuration-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .answer-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 177 HOTSPOT-ASP.NET Core API Authentication Configuration</h1>
+    
+    <div class="question-container">
+        <div class="scenario">
+            <p>You are developing an ASP.NET Core API app by using C#. The API app will allow users to authenticate by using Twitter and Azure Active Directory (Azure AD). Users must be authenticated before calling API methods. You must log the user's name for each method call.</p>
+            <p>You need to configure the API method calls.</p>
+            <p>Which values should you use? To answer, select the appropriate options in the answer area.</p>
+        </div>
+        
+        <table class="configuration-table">
+            <thead>
+                <tr>
+                    <th>Code segment</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Attribute</td>
+                    <td>
+                        <select id="attributeSelect">
+                            <option value="">-- Select an option --</option>
+                            <option value="Authorize">Authorize</option>
+                            <option value="AllowAnonymous">AllowAnonymous</option>
+                            <option value="AutoValidateAntiForgeryToken">AutoValidateAntiForgeryToken</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Request Header</td>
+                    <td>
+                        <select id="headerSelect">
+                            <option value="">-- Select an option --</option>
+                            <option value="X-MS-CLIENT-PRINCIPAL-NAME">X-MS-CLIENT-PRINCIPAL-NAME</option>
+                            <option value="Proxy-Authorization">Proxy-Authorization</option>
+                            <option value="X-Forwarded-For">X-Forwarded-For</option>
+                            <option value="X-MS-CLIENT-PRINCIPAL-ID">X-MS-CLIENT-PRINCIPAL-ID</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button class="answer-button" id="showAnswer">View Answer</button>
+        
+        <div class="answer-section" id="answerSection">
+            <h3>Correct Answers and Explanations:</h3>
+            <div class="answer-item">
+                <strong>Attribute:</strong>
+                <p class="correct-answer">Answer: Authorize</p>
+                <p class="explanation">The [Authorize] attribute is required to ensure users are authenticated before calling API methods. This attribute can be applied at the controller or action level to enforce authentication requirements.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Request Header:</strong>
+                <p class="correct-answer">Answer: X-MS-CLIENT-PRINCIPAL-NAME</p>
+                <p class="explanation">The "X-MS-CLIENT-PRINCIPAL-NAME" header contains the authenticated user's name when using Azure App Service Authentication (which supports both Twitter and Azure AD). This is the correct header to use for logging the user's name for each method call.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Implementation Notes:</strong>
+                <p class="explanation">1. The [Authorize] attribute should be applied to controllers or actions that require authentication.</p>
+                <p class="explanation">2. To get the user's name in your controller actions, you can access the "X-MS-CLIENT-PRINCIPAL-NAME" header from the request.</p>
+                <p class="explanation">3. For Azure AD authentication, you may also need to configure the authentication middleware in your Startup.cs file.</p>
+                <p class="explanation">4. When using Twitter authentication, ensure you've registered your application with Twitter and configured the appropriate consumer key and secret.</p>
+            </div>
+            <h3>正确答案与中文说明：</h3>
+            <div class="answer-item">
+                <strong>属性：</strong>
+                <p class="correct-answer">答案：Authorize</p>
+                <p class="explanation">[Authorize]属性用于确保在调用API方法前用户已经通过身份验证。这个属性可以应用在控制器或方法级别来强制执行认证要求。</p>
+            </div>
+            <div class="answer-item">
+                <strong>请求头：</strong>
+                <p class="correct-answer">答案：X-MS-CLIENT-PRINCIPAL-NAME</p>
+                <p class="explanation">当使用Azure应用服务认证(支持Twitter和Azure AD)时，"X-MS-CLIENT-PRINCIPAL-NAME"请求头包含了已认证用户的名称。这是记录每个方法调用用户名的正确请求头。</p>
+            </div>
+            <div class="answer-item">
+                <strong>实现说明：</strong>
+                <p class="explanation">1. [Authorize]属性应该应用于需要认证的控制器或方法。</p>
+                <p class="explanation">2. 在控制器方法中，您可以从请求中访问"X-MS-CLIENT-PRINCIPAL-NAME"头来获取用户名。</p>
+                <p class="explanation">3. 对于Azure AD认证，您可能还需要在Startup.cs文件中配置认证中间件。</p>
+                <p class="explanation">4. 使用Twitter认证时，请确保您已在Twitter注册了应用程序并配置了正确的消费者密钥和密钥。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attributeSelect = document.getElementById('attributeSelect');
+            const headerSelect = document.getElementById('headerSelect');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerSection = document.getElementById('answerSection');
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = answerSection.style.display === 'block' ? 'none' : 'block';
+                this.textContent = answerSection.style.display === 'block' ? 'Hide Answer' : 'View Answer';
+                
+                // Highlight correct answers in dropdowns
+                if (answerSection.style.display === 'block') {
+                    attributeSelect.value = 'Authorize';
+                    headerSelect.value = 'X-MS-CLIENT-PRINCIPAL-NAME';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

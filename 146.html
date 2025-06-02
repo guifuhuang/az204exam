@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 146 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .line-number {
+            color: #999;
+            display: inline-block;
+            width: 30px;
+            text-align: right;
+            margin-right: 10px;
+            user-select: none;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f2f2f2;
+        }
+        .statement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .statement-table th, .statement-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .statement-table th {
+            background-color: #f2f2f2;
+        }
+        .radio-group {
+            text-align: center;
+        }
+        .answer-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .answer-item {
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 146 HOTSPOT</h2>
+    <p>A company develops a series of mobile games. All games use a single leaderboard service.</p>
+    <p>You have the following requirements:</p>
+    <ul>
+        <li>Code should be scalable and allow for growth.</li>
+        <li>Each record must consist of a playedId, gameId, score, and time played.</li>
+        <li>When users reach a new high score, the system will save the new score using the SaveScore function below.</li>
+        <li>Each game is assigned and Id based on the series title.</li>
+    </ul>
+    <p>You have the following code. (Line numbers are included for reference only.)</p>
+
+    <div class="code-block">
+        <div><span class="line-number">01</span>public void SaveScore(string gameId, string playerId, int score, long timePlayed)</div>
+        <div><span class="line-number">02</span>{</div>
+        <div><span class="line-number">03</span>    CloudStorageAccount account = CloudStorageAccount.Parse("UseDevelopmentStorage=true");</div>
+        <div><span class="line-number">04</span>    CloudTableClient tableClient = account.CreateCloudTableClient();</div>
+        <div><span class="line-number">05</span>    CloudTable table = tableClient.GetTableReference("scoreTable");</div>
+        <div><span class="line-number">06</span>    var createIfNotExists = table.CreateIfNotExists();</div>
+        <div><span class="line-number">07</span>    var scoreRecord = new PlayerScore(gameId, playerId, score, timePlayed);</div>
+        <div><span class="line-number">08</span>    TableOperation insertOperation = TableOperation.Insert(scoreRecord);</div>
+        <div><span class="line-number">09</span>    table.Execute(insertOperation);</div>
+        <div><span class="line-number">10</span>}</div>
+        <div><span class="line-number">11</span></div>
+        <div><span class="line-number">12</span>public class PlayerScore : TableEntity</div>
+        <div><span class="line-number">13</span>{</div>
+        <div><span class="line-number">14</span>    public PlayerScore(string gameId, string playerId, int score, long timePlayed)</div>
+        <div><span class="line-number">15</span>    {</div>
+        <div><span class="line-number">16</span>        this.PartitionKey = gameId;</div>
+        <div><span class="line-number">17</span>        this.RowKey = playerId;</div>
+        <div><span class="line-number">18</span>        Score = score;</div>
+        <div><span class="line-number">19</span>        TimePlayed = timePlayed;</div>
+        <div><span class="line-number">20</span>    }</div>
+        <div><span class="line-number">21</span></div>
+        <div><span class="line-number">22</span>    public int Score { get; set; }</div>
+        <div><span class="line-number">23</span>    public long TimePlayed { get; set; }</div>
+        <div><span class="line-number">24</span>}</div>
+    </div>
+
+    <p>You store customer information in an Azure Cosmos database. The following data already exists in the database:</p>
+    <table class="data-table">
+        <tr>
+            <th>PartitionKey</th>
+            <th>RowKey</th>
+            <th>email</th>
+        </tr>
+        <tr>
+            <td>Harp</td>
+            <td>Walter</td>
+            <td>wharp@contoso.com</td>
+        </tr>
+        <tr>
+            <td>Smith</td>
+            <td>Steve</td>
+            <td>ssmith@contoso.com</td>
+        </tr>
+        <tr>
+            <td>Smith</td>
+            <td>Jeff</td>
+            <td>jsmith@contoso.com</td>
+        </tr>
+    </table>
+
+    <div class="code-block">
+        <div><span class="line-number">01</span>CloudTableClient tableClient = account.CreateCloudTableClient();</div>
+        <div><span class="line-number">02</span>CloudTable table = tableClient.GetTableReference("scoreTable");</div>
+        <div><span class="line-number">03</span>TableQuery&lt;PlayerScore&gt; query = new TableQuery&lt;PlayerScore&gt;();</div>
+        <div><span class="line-number">04</span>query.Where(TableQuery.CombineFilters(</div>
+        <div><span class="line-number">05</span>    TableQuery.GenerateFilterCondition("email", QueryComparisons.Equal, "smith"),</div>
+        <div><span class="line-number">06</span>    TableOperators.And,</div>
+        <div><span class="line-number">07</span>    TableQuery.GenerateFilterCondition("email", QueryComparisons.Equal, "samsmith@contoso.com")</div>
+        <div><span class="line-number">08</span>));</div>
+        <div><span class="line-number">09</span>var result = table.ExecuteQuerySegmentedAsync(query, null);</div>
+    </div>
+
+    <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+
+    <table class="statement-table">
+        <tr>
+            <th>Statement</th>
+            <th>Yes</th>
+            <th>No</th>
+        </tr>
+        <tr>
+            <td>The code will work with Cosmos DB.</td>
+            <td class="radio-group">
+                <input type="radio" name="statement1" value="Yes">
+            </td>
+            <td class="radio-group">
+                <input type="radio" name="statement1" value="No">
+            </td>
+        </tr>
+        <tr>
+            <td>The save score function will update and replace a record if one already exists with the same playerId and gameId.</td>
+            <td class="radio-group">
+                <input type="radio" name="statement2" value="Yes">
+            </td>
+            <td class="radio-group">
+                <input type="radio" name="statement2" value="No">
+            </td>
+        </tr>
+        <tr>
+            <td>The data for the game will be automatically partitioned.</td>
+            <td class="radio-group">
+                <input type="radio" name="statement3" value="Yes">
+            </td>
+            <td class="radio-group">
+                <input type="radio" name="statement3" value="No">
+            </td>
+        </tr>
+        <tr>
+            <td>This code will store the values for the gameId and playerId parameters in the database.</td>
+            <td class="radio-group">
+                <input type="radio" name="statement4" value="Yes">
+            </td>
+            <td class="radio-group">
+                <input type="radio" name="statement4" value="No">
+            </td>
+        </tr>
+    </table>
+
+    <button class="answer-button" onclick="showAnswers()">查看答案</button>
+
+    <div id="answer-section" class="answer-section">
+        <h3>Answers and Explanations:</h3>
+        <div class="answer-item">
+            <p><strong>1. The code will work with Cosmos DB.</strong></p>
+            <p><span class="correct">Correct answer: No</span></p>
+            <p>Explanation: The code is using Azure Table Storage APIs (CloudStorageAccount, CloudTableClient, etc.) which are different from Cosmos DB Table API. While Cosmos DB has a Table API that is compatible with Azure Table Storage, this code specifically targets Azure Table Storage, not Cosmos DB.</p>
+        </div>
+        <div class="answer-item">
+            <p><strong>2. The save score function will update and replace a record if one already exists with the same playerId and gameId.</strong></p>
+            <p><span class="correct">Correct answer: No</span></p>
+            <p>Explanation: The code uses TableOperation.Insert which will throw an exception if a record with the same PartitionKey (gameId) and RowKey (playerId) already exists. To update an existing record, it should use TableOperation.InsertOrReplace.</p>
+        </div>
+        <div class="answer-item">
+            <p><strong>3. The data for the game will be automatically partitioned.</strong></p>
+            <p><span class="correct">Correct answer: Yes</span></p>
+            <p>Explanation: The code sets PartitionKey = gameId, which means the data will be automatically partitioned by gameId. This is how Azure Table Storage handles partitioning - all entities with the same PartitionKey are stored in the same partition.</p>
+        </div>
+        <div class="answer-item">
+            <p><strong>4. This code will store the values for the gameId and playerId parameters in the database.</strong></p>
+            <p><span class="correct">Correct answer: Yes</span></p>
+            <p>Explanation: The code stores gameId as PartitionKey and playerId as RowKey in the PlayerScore entity, both of which are stored in the database. These are the primary keys for the table entity.</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswers() {
+            document.getElementById('answer-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Insights Availability Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 223</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You develop and deploy an ASP.NET web app to Azure App Service. You use Application Insights telemetry to monitor the app.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ol>
+            <li>Test the app to ensure it is available and responsive from various points around the world</li>
+            <li>Perform tests at regular intervals</li>
+            <li>Send alerts to support staff if the app is not responding</li>
+        </ol>
+        
+        <p><strong>Task:</strong></p>
+        <p>Which two test types can you use? Each correct answer presents a complete solution.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="answer" value="A">
+                <label for="optionA">A. integration</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="answer" value="B">
+                <label for="optionB">B. multi-step web</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="answer" value="C">
+                <label for="optionC">C. URL ping</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="answer" value="D">
+                <label for="optionD">D. unit</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="answer" value="E">
+                <label for="optionE">E. load</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p>正确答案是：<span class="correct">B. multi-step web</span> 和 <span class="correct">C. URL ping</span></p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>在Application Insights中，有以下四种可用性测试类型：</p>
+            <ol>
+                <li><strong>标准测试</strong>：通过发送单个请求来检查网站可用性</li>
+                <li><strong>自定义TrackAvailability测试</strong>：创建自定义应用程序运行可用性测试</li>
+                <li><strong>URL ping测试</strong>：验证端点是否响应并测量性能</li>
+                <li><strong>多步骤Web测试</strong>：模拟用户会话并验证多个步骤的响应</li>
+            </ol>
+            
+            <p><strong>选择理由：</strong></p>
+            <ul>
+                <li><span class="correct">URL ping测试(C)</span>：
+                    <ul>
+                        <li>最简单的可用性测试类型</li>
+                        <li>可以从全球多个位置定期发送HTTP请求</li>
+                        <li>可以配置响应时间阈值和内容匹配规则</li>
+                        <li>支持自动警报功能</li>
+                    </ul>
+                </li>
+                <li><span class="correct">多步骤Web测试(B)</span>：
+                    <ul>
+                        <li>模拟更复杂的用户交互流程</li>
+                        <li>可以记录和回放多个HTTP请求序列</li>
+                        <li>支持验证每个步骤的响应</li>
+                        <li>同样支持从全球多个位置执行和警报功能</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p><strong>其他选项分析：</strong></p>
+            <ul>
+                <li><span class="incorrect">A. integration</span>：集成测试不是Application Insights提供的可用性测试类型</li>
+                <li><span class="incorrect">D. unit</span>：单元测试是开发阶段的测试方法，不适用于生产环境监控</li>
+                <li><span class="incorrect">E. load</span>：负载测试用于评估系统在压力下的性能，不是针对可用性监控</li>
+            </ul>
+            
+            <p><strong>配置建议：</strong></p>
+            <ol>
+                <li>对于简单监控，使用URL ping测试配置：
+                    <ul>
+                        <li>设置5个以上的测试位置</li>
+                        <li>测试频率建议5分钟</li>
+                        <li>配置响应超时阈值(如30秒)</li>
+                        <li>设置内容匹配规则验证关键页面内容</li>
+                    </ul>
+                </li>
+                <li>对于关键业务流程，使用多步骤Web测试：
+                    <ul>
+                        <li>记录用户登录-操作-登出的完整流程</li>
+                        <li>验证每个步骤的关键响应</li>
+                        <li>配置更严格的警报规则(如3/5位置失败)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>警报配置：</strong></p>
+            <ul>
+                <li>在创建测试后会自动启用基本警报</li>
+                <li>建议配置操作组发送邮件/SMS/Teams通知</li>
+                <li>对于关键应用，建议设置"Y个位置中有X个报告失败"的警报规则</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

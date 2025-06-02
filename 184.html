@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .hotspot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .hotspot-table th, .hotspot-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .hotspot-table th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 184 HOTSPOT</h2>
+        <p>You are configuring a development environment for your team. You deploy the latest Visual Studio image from the Azure Marketplace to your Azure subscription.</p>
+        
+        <p>The development environment requires several software development kits (SDKs) and third-party components to support application development across the organization. You install and customize the deployed virtual machine (VM) for your development team. The customized VM must be saved to allow provisioning of a new team member development environment.</p>
+        
+        <p>You need to save the customized VM for future provisioning.</p>
+        
+        <p>Which tools or services should you use? To answer, select the appropriate options in the answer area.</p>
+        
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+    
+    <table class="hotspot-table">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Tool or service</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Generalize the VM</td>
+                <td>
+                    <select id="generalize">
+                        <option value="">Select an option</option>
+                        <option value="Azure PowerShell">Azure PowerShell</option>
+                        <option value="Visual Studio command prompt">Visual Studio command prompt</option>
+                        <option value="Azure Migrate">Azure Migrate</option>
+                        <option value="Azure Backup">Azure Backup</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Store images</td>
+                <td>
+                    <select id="store">
+                        <option value="">Select an option</option>
+                        <option value="Azure Blob Storage">Azure Blob Storage</option>
+                        <option value="Azure Data Lake Storage">Azure Data Lake Storage</option>
+                        <option value="Azure File Storage">Azure File Storage</option>
+                        <option value="Azure Table Storage">Azure Table Storage</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answerSection" class="answer">
+        <h3>正确答案:</h3>
+        <p><strong>Generalize the VM:</strong> Azure PowerShell</p>
+        <p><strong>Store images:</strong> Azure Blob Storage</p>
+        
+        <h3>说明:</h3>
+        <ol>
+            <li><strong>通用化虚拟机:</strong> 
+                <ul>
+                    <li>需要使用Azure PowerShell中的<code>Set-AzVm -Generalized</code>命令或Azure CLI中的<code>az vm generalize</code>命令来通用化VM</li>
+                    <li>这是创建自定义镜像前的必要步骤，会移除所有机器特定信息</li>
+                </ul>
+            </li>
+            <li><strong>存储镜像:</strong>
+                <ul>
+                    <li>Azure Blob Storage是存储VM镜像的标准服务</li>
+                    <li>通用化后，可以使用<code>Save-AzVMImage</code>命令将镜像保存到Blob存储</li>
+                    <li>存储的镜像可以用于后续创建相同配置的新VM</li>
+                </ul>
+            </li>
+        </ol>
+        <p>其他选项不适合此场景：Visual Studio命令提示符不用于VM管理，Azure Migrate用于迁移评估，Azure Backup用于备份而非镜像创建，其他存储服务不用于存储VM镜像。</p>
+    </div>
+    
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

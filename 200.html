@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .code-block {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            margin: 5px 0;
+            overflow-x: auto;
+        }
+        #answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .correct {
+            color: #107c10;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 200</h2>
+        <p>A company is developing a solution that allows smart refrigerators to send temperature information to a central location. You have an existing Service Bus.</p>
+        <p>The solution must receive and store messages until they can be processed. You create an Azure Service Bus instance by providing a name, pricing tier, subscription, resource group, and location.</p>
+        <p>You need to complete the configuration.</p>
+        <p>Which Azure CLI or PowerShell command should you run?</p>
+        
+        <div class="options">
+            <div class="option">
+                <label>
+                    <input type="radio" name="answer" value="A">
+                    <div class="code-block">
+az servicebus namespace create
+    --resource-group fridgerg
+    --name fridge-ns
+    --location fridge-loc
+                    </div>
+                </label>
+            </div>
+            <div class="option">
+                <label>
+                    <input type="radio" name="answer" value="B">
+                    <div class="code-block">
+az servicebus queue create
+    --resource-group fridge-rg
+    --namespace-name fridge-ns
+    --name fridge-q
+                    </div>
+                </label>
+            </div>
+            <div class="option">
+                <label>
+                    <input type="radio" name="answer" value="C">
+                    <div class="code-block">
+connectionString=$(az servicebus namespace authorization-rule keys list
+    --resource-group fridge-rg
+    --namespace-name fridge-ns
+    --name RootManageSharedAccessKey
+    --query primaryConnectionString --output tsv)
+                    </div>
+                </label>
+            </div>
+            <div class="option">
+                <label>
+                    <input type="radio" name="answer" value="D">
+                    <div class="code-block">
+az group create
+    --name fridge-rg
+    --location fridgelog
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案: <span class="correct">B. Option B</span></h3>
+        
+        <h3>说明:</h3>
+        <p>题目要求完成Service Bus的配置，以接收和存储智能冰箱的温度信息消息。根据题目描述和提供的选项：</p>
+        
+        <ol>
+            <li><strong>选项分析:</strong>
+                <ul>
+                    <li><strong>A选项</strong>：创建Service Bus命名空间，但题目中已说明"已有Service Bus"并创建了实例</li>
+                    <li><strong>B选项</strong>：创建Service Bus队列，这是正确答案，因为队列正是用于接收和存储消息的组件</li>
+                    <li><strong>C选项</strong>：获取连接字符串，这是后续使用的步骤，不是当前需要的配置</li>
+                    <li><strong>D选项</strong>：创建资源组，题目中已提供资源组信息</li>
+                </ul>
+            </li>
+            
+            <li><strong>为什么选择B:</strong>
+                <ul>
+                    <li>题目明确要求"接收和存储消息"，这正是Service Bus队列的功能</li>
+                    <li>虽然已有Service Bus实例，但需要创建队列来具体处理消息</li>
+                    <li>队列是消息存储的物理容器，必须显式创建</li>
+                </ul>
+            </li>
+            
+            <li><strong>命令详解:</strong>
+                <div class="code-block">
+az servicebus queue create
+    --resource-group fridge-rg      # 指定资源组
+    --namespace-name fridge-ns      # 指定Service Bus命名空间
+    --name fridge-q                 # 指定队列名称
+                </div>
+            </li>
+        </ol>
+        
+        <p><strong>关键点:</strong></p>
+        <ul>
+            <li>Service Bus命名空间是消息服务的高级容器</li>
+            <li>队列是实际存储消息的实体</li>
+            <li>题目中已完成命名空间创建，下一步需要创建具体队列</li>
+            <li>连接字符串和资源组创建都不是当前配置的核心需求</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

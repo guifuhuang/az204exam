@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure SQL Database Data Masking Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        .option.selected {
+            background-color: #d4edff;
+            border-color: #a8d1ff;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 171</h2>
+        <p>A company uses Azure SQL Database to store data for an app. The data includes sensitive information.</p>
+        <p>You need to implement measures that allow only members of the managers group to see sensitive information.</p>
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="options">
+        <div class="option" data-value="A">A. Include the managers group</div>
+        <div class="option" data-value="B">B. Exclude the managers group</div>
+        <div class="option" data-value="C">C. Exclude the administrators group</div>
+        <div class="option" data-value="D">
+            D. Navigate to the following URL:<br>
+            <div class="code">PUT https://management.azure.com/subscriptions/00000000-1111-2222-3333-44444444444
+/resourceGroups/rg01/providers/Microsoft.Sql/servers/server01/databases/customers
+/transparentDataEncryption/current?api-version=2014-04-01</div>
+        </div>
+        <div class="option" data-value="E">
+            E. Run the following Azure PowerShell command:<br>
+            <div class="code">New-AzureRmSqlDatabaseDataMaskingRule -SchemaName "dbo" -TableName "customers" \
+-ColumnName "sent" -MaskingFunction "Default"</div>
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p><span class="correct">A. Include the managers group</span>, <span class="correct">E. Run the following Azure PowerShell command:</span></p>
+        
+        <div class="explanation">
+            <h3>解析:</h3>
+            <p>要实现仅允许管理人员组查看敏感信息的需求，需要完成以下两个关键操作：</p>
+            
+            <ol>
+                <li><strong>包含管理人员组 (Include the managers group)</strong>：
+                    <ul>
+                        <li>在动态数据掩码配置中，必须将管理人员组包含在特权用户列表中</li>
+                        <li>这样管理人员组成员才能查看未掩码的原始数据[8](@ref)</li>
+                        <li>排除管理人员组(B选项)会导致相反效果，不符合需求</li>
+                    </ul>
+                </li>
+                
+                <li><strong>运行PowerShell命令创建数据掩码规则</strong>：
+                    <ul>
+                        <li>使用<code>New-AzureRmSqlDatabaseDataMaskingRule</code>命令为敏感列创建掩码规则</li>
+                        <li>需要指定架构名、表名、列名和掩码函数[6](@ref)</li>
+                        <li>示例中的"Default"掩码函数会完全隐藏数据[8](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>为什么其他选项不正确：</strong></p>
+            <ul>
+                <li><strong>C. 排除管理员组</strong>：题目要求的是控制管理人员访问权限，与管理员组无关</li>
+                <li><strong>D. 透明数据加密URL</strong>：此URL用于配置透明数据加密(TDE)，与数据掩码无关[4](@ref)</li>
+            </ul>
+            
+            <p><strong>完整实现步骤：</strong></p>
+            <ol>
+                <li>使用PowerShell创建数据掩码规则：
+                    <div class="code">
+                        New-AzureRmSqlDatabaseDataMaskingRule -ResourceGroupName "YourRG" \<br>
+                        -ServerName "YourServer" -DatabaseName "YourDB" \<br>
+                        -SchemaName "dbo" -TableName "customers" \<br>
+                        -ColumnName "sent" -MaskingFunction "Default"
+                    </div>
+                </li>
+                <li>在Azure门户中配置数据掩码策略，将管理人员组添加到特权用户列表</li>
+                <li>验证管理人员组成员可以查看未掩码数据，而其他用户看到的是掩码后的数据</li>
+            </ol>
+            
+            <p><strong>技术要点：</strong></p>
+            <ul>
+                <li>数据掩码是在查询结果返回时应用的，不影响底层存储的数据[8](@ref)</li>
+                <li>UNMASK权限可以精细控制哪些用户/组可以查看原始数据[8](@ref)</li>
+                <li>不同的掩码函数(default, email, random等)适用于不同类型的数据[8](@ref)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 多选功能实现
+        const options = document.querySelectorAll('.option');
+        let selectedOptions = [];
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedOptions = selectedOptions.filter(item => item !== value);
+                } else {
+                    if (selectedOptions.length < 2) {
+                        this.classList.add('selected');
+                        selectedOptions.push(value);
+                    }
+                }
+            });
+        });
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // 清除所有选择
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 选择正确答案
+            document.querySelector('.option[data-value="A"]').classList.add('selected');
+            document.querySelector('.option[data-value="E"]').classList.add('selected');
+        }
+    </script>
+</body>
+</html>

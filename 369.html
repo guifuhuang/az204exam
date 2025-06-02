@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus 配置测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeff5;
+        }
+        
+        .question-number {
+            background: #0078d4;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+        }
+        
+        .question-text p {
+            margin-bottom: 12px;
+        }
+        
+        .requirements {
+            background: #eef7ff;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+        }
+        
+        .requirements h3 {
+            color: #1e4a8e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirements h3 i {
+            margin-right: 10px;
+        }
+        
+        .requirement-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        .requirement-item i {
+            color: #4a90e2;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .option-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .option-card:hover {
+            border-color: #4a90e2;
+            background: #eef7ff;
+            transform: translateY(-3px);
+        }
+        
+        .option-card.selected {
+            border-color: #28a745;
+            background: #e8f5e9;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+        }
+        
+        .option-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #6c757d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .option-card.A .option-letter { background: #dc3545; }
+        .option-card.B .option-letter { background: #fd7e14; }
+        .option-card.C .option-letter { background: #ffc107; }
+        .option-card.D .option-letter { background: #20c997; }
+        
+        .option-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-parameter {
+            color: #9cdcfe;
+        }
+        
+        .code-value {
+            color: #ce9178;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(120deg, #0078d4 0%, #1e4a8e 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn:hover {
+            background: linear-gradient(120deg, #0066b8 0%, #163a75 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            display: none;
+            background: linear-gradient(to right, #e6f7ff, #f0f9ff);
+            border-left: 5px solid #1890ff;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+        
+        .answer-header i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+        
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .correct-answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .correct-answer h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 25px;
+        }
+        
+        .explanation h3 {
+            color: #1e4a8e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Service Bus 配置测试题</h1>
+            <p class="subtitle">选择正确的命令完成Service Bus实例配置</p>
+        </header>
+        
+        <div class="card">
+            <div class="question-header">
+                <div class="question-number">369</div>
+                <div class="question-text">
+                    <p><strong>题目描述</strong></p>
+                    <p>解决方案需要接收并存储消息直到它们可以被处理。您通过提供名称、定价层、订阅、资源组和位置创建了一个Azure Service Bus实例。</p>
+                    <p>您需要完成配置。</p>
+                    <p>应该运行哪个Azure CLI或PowerShell命令？</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3><i class="fas fa-tasks"></i> 配置要求</h3>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>创建完整的Service Bus实例（命名空间）</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>包含资源组、位置、命名空间名称等参数</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>使用正确的PowerShell或CLI命令</div>
+                </div>
+            </div>
+            
+            <h2 style="margin: 25px 0 15px; color: #1e4a8e;">配置选项</h2>
+            <p style="margin-bottom: 20px;">请选择正确的命令完成Service Bus实例配置：</p>
+            
+            <div class="options-container">
+                <!-- 选项 A -->
+                <div class="option-card A" data-option="A">
+                    <div class="option-header">
+                        <div class="option-letter">A</div>
+                        <div class="option-title">创建资源组</div>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-keyword">New-AzureRmResourceGroup</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Name</span> <span class="code-value">fridge-rg</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Location</span> <span class="code-value">fridge-loc</span>
+                    </div>
+                </div>
+                
+                <!-- 选项 B -->
+                <div class="option-card B" data-option="B">
+                    <div class="option-header">
+                        <div class="option-letter">B</div>
+                        <div class="option-title">获取连接字符串</div>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-comment"># 获取服务总线命名空间的连接字符串</span><br>
+                        <span class="code-keyword">az servicebus namespace authorization-rule keys list</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">--resource-group</span> <span class="code-value">fridge-group</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">--namespace-name</span> <span class="code-value">fridge-ns</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">--name</span> <span class="code-value">RootManageSharedAccessKey</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">--query</span> <span class="code-value">PrimaryConnectionString</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">--output</span> <span class="code-value">tsv</span>
+                    </div>
+                </div>
+                
+                <!-- 选项 C -->
+                <div class="option-card C" data-option="C">
+                    <div class="option-header">
+                        <div class="option-letter">C</div>
+                        <div class="option-title">创建服务总线队列</div>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-keyword">New-AzureRmServiceBusQueue</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-ResourceGroupName</span> <span class="code-value">fridge-rg</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-NamespaceName</span> <span class="code-value">fridge-ns</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Name</span> <span class="code-value">fridge-queue</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-EnablePartitioning</span> <span class="code-value">$False</span>
+                    </div>
+                </div>
+                
+                <!-- 选项 D -->
+                <div class="option-card D" data-option="D">
+                    <div class="option-header">
+                        <div class="option-letter">D</div>
+                        <div class="option-title">创建服务总线命名空间</div>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-keyword">New-AzureRmServiceBusNamespace</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-ResourceGroupName</span> <span class="code-value">fridge-rg</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-NamespaceName</span> <span class="code-value">fridge-ns</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Location</span> <span class="code-value">fridge-loc</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button id="checkAnswer" class="btn">
+                    <i class="fas fa-check-circle"></i> 查看答案
+                </button>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <div class="answer-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>正确答案与解析</h2>
+                </div>
+                
+                <div class="correct-answer">
+                    <h3><i class="fas fa-check"></i> 正确答案: <span style="color:#2e7d32">选项 C</span></h3>
+                    <!-- <div class="code-block">
+                        <span class="code-keyword">New-AzureRmServiceBusNamespace</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-ResourceGroupName</span> <span class="code-value">fridge-rg</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-NamespaceName</span> <span class="code-value">fridge-ns</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Location</span> <span class="code-value">fridge-loc</span>
+                    </div> -->
+                    <div class="code-block">
+                        <span class="code-keyword">New-AzureRmServiceBusQueue</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-ResourceGroupName</span> <span class="code-value">fridge-rg</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-NamespaceName</span> <span class="code-value">fridge-ns</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-Name</span> <span class="code-value">fridge-queue</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parameter">-EnablePartitioning</span> <span class="code-value">$False</span>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-book"></i> 解析说明</h3>
+                    
+                    <p><strong>为什么选择C,不选择选项 D？</strong></p>
+                    <p>虽然要先又命名空间，但是题目要求创建完整的Azure Service Bus实例</p>
+                    
+                    <ul style="padding-left: 25px; margin: 15px 0;">
+                        <li><span class="highlight">New-AzureRmServiceBusNamespace</span> 是创建Service Bus实例的正确PowerShell命令</li>
+                        <li>该命令需要提供<span class="highlight">资源组名称</span>、<span class="highlight">命名空间名称</span>和<span class="highlight">位置</span>，完全符合题目要求</li>
+                        <li>创建命名空间是设置Service Bus的第一步，之后才能创建队列、主题等资源</li>
+                    </ul>
+                    
+                    <p><strong>其他选项为什么不正确？</strong></p>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-times" style="color:#dc3545"></i>
+                        <div><strong>选项 A</strong>：仅创建资源组，不创建Service Bus资源</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-times" style="color:#dc3545"></i>
+                        <div><strong>选项 B</strong>：获取连接字符串，但前提是命名空间已存在</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <i class="fas fa-times" style="color:#dc3545"></i>
+                        <div><strong>选项 C</strong>：创建服务总线队列，但需要先有命名空间</div>
+                    </div>
+                    
+                    <p><strong>关键概念：</strong></p>
+                    <p>在Azure中，Service Bus实例由以下层次结构组成：</p>
+                    <ol style="padding-left: 25px; margin: 15px 0;">
+                        <li><span class="highlight">命名空间</span> - 顶级容器，包含所有Service Bus资源</li>
+                        <li><span class="highlight">队列/主题</span> - 消息存储和传递的实际实体</li>
+                        <li><span class="highlight">订阅/规则</span> - 主题的消费者配置</li>
+                    </ol>
+                    
+                    <p>因此，创建Service Bus实例的第一步始终是创建命名空间。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Service Bus 配置测试题 | 基于实际场景设计</p>
+            <p>© 2023 Azure 认证模拟测试</p>
+        </div>
+    </div>
+
+    <script>
+        // 选项选择功能
+        const optionCards = document.querySelectorAll('.option-card');
+        optionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // 移除之前的选择
+                optionCards.forEach(c => c.classList.remove('selected'));
+                // 添加当前选择
+                card.classList.add('selected');
+            });
+        });
+        
+        // 查看答案功能
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案区域
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

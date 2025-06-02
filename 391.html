@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure B2B用户认证方式更改测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f8fc;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .options-container {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f5ff;
+            border-color: #c2d6ff;
+        }
+        .option.selected {
+            background-color: #e1ebff;
+            border-color: #0078d4;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .explanation {
+            background-color: #f3f9ff;
+            border-left: 4px solid #0078d4;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .incorrect-answer {
+            color: #d83b01;
+        }
+        h1 {
+            color: #004578;
+            border-bottom: 2px solid #e1ebff;
+            padding-bottom: 10px;
+        }
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            background-color: #f8f9fc;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1>Azure B2B用户认证方式更改测试题</h1>
+        
+        <div class="question-text">
+            <p><strong>问题:</strong> 您正在构建一个使用Azure B2B协作进行身份验证的B2B Web应用程序。</p>
+            <p>付费客户使用联合身份验证登录Azure B2B。</p>
+            <p>该应用程序允许用户使用任何电子邮件地址注册试用帐户。</p>
+            <p>当用户转换为付费客户时，应保留与试用帐户关联的数据，但用户必须使用联合身份验证进行身份验证。</p>
+            <p>您需要在用户转换为付费客户时更新Azure Active Directory (Azure AD)中的用户信息。</p>
+            <p><strong>问题:</strong> 哪个Graph API参数用于将身份验证从一次性密码更改为联合身份验证？</p>
+        </div>
+        
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">A. userFlowType</div>
+            <div class="option" onclick="selectOption(this)">B. Status</div>
+            <div class="option" onclick="selectOption(this)">C. invitedUser</div>
+            <div class="option" onclick="selectOption(this)">D. resetRedemption</div>
+        </div>
+        
+        <button class="answer-button" onclick="showAnswer()">查看答案</button>
+        
+        <div class="explanation" id="explanation">
+            <h3>答案及解析</h3>
+            <p><span class="correct-answer">正确答案: B. Status</span></p>
+            <p><strong>解析:</strong></p>
+            <p>在Azure AD B2B协作场景中，当用户从试用账户（使用一次性密码）转换为付费客户（需要使用联合身份验证）时：</p>
+            <ul>
+                <li><strong>Status参数</strong>用于管理用户的身份验证状态</li>
+                <li>通过将用户的<code>status</code>属性更新为<code>Accepted</code>或<code>PendingAcceptance</code>，可以触发身份验证方法的变更</li>
+                <li>此操作会强制系统重新评估用户的身份验证方法，从而切换到联合身份验证</li>
+                <li>其他选项分析：
+                    <ul>
+                        <li><strong>A. userFlowType</strong> - 用于B2C用户流，不适用于B2B协作场景</li>
+                        <li><strong>C. invitedUser</strong> - 用于初始邀请用户，不适用于更新现有用户的身份验证方法</li>
+                        <li><strong>D. resetRedemption</strong> - 用于重置邀请状态，但不直接更改身份验证方法</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>因此，使用Graph API的<code>status</code>参数是正确的方法，它允许在保留用户数据的同时更新身份验证方法。</p>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // 移除之前的选择
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 添加当前选择
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            const explanation = document.getElementById('explanation');
+            explanation.style.display = 'block';
+            
+            // 滚动到解释部分
+            explanation.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

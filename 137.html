@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure WebJobs Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        @media (min-width: 768px) {
+            .drag-drop-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        .webjob-types, .scenarios, .answer-area {
+            width: 100%;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: white;
+            margin-bottom: 15px;
+        }
+        @media (min-width: 768px) {
+            .webjob-types, .scenarios, .answer-area {
+                width: 30%;
+                min-height: 300px;
+                margin-bottom: 0;
+            }
+        }
+        .drag-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #ddd;
+            touch-action: none;
+            user-select: none;
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+        .answer-area .drag-item {
+            background-color: #dff0d8;
+        }
+        .scenario-item {
+            background-color: #e6f7ff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #b3e0ff;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .correct-order {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .drag-hint {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .drag-hint {
+                display: none;
+            }
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #e6f7ff;
+        }
+        .drop-zone {
+            min-height: 50px;
+            background-color: #f9f9f9;
+            border: 1px dashed #aaa;
+            padding: 5px;
+        }
+        .drop-zone.highlight {
+            background-color: #e6ffe6;
+            border-color: #107c10;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 137 DRAG DROP</h2>
+        <p>You are developing Azure WebJobs. You need to recommend a WebJob type for each scenario. Which WebJob type should you recommend? To answer, drag the appropriate WebJob types to the correct scenarios. Each WebJob type may be used once, more than once, or not at all.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <span class="drag-hint">(Touch and hold to drag items)</span>
+        
+        <div class="drag-drop-container">
+            <div class="webjob-types" id="webjobTypes">
+                <div class="drag-item" draggable="true" data-id="Triggered">Triggered</div>
+                <div class="drag-item" draggable="true" data-id="Continuous">Continuous</div>
+            </div>
+            
+            <div class="scenarios" id="scenarios">
+                <div class="scenario-item" data-scenario="1">
+                    <p>Run on all instances that the web app runs on. Optionally restrict the WebJob to a single instance.</p>
+                </div>
+                <div class="scenario-item" data-scenario="2">
+                    <p>Run on a single instance that Azure selects for load balancing.</p>
+                </div>
+                <div class="scenario-item" data-scenario="3">
+                    <p>Supports remote debugging.</p>
+                </div>
+            </div>
+            
+            <div class="answer-area" id="answerArea">
+                <table class="answer-table">
+                    <tr>
+                        <th>Scenario</th>
+                        <th>WebJob type</th>
+                    </tr>
+                    <tr>
+                        <td>Run on all instances...</td>
+                        <td class="drop-zone" data-scenario="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Run on a single instance...</td>
+                        <td class="drop-zone" data-scenario="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Supports remote debugging...</td>
+                        <td class="drop-zone" data-scenario="3"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <button class="check-answer" id="checkAnswer">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <div class="correct-order">
+                <table class="answer-table">
+                    <tr>
+                        <th>Scenario</th>
+                        <th>WebJob type</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Run on all instances that the web app runs on. Optionally restrict the WebJob to a single instance.</p>
+                        </td>
+                        <td><span class="correct-answer">Continuous</span></td>
+                        <td>Continuous WebJobs can run on all instances or be restricted to a single instance</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Run on a single instance that Azure selects for load balancing.</p>
+                        </td>
+                        <td><span class="correct-answer">Triggered</span></td>
+                        <td>Triggered WebJobs run on a single instance selected by Azure</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Supports remote debugging.</p>
+                        </td>
+                        <td><span class="correct-answer">Continuous</span></td>
+                        <td>Only Continuous WebJobs support remote debugging</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p><strong>Azure WebJobs 类型比较:</strong></p>
+                <table class="answer-table">
+                    <tr>
+                        <th>类型</th>
+                        <th>特点</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td>Triggered</td>
+                        <td>
+                            <ul>
+                                <li>按需运行（手动触发或按计划）</li>
+                                <li>由Azure选择单个实例运行</li>
+                                <li>支持负载均衡</li>
+                                <li>不支持远程调试</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>后台批处理任务</li>
+                                <li>计划任务</li>
+                                <li>需要负载均衡的场景</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Continuous</td>
+                        <td>
+                            <ul>
+                                <li>持续运行</li>
+                                <li>可以运行在所有实例上</li>
+                                <li>可以限制在单个实例上运行</li>
+                                <li>支持远程调试</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>需要持续运行的服务</li>
+                                <li>需要调试的开发场景</li>
+                                <li>队列监听等持续处理</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+                
+                <p><strong>关键点分析:</strong></p>
+                <ol>
+                    <li><strong>Continuous WebJobs</strong> 适合需要持续运行或扩展到所有实例的场景</li>
+                    <li><strong>Triggered WebJobs</strong> 适合按需运行且需要负载均衡的场景</li>
+                    <li>只有Continuous WebJobs支持远程调试</li>
+                    <li>选择WebJob类型时需要考虑运行模式、扩展性和调试需求</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮功能
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || !answerContainer.style.display) {
+                answerContainer.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerContainer.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 拖拽功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            let draggedItem = null;
+            
+            // 为每个可拖拽项添加事件监听
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('touchstart', touchStart, { passive: false });
+            });
+            
+            // 为每个放置区域添加事件监听
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+                zone.addEventListener('touchend', touchDrop);
+            });
+            
+            function dragStart(e) {
+                draggedItem = e.target;
+                e.dataTransfer.setData('text/plain', e.target.dataset.id);
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => {
+                    e.target.classList.add('dragging');
+                }, 0);
+            }
+            
+            function touchStart(e) {
+                e.preventDefault();
+                draggedItem = e.target;
+                draggedItem.classList.add('dragging');
+                
+                // 创建拖拽项的克隆用于视觉反馈
+                const clone = draggedItem.cloneNode(true);
+                clone.style.position = 'absolute';
+                clone.style.top = '-100px';
+                clone.style.left = '-100px';
+                clone.style.width = draggedItem.offsetWidth + 'px';
+                clone.id = 'drag-clone';
+                document.body.appendChild(clone);
+                
+                // 更新克隆位置
+                function moveClone(e) {
+                    const touch = e.touches[0];
+                    clone.style.left = (touch.clientX - clone.offsetWidth / 2) + 'px';
+                    clone.style.top = (touch.clientY - clone.offsetHeight / 2) + 'px';
+                    
+                    // 高亮放置区域
+                    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropZone = touchElement.closest('.drop-zone');
+                    dropZones.forEach(zone => zone.classList.remove('highlight'));
+                    if (dropZone) dropZone.classList.add('highlight');
+                }
+                
+                document.addEventListener('touchmove', moveClone, { passive: false });
+                document.addEventListener('touchend', function end() {
+                    document.removeEventListener('touchmove', moveClone);
+                    document.removeEventListener('touchend', end);
+                    
+                    const touch = e.changedTouches[0];
+                    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropZone = touchElement ? touchElement.closest('.drop-zone') : null;
+                    
+                    if (dropZone) {
+                        dropZone.innerHTML = '';
+                        const newItem = draggedItem.cloneNode(true);
+                        newItem.classList.remove('dragging');
+                        newItem.draggable = false;
+                        dropZone.appendChild(newItem);
+                    }
+                    
+                    document.body.removeChild(clone);
+                    draggedItem.classList.remove('dragging');
+                    dropZones.forEach(zone => zone.classList.remove('highlight'));
+                    draggedItem = null;
+                });
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+            
+            function dragEnter(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            }
+            
+            function dragLeave() {
+                this.classList.remove('highlight');
+            }
+            
+            function drop(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                // 获取拖拽的数据
+                const data = e.dataTransfer.getData('text/plain');
+                
+                // 清除放置区域已有的内容
+                this.innerHTML = '';
+                
+                // 创建新的项目放入放置区域
+                const newItem = document.createElement('div');
+                newItem.className = 'drag-item';
+                newItem.textContent = data === 'Triggered' ? 'Triggered' : 'Continuous';
+                newItem.dataset.id = data;
+                newItem.draggable = false;
+                
+                this.appendChild(newItem);
+                
+                // 恢复原始拖拽项状态
+                if (draggedItem) {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                }
+            }
+            
+            function touchDrop(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                if (!draggedItem) return;
+                
+                // 清除放置区域已有的内容
+                this.innerHTML = '';
+                
+                // 创建新的项目放入放置区域
+                const newItem = draggedItem.cloneNode(true);
+                newItem.classList.remove('dragging');
+                newItem.draggable = false;
+                
+                this.appendChild(newItem);
+            }
+        });
+    </script>
+</body>
+</html>

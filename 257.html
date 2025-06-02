@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Storage 测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 257</h2>
+        <p>You have an existing Azure storage account that stores large volumes of data across multiple containers.</p>
+        <p>You need to copy all data from the existing storage account to a new storage account. The copy process must meet the following requirements:</p>
+        <ul>
+            <li>Automate data movement.</li>
+            <li>Minimize user input required to perform the operation.</li>
+            <li>Ensure that the data movement process is recoverable.</li>
+        </ul>
+        <p>What should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. AzCopy</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Azure Storage Explorer</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Azure portal</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. .NET Storage Client Library</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <h3>正确答案: A. AzCopy</h3>
+        <p><strong>说明:</strong></p>
+        <p>AzCopy 是满足所有要求的最佳选择：</p>
+        <ol>
+            <li>AzCopy 是一个命令行工具，可以完全自动化数据迁移过程。</li>
+            <li>它只需要最少的用户输入，可以编写脚本来自动执行。</li>
+            <li>AzCopy 具有恢复功能，如果传输中断，可以从断点继续传输。</li>
+            <li>它专为大规模数据传输而设计，适合处理大量数据。</li>
+        </ol>
+        <p>其他选项的不足：</p>
+        <ul>
+            <li>B. Azure Storage Explorer：图形界面工具，需要较多人工操作，不适合自动化</li>
+            <li>C. Azure portal：完全手动操作，无法自动化</li>
+            <li>D. .NET Storage Client Library：虽然可以编程实现，但开发工作量较大，不如AzCopy直接</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

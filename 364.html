@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management 策略配置测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .code-editor {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            border-radius: 8px;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .code-line {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding-left: 10px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .code-line:hover {
+            background: #2a2a2a;
+            border-left: 2px solid #0078d7;
+        }
+        .line-number {
+            color: #6a9955;
+            min-width: 30px;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .code-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .tag {
+            color: #569cd6;
+        }
+        .attr {
+            color: #9cdcfe;
+        }
+        .value {
+            color: #ce9178;
+        }
+        .comment {
+            color: #6a9955;
+        }
+        .select-container {
+            display: inline-block;
+            margin: 0 5px;
+            position: relative;
+        }
+        .code-select {
+            background: #3a3a3a;
+            color: #f8f8f8;
+            border: 1px solid #0078d7;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            min-width: 120px;
+            transition: all 0.3s;
+        }
+        .code-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.5);
+        }
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 25px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-title {
+            color: #0078d7;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 5px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+        }
+        .answer-section {
+            margin-top: 15px;
+        }
+        .answer-section h3 {
+            color: #0078d7;
+            margin-bottom: 10px;
+        }
+        .answer-row {
+            display: flex;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .answer-label {
+            font-weight: bold;
+            min-width: 120px;
+            color: #0078d7;
+        }
+        @media (max-width: 768px) {
+            .code-editor {
+                padding: 15px;
+                font-size: 14px;
+            }
+            .code-line {
+                flex-wrap: wrap;
+            }
+            .select-container {
+                margin: 5px 0;
+                display: block;
+            }
+            .code-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure API Management 策略配置测试</h1>
+            <p>QUESTION NO: 364 HOTSPOT</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您开发了一个使用Azure API Management公开的图像上传服务。上传后的图像会进行自动标记分析。</p>
+                <p>超过500 KB的图像由不同的后端处理，该后端提供成本较低的低层级服务。该层级服务由名为x-lsrSe-request的标头表示。</p>
+                <p>超过500 KB的图像绝不能由较小图像的后端处理，并且必须始终按较低价格收费。</p>
+                <p>您需要实施API Management策略以确保图像得到正确处理。</p>
+                <p>如何完成API Management入站策略？请选择答案区域中的适当选项。</p>
+                <p>注意：每个正确选项值1分。</p>
+            </div>
+        </div>
+        
+        <div class="code-editor">
+            <div class="code-line">
+                <span class="line-number">1</span>
+                <span class="code-content"><span class="tag">&lt;inbound&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">2</span>
+                <span class="code-content">
+                    <span class="tag">&lt;base</span> <span class="tag">/&gt;</span>
+                </span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">3</span>
+                <span class="code-content">
+                    <span class="tag">&lt;set-variable</span> <span class="attr">name</span>=<span class="value">"imageSize"</span> <span class="attr">value</span>=<span class="value">"@{context.Request.Headers["Content-Length"][0]}"</span> <span class="tag">/&gt;</span>
+                </span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">4</span>
+                <span class="code-content"><span class="tag">&lt;choose&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">5</span>
+                <span class="code-content">&nbsp;&nbsp;<span class="tag">&lt;when</span> <span class="attr">condition</span>=<span class="value">"@(int.Parse(context.variables.GetValueOrDefault&lt;string&gt;('imageSize']))<512000)"</span><span class="tag">&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">6</span>
+                <span class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;set-header</span> <span class="attr">name</span>=<span class="value">"x-large-request"</span> <span class="attr">exists-action</span>=<span class="value">"</span>
+                <div class="select-container">
+                    <select class="code-select" id="select1">
+                        <option value="">请选择</option>
+                        <option value="append">append</option>
+                        <option value="skip">skip</option>
+                        <option value="delete">delete</option>
+                        <option value="override">override</option>
+                    </select>
+                </div>
+                <span class="value">"</span><span class="tag">&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">7</span>
+                <span class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;value&gt;</span>true<span class="tag">&lt;/value&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">8</span>
+                <span class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/set-header&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">9</span>
+                <span class="code-content">&nbsp;&nbsp;<span class="tag">&lt;/when&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">10</span>
+                <span class="code-content">&nbsp;&nbsp;<span class="tag">&lt;otherwise&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">11</span>
+                <span class="code-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span>
+                <div class="select-container">
+                    <select class="code-select" id="select2">
+                        <option value="">请选择</option>
+                        <option value="set-body">set-body</option>
+                        <option value="forward-request">forward-request</option>
+                        <option value="set-backend-service">set-backend-service</option>
+                        <option value="set-query-parameter">set-query-parameter</option>
+                    </select>
+                </div><div class="select-container">
+                    <select class="code-select" id="select3">
+                        <option value="">请选择</option>
+                        <option value="base-url">base-url</option>
+                        <option value="dimension">dimension</option>
+                        <option value="vary-by-header">vary-by-header</option>
+                        <option value="publish-to-dapr">publish-to-dapr</option>
+                    </select>
+                </div>="{{large-image-host}}"<span class="tag">/&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">12</span>
+                <span class="code-content">&nbsp;&nbsp;<span class="tag">&lt;/otherwise&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">13</span>
+                <span class="code-content"><span class="tag">&lt;/choose&gt;</span></span>
+            </div>
+            <div class="code-line">
+                <span class="line-number">14</span>
+                <span class="code-content"><span class="tag">&lt;/inbound</span> <span class="tag">&gt;</span></span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第6行：</div>
+                            <div>delete</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">第11行(1)：</div>
+                            <div>set-backend-service</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">第11行(2)：</div>
+                            <div>base-url</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>需求分析：</h4>
+                    <p>根据题目要求，需要实现以下功能：</p>
+                    <ul>
+                        <li>超过500KB的图像必须由专门的后端处理</li>
+                        <li>必须设置x-lsrSe-request标头表示使用低成本服务</li>
+                        <li>大图像绝不能由小图像的后端处理</li>
+                    </ul>
+                    
+                    <h4>策略实现说明：</h4>
+                    
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第6行：</div>
+                            <div>
+                                <p>在<code>&lt;when&gt;</code>块中（处理小图像），需要删除x-large-request标头：</p>
+                                <p>选择<span class="highlight">delete</span>确保小图像请求中不存在该标头</p>
+                                <p>其他选项说明：</p>
+                                <ul>
+                                    <li><span class="highlight">append</span>：追加值，可能导致多个值</li>
+                                    <li><span class="highlight">skip</span>：如果标头已存在则跳过</li>
+                                    <li><span class="highlight">override</span>：覆盖现有值，但小图像不应有此标头</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">第11行(1)：</div>
+                            <div>
+                                <p>在<code>&lt;otherwise&gt;</code>块中（处理大图像），需要设置后端服务：</p>
+                                <p>选择<span class="highlight">set-backend-service</span>将请求路由到专门处理大图像的后端</p>
+                                <p>其他选项说明：</p>
+                                <ul>
+                                    <li><span class="highlight">set-body</span>：修改请求体，不适用</li>
+                                    <li><span class="highlight">forward-request</span>：转发请求，但未指定后端</li>
+                                    <li><span class="highlight">set-query-parameter</span>：设置查询参数，不适用</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">第11行(2)：</div>
+                            <div>
+                                <p>设置后端服务需要指定<span class="highlight">base-url</span>属性：</p>
+                                <p>该属性用于定义目标后端的基URL</p>
+                                <p>其他选项说明：</p>
+                                <ul>
+                                    <li><span class="highlight">dimension</span>：维度参数，不适用</li>
+                                    <li><span class="highlight">vary-by-header</span>：缓存相关设置，不适用</li>
+                                    <li><span class="highlight">publish-to-dapr</span>：Dapr集成，不适用</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>完整策略说明：</h4>
+                    <pre style="background: #2a2a2a; color: #f8f8f8; padding: 15px; border-radius: 8px; overflow: auto;">
+&lt;inbound&gt;
+    &lt;base /&gt;
+    &lt;set-variable name="imageSize" value="@{context.Request.Headers["Content-Length"][0]}" /&gt;
+    &lt;choose&gt;
+        &lt;when condition="@(int.Parse(context.variables.GetValueOrDefault&lt;string&gt;('imageSize']))&lt;512000)"&gt;
+            &lt;set-header name="x-large-request" exists-action="delete"&gt;
+                &lt;value&gt;true&lt;/value&gt;
+            &lt;/set-header&gt;
+        &lt;/when&gt;
+        &lt;otherwise&gt;
+            &lt;set-backend-service base-url="{{large-image-host}}" /&gt;
+        &lt;/otherwise&gt;
+    &lt;/choose&gt;
+&lt;/inbound&gt;</pre>
+                    
+                    <p>此策略确保：</p>
+                    <ol>
+                        <li>小图像请求中删除x-large-request标头，防止错误计费</li>
+                        <li>大图像请求被路由到专门的后端服务（large-image-host）</li>
+                        <li>大图像请求保留了x-large-request标头（未删除即保留）</li>
+                        <li>符合业务需求：大图像使用低成本服务，小图像使用标准服务</li>
+                    </ol>
+                    
+                    <h4>注意事项：</h4>
+                    <p>策略中未显式设置x-large-request标头为true，因为：</p>
+                    <ul>
+                        <li>大图像请求可能已包含此标头</li>
+                        <li>如果未包含，应添加显式设置（策略中缺失此部分）</li>
+                        <li>实际应用中建议添加：<code>&lt;set-header name="x-large-request" exists-action="override"&gt;&lt;value&gt;true&lt;/value&gt;&lt;/set-header&gt;</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure API Management 策略配置测试 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

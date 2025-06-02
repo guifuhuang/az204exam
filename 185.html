@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Plan Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .hotspot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .hotspot-table th, .hotspot-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .hotspot-table th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 185 HOTSPOT</h2>
+        <p>You are implementing a software as a service (SaaS) ASP.NET Core web service that will run as an Azure Web App. The web service will use an on-premises SQL Server database for storage. The web service also includes a WebJob that processes data updates. Four customers will use the web service.</p>
+        
+        <ul>
+            <li>Each instance of the WebJob processes data for a single customer and must run as a singleton instance.</li>
+            <li>Each deployment must be tested by using deployment slots prior to serving production data.</li>
+            <li>Azure costs must be minimized.</li>
+            <li>Azure resources must be located in an isolated network.</li>
+        </ul>
+        
+        <p>You need to configure the App Service plan for the Web App.</p>
+        
+        <p>How should you configure the App Service plan? To answer, select the appropriate settings in the answer area.</p>
+        
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+    
+    <table class="hotspot-table">
+        <thead>
+            <tr>
+                <th>App service plan setting</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Number of VM instances</td>
+                <td>
+                    <select id="vmInstances">
+                        <option value="">Select an option</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Pricing tier</td>
+                <td>
+                    <select id="pricingTier">
+                        <option value="">Select an option</option>
+                        <option value="Isolated">Isolated</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Consumption">Consumption</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answerSection" class="answer">
+        <h3>正确答案:</h3>
+        <p><strong>Number of VM instances:</strong> 4</p>
+        <p><strong>Pricing tier:</strong> Isolated</p>
+        
+        <h3>说明:</h3>
+        <ol>
+            <li><strong>VM实例数量选择4的原因:</strong>
+                <ul>
+                    <li>有4个客户，每个WebJob需要为单个客户运行且必须是单例实例</li>
+                    <li>因此需要4个实例来确保每个客户有一个专用实例</li>
+                    <li>这满足"每个WebJob处理单个客户数据且作为单例运行"的要求</li>
+                </ul>
+            </li>
+            <li><strong>选择Isolated定价层的原因:</strong>
+                <ul>
+                    <li>题目要求"Azure资源必须位于隔离网络中"</li>
+                    <li>Isolated (隔离)层级提供App Service Environment，可以实现网络隔离</li>
+                    <li>虽然Premium也支持部署槽位，但不能满足网络隔离要求</li>
+                    <li>Standard和Consumption层级既不支持部署槽位，也不支持网络隔离</li>
+                </ul>
+            </li>
+            <li><strong>其他考虑因素:</strong>
+                <ul>
+                    <li>Isolated层级虽然成本较高，但题目要求网络隔离，这是必须的选择</li>
+                    <li>4个实例是在满足需求的前提下最小化成本的选择</li>
+                    <li>部署槽位功能在Isolated层级中可用，满足测试需求</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+    
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

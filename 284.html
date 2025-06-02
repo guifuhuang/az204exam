@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试题 - 创建Web测试警报</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        QUESTION NO: 284<br>
+        您正在使用Application Insights创建一个Web测试警报程序。您需要以编程方式创建Web测试警报。以下哪两种方法可以以编程方式创建Web测试警报？每个正确答案都提供了一个完整的解决方案。<br>
+        注意：每个正确答案得一分。
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="checkbox" id="optionA" name="optionA">
+            <label for="optionA">A. 使用Application Insights REST API创建Web测试警报</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionB" name="optionB">
+            <label for="optionB">B. 使用Application Insights SDK创建Web测试警报</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionC" name="optionC">
+            <label for="optionC">C. 使用Application Insights客户端库创建Web测试警报</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionD" name="optionD">
+            <label for="optionD">D. 使用Application Insights门户创建Web测试警报</label>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <strong>正确答案：A, B</strong><br><br>
+        <strong>说明：</strong><br>
+        1. <strong>A选项正确</strong>：Application Insights提供了REST API，可以通过编程方式创建和管理Web测试警报。<br>
+        2. <strong>B选项正确</strong>：Application Insights SDK也支持以编程方式创建Web测试警报。<br>
+        3. C选项不正确：Application Insights没有专门的"客户端库"用于创建Web测试警报。<br>
+        4. D选项不正确：题目要求的是"以编程方式"创建，而门户操作是手动方式，不符合题目要求。
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

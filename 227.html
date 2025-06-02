@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Messaging Solution</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 227</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing an Azure Service application that processes queue data when it receives a message from a mobile application. Messages may not be sent to the service consistently.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>Queue size must not grow larger than 80 gigabytes (GB)</li>
+            <li>Use first-in-first-out (FIFO) ordering of messages</li>
+            <li>Minimize Azure costs</li>
+        </ul>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Use the .Net API to add a message to an Azure Service Bus Queue from the mobile application. Create an Azure Windows VM that is triggered from Azure Service Bus Queue.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">B. No</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>该解决方案不符合要求，原因如下：</p>
+            
+            <ol>
+                <li><strong>成本问题</strong>：
+                    <ul>
+                        <li>使用Azure Windows VM会增加计算成本，特别是当消息处理不频繁时[12](@ref)[13](@ref)</li>
+                        <li>更经济的解决方案是使用Azure Functions，它采用无服务器架构，按执行计费[6](@ref)[7](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>架构问题</strong>：
+                    <ul>
+                        <li>Azure Service Bus Queue原生不支持直接触发Windows VM[3](@ref)[5](@ref)</li>
+                        <li>正确的触发方式应使用Azure Functions或Logic Apps[6](@ref)[8](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>技术实现问题</strong>：
+                    <ul>
+                        <li>虽然Service Bus Queue支持FIFO排序[1](@ref)[3](@ref)，但使用VM作为处理器可能无法保证严格的顺序处理</li>
+                        <li>VM需要手动配置和管理，增加了运维复杂度[12](@ref)[14](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>推荐解决方案：</strong></p>
+            <ol>
+                <li>使用Azure Service Bus队列（支持FIFO和80GB容量）[3](@ref)[5](@ref)</li>
+                <li>采用Azure Functions作为消息处理器（成本更低）[6](@ref)[7](@ref)</li>
+                <li>配置Service Bus触发器自动处理消息[8](@ref)</li>
+            </ol>
+            
+            <p><strong>关键区别：</strong></p>
+            <table border="1">
+                <tr>
+                    <th>方案</th>
+                    <th>成本</th>
+                    <th>FIFO支持</th>
+                    <th>运维复杂度</th>
+                </tr>
+                <tr>
+                    <td>VM方案</td>
+                    <td>高（按小时计费）[12](@ref)</td>
+                    <td>可能中断</td>
+                    <td>高</td>
+                </tr>
+                <tr>
+                    <td>Functions方案</td>
+                    <td>低（按执行计费）[6](@ref)</td>
+                    <td>完整支持</td>
+                    <td>低</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

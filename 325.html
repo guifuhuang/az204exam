@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 325 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .question-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        .dropdown {
+            display: inline-block;
+            margin: 0 5px;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .answer-btn:hover {
+            background: #0056b3;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 325 HOTSPOT</h2>
+        <p>You are developing an application that runs in several customer Azure Kubernetes Service clusters.</p>
+        <p>Requirements:</p>
+        <ul>
+            <li>Within each cluster, a pod runs that collects performance data to be analyzed later</li>
+            <li>A large amount of data is collected so saving latency must be minimized</li>
+            <li>The performance data must be stored so that pod restarts do not impact the stored data</li>
+            <li>Write latency should be minimized</li>
+        </ul>
+        <p>You need to configure blob storage.</p>
+        <p>How should you complete the YAML configuration?</p>
+        
+        <div class="code-container">
+            apiVersion: storage.k8s.io/v1<br>
+            kind: 
+            <div class="dropdown">
+                <select id="kind">
+                    <option value="">Select</option>
+                    <option value="PodStorage">PodStorage</option>
+                    <option value="StorageClass">StorageClass</option>
+                    <option value="PersistentVolume">PersistentVolume</option>
+                    <option value="PersistentVolumeClaim">PersistentVolumeClaim</option>
+                </select>
+            </div><br>
+            metadata:<br>
+            &nbsp;&nbsp;name: data-store<br>
+            provisioner: kubernetes.io/
+            <div class="dropdown">
+                <select id="provisioner">
+                    <option value="">Select</option>
+                    <option value="azure-disk">azure-disk</option>
+                    <option value="azure-file">azure-file</option>
+                    <option value="portworx-volume">portworx-volume</option>
+                    <option value="scaleio">scaleio</option>
+                </select>
+            </div><br>
+            parameters:<br>
+            &nbsp;&nbsp;skuName: Premium_LRS<br>
+            reclaimPolicy: 
+            <div class="dropdown">
+                <select id="reclaimPolicy">
+                    <option value="">Select</option>
+                    <option value="local">local</option>
+                    <option value="retain">retain</option>
+                    <option value="delete">delete</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
+        <p class="correct-answer">kind: StorageClass</p>
+        <p class="correct-answer">provisioner: azure-disk</p>
+        <p class="correct-answer">reclaimPolicy: retain</p>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>配置选择依据</strong>：</p>
+            <ul>
+                <li><strong>kind: StorageClass</strong>：
+                    <ul>
+                        <li>StorageClass是K8s中定义存储类型的资源</li>
+                        <li>允许动态创建持久卷(PV)</li>
+                        <li>与题目中"配置blob存储"需求完全匹配</li>
+                    </ul>
+                </li>
+                <li><strong>provisioner: azure-disk</strong>：
+                    <ul>
+                        <li>Azure Disk提供低延迟高性能块存储</li>
+                        <li>Premium_LRS SSD支持单毫秒级延迟</li>
+                        <li>支持动态扩容，最大支持32TB存储</li>
+                    </ul>
+                </li>
+                <li><strong>reclaimPolicy: retain</strong>：
+                    <ul>
+                        <li>确保Pod重启或删除时数据不会丢失</li>
+                        <li>PV和底层磁盘资源会被保留</li>
+                        <li>需要手动清理不再需要的资源</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p>2. <strong>性能对比</strong>：</p>
+            <table border="1">
+                <tr>
+                    <th>选项</th>
+                    <th>类型</th>
+                    <th>延迟</th>
+                    <th>适用场景</th>
+                </tr>
+                <tr>
+                    <td>azure-disk</td>
+                    <td>块存储</td>
+                    <td>1-2ms</td>
+                    <td>高性能IO</td>
+                </tr>
+                <tr>
+                    <td>azure-file</td>
+                    <td>文件存储</td>
+                    <td>10ms+</td>
+                    <td>共享存储</td>
+                </tr>
+            </table>
+            
+            <p>3. <strong>错误选项分析</strong>：</p>
+            <ul>
+                <li><strong>PodStorage</strong>：非标准K8s资源类型</li>
+                <li><strong>azure-file</strong>：基于SMB协议，延迟高于Disk</li>
+                <li><strong>delete</strong>：Pod删除后数据会丢失，不符合需求</li>
+            </ul>
+            
+            <p>4. <strong>完整配置示例</strong>：</p>
+            <pre>
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: data-store
+provisioner: azure-disk
+parameters:
+  skuName: Premium_LRS
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+            // 自动选择正确答案
+            document.getElementById('kind').value = 'StorageClass';
+            document.getElementById('provisioner').value = 'azure-disk';
+            document.getElementById('reclaimPolicy').value = 'retain';
+        }
+    </script>
+</body>
+</html>

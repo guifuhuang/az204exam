@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 340 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-family: Consolas, monospace;
+            position: relative;
+        }
+        .binding-option {
+            position: absolute;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+        .binding-option select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .routes-select {
+            top: 40px;
+        }
+        .auth-provider-select {
+            top: 180px;
+        }
+        .post-login-select {
+            top: 220px;
+        }
+        .redirect-select {
+            top: 100px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2 style="color:red;">QUESTION NO: 340 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing an Azure Static Web app that contains training materials for a tool company. Each tool's training material is contained in a static web page that is linked from the tool's publicly available description page.</p>
+            <p>A user must be authenticated using Azure AD prior to viewing training.</p>
+            <p>You need to ensure that the user can view training material pages after authentication.</p>
+            <p>How should you complete the configuration file? To answer, select the appropriate options in the answer area.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <div class="code-container">
+            <pre>{
+  "<span class="binding-option routes-select">
+    <select id="routes-select">
+      <option value="">Select</option>
+      <option value="routes">routes</option>
+      <option value="headers">headers</option>
+      <option value="responseOverrides">responseOverrides</option>
+      <option value="navigationFallback">navigationFallback</option>
+    </select>
+  </span>": {
+    "400": {},
+    "401": {},
+    "403": {},
+    "404": {
+      "redirect": "<span class="binding-option redirect-select">
+                   <select id="redirect-select">
+                     <option value="">Select</option>
+                     <option value="%auth.login">%auth.login</option>
+                     <option value="%auth.logout">%auth.logout</option>
+                     <option value="%auth.return">%auth.return</option>
+                     <option value="%auth.referrer">%auth.referrer</option>
+                   </select>
+                 </span>",
+      "statusCode": 302
+    }
+  },
+  "<span class="binding-option auth-provider-select">
+    <select id="auth-provider-select">
+      <option value="">Select</option>
+      <option value="aad">aad</option>
+      <option value="azure">azure</option>
+      <option value="graph">graph</option>
+      <option value="microsoft">microsoft</option>
+    </select>
+  </span>": {
+    "<span class="binding-option post-login-select">
+      <select id="post-login-select">
+        <option value="">Select</option>
+        <option value="post_login.microsoftonline">post_login.microsoftonline</option>
+        <option value="post_login.azure">post_login.azure</option>
+        <option value="post_login.graph">post_login.graph</option>
+        <option value="post_login.orig">post_login.orig</option>
+      </select>
+    </span>": {
+      "orig": "",
+      "route": "",
+      "return": "",
+      "referrer": ""
+    }
+  }
+}</pre>
+        </div>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">routes: routes</p>
+            <p class="correct-answer">redirect: %auth.login</p>
+            <p class="correct-answer">auth provider: aad</p>
+            <p class="correct-answer">post login: post_login.microsoftonline</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>routes</strong> 是处理认证和重定向的正确配置部分。它定义了不同HTTP状态码的处理方式。</p>
+                <p>2. <strong>%auth.login</strong> 是404错误的正确重定向目标。当用户尝试访问需要认证的资源时，会被重定向到登录页面。</p>
+                <p>3. <strong>aad</strong> 是Azure Active Directory的身份提供者标识。题目要求使用Azure AD进行认证。</p>
+                <p>4. <strong>post_login.microsoftonline</strong> 是Azure AD登录后的正确回调端点。这是Microsoft在线服务的标准登录后端点。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>routes配置处理认证流程和错误页面</li>
+                    <li>%auth.login是静态Web应用的标准登录重定向变量</li>
+                    <li>aad是Azure Active Directory的官方标识符</li>
+                    <li>post_login.microsoftonline是Azure AD的标准登录后端点</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

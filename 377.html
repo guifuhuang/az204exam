@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Configuration 多选题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .question-container {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question {
+            background-color: #f8f9fa;
+            border-left: 5px solid #4364F7;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #1a2a6c;
+            font-weight: 600;
+        }
+        .requirements {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .requirements h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        .requirements ul {
+            padding-left: 25px;
+        }
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        .options {
+            margin: 25px 0;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option:hover {
+            background-color: #e3f2fd;
+            border-color: #4364F7;
+        }
+        .option input {
+            margin-right: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+            transform: scale(1.3);
+        }
+        .option label {
+            flex: 1;
+            font-size: 17px;
+            cursor: pointer;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .btn {
+            background: linear-gradient(90deg, #0052D4, #4364F7);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 100, 247, 0.6);
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .answer-container {
+            padding: 0 30px 30px;
+            display: none;
+        }
+        .answer-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .answer-title {
+            color: #1a2a6c;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #4364F7;
+            padding-bottom: 10px;
+        }
+        .correct-answer {
+            font-size: 22px;
+            color: #2e7d32;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .explanation {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        .explanation p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #b3c6ff;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            header {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .question-container, .answer-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure App Configuration 多选题</h1>
+            <div class="subtitle">QUESTION NO: 377</div>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <div class="question-text">
+                    您开发了一个使用Azure App Configuration的ASP.NET Core应用程序。您还创建了一个包含100个设置的App Configuration。该应用程序必须满足以下要求：
+                </div>
+                
+                <div class="requirements">
+                    <h3>要求：</h3>
+                    <ul>
+                        <li>确保在单个设置发生更改时所有配置数据的一致性</li>
+                        <li>动态处理配置数据更改而不导致应用程序重启</li>
+                        <li>减少对App Configuration API的总体请求数</li>
+                    </ul>
+                </div>
+                
+                <div class="question-text">
+                    您必须在应用程序中实现动态配置更新。以下哪两种方式可以实现此目标？（每个正确答案代表解决方案的一部分）
+                </div>
+            </div>
+            
+            <div class="options">
+                <div class="option">
+                    <input type="checkbox" id="optionA" name="options">
+                    <label for="optionA">A. 从默认值增加App Configuration缓存过期时间</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionB" name="options">
+                    <label for="optionB">B. 为每个App Configuration存储设置创建并实现环境变量</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionC" name="options">
+                    <label for="optionC">C. 从默认值减少App Configuration缓存过期时间</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionD" name="options">
+                    <label for="optionD">D. 注册App Configuration存储中的所有键。将Register方法的refreshAll参数设置为false</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionE" name="options">
+                    <label for="optionE">E. 在App Configuration存储中创建并注册标记键(sentinel key)。将Register方法的refreshAll参数设置为true</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionF" name="options">
+                    <label for="optionF">F. 创建并配置Azure Key Vault。实现Azure Key Vault配置提供程序</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn" id="showAnswerBtn">查看答案</button>
+        </div>
+        
+        <div class="answer-container" id="answerContainer">
+            <div class="answer-box">
+                <div class="answer-title">答案与解析</div>
+                <div class="correct-answer">正确答案：A 和 E</div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    <p><span class="highlight">A. 增加App Configuration缓存过期时间</span>：通过增加缓存过期时间，可以减少应用程序向App Configuration API发出的请求次数。较长的缓存时间意味着应用程序不会频繁检查配置更新，从而减少API调用次数，满足"减少总体请求数"的要求。</p>
+                    
+                    <p><span class="highlight">E. 使用标记键(sentinel key)</span>：</p>
+                    <ul>
+                        <li>创建一个特殊的标记键（如"version"或"last_updated"）来监控配置变化</li>
+                        <li>当标记键的值发生变化时，触发所有配置的刷新（refreshAll=true）</li>
+                        <li>这种方法确保所有配置同时更新，保持数据一致性</li>
+                        <li>应用程序只需监控一个键的变化，而不是所有100个键，大大减少请求数量</li>
+                        <li>配置更改可以动态处理，无需重启应用</li>
+                    </ul>
+                    
+                    <p><span class="highlight">为什么不选择其他选项？</span></p>
+                    <p>B. 环境变量：环境变量是静态的，无法实现动态更新，且不适用于大量配置</p>
+                    <p>C. 减少缓存时间：会增加API请求次数，与"减少请求数"的要求相悖</p>
+                    <p>D. 注册所有键但refreshAll=false：无法确保所有配置同时更新，可能导致数据不一致</p>
+                    <p>F. Key Vault：用于存储机密，与App Configuration动态更新机制无关</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Azure App Configuration 多选题 | 技术支持场景模拟
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('showAnswerBtn').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answerContainer');
+            answerContainer.style.display = 'block';
+            
+            // 标记正确答案
+            document.getElementById('optionA').checked = true;
+            document.getElementById('optionE').checked = true;
+            
+            // 滚动到答案位置
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // 禁用按钮防止重复点击
+            this.disabled = true;
+            this.textContent = '已显示答案';
+            this.style.background = 'linear-gradient(90deg, #4caf50, #2e7d32)';
+        });
+    </script>
+</body>
+</html>

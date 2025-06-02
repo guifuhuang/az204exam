@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Apps Management Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        .tools-container, .functionality-container {
+            margin-bottom: 20px;
+        }
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .drop-zone.highlight {
+            border-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        .draggable-tool {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+        }
+        .functionality-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .functionality-title {
+            font-weight: bold;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 4px solid #4caf50;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .functionality-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .drop-zone {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 112 DRAG DROP</h2>
+        <p>You manage several existing Logic Apps.</p>
+        <p>You need to change definitions, add new logic, and optimize these apps on a regular basis.</p>
+        <p>What should you use? To answer, drag the appropriate tools to the correct functionalities. Each tool may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="drag-drop-container">
+            <div class="tools-container">
+                <h3>Tools</h3>
+                <div id="tools">
+                    <div class="draggable-tool" draggable="true" data-tool="Logic Apps Designer">Logic Apps Designer</div>
+                    <div class="draggable-tool" draggable="true" data-tool="Code View Editor">Code View Editor</div>
+                    <div class="draggable-tool" draggable="true" data-tool="Enterprise Integration Pack">Enterprise Integration Pack</div>
+                </div>
+            </div>
+
+            <div class="functionality-container">
+                <h3>Functionality</h3>
+                
+                <div class="functionality-item">
+                    <div class="functionality-title">Edit B2B workflows</div>
+                    <div class="drop-zone" data-functionality="Edit B2B workflows"></div>
+                </div>
+                
+                <div class="functionality-item">
+                    <div class="functionality-title">Edit definitions in JSON</div>
+                    <div class="drop-zone" data-functionality="Edit definitions in JSON"></div>
+                </div>
+                
+                <div class="functionality-item">
+                    <div class="functionality-title">Visually add functionality</div>
+                    <div class="drop-zone" data-functionality="Visually add functionality"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct">Edit B2B workflows: Enterprise Integration Pack</span></p>
+            <p><span class="correct">Edit definitions in JSON: Code View Editor</span></p>
+            <p><span class="correct">Visually add functionality: Logic Apps Designer</span></p>
+            
+            <div class="explanation">
+                <h3>说明:</h3>
+                <p>根据Azure Logic Apps的功能和题目要求，以下是正确的工具匹配：</p>
+                
+                <h4>详细解释:</h4>
+                <p>1. <strong>Edit B2B workflows: Enterprise Integration Pack</strong></p>
+                <p>Enterprise Integration Pack (EIP) 专门用于处理B2B工作流，支持EDI、X12、AS2等企业集成场景。</p>
+                
+                <p>2. <strong>Edit definitions in JSON: Code View Editor</strong></p>
+                <p>Code View Editor 允许直接编辑Logic Apps的JSON定义文件，适合进行底层配置修改。</p>
+                
+                <p>3. <strong>Visually add functionality: Logic Apps Designer</strong></p>
+                <p>Logic Apps Designer 提供可视化界面，通过拖拽方式添加新的触发器和操作。</p>
+                
+                <h4>工具对比:</h4>
+                <table border="1" cellpadding="5">
+                    <tr>
+                        <th>工具</th>
+                        <th>主要用途</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td>Logic Apps Designer</td>
+                        <td>可视化设计</td>
+                        <td>添加新逻辑、修改流程结构</td>
+                    </tr>
+                    <tr>
+                        <td>Code View Editor</td>
+                        <td>代码编辑</td>
+                        <td>修改定义、优化配置</td>
+                    </tr>
+                    <tr>
+                        <td>Enterprise Integration Pack</td>
+                        <td>企业集成</td>
+                        <td>B2B工作流、EDI处理</td>
+                    </tr>
+                </table>
+                
+                <h4>参考文档:</h4>
+                <p><a href="https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-overview" target="_blank">Azure Logic Apps documentation</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const draggables = document.querySelectorAll('.draggable-tool');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            let draggedItem = null;
+            
+            // Drag events for touch devices
+            draggables.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('dragstart', function() {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.display = 'none';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.display = 'inline-block';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                // For touch devices
+                zone.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                zone.addEventListener('touchend', function(e) {
+                    if (draggedItem && !this.hasChildNodes()) {
+                        const clone = draggedItem.cloneNode(true);
+                        clone.style.display = 'inline-block';
+                        this.appendChild(clone);
+                        draggedItem = null;
+                    }
+                    e.preventDefault();
+                });
+                
+                // For mouse drag
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    if (draggedItem && !this.hasChildNodes()) {
+                        const clone = draggedItem.cloneNode(true);
+                        clone.style.display = 'inline-block';
+                        this.appendChild(clone);
+                    }
+                });
+            });
+        });
+
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            answerContainer.style.display = 'block';
+            
+            // Clear all drop zones first
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.innerHTML = '';
+            });
+            
+            // Set correct answers
+            document.querySelector('[data-functionality="Edit B2B workflows"]')
+                .innerHTML = '<div class="draggable-tool" style="display:inline-block">Enterprise Integration Pack</div>';
+            
+            document.querySelector('[data-functionality="Edit definitions in JSON"]')
+                .innerHTML = '<div class="draggable-tool" style="display:inline-block">Code View Editor</div>';
+            
+            document.querySelector('[data-functionality="Visually add functionality"]')
+                .innerHTML = '<div class="draggable-tool" style="display:inline-block">Logic Apps Designer</div>';
+            
+            // Scroll to answer
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

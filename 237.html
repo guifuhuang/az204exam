@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Solution Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .answer-btn:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .reference-link {
+            color: #0066cc;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 237</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.</em></p>
+        <p><em>After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing an Azure solution to collect point-of-sale (POS) device data from 2,000 stores located throughout the world. A single device can produce 2 megabytes (MB) of data every 24 hours. Each store location has one to five devices that send data.</p>
+        <p>You must store the device data in Azure Blob storage. Device data must be correlated based on a device identifier. Additional stores are expected to open in the future.</p>
+        <p>You need to implement a solution to receive the device data.</p>
+        
+        <p><strong>Solution:</strong> Provision an Azure Event Grid. Configure the machine identifier as the partition key and enable capture.</p>
+        
+        <p><strong>Question:</strong> Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+    </div>
+    
+    <button id="answerBtn" class="answer-btn">查看答案</button>
+    
+    <div id="answerSection" class="answer-section">
+        <h3>正确答案: <span class="highlight">B. No</span></h3>
+        
+        <h3>解释说明:</h3>
+        <p>这个解决方案不符合要求，原因如下：</p>
+        
+        <p>1. <strong>Event Grid 不适合大规模设备数据收集场景</strong>：Event Grid 主要用于事件路由和分发，而不是持续的数据流收集[6](@ref)[9](@ref)。它更适合处理离散事件（如设备连接/断开事件），而不是持续的设备遥测数据流[2](@ref)[6](@ref)。</p>
+        
+        <p>2. <strong>分区键配置不正确</strong>：Event Grid 不支持以设备标识符作为分区键的概念[6](@ref)。题目中提到的"配置机器标识符为分区键"在 Event Grid 中无法实现。</p>
+        
+        <p>3. <strong>数据量考虑</strong>：题目描述的场景涉及每天 2,000 个门店（每个门店 1-5 个设备）产生的数据，总数据量可能达到每天 4-20GB。Event Grid 不是为处理这种持续、大量的数据流而设计的[1](@ref)[6](@ref)。</p>
+        
+        <p>4. <strong>存储要求</strong>：题目明确要求将数据存储在 Azure Blob 存储中，而 Event Grid 的捕获功能主要用于将事件存档到 Blob 存储，这不是一个高效的数据收集方案[6](@ref)[9](@ref)。</p>
+        
+        <p><strong>更合适的解决方案</strong>应该是：</p>
+        <ul>
+            <li>使用 Azure IoT Hub 来收集设备数据，然后通过消息路由将数据发送到 Blob 存储[6](@ref)[8](@ref)</li>
+            <li>或者使用 Azure Event Hubs 作为高吞吐量的数据入口，然后将数据路由到 Blob 存储[6](@ref)[9](@ref)</li>
+        </ul>
+        
+        <p>参考文档: <a href="https://docs.microsoft.com/en-us/azure/event-grid/compare-messaging-services" class="reference-link" target="_blank">Compare messaging services - Event Grid, Event Hubs, and Service Bus</a></p>
+    </div>
+    
+    <script>
+        document.getElementById('answerBtn').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection.style.display === 'none' || answerSection.style.display === '') {
+                answerSection.style.display = 'block';
+            } else {
+                answerSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

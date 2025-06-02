@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD Application Configuration Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-drop-container {
+            display: flex;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        .settings-panel {
+            flex: 1;
+            background-color: white;
+            border: 1px solid #a0c6ff;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .settings-panel h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .setting-item {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #f0f7ff;
+            border: 1px solid #a0c6ff;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .answer-area {
+            flex: 2;
+            background-color: white;
+            border: 1px solid #a0c6ff;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .answer-area h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .answer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .answer-table th {
+            background-color: #f0f7ff;
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        .answer-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .drop-target {
+            min-height: 30px;
+            border: 1px dashed #a0c6ff;
+            margin: 2px 0;
+            padding: 5px;
+        }
+        #answer {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        @media (max-width: 768px) {
+            .drag-drop-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 195 DRAG DROP</h2>
+        <p>You are developing an ASP.NET Core website that can be used to manage photographs which are stored in Azure Blob Storage containers.</p>
+        <p>Users of the website authenticate by using their Azure Active Directory (Azure AD) credentials.</p>
+        <p>You implement role-based access control (RBAC) role permission on the containers that store photographs. You assign users to RBAC role.</p>
+        <p>You need to configure the website's Azure AD Application so that user's permissions can be used with the Azure Blob containers.</p>
+        <p>How should you configure the application? To answer, drag the appropriate setting to the correct location. Each setting may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="drag-drop-container">
+            <div class="settings-panel">
+                <h3>Settings</h3>
+                <div class="setting-item" draggable="true" data-value="client_id">client_id</div>
+                <div class="setting-item" draggable="true" data-value="delegated">delegated</div>
+                <div class="setting-item" draggable="true" data-value="profile">profile</div>
+                <div class="setting-item" draggable="true" data-value="application">application</div>
+                <div class="setting-item" draggable="true" data-value="user_impersonation">user_impersonation</div>
+            </div>
+            
+            <div class="answer-area">
+                <h3>Answer Area</h3>
+                <table class="answer-table">
+                    <thead>
+                        <tr>
+                            <th>API</th>
+                            <th>Permission</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Azure Storage</td>
+                            <td class="drop-target" data-api="Azure Storage" data-field="Permission"></td>
+                            <td class="drop-target" data-api="Azure Storage" data-field="Type"></td>
+                        </tr>
+                        <tr>
+                            <td>Microsoft Graph</td>
+                            <td class="drop-target" data-api="Microsoft Graph" data-field="Permission">User.Read</td>
+                            <td class="drop-target" data-api="Microsoft Graph" data-field="Type"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answer">
+        <h3>正确答案:</h3>
+        <table class="answer-table">
+            <thead>
+                <tr>
+                    <th>API</th>
+                    <th>Permission</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Azure Storage</td>
+                    <td>user_impersonation</td>
+                    <td>delegated</td>
+                </tr>
+                <tr>
+                    <td>Microsoft Graph</td>
+                    <td>User.Read</td>
+                    <td>delegated</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>说明:</h3>
+        <p>要实现网站用户通过Azure AD凭证管理Azure Blob Storage中的照片，并基于RBAC角色控制访问权限，需要正确配置Azure AD应用程序的API权限：</p>
+        
+        <ol>
+            <li><strong>Azure Storage权限配置:</strong>
+                <ul>
+                    <li>Permission: <code>user_impersonation</code> - 允许应用程序代表用户访问Azure Storage</li>
+                    <li>Type: <code>delegated</code> - 使用委派权限，即应用程序代表已登录用户访问资源</li>
+                </ul>
+            </li>
+            <li><strong>Microsoft Graph权限配置:</strong>
+                <ul>
+                    <li>Permission: <code>User.Read</code> - 基本权限，用于读取用户基本信息</li>
+                    <li>Type: <code>delegated</code> - 同样使用委派权限模式</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>这种配置方式允许：</p>
+        <ul>
+            <li>网站代表用户访问Azure Blob Storage（通过user_impersonation权限）</li>
+            <li>应用RBAC角色来控制用户对特定容器的访问权限</li>
+            <li>获取用户基本信息（通过User.Read权限）</li>
+        </ul>
+    </div>
+
+    <script>
+        // Variables to track drag/drop state
+        let draggedItem = null;
+        
+        // Desktop drag events
+        document.querySelectorAll('.setting-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                e.dataTransfer.setData('text/plain', this.dataset.value);
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+            });
+        });
+        
+        document.querySelectorAll('.drop-target').forEach(target => {
+            target.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e1f0ff';
+            });
+            
+            target.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            target.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                if (draggedItem) {
+                    this.textContent = draggedItem.dataset.value;
+                    this.dataset.value = draggedItem.dataset.value;
+                }
+            });
+        });
+        
+        // Mobile touch events
+        document.querySelectorAll('.setting-item').forEach(item => {
+            item.addEventListener('touchstart', function(e) {
+                draggedItem = this;
+                e.preventDefault();
+            });
+        });
+        
+        document.querySelectorAll('.drop-target').forEach(target => {
+            target.addEventListener('touchenter', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e1f0ff';
+            });
+            
+            target.addEventListener('touchleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            target.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                if (draggedItem && !document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY).classList.contains('setting-item')) {
+                    this.textContent = draggedItem.dataset.value;
+                    this.dataset.value = draggedItem.dataset.value;
+                }
+            });
+        });
+        
+        // Show answer button
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

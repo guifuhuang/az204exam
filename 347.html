@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 347 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .option.selected {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 347 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You develop a Python application for image rendering that uses GPU resources to optimize rendering processes. You deploy the application to an Azure Container Instances (ACI) Linux container.</p>
+            <p>The application requires a secret value to be passed when the container is started. The value must only be accessed from within the container.</p>
+            <p>You need to pass the secret value.</p>
+            <p>What are two possible ways to achieve this goal? Each correct answer presents a complete solution.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <div id="options-container">
+            <div class="option" data-value="A">
+                <input type="checkbox" id="optionA" name="option">
+                <label for="optionA">A. Create an environment variable Set the secureValue property to the secret value.</label>
+            </div>
+            <div class="option" data-value="B">
+                <input type="checkbox" id="optionB" name="option">
+                <label for="optionB">B. Add the secret value to the container image. Use a managed identity.</label>
+            </div>
+            <div class="option" data-value="C">
+                <input type="checkbox" id="optionC" name="option">
+                <label for="optionC">C. Add the secret value to the application code Set the container startup command.</label>
+            </div>
+            <div class="option" data-value="D">
+                <input type="checkbox" id="optionD" name="option">
+                <label for="optionD">D. Add the secret value to an Azure Blob storage account. Generate a SAS token.</label>
+            </div>
+            <div class="option" data-value="E">
+                <input type="checkbox" id="optionE" name="option">
+                <label for="optionE">E. Mount a secret volume containing the secret value in a secrets file.</label>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">A. Create an environment variable Set the secureValue property to the secret value.</p>
+            <p class="correct-answer">E. Mount a secret volume containing the secret value in a secrets file.</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>环境变量(A)</strong> 是Azure容器实例中传递密钥值的标准方法之一。通过设置secureValue属性，可以确保密钥值在传输和存储过程中被加密保护[7](@ref)。</p>
+                <p>2. <strong>挂载密钥卷(E)</strong> 是另一种安全传递密钥的方法。密钥会被存储在专门的文件中，并挂载到容器内的特定目录，只有容器内部可以访问这些文件[7](@ref)。</p>
+                <p>其他选项不正确的原因：</p>
+                <ul>
+                    <li>B选项将密钥值直接存储在容器镜像中不安全，因为镜像可能被他人获取</li>
+                    <li>C选项将密钥硬编码在应用代码中不符合安全最佳实践</li>
+                    <li>D选项使用Blob存储和SAS令牌会增加不必要的复杂性，且不如ACI原生方案安全</li>
+                </ul>
+                <p>这两种方法(A和E)都是Azure容器实例官方支持的安全传递密钥的方式，能够满足题目中"密钥只能从容器内部访问"的要求[7](@ref)。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

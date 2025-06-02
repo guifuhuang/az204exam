@@ -3,129 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Networking Question</title>
+    <title>QUESTION NO: 319</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
         }
-        .question {
-            background-color: #f9f9f9;
+        .question-container {
+            background: white;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        .options {
-            margin: 20px 0;
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .option {
             margin: 10px 0;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            background-color: white;
+            display: flex;
+            align-items: center;
         }
-        input[type="radio"] {
+        .option input {
             margin-right: 10px;
         }
-        button {
-            padding: 10px 20px;
-            background-color: #0078d4;
+        .answer-btn {
+            background: #007bff;
             color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 15px;
         }
-        button:hover {
-            background-color: #106ebe;
+        .answer-btn:hover {
+            background: #0056b3;
         }
-        #answer {
+        #answerSection {
             display: none;
             margin-top: 20px;
+            background: white;
             padding: 20px;
-            background-color: #f3f2f1;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .correct-answer {
+            color: #28a745;
             font-weight: bold;
-            color: #107c10;
         }
         .explanation {
             margin-top: 15px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="question">
+    <div class="question-container">
         <h2>QUESTION NO: 319</h2>
-        <p>You need to design network connectivity for a subnet in an Azure virtual network. The subnet will contain 30 virtual machines. The virtual machines will establish outbound connections to internet hosts by using the same a pool of four public IP addresses, inbound connections to the virtual machines will be prevented.</p>
+        <p>You need to design network connectivity for a subnet in an Azure virtual network.</p>
+        <p>Requirements:</p>
+        <ul>
+            <li>The subnet will contain 30 virtual machines</li>
+            <li>The virtual machines will establish outbound connections to internet hosts by using the same pool of four public IP addresses</li>
+            <li>Inbound connections to the virtual machines will be prevented</li>
+        </ul>
         <p>What should include in the design?</p>
-        
-        <div class="options">
-            <label class="option">
-                <input type="radio" name="answer" value="A"> A. Azure Private Link
-            </label></br></br>
-            <label class="option">
-                <input type="radio" name="answer" value="B"> B. NAT Gateway
-            </label></br></br>
-            <label class="option">
-                <input type="radio" name="answer" value="C"> C. User Defined Routes
-            </label></br></br>
-            <label class="option">
-                <input type="radio" name="answer" value="D"> D. Azure Virtual WAN
-            </label>
-        </div>
     </div>
-    
-    <button onclick="showAnswer()">查看答案</button>
-    
-    <div id="answer">
-        <h3>正确答案:</h3>
+
+    <div class="options-container">
+        <label class="option">
+            <input type="radio" name="networkSolution" value="PrivateLink"> A. Azure Private Link
+        </label>
+        <label class="option">
+            <input type="radio" name="networkSolution" value="NATGateway"> B. NAT Gateway
+        </label>
+        <label class="option">
+            <input type="radio" name="networkSolution" value="UDR"> C. User Defined Routes
+        </label>
+        <label class="option">
+            <input type="radio" name="networkSolution" value="VirtualWAN"> D. Azure Virtual WAN
+        </label>
+    </div>
+
+    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <h3>正确答案：</h3>
         <p class="correct-answer">B. NAT Gateway</p>
         
         <div class="explanation">
-            <h3>说明:</h3>
-            <p><strong>为什么选择NAT Gateway:</strong></p>
+            <h4>技术说明：</h4>
+            <p>1. <strong>NAT Gateway的核心优势</strong>：</p>
             <ul>
-                <li>NAT网关专门用于提供出站互联网连接，同时阻止入站连接</li>
-                <li>支持多个VM共享一组公共IP地址（题目要求的4个IP）</li>
-                <li>无需在VM上配置公共IP地址即可实现出站连接</li>
-                <li>自动阻止入站连接，符合安全要求</li>
-                <li>Azure推荐用于大规模出站连接场景</li>
+                <li>专为出站连接设计，完美匹配题目中"使用4个公共IP池进行出站连接"的需求[7](@ref)[9](@ref)</li>
+                <li>默认阻止所有入站连接，符合"阻止入站连接"的安全要求[9](@ref)</li>
+                <li>支持动态SNAT端口分配，可自动扩展连接数避免端口耗尽[7](@ref)[14](@ref)</li>
+                <li>单网关可处理50Gbps流量，轻松支持30台虚拟机[9](@ref)</li>
             </ul>
             
-            <p><strong>其他选项为什么不正确:</strong></p>
-            <ul>
-                <li><strong>A. Azure Private Link</strong>: 用于安全访问Azure服务，不提供出站互联网连接</li>
-                <li><strong>C. User Defined Routes</strong>: 用于自定义网络流量路由，无法实现IP地址共享</li>
-                <li><strong>D. Azure Virtual WAN</strong>: 用于大规模网络连接中心，不解决具体出站连接需求</li>
-            </ul>
-            
-            <p><strong>NAT Gateway关键特性:</strong></p>
-            <ol>
-                <li>支持最多16个公共IP地址的地址池</li>
-                <li>单个NAT网关可处理最多64,000个并发流</li>
-                <li>自动SNAT（源网络地址转换）</li>
-                <li>与网络安全组(NSG)配合实现完全的网络隔离</li>
-            </ol>
-            
-            <p><strong>实现架构示例:</strong></p>
+            <p>2. <strong>具体实现方案</strong>：</p>
             <pre>
-Virtual Machines (30) → Subnet → NAT Gateway (4 Public IPs) → Internet
-            ↑
-            └─────────────× 入站连接被自动阻止
+# 创建NAT网关并关联4个公共IP
+az network nat gateway create --name MyNATGateway --public-ip-addresses MyIP1 MyIP2 MyIP3 MyIP4
+
+# 将子网配置为使用NAT网关
+az network vnet subnet update --vnet-name MyVNet --name MySubnet --nat-gateway MyNATGateway
             </pre>
+            
+            <p>3. <strong>错误选项分析</strong>：</p>
+            <ul>
+                <li><strong>A. Private Link</strong>：用于私有访问PaaS服务，不提供出站互联网连接功能[10](@ref)[11](@ref)</li>
+                <li><strong>C. 用户定义路由</strong>：需配合NAT网关使用，单独使用无法实现SNAT功能[9](@ref)[14](@ref)</li>
+                <li><strong>D. Virtual WAN</strong>：用于多区域网络互联，不解决子网级出站连接需求[2](@ref)[6](@ref)</li>
+            </ul>
+            
+            <p>4. <strong>关键配置验证</strong>：</p>
+            <ul>
+                <li>确保子网没有关联负载均衡器或实例级公共IP（避免冲突）[9](@ref)</li>
+                <li>检查路由表确认0.0.0.0/0流量指向NAT网关[14](@ref)</li>
+                <li>监控SNAT端口使用率（每个IP提供64,000个端口）[7](@ref)</li>
+            </ul>
         </div>
     </div>
-    
+
     <script>
         function showAnswer() {
-            document.getElementById('answer').style.display = 'block';
-            document.querySelector('input[value="B"]').checked = true;
+            document.getElementById('answerSection').style.display = 'block';
         }
     </script>
 </body>

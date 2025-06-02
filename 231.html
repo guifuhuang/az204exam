@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD Authorization Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 231</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing a website that will run as an Azure Web App. Users will authenticate by using their Azure Active Directory (Azure AD) credentials.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>Assign users one of three permission levels: admin, normal, and reader</li>
+            <li>Use Azure AD group membership to determine permission level</li>
+        </ul>
+        
+        <p><strong>Solution:</strong></p>
+        <ol>
+            <li>Create a new Azure AD application</li>
+            <li>In the application's manifest, define application roles matching the required permission levels</li>
+            <li>Assign the appropriate Azure AD group to each role</li>
+            <li>In the website, use the value of the roles claim from the JWT for the user to determine permissions</li>
+        </ol>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">B. No</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>该解决方案不符合要求，原因如下：</p>
+            
+            <ol>
+                <li><strong>组声明配置缺失</strong>：
+                    <ul>
+                        <li>解决方案未提及需要在应用清单中配置<code>groupMembershipClaims</code>属性[1](@ref)</li>
+                        <li>正确的配置应为：<code>"groupMembershipClaims": "SecurityGroup"</code>才能获取组声明[1](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>令牌处理不完整</strong>：
+                    <ul>
+                        <li>当用户属于大量组(超过150-200个)时，令牌中不会包含组声明而会包含超额声明[1](@ref)[5](@ref)</li>
+                        <li>解决方案未处理这种情况，需要额外调用Graph API获取用户组信息[5](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>权限验证方式</strong>：
+                    <ul>
+                        <li>直接使用组ID验证权限比应用角色更符合题目要求[1](@ref)</li>
+                        <li>ASP.NET Core中应配置：<code>.RequireClaim("groups", "YourGroupID")</code>[1](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>正确实现步骤：</strong></p>
+            <ol>
+                <li>在Azure门户中编辑应用清单，添加：
+                    <pre>"groupMembershipClaims": "SecurityGroup"</pre>
+                </li>
+                <li>在ASP.NET Core中配置授权策略：
+                    <pre>
+services.AddControllersWithViews(options => {
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .RequireClaim("groups", "AdminGroupID")
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});</pre>
+                </li>
+                <li>处理超额情况：
+                    <ul>
+                        <li>检查令牌中的<code>_claim_names</code>和<code>_claim_sources</code>声明[5](@ref)</li>
+                        <li>调用Graph API的<code>getMemberGroups</code>方法获取完整组列表[5](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>参考配置截图：</strong></p>
+            <img src="https://blogs.msdn.microsoft.com/waws/2017/03/13/azure-app-service-authentication-aad-groups/" alt="Azure AD组声明配置示例">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

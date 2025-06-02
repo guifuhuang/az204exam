@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Search Indexer Configuration Validation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .scenario {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f3f2f1;
+            border-radius: 4px;
+        }
+        .statement-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #d2d0ce;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .statement-text {
+            flex: 1;
+        }
+        .answer-options {
+            display: flex;
+            gap: 10px;
+        }
+        .answer-option {
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid #d2d0ce;
+            background-color: white;
+        }
+        .answer-option.selected {
+            background-color: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+        .answer-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        .answer-button:hover {
+            background-color: #106ebe;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f3f2f1;
+            border-radius: 8px;
+            border-left: 4px solid #0078d4;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d2d0ce;
+        }
+        .answer-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .answer-item strong {
+            color: #323130;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            color: #605e5c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .statement-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .answer-options {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .answer-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: red;">这个不看了QUESTION NO: 176-Azure Search Indexer Configuration Validation</h1>
+    
+    <div class="question-container">
+        <div class="scenario">
+            <p>You are validating the configuration of an Azure Search indexer. The service has been configured with an indexer that uses the Import Data option. The index is configured using options as shown in the Index Configuration exhibit. When users search with no filter, all three records are displayed.</p>
+            <p>When users search for items by description, Search explorer returns no records. The Search Explorer exhibit shows the query and results for a test where a user is trying to search for all items in the table that have a description that contains the word "bag".</p>
+            <p>You need to resolve the issue.</p>
+            <p>For each of the following statements, select Yes if the statement is true. Otherwise, select No.</p>
+        </div>
+        
+        <div class="statement-item">
+            <div class="statement-text">
+                <strong>Statement 1:</strong> You can try recreating the search index with the same settings for all fields but selecting the "Searchable" option for the "ItemDescription" field.
+            </div>
+            <div class="answer-options">
+                <div class="answer-option" data-statement="1" data-answer="Yes">Yes</div>
+                <div class="answer-option" data-statement="1" data-answer="No">No</div>
+            </div>
+        </div>
+        
+        <div class="statement-item">
+            <div class="statement-text">
+                <strong>Statement 2:</strong> You can resolve the issue by selecting the index, editing the "ItemDescription" field, and selecting the "Searchable" option for that field.
+            </div>
+            <div class="answer-options">
+                <div class="answer-option" data-statement="2" data-answer="Yes">Yes</div>
+                <div class="answer-option" data-statement="2" data-answer="No">No</div>
+            </div>
+        </div>
+        
+        <div class="statement-item">
+            <div class="statement-text">
+                <strong>Statement 3:</strong> You can resolve the issue by running the indexer.
+            </div>
+            <div class="answer-options">
+                <div class="answer-option" data-statement="3" data-answer="Yes">Yes</div>
+                <div class="answer-option" data-statement="3" data-answer="No">No</div>
+            </div>
+        </div>
+        
+        <div class="statement-item">
+            <div class="statement-text">
+                <strong>Statement 4:</strong> You can resolve the issue by changing the query string in Search explorer to "bag".
+            </div>
+            <div class="answer-options">
+                <div class="answer-option" data-statement="4" data-answer="Yes">Yes</div>
+                <div class="answer-option" data-statement="4" data-answer="No">No</div>
+            </div>
+        </div>
+        
+        <button class="answer-button" id="showAnswer">View Answer</button>
+        
+        <div class="answer-section" id="answerSection">
+            <h3>Correct Answers and Explanations:</h3>
+            <div class="answer-item">
+                <strong>Statement 1:</strong>
+                <p class="correct-answer">Answer: Yes</p>
+                <p class="explanation">Recreating the index with the "Searchable" option enabled for the ItemDescription field would resolve the issue. This is a valid approach, though not the most efficient one.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Statement 2:</strong>
+                <p class="correct-answer">Answer: Yes</p>
+                <p class="explanation">Editing the existing index to make the ItemDescription field searchable is the most straightforward solution. After making this change, you would need to run the indexer again to reprocess the data.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Statement 3:</strong>
+                <p class="correct-answer">Answer: No</p>
+                <p class="explanation">Simply running the indexer without first making the ItemDescription field searchable would not resolve the issue. The field configuration needs to be changed first.</p>
+            </div>
+            <div class="answer-item">
+                <strong>Statement 4:</strong>
+                <p class="correct-answer">Answer: No</p>
+                <p class="explanation">Changing the query string format alone won't help if the ItemDescription field isn't configured as searchable. The underlying issue is with the index configuration, not the query syntax.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const answerOptions = document.querySelectorAll('.answer-option');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            const answerSection = document.getElementById('answerSection');
+            
+            // Handle answer selection
+            answerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options in this statement group
+                    const statementGroup = this.closest('.answer-options');
+                    statementGroup.querySelectorAll('.answer-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = answerSection.style.display === 'block' ? 'none' : 'block';
+                this.textContent = answerSection.style.display === 'block' ? 'Hide Answer' : 'View Answer';
+            });
+        });
+    </script>
+</body>
+</html>

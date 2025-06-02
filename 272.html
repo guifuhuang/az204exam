@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure认证测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 272</h3>
+        <p>You develop and deploy an Azure App Service web app named App1. You create a new Azure Key Vault named Vault1. You import several API keys, passwords, certificates, and cryptographic keys into Vault1.</p>
+        <p>You need to grant App1 access to Vault1 and automatically rotate credentials. Credentials must not be stored in code.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="q272" id="q272a" value="A">
+                <label for="q272a">A. Enable App Service authentication for App1. Assign a custom RBAC role to Vault1.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q272" id="q272b" value="B">
+                <label for="q272b">B. Add a TLS/SSL binding to App1.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q272" id="q272c" value="C">
+                <label for="q272c">C. Assign a managed identity to App1.</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q272" id="q272d" value="D">
+                <label for="q272d">D. Upload a self-signed client certificate to Vault1. Update App1 to use the client certificate.</label>
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="showAnswer()">查看答案</button>
+    
+    <div id="answer" class="answer">
+        <h3>正确答案：C</h3>
+        <p>解释说明：</p>
+        <p>题目要求授予App1访问Vault1的权限，并且不能将凭证存储在代码中，同时要实现凭证的自动轮换。</p>
+        <p>最佳解决方案是为App1分配托管标识（Managed Identity）。托管标识允许Azure资源（如App Service）自动获得Azure AD身份验证，无需在代码中存储任何凭证。通过为托管标识分配适当的Key Vault访问权限，可以实现安全的访问控制。</p>
+        <p>选项D虽然也是一种安全方法，但不是最佳选择，因为它需要管理证书，不如托管标识方便和安全。托管标识是Azure推荐的最佳实践，可以自动处理凭证轮换。</p>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

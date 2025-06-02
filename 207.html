@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Session State Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 207</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution. Determine whether the solution meets the stated goals.</em></p>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing and deploying several ASP.NET web applications to Azure App Service. You plan to save session state information and HTML output.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>Share session state across all ASP.NET web applications</li>
+            <li>Support controlled, concurrent access to the same session state data for multiple readers and a single writer</li>
+            <li>Save full HTTP responses for concurrent requests</li>
+        </ul>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Enable Application Request Routing (ARR).</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>B. No</strong></p>
+            <p><strong>解释：</strong></p>
+            <p>这个解决方案不能满足目标，因为Application Request Routing (ARR)主要用于负载均衡和请求路由，而不是会话状态存储[6](@ref)。</p>
+            
+            <p>主要原因：</p>
+            <ul>
+                <li>ARR是一个反向代理和负载均衡模块，不提供共享会话状态的功能[6](@ref)</li>
+                <li>ARR无法满足"多读单写"的并发访问控制要求[6](@ref)</li>
+                <li>ARR不会存储完整的HTTP响应[6](@ref)</li>
+                <li>ARR主要用于请求分发而不是数据存储[6](@ref)</li>
+            </ul>
+            
+            <p>正确的解决方案应该是：</p>
+            <ol>
+                <li>使用Azure Redis缓存作为会话状态提供程序，它可以：
+                    <ul>
+                        <li>在不同应用间共享会话状态[2](@ref)</li>
+                        <li>支持多读单写的并发控制[8](@ref)</li>
+                        <li>提供高性能的分布式存储[2](@ref)</li>
+                    </ul>
+                </li>
+                <li>或者使用SQL Server会话状态提供程序，它可以：
+                    <ul>
+                        <li>在不同应用间共享会话状态[1](@ref)</li>
+                        <li>提供持久化存储[1](@ref)</li>
+                    </ul>
+                </li>
+                <li>或者使用Azure缓存会话状态提供程序，它专门设计用于：
+                    <ul>
+                        <li>共享会话状态[8](@ref)</li>
+                        <li>支持并发访问控制[8](@ref)</li>
+                        <li>使用压缩减少网络流量[8](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p>ARR虽然可以提高应用程序的可伸缩性和可靠性，但它不是为会话状态存储设计的解决方案[6](@ref)。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

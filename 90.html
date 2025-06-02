@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEDA CRD Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            touch-action: none;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .drag-options, .drop-targets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .drag-item {
+            padding: 8px 12px;
+            background-color: #e1f5fe;
+            border: 1px solid #0288d1;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+        }
+        .drop-zone {
+            display: flex;
+            flex-direction: column;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .drop-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .drop-row .setting {
+            flex: 1;
+            padding-right: 10px;
+        }
+        .drop-slot {
+            min-width: 150px;
+            min-height: 36px;
+            border: 1px dashed #9e9e9e;
+            border-radius: 4px;
+            padding: 5px;
+            margin-left: 10px;
+        }
+        .drop-slot.highlight {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4caf50;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        @media (max-width: 600px) {
+            .drop-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .drop-slot {
+                margin-left: 0;
+                margin-top: 5px;
+                width: 100%;
+            }
+        }
+        .dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+        .drag-ghost {
+            position: absolute;
+            opacity: 0.8;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 90 DRAG DROP</h2>
+        <p>You are a developer for a software as a service (SaaS) company that uses an Azure Function to process orders. The Azure Function currently runs on an Azure Function app that is triggered by an Azure Storage queue.</p>
+        <p>You are preparing to migrate the Azure Function to Kubernetes using Kubernetes-based Event Driven Autoscaling (KEDA).</p>
+        <p>You need to configure Kubernetes Custom Resource Definitions (CRD) for the Azure Function.</p>
+        <p>Which CRDs should you configure? To answer, drag the appropriate CRD types to the correct locations. Each CRD type may be used once, more than once, or not at all.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <table>
+            <tr>
+                <th>CRD types</th>
+                <th>Setting</th>
+                <th>CRD type</th>
+            </tr>
+            <tr>
+                <td>Secret</td>
+                <td>Azure Function code</td>
+                <td class="drop-slot" data-setting="Azure Function code"></td>
+            </tr>
+            <tr>
+                <td>Deployment</td>
+                <td>Polling interval</td>
+                <td class="drop-slot" data-setting="Polling interval"></td>
+            </tr>
+            <tr>
+                <td>ScaledObject</td>
+                <td>Azure Storage connection string</td>
+                <td class="drop-slot" data-setting="Azure Storage connection string"></td>
+            </tr>
+            <tr>
+                <td>TriggerAuthentication</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div class="drag-drop-container">
+            <h3>Drag Options</h3>
+            <div class="drag-options">
+                <div class="drag-item" draggable="true" data-value="Secret">Secret</div>
+                <div class="drag-item" draggable="true" data-value="Deployment">Deployment</div>
+                <div class="drag-item" draggable="true" data-value="ScaledObject">ScaledObject</div>
+                <div class="drag-item" draggable="true" data-value="TriggerAuthentication">TriggerAuthentication</div>
+            </div>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <ul>
+                <li><strong>Azure Function code</strong>: Deployment</li>
+                <li><strong>Polling interval</strong>: ScaledObject</li>
+                <li><strong>Azure Storage connection string</strong>: TriggerAuthentication</li>
+            </ul>
+            <h3>说明:</h3>
+            <p>1. <strong>Deployment</strong>: 用于部署Azure Function代码到Kubernetes集群。</p>
+            <p>2. <strong>ScaledObject</strong>: KEDA使用此CRD来定义自动缩放规则，包括轮询间隔等设置。</p>
+            <p>3. <strong>TriggerAuthentication</strong>: 用于安全地存储和引用触发器的认证信息，如Azure Storage连接字符串。</p>
+            
+            <h4>示例配置:</h4>
+            <pre>
+# ScaledObject 示例
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-processor
+spec:
+  scaleTargetRef:
+    deploymentName: order-processor
+  pollingInterval: 15  # 轮询间隔(秒)
+  triggers:
+  - type: azure-storage-queue
+    metadata:
+      queueName: orders
+    authenticationRef:
+      name: storage-auth  # 引用TriggerAuthentication
+
+# TriggerAuthentication 示例
+apiVersion: keda.k8s.io/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: storage-auth
+spec:
+  secretTargetRef:
+  - parameter: connection
+    name: storage-secret  # Secret名称
+    key: connectionString # Secret中的键
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropSlots = document.querySelectorAll('.drop-slot');
+            
+            let draggedItem = null;
+            let ghostElement = null;
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            // Desktop drag events
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    e.dataTransfer.setData('text/plain', this.dataset.value);
+                    this.classList.add('dragging');
+                    
+                    // Create ghost element for better visual feedback
+                    ghostElement = this.cloneNode(true);
+                    ghostElement.classList.add('drag-ghost');
+                    ghostElement.style.width = this.offsetWidth + 'px';
+                    ghostElement.style.height = this.offsetHeight + 'px';
+                    document.body.appendChild(ghostElement);
+                    
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                    
+                    if (ghostElement && ghostElement.parentNode) {
+                        ghostElement.parentNode.removeChild(ghostElement);
+                    }
+                });
+            });
+
+            // Mobile touch events
+            dragItems.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    draggedItem = this;
+                    this.classList.add('dragging');
+                    
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    
+                    // Create ghost element
+                    ghostElement = this.cloneNode(true);
+                    ghostElement.classList.add('drag-ghost');
+                    ghostElement.style.position = 'fixed';
+                    ghostElement.style.left = touchStartX - this.offsetWidth/2 + 'px';
+                    ghostElement.style.top = touchStartY - this.offsetHeight/2 + 'px';
+                    document.body.appendChild(ghostElement);
+                });
+                
+                item.addEventListener('touchmove', function(e) {
+                    if (!draggedItem) return;
+                    e.preventDefault();
+                    
+                    const touch = e.touches[0];
+                    const x = touch.clientX - ghostElement.offsetWidth/2;
+                    const y = touch.clientY - ghostElement.offsetHeight/2;
+                    
+                    ghostElement.style.left = x + 'px';
+                    ghostElement.style.top = y + 'px';
+                    
+                    // Highlight potential drop targets
+                    const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropSlot = elementAtPoint?.closest('.drop-slot');
+                    
+                    dropSlots.forEach(slot => {
+                        slot.classList.toggle('highlight', slot === dropSlot);
+                    });
+                });
+                
+                item.addEventListener('touchend', function() {
+                    if (!draggedItem) return;
+                    
+                    // Find drop target
+                    const dropSlot = document.querySelector('.drop-slot.highlight');
+                    if (dropSlot) {
+                        dropSlot.innerHTML = '';
+                        const clone = this.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        dropSlot.appendChild(clone);
+                    }
+                    
+                    // Clean up
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                    
+                    if (ghostElement && ghostElement.parentNode) {
+                        ghostElement.parentNode.removeChild(ghostElement);
+                    }
+                    
+                    dropSlots.forEach(slot => {
+                        slot.classList.remove('highlight');
+                    });
+                });
+            });
+
+            // Drop zone events
+            dropSlots.forEach(slot => {
+                slot.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                slot.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                slot.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clone = draggedItem.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        this.appendChild(clone);
+                    }
+                });
+            });
+        });
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Web Apps 自动缩放配置测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a4d69, #4b86b4);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #2c3e50;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #0078d4;
+        }
+        .options {
+            margin: 25px 0;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f0f5ff;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .option:hover {
+            background: #e1ebff;
+            transform: translateY(-2px);
+        }
+        .option input {
+            margin-right: 15px;
+            margin-top: 5px;
+            transform: scale(1.3);
+        }
+        .option label {
+            font-size: 18px;
+            flex: 1;
+            cursor: pointer;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        button {
+            padding: 14px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        #check-answer {
+            background: #0078d4;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 120, 212, 0.3);
+        }
+        #check-answer:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+        }
+        #reset {
+            background: #f0f0f0;
+            color: #333;
+        }
+        #reset:hover {
+            background: #e0e0e0;
+        }
+        .answer-section {
+            padding: 30px;
+            background: #e8f4ff;
+            border-radius: 0 0 15px 15px;
+            display: none;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0078d4;
+        }
+        .correct-answer {
+            font-size: 22px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #d4edda;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .explanation h3 {
+            color: #0078d4;
+            margin-bottom: 15px;
+        }
+        .explanation p {
+            margin-bottom: 15px;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+        .explanation ul {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        .explanation li {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .highlight {
+            background: #fff8e1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .azure-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #0078d4;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            .question {
+                font-size: 18px;
+            }
+            .option label {
+                font-size: 16px;
+            }
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Web Apps 自动缩放配置测试题</h1>
+            <p>QUESTION NO: 355</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您为一家商业潜水公司开发 Azure Web Apps。法规要求所有潜水员在每次潜水工作开始后每15天填写一次健康问卷。</p>
+                <p>您需要配置 Azure Web Apps，以便在潜水员填写问卷时扩展实例数量，并在填写完成后缩减实例数量。</p>
+                <p>您需要配置自动缩放。哪两种自动缩放配置可以实现此目标？（每个正确答案都提供了一个完整的解决方案）</p>
+                <p><strong>注意：</strong>每个正确选项值一分。</p>
+            </div>
+            
+            <div class="options">
+                <div class="option">
+                    <input type="checkbox" id="optionA" name="options" value="A">
+                    <label for="optionA">A. Predictive autoscaling（预测性自动缩放）</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionB" name="options" value="B">
+                    <label for="optionB">B. CPU usage-based autoscaling（基于CPU使用率的自动缩放）</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionC" name="options" value="C">
+                    <label for="optionC">C. Recurrence profile（重复周期配置文件）</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionD" name="options" value="D">
+                    <label for="optionD">D. Fixed date profile（固定日期配置文件）</label>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button id="check-answer">查看答案</button>
+                <button id="reset">重置选择</button>
+            </div>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2>答案与解析</h2>
+            <div class="correct-answer">正确答案：A 和 D</div>
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                <p>根据题目要求，需要每15天在特定时间段（潜水员填写问卷期间）扩展实例，填写完成后缩减实例。以下是详细分析：</p>
+                
+                <ul>
+                    <li><span class="highlight">A. Predictive autoscaling（预测性自动缩放）</span> - 这是正确的解决方案。预测性自动缩放使用机器学习分析历史负载模式，预测未来的负载需求。对于每15天发生的周期性事件（如问卷填写），它可以提前预测负载增加并自动扩展实例。</li>
+                    
+                    <li><span class="highlight">D. Fixed date profile（固定日期配置文件）</span> - 这是正确的解决方案。固定日期配置文件允许您设置特定日期和时间段的缩放规则。您可以预先配置每15天的具体日期，在问卷填写期间扩展实例，填写完成后缩减实例。</li>
+                    
+                    <li><span class="highlight">B. CPU usage-based autoscaling（基于CPU使用率的自动缩放）</span> - 这不适用。题目要求基于特定时间表（每15天）而不是实时负载指标进行缩放。基于CPU的缩放无法保证在问卷填写期间准确扩展。</li>
+                    
+                    <li><span class="highlight">C. Recurrence profile（重复周期配置文件）</span> - 这不适用。重复周期配置文件适用于每日、每周或每月等固定周期，但<span class="highlight">不支持每15天的非标准周期</span>。Azure的重复周期配置无法直接设置为每15天一次。</li>
+                </ul>
+                
+                <h3>Azure自动缩放最佳实践：</h3>
+                <p>对于这种周期性可预测的工作负载：</p>
+                <ol>
+                    <li>优先使用<span class="highlight">预测性自动缩放</span>，它可以根据历史数据自动识别模式</li>
+                    <li>当有确切日期时，使用<span class="highlight">固定日期配置文件</span>进行精确控制</li>
+                    <li>避免使用基于指标的缩放（如CPU），除非负载模式不可预测</li>
+                    <li>结合使用预测性缩放和固定日期配置可获得最佳效果</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Azure Web Apps 自动缩放配置测试题 | 基于Azure文档内容</p>
+    </footer>
+
+    <script>
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        document.getElementById('reset').addEventListener('click', function() {
+            // 重置所有复选框
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // 隐藏答案部分
+            document.getElementById('answer-section').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service REST API 配置问题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 265</h2>
+        <p>You are developing an Azure App Service REST API.</p>
+        <p>The API must be called by an Azure App Service web app. The API must retrieve and update user profile information stored in Azure Active Directory (Azure AD).</p>
+        <p>You need to configure the API to make the updates.</p>
+        <p>Which two tools should you use? Each correct answer presents part of the solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options">
+                <label for="optionA">A. Microsoft Graph API</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options">
+                <label for="optionB">B. Microsoft Authentication Library (MSAL)</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options">
+                <label for="optionC">C. Azure API Management</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options">
+                <label for="optionD">D. Microsoft Azure Security Center</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="options">
+                <label for="optionE">E. Microsoft Azure Key Vault SDK</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p>正确答案: <span class="correct">A. Microsoft Graph API</span> 和 <span class="correct">C. Azure API Management</span></p>
+            <div class="explanation">
+                <p>说明:</p>
+                <p>1. <strong>Microsoft Graph API</strong> 是访问和更新Azure AD中用户信息的正确方式。企业开发者使用Microsoft Graph在Azure AD资源和其他服务之间创建独特的工作流，实现身份管理和自动化管理流程，如员工入职(和离职)、个人资料维护、许可证部署等。</p>
+                <p>2. <strong>Azure API Management (APIM)</strong> 是为现有后端服务创建一致且现代化的API网关的方式。API Management帮助组织向外部、合作伙伴和内部开发者发布API，释放其数据和服务的潜力。</p>
+                <p>其他选项说明：</p>
+                <p>- B. MSAL虽然用于身份验证，但不是此场景的最佳选择</p>
+                <p>- D. Azure Security Center是安全监控工具，不相关</p>
+                <p>- E. Azure Key Vault SDK用于管理密钥和机密，不用于用户数据操作</p>
+                <p>参考文档：<a href="https://docs.microsoft.com/en-us/graph/azuread-identity-access-management-concept-overview" target="_blank">Microsoft Graph Azure AD身份和访问管理概述</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

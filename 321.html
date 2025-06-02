@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUESTION NO: 317</title>
+    <title>QUESTION NO: 321</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,30 +68,31 @@
 </head>
 <body>
     <div class="question-container">
-        <h2>QUESTION NO: 317</h2>
-        <p>Your company has several containers based on the following operating systems:</p>
+        <h2>QUESTION NO: 321</h2>
+        <p>You are designing a multi-tiered application that will be hosted on Azure virtual machines.</p>
+        <p>Requirements:</p>
         <ul>
-            <li>Windows Server 2019 Nano Server</li>
-            <li>Windows Server 2019 Server Core</li>
-            <li>Windows Server 2022 Nano Server</li>
-            <li>Windows Server 2022 Server Core</li>
-            <li>Linux</li>
+            <li>The virtual machines will run Windows Server</li>
+            <li>Front-end servers will be accessible from the Internet over port 443</li>
+            <li>Other servers will NOT be directly accessible over the internet</li>
+            <li>Need to administer VMs using Remote Desktop</li>
+            <li>Minimize exposure of VMs on the Internet</li>
         </ul>
-        <p>You plan to migrate the containers to an Azure Kubernetes cluster. What is the minimum number of node pools that the cluster must have?</p>
+        <p>Which Azure service should you recommend?</p>
     </div>
 
     <div class="options-container">
         <label class="option">
-            <input type="radio" name="nodePool" value="1"> A. 1
+            <input type="radio" name="vmAdmin" value="Bastion"> A. Azure Bastion
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="2"> B. 2
+            <input type="radio" name="vmAdmin" value="ServiceEndpoint"> B. Service Endpoint
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="3"> C. 3
+            <input type="radio" name="vmAdmin" value="PrivateLink"> C. Azure Private Link
         </label>
         <label class="option">
-            <input type="radio" name="nodePool" value="6"> D. 6
+            <input type="radio" name="vmAdmin" value="FrontDoor"> D. Azure Front Door
         </label>
     </div>
 
@@ -99,42 +100,41 @@
 
     <div id="answerSection">
         <h3>正确答案：</h3>
-        <p class="correct-answer">C. 3</p>
+        <p class="correct-answer">A. Azure Bastion</p>
         
         <div class="explanation">
             <h4>技术说明：</h4>
-            <p>1. <strong>节点池划分依据</strong>：</p>
+            <p>1. <strong>Azure Bastion的核心优势</strong>：</p>
             <ul>
-                <li><strong>Linux节点池</strong>：运行所有Linux容器（必须存在至少1个系统节点池）[7](@ref)</li>
-                <li><strong>Windows Server 2019节点池</strong>：同时支持Nano Server和Server Core容器（共享相同内核版本）</li>
-                <li><strong>Windows Server 2022节点池</strong>：需要独立节点池（内核版本与2019不兼容）[5](@ref)</li>
+                <li>完全托管的PaaS服务，无需暴露VM的公共IP即可通过Azure门户提供安全的RDP/SSH连接[8](@ref)[10](@ref)</li>
+                <li>通过TLS 443端口建立加密隧道，避免直接开放3389(RDP)等管理端口[10](@ref)</li>
+                <li>内置网络隔离，无需在NSG中配置入站规则[8](@ref)</li>
+                <li>支持Just-in-Time(JIT)访问控制，可进一步减少攻击面[8](@ref)</li>
             </ul>
             
-            <p>2. <strong>关键限制</strong>：</p>
-            <ul>
-                <li>Windows容器不能运行在Linux节点上，反之亦然[5](@ref)</li>
-                <li>不同Windows Server版本需要独立节点池（2019与2022内核不兼容）</li>
-                <li>同一Windows Server版本的不同变体（如Nano Server和Server Core）可共享节点池[7](@ref)</li>
-                <li>系统节点池必须运行Linux（不能使用Windows作为系统节点池）[7](@ref)</li>
-            </ul>
-            
-            <p>3. <strong>配置示例</strong>：</p>
+            <p>2. <strong>典型部署架构</strong>：</p>
             <pre>
-# Linux系统节点池（必须存在）
-az aks nodepool add --name linuxpool --os-type Linux --mode System
-
-# Windows Server 2019节点池
-az aks nodepool add --name win2019pool --os-type Windows --os-sku Windows2019
-
-# Windows Server 2022节点池
-az aks nodepool add --name win2022pool --os-type Windows --os-sku Windows2022
+# 创建Bastion主机（需专用子网AzureBastionSubnet）
+az network bastion create \
+  --name MyBastion \
+  --public-ip-address MyBastionIP \
+  --resource-group MyRG \
+  --vnet-name MyVNet \
+  --sku Standard
             </pre>
             
-            <p>4. <strong>错误选项分析</strong>：</p>
+            <p>3. <strong>错误选项分析</strong>：</p>
             <ul>
-                <li><strong>A. 1</strong>：无法同时满足Linux和Windows容器需求</li>
-                <li><strong>B. 2</strong>：无法区分Windows Server 2019和2022</li>
-                <li><strong>D. 6</strong>：过度划分（Nano Server和Server Core可共享节点池）</li>
+                <li><strong>B. 服务端点</strong>：用于保护PaaS服务访问，不提供VM管理功能[4](@ref)</li>
+                <li><strong>C. Private Link</strong>：用于私有连接Azure服务，不能用于VM管理[5](@ref)[6](@ref)</li>
+                <li><strong>D. Front Door</strong>：Web应用流量加速和负载均衡服务，与VM管理无关[1](@ref)</li>
+            </ul>
+            
+            <p>4. <strong>安全验证要点</strong>：</p>
+            <ul>
+                <li>确保所有VM未分配公共IP地址</li>
+                <li>检查NSG规则拒绝所有入站3389端口流量</li>
+                <li>启用Bastion的日志记录功能监控管理访问</li>
             </ul>
         </div>
     </div>

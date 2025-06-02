@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Deployment Features</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .drag-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        .features-box {
+            flex: 1;
+            min-height: 150px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .requirements-box {
+            flex: 1;
+            min-height: 150px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .feature-item {
+            background-color: #e7f3fe;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #0078d4;
+        }
+        .drop-target {
+            min-height: 40px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 213 DRAG DROP</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are preparing to deploy an Azure virtual machine (VM) based application. The VMs that run the application have the following requirements:</p>
+        <ul>
+            <li>When a VM is provisioned the firewall must be automatically configured before it can access Azure resources.</li>
+            <li>Supporting services must be installed by using an Azure PowerShell script that is stored in Azure Storage.</li>
+        </ul>
+        
+        <p><strong>Task:</strong></p>
+        <p>You need to ensure that the requirements are met. Which features should you use? To answer, drag the appropriate features to the correct requirements.</p>
+        
+        <div class="drag-container">
+            <div class="features-box" id="featuresBox">
+                <div class="feature-item" draggable="true" data-feature="Run Command">Run Command</div>
+                <div class="feature-item" draggable="true" data-feature="Serial console">Serial console</div>
+                <div class="feature-item" draggable="true" data-feature="Hybrid Runbook Worker">Hybrid Runbook Worker</div>
+                <div class="feature-item" draggable="true" data-feature="Custom Script Extension">Custom Script Extension</div>
+            </div>
+            
+            <div class="requirements-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Requirement</th>
+                            <th>Feature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Firewall configuration</td>
+                            <td class="drop-target" data-requirement="firewall"></td>
+                        </tr>
+                        <tr>
+                            <td>Supporting services script</td>
+                            <td class="drop-target" data-requirement="script"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Firewall configuration</td>
+                        <td>Custom Script Extension</td>
+                    </tr>
+                    <tr>
+                        <td>Supporting services script</td>
+                        <td>Run Command</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确的功能匹配应该是：</p>
+            <ul>
+                <li><strong>Firewall configuration</strong>：使用"Custom Script Extension"来自动配置防火墙。这个扩展可以在VM部署后自动下载和执行脚本，非常适合初始配置任务。</li>
+                <li><strong>Supporting services script</strong>：使用"Run Command"来执行存储在Azure Storage中的PowerShell脚本。Run Command允许远程执行脚本而无需在VM上预先安装代理。</li>
+            </ul>
+            
+            <p>其他选项说明：</p>
+            <ul>
+                <li><strong>Serial console</strong>：提供对VM串行控制台的访问，不适用于自动化配置</li>
+                <li><strong>Hybrid Runbook Worker</strong>：用于混合环境自动化，但需要预先配置</li>
+            </ul>
+            
+            <p>关键区别：</p>
+            <ol>
+                <li>Custom Script Extension适用于初始部署时的自动化配置</li>
+                <li>Run Command更适合后期维护和脚本执行</li>
+                <li>两者都可以执行PowerShell脚本，但使用场景不同</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽功能实现（支持桌面和移动端）
+        document.addEventListener('DOMContentLoaded', function() {
+            const features = document.querySelectorAll('.feature-item');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            features.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e1f5fe';
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '';
+                    
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        this.appendChild(clonedItem);
+                        this.setAttribute('data-feature', clonedItem.getAttribute('data-feature'));
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            features.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.4';
+                    e.preventDefault();
+                }, {passive: false});
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropTargets.forEach(target => {
+                target.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                target.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        this.innerHTML = '';
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.draggable = false;
+                        this.appendChild(clonedItem);
+                        this.setAttribute('data-feature', clonedItem.getAttribute('data-feature'));
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                    e.preventDefault();
+                }, {passive: false});
+            });
+            
+            // 显示答案
+            document.getElementById('showAnswer').addEventListener('click', function() {
+                document.getElementById('answerSection').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

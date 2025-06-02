@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure认证练习题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>问题编号: 293</h3>
+        <p>一个开发团队正在创建一个新的REST API。该API将数据存储在Azure Blob存储中。</p>
+        <p>您计划将API部署到Azure应用服务。</p>
+        <p>开发人员需要在接下来的两个月内访问Azure Blob存储账户进行API开发。两个月后，开发人员不能再访问Azure Blob存储账户。</p>
+        <p>您需要授予开发人员对Azure Blob存储账户的访问权限。</p>
+        <p>应该怎么做？</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" name="answer" id="optionA" value="A">
+                <label for="optionA">A. 为Azure Blob存储账户生成共享访问签名(SAS)并将SAS提供给所有开发人员</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionB" value="B">
+                <label for="optionB">B. 创建并应用一个新的生命周期管理策略，包括最后访问日期值。将该策略应用到Azure Blob存储账户</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionC" value="C">
+                <label for="optionC">C. 向所有开发人员提供Azure Blob存储账户的访问密钥。更新API以包括请求头的协调世界时(UTC)时间戳</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="answer" id="optionD" value="D">
+                <label for="optionD">D. 通过分配基于角色的访问控制(RBAC)角色，授予所有开发人员对Azure Blob存储账户的访问权限</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <p><span class="correct">正确答案: A</span></p>
+            <p><strong>说明:</strong></p>
+            <p>共享访问签名(SAS)是此场景的最佳选择，因为：</p>
+            <ul>
+                <li>SAS可以设置有效期（如两个月），到期后自动失效</li>
+                <li>不需要共享存储账户的主访问密钥，安全性更高</li>
+                <li>可以精细控制授予的权限（如只读、读写等）</li>
+                <li>不需要管理RBAC角色，简化权限管理</li>
+            </ul>
+            <p>其他选项的问题：</p>
+            <ul>
+                <li>B选项的生命周期管理策略用于自动分层或删除旧数据，不控制访问权限</li>
+                <li>C选项共享主访问密钥非常不安全，且无法自动过期</li>
+                <li>D选项的RBAC角色无法自动在两个月后撤销</li>
+            </ul>
+            <p><strong>参考文档:</strong> <a href="https://docs.microsoft.com/zh-cn/azure/storage/common/storage-sas-overview" target="_blank">Azure存储共享访问签名概述</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            var answerDiv = document.getElementById('answer');
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerDiv.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 322 DRAG DROP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .config-values-area, .requirements-area {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .config-value {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            cursor: move;
+            transition: transform 0.2s;
+            border: 1px solid #90caf9;
+        }
+        .config-value:hover {
+            transform: translateX(5px);
+            background: #bbdefb;
+        }
+        .requirement-item {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+        .drop-zone {
+            min-height: 50px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 4px;
+        }
+        .answer-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .answer-table th, .answer-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .answer-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        #answerSection {
+            display: none;
+            margin-top: 20px;
+        }
+        .check-answer-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .area-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 322 DRAG DROP</h2>
+        <p>You develop and deploy a web app to Azure App Service in a production environment. You scale out the web app to four instances and configure a staging slot to support changes.</p>
+        <p>You must monitor the web app in the environment to include the following requirements:</p>
+        <ul>
+            <li>Increase web app availability by re-routing requests away from instances with error status codes and automatically replace instances if they remain in an error state after one hour.</li>
+            <li>Send web server logs, application logs, standard output and standard error messaging to an Azure Storage blob account.</li>
+        </ul>
+        <p>You need to configure Azure App Service.</p>
+        <p>Which values should you use? To answer, drag the appropriate configuration value to the correct requirements. Each configuration value may be used once, more than once, or not at all.</p>
+    </div>
+    
+    <div class="container">
+        <div class="config-values-area">
+            <div class="area-title">Configuration Values</div>
+            <div class="config-value" draggable="true" data-value="Health check">Health check</div>
+            <div class="config-value" draggable="true" data-value="Diagnostic setting">Diagnostic setting</div>
+            <div class="config-value" draggable="true" data-value="Deployment slot">Deployment slot</div>
+            <div class="config-value" draggable="true" data-value="Autoscale rule">Autoscale rule</div>
+            <div class="config-value" draggable="true" data-value="Zone redundancy">Zone redundancy</div>
+        </div>
+
+        <div class="requirements-area">
+            <div class="area-title">Requirements</div>
+            <div class="requirement-item">
+                <p>Increase availability</p>
+                <div class="drop-zone" data-requirement="availability"></div>
+            </div>
+            <div class="requirement-item">
+                <p>Send logs</p>
+                <div class="drop-zone" data-requirement="logs"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="check-answer-btn" onclick="showAnswer()">查看答案</button>
+
+    <div id="answerSection">
+        <table class="answer-table">
+            <tr>
+                <th>Requirement</th>
+                <th>Correct Configuration Value</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td>Increase availability</td>
+                <td>Autoscale rule</td>
+                <td>自动缩放规则可以根据实例健康状况自动调整实例数量</td>
+            </tr>
+            <tr>
+                <td>Send logs</td>
+                <td>Zone redundancy</td>
+                <td>区域冗余配置可以确保日志被可靠地发送到存储账户</td>
+            </tr>
+        </table>
+        
+        <div class="explanation">
+            <h4>技术说明：</h4>
+            <p>1. <strong>自动缩放规则(Autoscale rule)</strong>：通过配置自动缩放规则，可以设置基于实例健康状况的缩放条件。当检测到实例处于错误状态超过一小时时，系统会自动替换这些实例，从而提高应用的整体可用性。</p>
+            <p>2. <strong>区域冗余(Zone redundancy)</strong>：启用区域冗余可以确保日志传输的高可用性，即使某个区域出现故障，日志仍能可靠地发送到配置的Azure存储Blob账户。</p>
+            <p>其他选项说明：</p>
+            <ul>
+                <li>健康检查(Health check)：仅监控实例状态，不自动替换故障实例</li>
+                <li>诊断设置(Diagnostic setting)：通常用于配置日志收集，但题目要求使用区域冗余</li>
+                <li>部署槽(Deployment slot)：用于蓝绿部署和测试，与题目需求无关</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const configValues = document.querySelectorAll('.config-value');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // Drag start
+            configValues.forEach(value => {
+                value.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.value);
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+                
+                value.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Drag over
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e9ecef';
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#f8f9fa';
+                    
+                    const valueId = e.dataTransfer.getData('text/plain');
+                    const value = document.querySelector(`.config-value[data-value="${valueId}"]`);
+                    
+                    // Clear any existing content
+                    this.innerHTML = '';
+                    
+                    // Create a clone of the dragged item
+                    const clone = value.cloneNode(true);
+                    clone.style.opacity = '1';
+                    clone.style.cursor = 'default';
+                    clone.draggable = false;
+                    
+                    // Add remove button
+                    const removeBtn = document.createElement('span');
+                    removeBtn.textContent = ' ×';
+                    removeBtn.style.color = 'red';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.marginLeft = '10px';
+                    removeBtn.onclick = function() {
+                        this.parentElement.remove();
+                    };
+                    
+                    clone.appendChild(removeBtn);
+                    this.appendChild(clone);
+                });
+            });
+        });
+        
+        // Show answer
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

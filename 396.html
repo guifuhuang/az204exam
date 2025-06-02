@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Azure Event Hubs Throttling Policy Question</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .question { font-size: 18px; font-weight: bold; }
+    .options { margin-top: 15px; }
+    .option { margin-bottom: 10px; }
+    #answer { display: none; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="question">
+    QUESTION NO: 396<br>
+    You are developing a road tollway tracking application that sends tracking events by using Azure Event Hubs using premium tier.
+    Each road must have a throttling policy uniquely assigned.
+    You need to configure the event hub to allow for per-road throttling.<br><br>
+    What should you do?
+  </div>
+
+  <form class="options">
+    <div class="option"><input type="radio" name="answer" id="a"> A. Ensure each road has a unique connection string.</div>
+    <div class="option"><input type="radio" name="answer" id="b"> B. Use a unique consumer group for each road</div>
+    <div class="option"><input type="radio" name="answer" id="c"> C. Use a unique application group for each road</div>
+    <div class="option"><input type="radio" name="answer" id="d"> D. Ensure each road stores events in a different partition.</div>
+  </form>
+
+  <button onclick="document.getElementById('answer').style.display='block';">查看答案</button>
+
+  <div id="answer">
+    <strong>正确答案：</strong> D<br><br>
+    <strong>说明：</strong><br>
+    Premium 层的 Azure Event Hubs 支持分区级别的资源隔离。通过将每条道路分配到不同的分区，可以实现基于分区的限流策略。这样每条道路的数据发送不会互相干扰，达到独立限流的目的。其他选项如连接字符串、consumer group、application group 并不能实现发送侧的限流控制。
+  </div>
+
+</body>
+</html>

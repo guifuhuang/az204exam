@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB RBAC Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 230</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing a Java application that uses Cassandra to store key and value data. You plan to use a new Azure Cosmos DB resource and the Cassandra API in the application.</p>
+        
+        <p><strong>Current Situation:</strong></p>
+        <ul>
+            <li>Created an Azure AD group named "Cosmos DB Creators"</li>
+            <li>Group needs to enable provisioning of Azure Cosmos accounts, databases, and containers</li>
+            <li>Group must NOT be able to access the keys required to access the data</li>
+        </ul>
+        
+        <p><strong>Requirement:</strong></p>
+        <p>You need to restrict access to the Azure AD group.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Which role-based access control should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. DocumentDB Accounts Contributor</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Cosmos Backup Operator</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Cosmos DB Operator</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Cosmos DB Account Reader</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">C. Cosmos DB Operator</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确答案是C，原因如下：</p>
+            
+            <ol>
+                <li><strong>角色权限分析</strong>：
+                    <ul>
+                        <li><span class="correct">Cosmos DB Operator</span>：可以预配Azure Cosmos账户、数据库和容器，但无法访问数据访问密钥[6](@ref)</li>
+                        <li><span class="incorrect">DocumentDB Accounts Contributor</span>：可以完全管理Azure Cosmos DB账户，包括访问密钥[6](@ref)</li>
+                        <li><span class="incorrect">Cosmos Backup Operator</span>：只能提交恢复请求，不符合预配资源的需求[6](@ref)</li>
+                        <li><span class="incorrect">Cosmos DB Account Reader</span>：只能读取账户数据，无法创建资源[6](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>需求匹配</strong>：
+                    <ul>
+                        <li>题目要求允许预配资源但禁止访问密钥，Cosmos DB Operator角色完全符合这一要求</li>
+                        <li>该角色属于控制平面访问权限，不涉及数据平面操作[6](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>Cassandra API注意事项</strong>：
+                    <ul>
+                        <li>Azure Cosmos DB的Cassandra API不支持传统Cassandra的RBAC功能[5](@ref)</li>
+                        <li>必须使用Azure门户配置基于角色的访问控制[5](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>配置步骤：</strong></p>
+            <ol>
+                <li>在Azure门户中导航到Cosmos DB账户</li>
+                <li>选择"访问控制(IAM)"</li>
+                <li>添加角色分配，选择"Cosmos DB Operator"角色</li>
+                <li>选择"Cosmos DB Creators" Azure AD组作为成员</li>
+                <li>保存设置</li>
+            </ol>
+            
+            <p><strong>安全最佳实践：</strong></p>
+            <ul>
+                <li>遵循最小权限原则，仅授予必要的权限[3](@ref)</li>
+                <li>定期审核角色分配，确保没有过度授权[3](@ref)</li>
+                <li>考虑为敏感操作启用多重身份验证[3](@ref)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Cosmos DB 多区域写入配置测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 342</h3>
+        <p>You are developing a .Net web application that stores data in Azure Cosmos DB. The application must use the Core API and allow millions of reads and writes. The Azure Cosmos DB account has been created with multiple write region enabled. The application has been deployed to the East US2 and Central US region.</p>
+        <p>You need to update the application to support multi-region writes.</p>
+        <p>What are two possible ways to achieve this goal? Each correct answer presents parts of the solutions.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="optionA">
+                <label for="optionA">A. Update the ConnectionPolicy class for the Cosmos client and populate the PreferredLocations property based on the geo-proximity of the application.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="optionB">
+                <label for="optionB">B. Update Azure Cosmos DB to use the Strong consistency level. Add indexed properties to the container to indicate region.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="optionC">
+                <label for="optionC">C. Update the ConnectionPolicy class for the Cosmos client and set the UseMultipleWriteLocations property to true.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="optionD">
+                <label for="optionD">D. Create and deploy a custom conflict resolution policy.</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="optionE">
+                <label for="optionE">E. Update Azure Cosmos DB to use the Session consistency level. Send the SessionToken property value from the FeedResponse object of the write action to the end-user by using a cookie.</label>
+            </div>
+        </div>
+        
+        <button onclick="showAnswer()">查看答案</button>
+        
+        <div id="answer" class="answer">
+            <h4>正确答案: C, D</h4>
+            <p>说明:</p>
+            <p>C选项正确 - 必须将UseMultipleWriteLocations属性设置为true才能启用多区域写入功能。</p>
+            <p>D选项正确 - 多区域写入需要配置冲突解决策略来处理可能的数据冲突。</p>
+            <p>A选项不正确 - PreferredLocations只影响读取操作的位置偏好。</p>
+            <p>B选项不正确 - 强一致性级别与多区域写入不兼容。</p>
+            <p>E选项不正确 - SessionToken与会话一致性相关，但不是实现多区域写入的必要条件。</p>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById("answer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

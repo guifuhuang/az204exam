@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Functions Connection Pooling Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options-container {
+            margin: 20px 0;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #e5f5ff;
+        }
+        .option.selected {
+            background-color: #ccebff;
+            border-color: #0078d4;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 247</h1>
+    
+    <div class="question-container">
+        <p>You are developing an Azure function that connects to an Azure SQL Database instance. The function is triggered by an Azure Storage queue.</p>
+        <p>You receive reports of numerous System.InvalidOperationExceptions with the following message:</p>
+        <p><em>"Timeout expired. The timeout period elapsed prior to obtaining a connection from the pool. This may have occurred because all pooled connections were in use and max pool size was reached."</em></p>
+        <p>You need to prevent the exception.</p>
+        <p>What should you do?</p>
+    </div>
+    
+    <div class="options-container">
+        <div class="option" onclick="selectOption(this)">A. In the host.json file, decrease the value of the batchSize option</div>
+        <div class="option" onclick="selectOption(this)">B. Convert the trigger to Azure Event Hub</div>
+        <div class="option" onclick="selectOption(this)">C. Convert the Azure Function to the Premium plan</div>
+        <div class="option" onclick="selectOption(this)">D. In the function.json file, change the value of the type option to queueScaling</div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Answer:</strong> A. In the host.json file, decrease the value of the batchSize option</p>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>该问题的正确解决方案是<strong>在host.json文件中减小batchSize选项的值</strong>，原因如下：</p>
+            <ol>
+                <li><strong>问题根源</strong>：错误消息表明SQL连接池中的所有连接都被占用，达到了最大连接数限制。这通常发生在函数同时处理太多队列消息时。</li>
+                <li><strong>batchSize选项的作用</strong>：
+                    <ul>
+                        <li>控制函数一次从队列中获取并处理的消息数量</li>
+                        <li>默认值为16，意味着函数可能同时处理多达16条消息</li>
+                        <li>每个消息处理都需要一个数据库连接</li>
+                    </ul>
+                </li>
+                <li><strong>减小batchSize的好处</strong>：
+                    <ul>
+                        <li>减少同时处理的消息数量</li>
+                        <li>降低并发数据库连接需求</li>
+                        <li>避免连接池耗尽</li>
+                    </ul>
+                </li>
+                <li><strong>其他选项分析</strong>：
+                    <ul>
+                        <li>B选项：转换为Event Hub不能解决连接池问题</li>
+                        <li>C选项：升级到Premium计划不会增加SQL连接池大小</li>
+                        <li>D选项：queueScaling不是有效的配置选项</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>配置示例（host.json）：</strong></p>
+            <pre>{
+  "version": "2.0",
+  "extensions": {
+    "queues": {
+      "batchSize": 5  // 减小默认值以减少并发
+    }
+  }
+}</pre>
+            
+            <p><strong>其他建议：</strong></p>
+            <ul>
+                <li>优化数据库查询性能</li>
+                <li>考虑使用连接复用模式</li>
+                <li>监控SQL连接池使用情况</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

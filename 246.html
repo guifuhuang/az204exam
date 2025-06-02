@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Lifecycle Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .column {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .column h3 {
+            margin-top: 0;
+            color: #0078d4;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .draggable-item {
+            background-color: #e5f5ff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #b3d9ff;
+            transition: background-color 0.2s;
+        }
+        .draggable-item:hover {
+            background-color: #ccebff;
+        }
+        .drop-zone {
+            min-height: 200px;
+            border: 2px dashed #0078d4;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .drop-zone.highlight {
+            background-color: #e5f5ff;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        @media (max-width: 600px) {
+            .columns {
+                flex-direction: column;
+            }
+            .draggable-item {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 246 DRAG DROP</h1>
+    
+    <div class="question-container">
+        <p>You are maintaining an existing application that uses an Azure Blob GPv1 Premium storage account. Data older than three months is rarely used. Data newer than three months must be available immediately. Data older than a year must be saved but does not need to be available immediately.</p>
+        <p>You need to configure the account to support a lifecycle management rule that moves blob data to archive storage for data not modified in the last year.</p>
+        <p>Which three actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+    </div>
+    
+    <div class="columns">
+        <div class="column">
+            <h3>Actions</h3>
+            <div id="actions-list">
+                <div class="draggable-item" draggable="true" data-id="1">Upgrade the storage account to GPv2</div>
+                <div class="draggable-item" draggable="true" data-id="2">Create a new GPv2 Standard account and set its default access tier level to cool</div>
+                <div class="draggable-item" draggable="true" data-id="3">Change the storage account access tier from hot to cool</div>
+                <div class="draggable-item" draggable="true" data-id="4">Copy the data to be archived to a Standard GPv2 storage account and then delete the data from the original storage account</div>
+            </div>
+        </div>
+        
+        <div class="column">
+            <h3>Answer Area</h3>
+            <div id="drop-zone" class="drop-zone">
+                <p>Drag and drop the correct actions here in the right order (3 items)</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+        <button id="reset">Reset</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Sequence:</strong></p>
+            <ol>
+                <li>Upgrade the storage account to GPv2</li>
+                <li>Copy the data to be archived to a Standard GPv2 storage account and then delete the data from the original storage account</li>
+                <li>Change the storage account access tier from hot to cool</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>将存储账户升级到GPv2</strong>：生命周期管理功能仅在GPv2账户中可用，GPv1 Premium账户不支持此功能。</p>
+            <p>2. <strong>将要归档的数据复制到标准GPv2存储账户，然后从原始存储账户删除数据</strong>：这是实际执行数据迁移的步骤，将旧数据移动到归档存储。</p>
+            <p>3. <strong>将存储账户访问层从热改为冷</strong>：设置适当的访问层以优化存储成本，冷存储层适合不常访问的数据。</p>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>GPv1 Premium账户不支持生命周期管理规则，必须升级到GPv2</li>
+                <li>归档存储层只能设置在blob级别，不能设置在账户级别</li>
+                <li>冷存储层适合存储至少30天的数据，访问频率较低</li>
+                <li>热存储层适合频繁访问的数据，但成本较高</li>
+                <li>参考文档：<a href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers" target="_blank">Azure Blob Storage tiers</a></li>
+            </ul>
+            
+            <p><strong>注意事项：</strong></p>
+            <ol>
+                <li>GPv2账户支持所有存储层（热、冷、归档）</li>
+                <li>数据迁移后，可以根据访问模式调整访问层以优化成本</li>
+                <li>归档存储的数据检索需要几小时的时间，不适合需要立即访问的数据</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('drop-zone');
+            const actionsList = document.getElementById('actions-list');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const resetBtn = document.getElementById('reset');
+            const answerSection = document.getElementById('answer-section');
+            
+            let draggedItem = null;
+            
+            // Add event listeners for draggable items
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', this.innerHTML);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Dragover drop zone
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+                e.dataTransfer.dropEffect = 'move';
+            });
+            
+            // Dragleave drop zone
+            dropZone.addEventListener('dragleave', function() {
+                this.classList.remove('highlight');
+            });
+            
+            // Drop on drop zone
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                // Check if item already exists
+                const existingItems = Array.from(dropZone.querySelectorAll('.draggable-item'));
+                const alreadyExists = existingItems.some(item => item.getAttribute('data-id') === draggedItem.getAttribute('data-id'));
+                
+                if (!alreadyExists && existingItems.length < 3) {
+                    const clone = draggedItem.cloneNode(true);
+                    clone.style.opacity = '1';
+                    dropZone.appendChild(clone);
+                    
+                    // Update drop zone prompt
+                    const prompt = dropZone.querySelector('p');
+                    if (prompt && dropZone.querySelectorAll('.draggable-item').length > 0) {
+                        dropZone.removeChild(prompt);
+                    }
+                }
+            });
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Reset button
+            resetBtn.addEventListener('click', function() {
+                dropZone.innerHTML = '<p>Drag and drop the correct actions here in the right order (3 items)</p>';
+                answerSection.style.display = 'none';
+            });
+            
+            // Touch device support
+            if ('ontouchstart' in window) {
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.addEventListener('touchstart', function(e) {
+                        draggedItem = this;
+                        e.preventDefault();
+                    }, { passive: false });
+                });
+                
+                dropZone.addEventListener('touchenter', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                dropZone.addEventListener('touchleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                dropZone.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                dropZone.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        // Check if item already exists
+                        const existingItems = Array.from(dropZone.querySelectorAll('.draggable-item'));
+                        const alreadyExists = existingItems.some(item => item.getAttribute('data-id') === draggedItem.getAttribute('data-id'));
+                        
+                        if (!alreadyExists && existingItems.length < 3) {
+                            const clone = draggedItem.cloneNode(true);
+                            dropZone.appendChild(clone);
+                            
+                            // Update drop zone prompt
+                            const prompt = dropZone.querySelector('p');
+                            if (prompt && dropZone.querySelectorAll('.draggable-item').length > 0) {
+                                dropZone.removeChild(prompt);
+                            }
+                        }
+                    }
+                }, { passive: false });
+            }
+        });
+    </script>
+</body>
+</html>

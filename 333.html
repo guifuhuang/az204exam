@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 333 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .requirements-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .requirements-table th, .requirements-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .requirements-table th {
+            background-color: #f2f2f2;
+        }
+        .select-container {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 333 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You are developing a web application that uses the Microsoft identity platform for user and resource authentication. The web application calls several REST APIs.</p>
+            <p>You are implementing various authentication and authorization flows for the web application.</p>
+            <p>You need to validate the claims in the authentication token.</p>
+            <p>Which token type should you use? To answer, select the appropriate options in the answer area.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <table class="requirements-table">
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Token type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Identify users for the application by using a JWT token that contains claims.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="token-type-1">
+                                <option value="">Select an option</option>
+                                <option value="Access">Access</option>
+                                <option value="ID">ID</option>
+                                <option value="Refresh">Refresh</option>
+                                <option value="SAML">SAML</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Identify the permissions granted to APIs by using a JWT token that contains claims.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="token-type-2">
+                                <option value="">Select an option</option>
+                                <option value="Access">Access</option>
+                                <option value="ID">ID</option>
+                                <option value="Refresh">Refresh</option>
+                                <option value="SAML">SAML</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Provide the web application with long-term access to resources on behalf of users without requiring interaction with those users.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="token-type-3">
+                                <option value="">Select an option</option>
+                                <option value="Access">Access</option>
+                                <option value="ID">ID</option>
+                                <option value="Refresh">Refresh</option>
+                                <option value="SAML">SAML</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Provide XML representations of claims that can be consumed by applications that use WS-Federation.</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="token-type-4">
+                                <option value="">Select an option</option>
+                                <option value="Access">Access</option>
+                                <option value="ID">ID</option>
+                                <option value="Refresh">Refresh</option>
+                                <option value="SAML">SAML</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">Identify users with JWT token: ID</p>
+            <p class="correct-answer">Identify API permissions: Access</p>
+            <p class="correct-answer">Long-term access without user interaction: Refresh</p>
+            <p class="correct-answer">XML claims for WS-Federation: SAML</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>ID令牌</strong> 用于识别应用程序的用户。ID令牌是JWT格式，包含用户身份信息，专门用于客户端验证用户身份[2](@ref)[4](@ref)。</p>
+                <p>2. <strong>Access令牌</strong> 用于识别API权限。Access令牌包含授予API的权限范围，用于授权访问受保护的资源[1](@ref)[7](@ref)。</p>
+                <p>3. <strong>Refresh令牌</strong> 提供长期访问资源的能力而无需用户交互。Refresh令牌用于获取新的Access令牌，有效期较长[3](@ref)[9](@ref)。</p>
+                <p>4. <strong>SAML令牌</strong> 是XML格式的安全令牌，支持WS-Federation协议。它能够提供XML格式的声明表示，被广泛用于企业身份联合场景[10](@ref)。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>ID令牌专门设计用于传递用户身份信息[2](@ref)</li>
+                    <li>Access令牌包含API权限范围信息[7](@ref)</li>
+                    <li>Refresh令牌提供长期访问能力[9](@ref)</li>
+                    <li>SAML是WS-Federation协议的标准XML令牌格式[10](@ref)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

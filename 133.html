@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus Audit Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .option-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+        }
+        .option-item.selected {
+            background-color: #dff0d8;
+            border-color: #107c10;
+        }
+        .option-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .property-table th, .property-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .property-table th {
+            background-color: #e6f7ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 133</h2>
+        <div class="scenario">
+            <p>You are creating a hazard notification system that has a single signaling server which triggers audio and visual alarms to start and stop.</p>
+            <p>You implement Azure Service Bus to publish alarms. Each alarm controller uses Azure Service Bus to receive alarm signals as part of a transaction. Alarm events must be recorded for audit purposes. Each transaction record must include information about the alarm type that was activated.</p>
+            <p>You need to implement a reply trail auditing solution.</p>
+        </div>
+        
+        <p>Which two actions should you perform? Each correct answer presents part of the solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="options-list" id="optionsList">
+            <div class="option-item" data-option="A">
+                <input type="checkbox" id="optionA">
+                <label for="optionA">A. Assign the value of the hazard message SessionID property to the ReplyToSessionId property.</label>
+            </div>
+            <div class="option-item" data-option="B">
+                <input type="checkbox" id="optionB">
+                <label for="optionB">B. Assign the value of the hazard message MessageId property to the DevileryCount property.</label>
+            </div>
+            <div class="option-item" data-option="C">
+                <input type="checkbox" id="optionC">
+                <label for="optionC">C. Assign the value of the hazard message SessionID property to the SequenceNumber property.</label>
+            </div>
+            <div class="option-item" data-option="D">
+                <input type="checkbox" id="optionD">
+                <label for="optionD">D. Assign the value of the hazard message MessageId property to the CorrelationId property.</label>
+            </div>
+            <div class="option-item" data-option="E">
+                <input type="checkbox" id="optionE">
+                <label for="optionE">E. Assign the value of the hazard message SequenceNumber property to the DeliveryCount property.</label>
+            </div>
+            <div class="option-item" data-option="F">
+                <input type="checkbox" id="optionF">
+                <label for="optionF">F. Assign the value of the hazard message MessageId property to the SequenceNumber property.</label>
+            </div>
+        </div>
+        
+        <button class="check-answer" id="checkAnswer">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct-answer">A. Assign the value of the hazard message SessionID property to the ReplyToSessionId property.</span></p>
+            <p><span class="correct-answer">D. Assign the value of the hazard message MessageId property to the CorrelationId property.</span></p>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p>要实现审计追踪解决方案，需要正确设置以下两个属性：</p>
+                
+                <table class="property-table">
+                    <tr>
+                        <th>选项</th>
+                        <th>解释</th>
+                    </tr>
+                    <tr>
+                        <td>A (正确)</td>
+                        <td>将SessionID赋值给ReplyToSessionId可以确保回复消息与原始消息关联，这对于审计追踪至关重要</td>
+                    </tr>
+                    <tr>
+                        <td>D (正确)</td>
+                        <td>将MessageId赋值给CorrelationId可以建立消息之间的关联关系，便于追踪整个事务流程</td>
+                    </tr>
+                    <tr>
+                        <td>B (错误)</td>
+                        <td>DeliveryCount是系统自动维护的属性，不应手动设置</td>
+                    </tr>
+                    <tr>
+                        <td>C (错误)</td>
+                        <td>SequenceNumber是系统分配的序号，不应手动设置</td>
+                    </tr>
+                    <tr>
+                        <td>E (错误)</td>
+                        <td>SequenceNumber和DeliveryCount是完全不同的属性，不应互相赋值</td>
+                    </tr>
+                    <tr>
+                        <td>F (错误)</td>
+                        <td>MessageId不应赋值给SequenceNumber，这会破坏消息的顺序追踪</td>
+                    </tr>
+                </table>
+                
+                <p><strong>关键点分析:</strong></p>
+                <ul>
+                    <li><strong>ReplyToSessionId</strong>：用于确保回复消息能正确关联到原始会话，这对审计追踪至关重要</li>
+                    <li><strong>CorrelationId</strong>：用于在分布式系统中追踪相关消息，是审计追踪的核心属性</li>
+                    <li>系统自动维护的属性（如SequenceNumber、DeliveryCount）不应手动修改</li>
+                    <li>审计追踪需要完整的消息关联关系，而不仅仅是消息内容</li>
+                </ul>
+                
+                <p><strong>Azure Service Bus 审计最佳实践:</strong></p>
+                <ol>
+                    <li>使用CorrelationId建立消息间的关联关系</li>
+                    <li>使用SessionId和ReplyToSessionId确保消息会话完整性</li>
+                    <li>避免修改系统自动维护的属性</li>
+                    <li>考虑启用消息的重复检测功能以提高可靠性</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 选项选择功能
+        document.querySelectorAll('.option-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 防止点击checkbox时触发两次
+                if (e.target.tagName !== 'INPUT') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                }
+                
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    this.classList.add('selected');
+                } else {
+                    this.classList.remove('selected');
+                }
+            });
+        });
+
+        // 查看答案按钮功能
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answer');
+            if (answerContainer.style.display === 'none' || !answerContainer.style.display) {
+                answerContainer.style.display = 'block';
+                this.textContent = '隐藏答案';
+            } else {
+                answerContainer.style.display = 'none';
+                this.textContent = '查看答案';
+            }
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

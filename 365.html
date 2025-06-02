@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Grid 配置测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .answer-area {
+            padding: 25px;
+            background: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .answer-title {
+            font-size: 24px;
+            color: #0078d7;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+            text-align: center;
+        }
+        .requirements {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .requirement-row {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f5f9ff;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .requirement-row:hover {
+            background: #e3f2fd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .requirement-label {
+            flex: 1;
+            font-weight: bold;
+            color: #005a9e;
+        }
+        .select-container {
+            flex: 1;
+            position: relative;
+        }
+        .config-select {
+            width: 100%;
+            background: white;
+            color: #333;
+            border: 2px solid #0078d7;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230078d7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        .config-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.3);
+        }
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 25px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 5px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+        }
+        .answer-section {
+            margin-top: 15px;
+        }
+        .answer-section h3 {
+            color: #0078d7;
+            margin-bottom: 10px;
+        }
+        .answer-row {
+            display: flex;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .answer-label {
+            font-weight: bold;
+            min-width: 200px;
+            color: #0078d7;
+        }
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .architecture-diagram img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .diagram-placeholder {
+            background: #e3f2fd;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #0078d7;
+        }
+        @media (max-width: 768px) {
+            .requirement-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .requirement-label, .select-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Event Grid 配置测试</h1>
+            <p>QUESTION NO: 365 HOTSPOT</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您开发了多个Azure Grid，包含数百种事件类型，如计费、库存和运输更新。</p>
+                <p>事件必须发送到单个端点，由Azure Functions应用程序处理。在事件处理前必须按事件类型进行筛选。您必须具有授权和身份验证控制，以对租户进行分区以接收事件数据。</p>
+                <p>您需要配置Azure Event Grid。</p>
+                <p>应该使用哪种配置？请选择答案区域中的适当值。</p>
+                <p>注意：每个正确选项值1分。</p>
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <div class="answer-title">Answer Area</div>
+            <div class="requirements">
+                <div class="requirement-row">
+                    <div class="requirement-label">Third party system endpoint to send events</div>
+                    <div class="select-container">
+                        <select class="config-select" id="select1">
+                            <option value="">请选择配置值</option>
+                            <option value="system-topic">system topic</option>
+                            <option value="custom-topic">custom topic</option>
+                            <option value="event-domain">event domain</option>
+                            <option value="event-subscription">event subscription</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="requirement-row">
+                    <div class="requirement-label">Azure Functions app endpoint to handle filtered events</div>
+                    <div class="select-container">
+                        <select class="config-select" id="select2">
+                            <option value="">请选择配置值</option>
+                            <option value="system-topic">system topic</option>
+                            <option value="custom-topic">custom topic</option>
+                            <option value="event-domain">event domain</option>
+                            <option value="event-subscription">event subscription</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="check-answer" class="btn">查看答案</button>
+        </div>
+        
+        <div id="answer-panel" class="answer-panel">
+            <div class="answer-title">答案与解析</div>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第三方系统端点发送事件：</div>
+                            <div>event domain</div>
+                        </div>
+                        <div class="answer-row">
+                            <div class="answer-label">Azure Functions处理筛选后事件：</div>
+                            <div>event subscription</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析：</h3>
+                    
+                    <h4>需求分析：</h4>
+                    <p>根据题目要求，需要实现以下功能：</p>
+                    <ul>
+                        <li>数百种事件类型需要发送到单个端点</li>
+                        <li>事件处理前必须按类型筛选</li>
+                        <li>需要授权和身份验证控制以分区租户</li>
+                        <li>使用Azure Functions处理筛选后的事件</li>
+                    </ul>
+                    
+                    <h4>Azure Event Grid 组件说明：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">事件域 (Event Domain)：</div>
+                            <div>
+                                <p>用于管理大量主题的顶级资源，特别适合多租户场景</p>
+                                <p>提供租户分区功能，每个租户有自己的主题空间</p>
+                                <p>支持细粒度的访问控制和授权管理</p>
+                                <p>允许第三方系统通过单个端点发送事件</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">事件订阅 (Event Subscription)：</div>
+                            <div>
+                                <p>定义事件路由规则和筛选条件</p>
+                                <p>支持按事件类型、主题等属性进行筛选</p>
+                                <p>可以将筛选后的事件路由到各种端点（如Azure Functions）</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">自定义主题 (Custom Topic)：</div>
+                            <div>
+                                <p>适用于单一应用程序或服务的事件路由</p>
+                                <p>缺乏多租户分区能力</p>
+                                <p>不适合管理数百种事件类型</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">系统主题 (System Topic)：</div>
+                            <div>
+                                <p>由Azure服务（如存储、IoT中心）自动创建</p>
+                                <p>不适用于第三方系统发送事件</p>
+                                <p>无法满足多租户分区需求</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>配置方案说明：</h4>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <div class="answer-label">第三方系统端点发送事件：</div>
+                            <div>
+                                <p>选择<span class="highlight">事件域 (Event Domain)</span></p>
+                                <p>原因：</p>
+                                <ul>
+                                    <li>支持多租户场景，每个租户有独立主题</li>
+                                    <li>提供细粒度的访问控制和授权管理</li>
+                                    <li>能够处理数百种事件类型</li>
+                                    <li>允许第三方系统通过单个端点发送事件</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-row">
+                            <div class="answer-label">Azure Functions处理筛选后事件：</div>
+                            <div>
+                                <p>选择<span class="highlight">事件订阅 (Event Subscription)</span></p>
+                                <p>原因：</p>
+                                <ul>
+                                    <li>可以定义筛选规则，按事件类型过滤</li>
+                                    <li>支持将筛选后的事件路由到Azure Functions</li>
+                                    <li>可以与事件域结合使用，为每个租户创建订阅</li>
+                                    <li>确保只有符合条件的事件被处理</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>完整架构说明：</h4>
+                    <div class="architecture-diagram">
+                        <div class="diagram-placeholder">
+                            Azure Event Grid 多租户架构示意图
+                        </div>
+                    </div>
+                    <ol>
+                        <li>创建<span class="highlight">事件域</span>作为顶级资源</li>
+                        <li>在事件域中为每个租户创建<span class="highlight">域主题</span></li>
+                        <li>第三方系统将事件发布到事件域中的特定域主题</li>
+                        <li>为每个租户创建<span class="highlight">事件订阅</span>，定义筛选规则</li>
+                        <li>将事件订阅连接到<span class="highlight">Azure Functions</span>端点</li>
+                        <li>Azure Functions处理筛选后的事件</li>
+                    </ol>
+                    
+                    <h4>为什么其他选项不合适？</h4>
+                    <ul>
+                        <li><span class="highlight">自定义主题</span>：缺乏多租户支持，管理数百个主题效率低下</li>
+                        <li><span class="highlight">系统主题</span>：仅适用于Azure服务，不适用于第三方系统</li>
+                        <li><span class="highlight">事件域用于处理</span>：事件域是入口点，不适合作为处理端点</li>
+                    </ul>
+                    
+                    <h4>实际应用场景：</h4>
+                    <p>这种架构非常适合SaaS应用程序，其中：</p>
+                    <ul>
+                        <li>每个客户（租户）有独立的事件流</li>
+                        <li>需要根据事件类型进行不同处理</li>
+                        <li>需要确保租户间的数据隔离</li>
+                        <li>需要集中管理大量事件类型</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure Event Grid 配置测试 | 腾讯AI助手提供技术支持</p>
+        </div>
+    </div>
+
+    <script>
+        // 查看答案按钮
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

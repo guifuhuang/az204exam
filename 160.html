@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Batch Pool Creation Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .parameters {
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+        .commands-box, .answer-box {
+            flex: 1;
+            min-height: 300px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .command-item, .answer-slot {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: move;
+            touch-action: none;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+        }
+        .answer-slot {
+            background-color: #e8f5e9;
+            min-height: 60px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .answer-slot::before {
+            content: attr(data-order) ". ";
+            font-weight: bold;
+        }
+        .answer-slot.empty {
+            background-color: #fff8e1;
+            border: 1px dashed #ffc107;
+        }
+        .answer-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+        }
+        .incorrect {
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 160 DRAG DROP</h2>
+        <p>You are creating a script that will run a large workload on an Azure Batch pool. Resources will be reused and do not need to be cleaned up after use.</p>
+        <p>You have the following parameters:</p>
+        
+        <div class="parameters">
+            <table>
+                <tr>
+                    <th>Parameter name</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>$script</td>
+                    <td>the script that will run across the batch pool</td>
+                </tr>
+                <tr>
+                    <td>$image</td>
+                    <td>the image that pool worker processes will use</td>
+                </tr>
+                <tr>
+                    <td>$sku</td>
+                    <td>the node agent SKU id</td>
+                </tr>
+                <tr>
+                    <td>$numberOfJobs</td>
+                    <td>the number of jobs to run</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p>You need to write an Azure CLI script that will create the jobs, tasks, and the pool.</p>
+        <p>In which order should you arrange the commands to develop the solution? To answer, move the appropriate commands from the list of command segments to the answer area and arrange them in the correct order.</p>
+    </div>
+
+    <div class="container">
+        <div class="commands-box" id="commandsBox">
+            <div class="command-item" draggable="true" data-id="1">az batch pool create --id mypool --vm-size Standard_A1 --target-dedicated 2 --image $image --node-agent-sku-id $sku</div>
+            <div class="command-item" draggable="true" data-id="2">az batch job create --id myjob --pool-id mypool</div>
+            <div class="command-item" draggable="true" data-id="3">for i in {1..$numberOfJobs}; do</div>
+            <div class="command-item" draggable="true" data-id="4">az batch task create --job-id myjob --task-id task$i --command-line $script</div>
+            
+        </div>
+        
+        <div class="answer-box" id="answerBox">
+            <div class="answer-slot empty" data-order="1"></div>
+            <div class="answer-slot empty" data-order="2"></div>
+            <div class="answer-slot empty" data-order="3"></div>
+            <div class="answer-slot empty" data-order="4"></div>
+            
+        </div>
+    </div>
+
+    <button class="answer-button" onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <ol>
+            <li>az batch pool create --id mypool --vm-size Standard_A1 --target-dedicated 2 --image $image --node-agent-sku-id $sku</li>
+            <li>az batch job create --id myjob --pool-id mypool</li>
+            <li>for i in {1..$numberOfJobs}; do</li>
+            <li>az batch task create --job-id myjob --task-id task$i --command-line $script</li>
+            
+        </ol>
+        
+        <h3>解析:</h3>
+        <p>根据Azure Batch服务文档和最佳实践：</p>
+        <ol>
+            <li><strong>创建批处理池</strong>：
+                <ul>
+                    <li>首先需要创建计算节点池</li>
+                    <li>使用命令：<code>az batch pool create</code></li>
+                    <li>指定池ID、虚拟机大小、节点数量、镜像和节点代理SKU</li>
+                    <li>注意使用<code>--target-dedicated</code>而不是<code>--target-dedicated-nodes</code></li>
+                </ul>
+            </li>
+            <li><strong>创建作业</strong>：
+                <ul>
+                    <li>在池创建完成后创建作业</li>
+                    <li>使用命令：<code>az batch job create</code></li>
+                    <li>将作业关联到之前创建的池</li>
+                </ul>
+            </li>
+            <li><strong>循环创建任务</strong>：
+                <ul>
+                    <li>根据指定的作业数量创建循环</li>
+                    <li>使用Bash循环语句：<code>for i in {1..$numberOfJobs}; do</code></li>
+                    <li>注意需要完整的循环结构，包括<code>done</code></li>
+                </ul>
+            </li>
+            <li><strong>创建任务</strong>：
+                <ul>
+                    <li>在循环内创建每个任务</li>
+                    <li>使用命令：<code>az batch task create</code></li>
+                    <li>为每个任务指定唯一ID、关联作业和要运行的脚本</li>
+                </ul>
+            </li>
+            <li><strong>结束循环</strong>：
+                <ul>
+                    <li>使用<code>done</code>完成循环结构</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p>完整的工作流程说明：</p>
+        <ol>
+            <li>首先创建计算资源池（Pool）</li>
+            <li>然后在池中创建作业（Job）</li>
+            <li>使用循环创建多个任务（Task）</li>
+            <li>每个任务会使用指定的脚本在池中的计算节点上执行</li>
+            <li>资源会被重用，不需要清理</li>
+        </ol>
+        
+        <p>参考文档：<a href="https://docs.microsoft.com/en-us/azure/batch/scripts/batch-cli-sample-run-job" target="_blank">Azure Batch CLI示例文档</a></p>
+    </div>
+
+    <script>
+        // Drag and drop functionality with touch support
+        let draggedItem = null;
+        const answerSlots = document.querySelectorAll('.answer-slot');
+        const commandItems = document.querySelectorAll('.command-item');
+        
+        // Mouse events
+        commandItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.display = 'none';
+                }, 0);
+            });
+            
+            item.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+        
+        answerSlots.forEach(slot => {
+            slot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#fff59d';
+            });
+            
+            slot.addEventListener('dragleave', function() {
+                this.style.backgroundColor = this.classList.contains('empty') ? '#fff8e1' : '#e8f5e9';
+            });
+            
+            slot.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = this.classList.contains('empty') ? '#fff8e1' : '#e8f5e9';
+                
+                if (this.classList.contains('empty')) {
+                    this.innerHTML = draggedItem.innerHTML;
+                    this.classList.remove('empty');
+                    this.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                    draggedItem.remove();
+                }
+            });
+        });
+        
+        // Touch events
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element.classList.contains('command-item')) {
+                draggedItem = element;
+                element.style.opacity = '0.5';
+            }
+        }, {passive: false});
+        
+        document.addEventListener('touchmove', function(e) {
+            if (draggedItem) {
+                e.preventDefault();
+            }
+        }, {passive: false});
+        
+        document.addEventListener('touchend', function(e) {
+            if (draggedItem) {
+                const touch = e.changedTouches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                
+                if (element && element.classList.contains('answer-slot') && element.classList.contains('empty')) {
+                    element.innerHTML = draggedItem.innerHTML;
+                    element.classList.remove('empty');
+                    element.setAttribute('data-id', draggedItem.getAttribute('data-id'));
+                    draggedItem.remove();
+                }
+                
+                draggedItem.style.opacity = '1';
+                draggedItem = null;
+            }
+        }, {passive: false});
+        
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Clear answer slots
+            answerSlots.forEach(slot => {
+                slot.innerHTML = '';
+                slot.classList.add('empty');
+            });
+            
+            // Add correct answers in order
+            const correctOrder = ['1', '2', '3', '4', '5'];
+            correctOrder.forEach((id, index) => {
+                const item = document.querySelector(`.command-item[data-id="${id}"]`);
+                if (item) {
+                    answerSlots[index].innerHTML = item.innerHTML;
+                    answerSlots[index].classList.remove('empty');
+                    answerSlots[index].setAttribute('data-id', id);
+                    item.remove();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

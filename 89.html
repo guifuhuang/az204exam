@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Service Plan Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .question {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .hotspot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .hotspot-table th, .hotspot-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .hotspot-table th {
+            background-color: #e9ecef;
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f3f3;
+            border-left: 4px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            background-color: #fff8e1;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 89 HOTSPOT</h3>
+        <p>You are implementing a software as a service (SaaS) ASP.NET Core web service that will run as an Azure Web App. The web service will use an on-premises SQL Server database for storage.</p>
+        <p>The web service also includes a WebJob that processes data updates. Four customers will use the web service.</p>
+        <ul>
+            <li>Each instance of the WebJob processes data for a single customer and must run as a singleton instance.</li>
+            <li>Each deployment must be tested by using deployment slots prior to serving production data.</li>
+            <li>Azure costs must be minimized.</li>
+            <li>Azure resources must be located in an isolated network.</li>
+        </ul>
+        <p>You need to configure the App Service plan for the Web App.</p>
+        <p>How should you configure the App Service plan? To answer, select the appropriate settings in the answer area.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+    
+    <table class="hotspot-table">
+        <thead>
+            <tr>
+                <th>App service plan setting</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Number of VM instances</td>
+                <td>
+                    <select id="vmInstances">
+                        <option value="">Select an option</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Pricing tier</td>
+                <td>
+                    <select id="pricingTier">
+                        <option value="">Select an option</option>
+                        <option value="Isolated">Isolated</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Consumption">Consumption</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answer">
+        <p><strong class="correct">正确答案：</strong></p>
+        <ul>
+            <li><strong>Number of VM instances:</strong> 4</li>
+            <li><strong>Pricing tier:</strong> Isolated</li>
+        </ul>
+        
+        <div class="explanation">
+            <div class="note">
+                <p><strong>解题要点：</strong></p>
+                <ol>
+                    <li>需要为4个客户各运行一个WebJob单例实例 → 需要4个VM实例</li>
+                    <li>要求资源位于隔离网络 → 必须选择Isolated定价层</li>
+                    <li>虽然要最小化成本，但网络隔离是硬性要求</li>
+                    <li>部署槽测试要求排除了Consumption计划</li>
+                </ol>
+            </div>
+            
+            <p><strong>详细分析：</strong></p>
+            <p><strong>1. VM实例数量选择：</strong></p>
+            <ul>
+                <li>题目明确要求每个客户的WebJob必须作为单例运行</li>
+                <li>有4个客户 → 需要4个实例来确保每个客户有专用实例</li>
+                <li>选择4个实例可以满足需求同时避免过度配置</li>
+            </ul>
+            
+            <p><strong>2. 定价层选择：</strong></p>
+            <ul>
+                <li><strong>Isolated</strong>：唯一提供网络隔离的选项，满足安全要求</li>
+                <li><strong>Standard/Premium</strong>：不提供网络隔离</li>
+                <li><strong>Consumption</strong>：不支持部署槽，且无法保证单例运行</li>
+            </ul>
+            
+            <p><strong>3. 其他要求验证：</strong></p>
+            <ul>
+                <li><strong>部署槽测试</strong>：Isolated计划支持部署槽</li>
+                <li><strong>成本最小化</strong>：在满足隔离要求的前提下，Isolated V1是最经济的隔离方案</li>
+                <li><strong>单例WebJob</strong>：专用VM实例确保每个客户有独立运行环境</li>
+            </ul>
+            
+            <p><strong>配置建议：</strong></p>
+            <ol>
+                <li>选择App Service Isolated计划(Isolated V1或Isolated V2)</li>
+                <li>配置4个实例(每个客户一个)</li>
+                <li>为每个客户配置单独的部署槽进行测试</li>
+                <li>使用Azure虚拟网络实现与本地SQL Server的安全连接</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+            // Set the correct answers in the dropdowns
+            document.getElementById('vmInstances').value = '4';
+            document.getElementById('pricingTier').value = 'Isolated';
+            
+            window.scrollTo({
+                top: document.getElementById('answer').offsetTop,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Practice Question 302</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 302</h2>
+        <p>You manage a data processing application that receives requests from an Azure Storage queue.</p>
+        <p>You need to manage access to the queue. You have the following requirements:</p>
+        <ul>
+            <li>Provide other applications access to the Azure queue.</li>
+            <li>Ensure that you can revoke access to the queue without having to regenerate the storage account keys.</li>
+            <li>Specify access at the queue level and not at the storage account level.</li>
+        </ul>
+        <p>Which type of shared access signature (SAS) should you use?</p>
+
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Service SAS with a stored access policy</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Account SAS</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. User Delegation SAS</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Service SAS with ad hoc SAS</label>
+            </div>
+        </div>
+
+        <button onclick="showAnswer()">查看答案</button>
+
+        <div id="answer" class="answer">
+            <p class="correct-answer">正确答案: A. Service SAS with a stored access policy</p>
+            <div class="explanation">
+                <p><strong>解析:</strong></p>
+                <p>1. <strong>服务SAS与存储访问策略</strong>是满足题目所有要求的最佳选择：</p>
+                <ul>
+                    <li>可以在队列级别创建SAS（满足第三个要求）</li>
+                    <li>通过存储访问策略可以随时撤销权限而无需重新生成存储账户密钥（满足第二个要求）</li>
+                    <li>可以为其他应用程序提供有限访问权限（满足第一个要求）</li>
+                </ul>
+                <p>2. 其他选项分析：</p>
+                <ul>
+                    <li><strong>账户SAS</strong>：在存储账户级别操作，不符合队列级别访问要求</li>
+                    <li><strong>用户委托SAS</strong>：适用于Azure AD身份验证场景，不适用于此需求</li>
+                    <li><strong>临时服务SAS</strong>：无法在不重新生成密钥的情况下撤销访问权限</li>
+                </ul>
+                <p>参考文档：<a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview" target="_blank">Azure Storage SAS概述</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure API Management 测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        h1 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #eef6fd;
+            border-color: #0078d4;
+        }
+        .option.selected {
+            background-color: #d0e8ff;
+            border-color: #0078d4;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .note {
+            background-color: #fff9db;
+            border-left: 4px solid #ffd43b;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .btn {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            border-radius: 4px;
+        }
+        .correct-answer {
+            color: #237804;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Azure API Management 测试题</h1>
+        
+        <div class="question">
+            QUESTION NO: 389<br>
+            您正在开发多个托管在Azure API Management (APIM)上的API。<br>
+            您必须检查APIM中API的请求处理，包括使用REST客户端发出的请求。请求检查必须包含以下信息：<br>
+            • APIM发送到API后端的请求及其接收的响应<br>
+            • 在发送回调用方之前应用于响应的策略<br>
+            • 请求处理期间发生的错误以及应用于这些错误的策略<br>
+            • APIM从调用方接收的原始请求以及应用于该请求的策略<br>
+            您需要检查这些API。<br>
+            应该执行哪三个操作？每个正确答案都是解决方案的一部分。<br>
+            注意：每个正确选择得1分。
+        </div>
+
+        <div class="note">
+            注意：本题为多选题，请选择所有符合要求的选项（共3个）
+        </div>
+
+        <div class="options">
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                A. 为用于检查API的订阅启用"Allow tracing"设置
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                B. 在API调用中添加Ocp-Apim-Trace头，值设置为true
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                C. 在API调用中添加Ocp-Apim-Subscription-Key头，值为允许访问API的订阅密钥
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                D. 创建并配置自定义策略，将其应用于API作用域的出站策略部分
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                E. 创建并配置自定义策略，将其应用于全局作用域的入站策略部分
+            </div>
+        </div>
+
+        <button class="btn" onclick="showAnswer()">查看答案</button>
+
+        <div id="answer" class="answer">
+            <div class="correct-answer">正确答案：A, B, D</div>
+            <div class="explanation">
+                <strong>解析说明：</strong>
+                <ul>
+                    <li><strong>A. 启用订阅的"Allow tracing"设置</strong>：这是跟踪API请求的前提条件，需要在订阅级别启用跟踪功能。</li>
+                    <li><strong>B. 添加Ocp-Apim-Trace头</strong>：该HTTP头(value=true)显式请求APIM返回详细的跟踪信息（虽然文档提到该头已被弃用，但在考试场景中仍作为正确答案）。</li>
+                    <li><strong>D. 创建API作用域的出站策略</strong>：在出站策略部分配置自定义策略可以捕获发送回调用方之前的响应处理信息。</li>
+                    <li><strong>为什么C不是答案</strong>：订阅密钥是API访问所必需的，但它本身不启用跟踪功能。</li>
+                    <li><strong>为什么E不是答案</strong>：全局作用域的入站策略无法提供API级别的详细跟踪信息。</li>
+                </ul>
+                <p>注意：根据最新文档，Ocp-Apim-Trace头已被Apim-Debug-Authorization取代，但在考试场景中仍按原答案评分。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+        }
+
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

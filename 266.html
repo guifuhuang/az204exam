@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Azure SAS Token Revocation Question</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    .question {
+      font-weight: bold;
+    }
+    .options {
+      margin: 15px 0;
+    }
+    .answer {
+      display: none;
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="question">
+    QUESTION NO: 266<br>
+    You develop a REST API. You implement a user delegation SAS token to communicate with Azure Blob storage.<br>
+    The token is compromised.<br>
+    You need to revoke the token.<br>
+    What are two possible ways to achieve this goal? Each correct answer presents a complete solution.<br>
+    <em>NOTE: Each correct selection is worth one point.</em>
+  </div>
+
+  <div class="options">
+    <label><input type="checkbox" name="option" value="A"> A. Revoke the delegation keys</label><br>
+    <label><input type="checkbox" name="option" value="B"> B. Delete the stored access policy</label><br>
+    <label><input type="checkbox" name="option" value="C"> C. Regenerate the account key</label><br>
+    <label><input type="checkbox" name="option" value="D"> D. Remove the role assignment for the security principle</label>
+  </div>
+
+  <button onclick="document.getElementById('answer').style.display='block'">查看答案</button>
+
+  <div id="answer" class="answer">
+    <strong>正确答案：</strong> A, B<br>
+    <strong>说明：</strong><br>
+    - <strong>A. Revoke the delegation keys</strong>：通过 Azure CLI 执行 <code>az storage account revoke-delegation-keys</code> 命令，可以撤销所有用户委托密钥，从而使基于这些密钥生成的 SAS 失效。<br>
+    - <strong>B. Delete the stored access policy</strong>：删除或重命名存储访问策略会立即使所有依赖该策略的 SAS 无效。<br>
+    - <strong>C</strong> 针对的是账户密钥 SAS，不适用于用户委托 SAS。<br>
+    - <strong>D</strong> 仅影响未来的权限授予，不会立即使现有 SAS 无效。
+    <br><br>
+    <strong>参考链接：</strong><br>
+    - <a href="https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/storage/blobs/storage-blob-userdelegationsas-create-cli.md" target="_blank">User Delegation SAS CLI</a><br>
+    - <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/define-stored-access-policy#modifyingor-revoking-astored-access-policy" target="_blank">Stored Access Policy - Microsoft Docs</a>
+  </div>
+
+</body>
+</html>

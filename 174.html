@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Protection Methods Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .column {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 200px;
+        }
+        .item {
+            padding: 8px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: move;
+            user-select: none;
+        }
+        .item.dragging {
+            opacity: 0.5;
+        }
+        .target {
+            background-color: #e9f7fe;
+        }
+        .answer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #007bff;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Data Protection Methods Test</h2>
+    <p>You must ensure that the external party cannot access the data in the SSN column of the Person table. Will each protection method meet the requirement?</p>
+    <p>Drag the appropriate responses (Yes/No) to the correct protection methods.</p>
+    
+    <div class="container">
+        <div class="column" id="responses">
+            <h3>Responses</h3>
+            <div class="item" draggable="true" data-value="Yes">Yes</div>
+            <div class="item" draggable="true" data-value="No">No</div>
+        </div>
+        
+        <div class="column" id="questions">
+            <h3>Protection Method</h3>
+            <div class="item target" data-question="1">Enable AlwaysOn encryption.</div>
+            <div class="item target" data-question="2">Set the column encryption setting to disabled.</div>
+            <div class="item target" data-question="3">Assign users to the Public fixed database role.</div>
+            <div class="item target" data-question="4">Store column encryption keys in the system catalog view in the database.</div>
+        </div>
+        
+        <div class="column" id="answers">
+            <h3>Response</h3>
+            <div class="item target" data-answer="1"></div>
+            <div class="item target" data-answer="2"></div>
+            <div class="item target" data-answer="3"></div>
+            <div class="item target" data-answer="4"></div>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div class="answer" id="answerSection">
+        <h3>Correct Answers and Explanation:</h3>
+        <ol>
+            <li><strong>Enable AlwaysOn encryption.</strong> - <span class="correct">Yes</span>: AlwaysOn encryption ensures the data is encrypted at rest and in transit, preventing unauthorized access.</li>
+            <li><strong>Set the column encryption setting to disabled.</strong> - <span class="correct">No</span>: Disabling encryption would leave the SSN data unprotected and accessible.</li>
+            <li><strong>Assign users to the Public fixed database role.</strong> - <span class="correct">No</span>: The Public role typically has minimal privileges but doesn't specifically protect the SSN column.</li>
+            <li><strong>Store column encryption keys in the system catalog view in the database.</strong> - <span class="correct">No</span>: Storing encryption keys in the database makes them potentially accessible to attackers if they gain database access.</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.item:not(.target)');
+            const targets = document.querySelectorAll('.item.target');
+            const answerSection = document.getElementById('answerSection');
+            const showAnswerBtn = document.getElementById('showAnswer');
+            
+            let draggedItem = null;
+            
+            // Desktop drag events
+            items.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.classList.add('dragging');
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+            
+            targets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                target.addEventListener('dragenter', function(e) {
+                    e.preventDefault();
+                    this.classList.add('hover');
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.classList.remove('hover');
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('hover');
+                    
+                    if (draggedItem && this.parentElement.id === 'answers') {
+                        // Clear any existing content
+                        this.innerHTML = '';
+                        
+                        // Clone the dragged item and add it to the target
+                        const clone = draggedItem.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        this.appendChild(clone);
+                        
+                        // Keep the original item in the responses column
+                    }
+                });
+            });
+            
+            // Mobile touch events
+            items.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.classList.add('dragging');
+                    e.preventDefault();
+                }, {passive: false});
+                
+                item.addEventListener('touchend', function() {
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+            
+            targets.forEach(target => {
+                target.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                target.addEventListener('touchend', function(e) {
+                    if (draggedItem && this.parentElement.id === 'answers') {
+                        // Clear any existing content
+                        this.innerHTML = '';
+                        
+                        // Clone the dragged item and add it to the target
+                        const clone = draggedItem.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        this.appendChild(clone);
+                        
+                        // Keep the original item in the responses column
+                    }
+                    draggedItem = null;
+                    document.querySelectorAll('.item').forEach(i => i.classList.remove('dragging'));
+                });
+            });
+            
+            // Show answer button
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

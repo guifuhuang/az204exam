@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 138 DRAG DROP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: Consolas, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .drop-target {
+            background-color: #e6f7ff;
+            padding: 5px;
+            border: 1px dashed #0078d4;
+            min-height: 30px;
+            margin: 5px 0;
+        }
+        .drag-item {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: move;
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+        .check-answer {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #005a9e;
+        }
+        .answer-container {
+            display: none;
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .authorization-code {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 138 DRAG DROP</h2>
+        <p>You are developing a .NET Core model-view controller (MVC) application hosted on Azure for a health care system that allows providers access to their information.</p>
+        <p>You develop the following code:</p>
+        
+        <div class="code-container">
+services.AddAuthorization (options =>
+{
+    options.AddPolicy("ProviderPartner", policy =>
+    {
+        policy.AddAuthenticationSchemes("Cookie", "Bearer");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("ProviderAdmin", "SysAdmin");
+        policy.RequireClaim("editor", "partner");
+    });
+});
+        </div>
+        
+        <p>You define a role named SysAdmin.</p>
+        <p>You need to ensure that the application meets the following authorization requirements:</p>
+        <ul>
+            <li>Allow the ProviderAdmin and SysAdmin roles access to the Partner controller regardless of whether the user holds an editor claim of partner.</li>
+            <li>Limit access to the Manage action of the controller to users with an editor claim of partner who are also members of the SysAdmin role.</li>
+        </ul>
+        <p>How should you complete the code? To answer, drag the appropriate code segments to the correct locations. Each code segment may be used once, more than once, or not at all.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+        
+        <div class="code-container">
+<span class="drop-target" id="box1"></span> </br>
+public class PartnerController : Controller
+{
+    <span class="drop-target" id="box2"></span>
+    public IActionResult Manage()
+    {
+        return View();
+    }
+    
+    // Other actions...
+}
+        </div>
+        
+        <h3>Available Code Segments:</h3>
+        <div id="dragItems">
+            <div class="drag-item" draggable="true" data-value="[Authorize(Roles = \"ProviderAdmin, SysAdmin\")]">[Authorize(Roles = "ProviderAdmin, SysAdmin")]</div>
+            <div class="drag-item" draggable="true" data-value="[Authorize(Policy = \"ProviderPartner\")]">[Authorize(Policy = "ProviderPartner")]</div>
+            <div class="drag-item" draggable="true" data-value="[Authorize(Roles = \"SysAdmin\")]">[Authorize(Roles = "SysAdmin")]</div>
+            <div class="drag-item" draggable="true" data-value="[Authorize]">[Authorize]</div>
+        </div>
+        
+        <button class="check-answer" id="checkAnswer">查看答案</button>
+        
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <div class="correct-answer">
+                <p><strong>Box 1:</strong> [Authorize(Roles = "ProviderAdmin, SysAdmin")]</p>
+                <p><strong>Box 2:</strong> [Authorize(Policy = "ProviderPartner")]</p>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明:</h3>
+                <p><strong>Box 1 解释:</strong></p>
+                <p>题目要求允许 ProviderAdmin 和 SysAdmin 角色访问 PartnerController，无论用户是否具有 editor claim of partner。因此我们需要在控制器级别使用 [Authorize(Roles = "ProviderAdmin, SysAdmin")] 特性。</p>
+                
+                <p><strong>Box 2 解释:</strong></p>
+                <p>题目要求限制 Manage 动作的访问权限，只允许具有 editor claim of partner 且是 SysAdmin 角色的用户访问。这正是我们在 Startup.cs 中定义的 "ProviderPartner" 策略所要求的：</p>
+                <div class="authorization-code">
+policy.RequireRole("ProviderAdmin", "SysAdmin");
+policy.RequireClaim("editor", "partner");
+                </div>
+                <p>因此我们需要在 Manage 动作上使用 [Authorize(Policy = "ProviderPartner")] 特性。</p>
+                
+                <p><strong>授权策略分析:</strong></p>
+                <p>在 Startup.cs 中定义的 "ProviderPartner" 策略包含以下要求：</p>
+                <ul>
+                    <li>使用 Cookie 和 Bearer 认证方案</li>
+                    <li>要求用户必须经过认证</li>
+                    <li>要求用户必须是 ProviderAdmin 或 SysAdmin 角色</li>
+                    <li>要求用户必须具有 editor claim 且值为 partner</li>
+                </ul>
+                <p>这与题目中对 Manage 动作的授权要求完全匹配。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropTargets = document.querySelectorAll('.drop-target');
+            
+            let draggedItem = null;
+            
+            // Add event listeners for drag items
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function() {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Add event listeners for drop targets
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#d4edff';
+                });
+                
+                target.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '#e6f7ff';
+                });
+                
+                target.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e6f7ff';
+                    
+                    if (draggedItem) {
+                        this.innerHTML = draggedItem.getAttribute('data-value');
+                    }
+                });
+            });
+            
+            // Show answer button
+            document.getElementById('checkAnswer').addEventListener('click', function() {
+                const answerContainer = document.getElementById('answer');
+                if (answerContainer.style.display === 'none' || !answerContainer.style.display) {
+                    answerContainer.style.display = 'block';
+                    this.textContent = '隐藏答案';
+                } else {
+                    answerContainer.style.display = 'none';
+                    this.textContent = '查看答案';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Lifecycle Policy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+        }
+        .question-container {
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .code-line {
+            margin-bottom: 5px;
+        }
+        .rule-name {
+            color: #ff5555;
+        }
+        .enabled {
+            color: #569cd6;
+        }
+        .type {
+            color: #ff5555;
+        }
+        .qa-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .qa-table th {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        .qa-table td, .qa-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .qa-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .qa-table tr:hover {
+            background-color: #e5f5ff;
+        }
+        .radio-option {
+            margin: 0 10px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 30px;
+            background-color: #f3f2f1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .answer-section h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QUESTION NO: 253 HOTSPOT</h1>
+    
+    <div class="question-container">
+        <p>You are developing an application that uses a premium block blob storage account. You are optimizing costs by automating Azure Blob Storage access tiers.</p>
+        <p>You apply the following policy rules to the storage account. You must determine the implications of applying the rules to the data. (Line numbers are included for reference only.)</p>
+    </div>
+    
+    <div class="code-container">
+        <div class="code-line">01 {</div>
+        <div class="code-line">02   "rules": [</div>
+        <div class="code-line">03     {</div>
+        <div class="code-line">04       "name": <span class="rule-name">"agingDataRule"</span>,</div>
+        <div class="code-line">05       "enabled": <span class="enabled">true</span>,</div>
+        <div class="code-line">06       "type": <span class="type">"Lifecycle"</span>,</div>
+    </div>
+    
+    <table class="qa-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Yes</th>
+                <th>No</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Block blobs prefixed with container1/salesorders or container2/inventory which have not been modified over 60 days are moved to cool storage.Blobs that have not been modified over 120 days are archived to the archive tier.</td>
+                <td><input type="radio" name="q1" class="radio-option"></td>
+                <td><input type="radio" name="q1" class="radio-option"></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Blobs are moved to cool storage if they have not been accessed for 30 days.</td>
+                <td><input type="radio" name="q2" class="radio-option"></td>
+                <td><input type="radio" name="q2" class="radio-option"></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Blobs are automatically tiered from cool back to hot if accessed again after being tiered to cool.</td>
+                <td><input type="radio" name="q3" class="radio-option"></td>
+                <td><input type="radio" name="q3" class="radio-option"></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>All block blobs older than 730 days will be deleted.</td>
+                <td><input type="radio" name="q4" class="radio-option"></td>
+                <td><input type="radio" name="q4" class="radio-option"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="button-container">
+        <button id="check-answer">Check Answer</button>
+    </div>
+    
+    <div id="answer-section" class="answer-section">
+        <h3>Correct Answer and Explanation</h3>
+        <div class="correct-answer">
+            <p><strong>Correct Answers:</strong></p>
+            <ol>
+                <li>Yes - Lifecycle management can move blobs to cooler tiers based on modification time</li>
+                <li>Yes - Lifecycle management can move blobs based on last access time</li>
+                <li>Yes - Azure automatically moves blobs back to hot tier when accessed</li>
+                <li>No - The policy snippet doesn't show any deletion rules</li>
+            </ol>
+        </div>
+        <div class="explanation">
+            <p><strong>中文说明：</strong></p>
+            <p>1. <strong>带有container1/salesorders或container2/inventory前缀的块blob在60天未修改后会移动到冷存储？120天未修改的blob会被归档？</strong></p>
+            <ul>
+                <li>答案：Yes</li>
+                <li>原因：生命周期管理可以根据修改时间将blob移动到更冷的层级</li>
+                <li>参考文档：<a href="https://docs.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview?tabs=azure-portal#move-aging-data-to-a-cooler-tier" target="_blank">Microsoft生命周期管理文档</a></li>
+            </ul>
+            
+            <p>2. <strong>如果blob 30天未被访问会被移动到冷存储？</strong></p>
+            <ul>
+                <li>答案：Yes</li>
+                <li>原因：生命周期管理可以根据最后访问时间移动blob</li>
+                <li>需要在存储账户上启用"访问跟踪"功能</li>
+            </ul>
+            
+            <p>3. <strong>blob从冷存储被访问后会自动回到热存储？</strong></p>
+            <ul>
+                <li>答案：Yes</li>
+                <li>原因：当访问冷存储或存档存储中的blob时，Azure会自动将其移回热存储</li>
+                <li>这是Azure的默认行为，不需要特别配置</li>
+            </ul>
+            
+            <p>4. <strong>所有超过730天的块blob会被删除？</strong></p>
+            <ul>
+                <li>答案：No</li>
+                <li>原因：提供的策略片段中没有显示任何删除规则</li>
+                <li>需要明确的delete动作定义才能实现自动删除</li>
+            </ul>
+            
+            <p><strong>技术说明：</strong></p>
+            <ul>
+                <li>生命周期管理规则可以基于修改时间或访问时间</li>
+                <li>自动回热是Azure的默认行为，无需特别配置</li>
+                <li>存档层转换需要明确的tierToArchive动作定义</li>
+                <li>删除操作需要明确的delete动作定义</li>
+                <li>基于前缀的规则需要定义prefixMatch</li>
+            </ul>
+            
+            <p><strong>完整生命周期策略示例：</strong></p>
+            <pre>{
+  "rules": [
+    {
+      "name": "agingRule",
+      "enabled": true,
+      "type": "Lifecycle",
+      "definition": {
+        "actions": {
+          "baseBlob": {
+            "tierToCool": { "daysAfterModificationGreaterThan": 60 },
+            "tierToArchive": { "daysAfterModificationGreaterThan": 120 },
+            "delete": { "daysAfterModificationGreaterThan": 730 }
+          }
+        },
+        "filters": {
+          "blobTypes": ["blockBlob"],
+          "prefixMatch": ["container1/salesorders", "container2/inventory"]
+        }
+      }
+    }
+  ]
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: answerSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

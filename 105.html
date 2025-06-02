@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Front Door Compression Issue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .options-container {
+            margin: 20px 0;
+        }
+        .option-group {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .option-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .option-label {
+            flex: 1;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 4px solid #4caf50;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .option-group {
+                padding: 10px;
+            }
+            .radio-group {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 105 HOTSPOT</h2>
+        <p>You are using Azure Front Door Service.</p>
+        <p>You are expecting inbound files to be compressed by using Brotli compression. You discover that inbound XML files are not compressed. The files are 9 megabytes (MB) in size.</p>
+        <p>You need to determine the root cause for the issue.</p>
+        <p>To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="options-container">
+            <div class="option-group">
+                <div class="option-row">
+                    <div class="option-label">The file MIME type is supported by the service.</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="mime" value="yes"> Yes
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="mime" value="no"> No
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-row">
+                    <div class="option-label">Edge nodes must be purged of all cache assets.</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="cache" value="yes"> Yes
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="cache" value="no"> No
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-row">
+                    <div class="option-label">The compression type is supported.</div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="compression" value="yes"> Yes
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="compression" value="no"> No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct">The file MIME type is supported by the service: No</span></p>
+            <p><span class="correct">Edge nodes must be purged of all cache assets: No</span></p>
+            <p><span class="correct">The compression type is supported: Yes</span></p>
+            
+            <div class="explanation">
+                <h3>说明:</h3>
+                <p>根据Azure Front Door的压缩功能文档，以下是问题的根本原因分析：</p>
+                
+                <h4>详细解释:</h4>
+                <p>1. <strong>文件MIME类型是否受支持: No</strong></p>
+                <p>Azure Front Door默认不支持XML文件的压缩。支持的MIME类型包括text/*, application/javascript, application/json等，但不包括application/xml。</p>
+                
+                <p>2. <strong>是否需要清除边缘节点缓存: No</strong></p>
+                <p>缓存清除与此压缩问题无关。压缩是在传输时进行的，与缓存内容无关。</p>
+                
+                <p>3. <strong>压缩类型是否受支持: Yes</strong></p>
+                <p>Brotli压缩是Azure Front Door支持的压缩类型之一（同时支持gzip和Brotli）。</p>
+                
+                <h4>解决方案:</h4>
+                <p>要解决此问题，您可以：</p>
+                <ul>
+                    <li>修改Azure Front Door规则引擎，添加XML MIME类型到压缩支持列表</li>
+                    <li>或者在前端应用中先将XML文件转换为JSON等受支持格式</li>
+                </ul>
+                
+                <h4>参考文档:</h4>
+                <p><a href="https://docs.microsoft.com/en-us/azure/frontdoor/front-door-caching" target="_blank">Azure Front Door compression documentation</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            answerContainer.style.display = 'block';
+            
+            // Scroll to answer
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

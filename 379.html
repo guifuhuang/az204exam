@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB 配置测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #005a9e;
+        }
+        .options-container {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+            border-color: #c7e0ff;
+        }
+        .option.selected {
+            background-color: #d0e8ff;
+            border-color: #0078d4;
+        }
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #106ebe;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e6f2ff;
+            border-radius: 8px;
+            border-left: 4px solid #0078d4;
+        }
+        .answer-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0078d4;
+        }
+        .correct-answer {
+            font-weight: 600;
+            color: #107c10;
+            margin: 10px 0;
+        }
+        .explanation {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <div class="question-text">
+            QUESTION NO: 379<br><br>
+            You are updating an application that stores data on Azure and uses Azure Cosmos DB for storage. 
+            The application stores data in multiple documents associated with a single username. 
+            The application requires the ability to update multiple documents for a username in a single ACID operation.<br><br>
+            You need to configure Azure Cosmos DB.<br><br>
+            Which two actions should you perform? Each correct answer presents part of the solution.<br>
+            NOTE: Each correct selection is worth one point.
+        </div>
+        
+        <div class="options-container">
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                A. Configure Azure Cosmos DB to use the Azure Cosmos DB for Apache Gremlin API.
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                B. Configure Azure Cosmos DB to use the Azure Cosmos DB for MongoDB API.
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                C. Create a collection sharded on username to store documents.
+            </div>
+            <div class="option" onclick="toggleOption(this)">
+                <input type="checkbox"> 
+                D. Create an unsharded collection to store documents.
+            </div>
+        </div>
+        
+        <button class="button" onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerContainer" class="answer-container">
+            <div class="answer-title">答案与解析：</div>
+            <div class="correct-answer">正确答案：B 和 D</div>
+            <div class="explanation">
+                <p><strong>解析：</strong></p>
+                <p>1. <strong>选项 B 正确</strong>：Azure Cosmos DB for MongoDB API 支持多文档 ACID 事务（在同一个分片内）。对于与单个用户名关联的多个文档，使用 MongoDB API 可以在单个事务中更新这些文档。</p>
+                
+                <p>2. <strong>选项 D 正确</strong>：创建未分片的集合（单分区集合）可以确保所有文档都存储在同一个物理分区中。在 Azure Cosmos DB 中，ACID 事务支持仅限于单个分区内的操作。通过使用未分片的集合，可以保证与单个用户名相关的所有文档都在同一个分区内，从而支持事务操作。</p>
+                
+                <p>3. <strong>选项 A 不正确</strong>：Gremlin API 主要用于图数据操作，不支持跨多个文档的 ACID 事务。</p>
+                
+                <p>4. <strong>选项 C 不正确</strong>：虽然基于用户名分片可以将同一用户的文档分组，但事务仍然受限于单个分区。在分片集合中，不同用户的文档可能分布在不同分区，但题目要求的是单个用户名下的多个文档事务操作，未分片集合（单分区）更直接满足此需求。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+        }
+        
+        function showAnswer() {
+            document.getElementById('answerContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

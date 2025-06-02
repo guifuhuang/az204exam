@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage Archive Tier SLA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 219</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are building a website that uses Azure Blob storage for data storage. You configure Azure Blob storage lifecycle to move all blobs to the archive tier after 30 days.</p>
+        
+        <p><strong>Requirement:</strong></p>
+        <p>Customers have requested a service-level agreement (SLA) for viewing data older than 30 days. You need to document the minimum SLA for data recovery.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Which SLA should you use?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. at least two days</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. between one and 15 hours</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. at least one day</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. between zero and 60 minutes</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">B. between one and 15 hours</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确答案是B，因为Azure归档存储层的数据恢复有以下特点：</p>
+            
+            <ol>
+                <li><strong>快速取回模式</strong>：通常需要1-5分钟完成数据取回[6](@ref)</li>
+                <li><strong>标准取回模式</strong>：一般需要3-5小时完成数据取回[6](@ref)</li>
+                <li><strong>批量取回模式</strong>：需要5-12小时完成数据取回[6](@ref)</li>
+            </ol>
+            
+            <p><strong>归档存储恢复的关键点：</strong></p>
+            <ul>
+                <li>归档存储的数据不能直接访问，必须先执行恢复操作(解冻)[6](@ref)</li>
+                <li>不同恢复模式对应不同的恢复时间和成本[6](@ref)</li>
+                <li>标准取回模式是最平衡的选择，恢复时间在3-5小时之间[6](@ref)</li>
+                <li>深度归档存储的恢复时间更长(12-48小时)，但题目中未涉及[6](@ref)</li>
+            </ul>
+            
+            <p><strong>SLA制定建议：</strong></p>
+            <ul>
+                <li>应基于标准取回模式(3-5小时)制定SLA</li>
+                <li>考虑最坏情况，应预留15小时的缓冲时间</li>
+                <li>如果客户需要更快访问，可以推荐快速取回模式(额外费用)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

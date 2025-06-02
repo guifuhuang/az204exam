@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure VM Managed Identity Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        select {
+            padding: 5px;
+            margin: 0 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 208 HOTSPOT</h2>
+        <p>You are developing an application that needs access to an Azure virtual machine (VM). The access lifecycle for the application must be associated with the VM service instance. You need to enable managed identity for the VM.</p>
+        <p>How should you complete the PowerShell segment? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+        
+        <div class="code">
+            $vm = Get-AzVM -ResourceGroupName "ContosoRG" -Name "ContosoVM"<br>
+            Update-AzVM -ResourceGroupName "ContosoRG" -VM $vm 
+            <select id="box1">
+                <option value="">--Select--</option>
+                <option value="-AssignIdentity">-AssignIdentity</option>
+                <option value="-IdentityId">-IdentityId</option>
+            </select>
+            <select id="box2">
+                <option value="">--Select--</option>
+                <option value="$SystemAssigned">$SystemAssigned</option>
+                <option value="$UserAssigned">$UserAssigned</option>
+            </select>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>Box1:</strong> -IdentityType</p>
+            <p><strong>Box2:</strong> SystemAssigned</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <p>正确的PowerShell命令应该是：</p>
+            <div class="code">
+                $vm = Get-AzVM -ResourceGroupName "ContosoRG" -Name "ContosoVM"<br>
+                Update-AzVM -ResourceGroupName "ContosoRG" -VM $vm -IdentityType SystemAssigned
+            </div>
+            
+            <p>关键点说明：</p>
+            <ol>
+                <li>题目要求访问生命周期必须与VM服务实例关联，这意味着需要使用<strong>系统分配的托管标识(SystemAssigned)</strong>，而不是用户分配的托管标识(UserAssigned)</li>
+                <li>正确的参数是<strong>-IdentityType</strong>，而不是-AssignIdentity或-IdentityId</li>
+                <li>系统分配的托管标识的生命周期与VM实例绑定，当VM被删除时，标识也会自动删除</li>
+                <li>用户分配的托管标识生命周期独立于VM，可以分配给多个资源</li>
+            </ol>
+            
+            <p>补充说明：</p>
+            <p>如果需要使用用户分配的托管标识，命令格式应为：</p>
+            <div class="code">
+                $vm = Get-AzVM -ResourceGroupName "ContosoRG" -Name "ContosoVM"<br>
+                $identity = Get-AzUserAssignedIdentity -ResourceGroupName myResourceGroup -Name myUserAssignedIdentity<br>
+                Update-AzVM -ResourceGroupName "ContosoRG" -VM $vm -IdentityType UserAssigned -IdentityId $identity.Id
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

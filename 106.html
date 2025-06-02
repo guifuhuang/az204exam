@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure CDN Caching Rules Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .options-container {
+            margin: 20px 0;
+        }
+        .option-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .option-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .option-label {
+            flex: 1;
+            font-weight: bold;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            min-width: 200px;
+        }
+        .check-answer {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #388e3c;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 4px solid #4caf50;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        @media (max-width: 600px) {
+            .option-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            select {
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>QUESTION NO: 106 HOTSPOT</h2>
+        <p>You are developing an Azure App Service hosted ASP.NET Core web app to deliver video on-demand streaming media. You enable an Azure Content Delivery Network (CDN) Standard for the web endpoint. Customer videos are downloaded from the web app by using the following example URL: <code>http://www.contoso.com/content.mp4?quality=1</code></p>
+        <p>All media content must expire from the cache after one hour. Customer videos with varying quality must be delivered to the closest regional point of presence (POP) node.</p>
+        <p>You need to configure Azure CDN caching rules.</p>
+        <p>Which options should you use? To answer, select the appropriate options in the answer area.</p>
+        <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+
+        <div class="options-container">
+            <table>
+                <tr>
+                    <th>Setting</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>Caching behavior</td>
+                    <td>
+                        <select id="cachingBehavior">
+                            <option value="">-- Select an option --</option>
+                            <option value="Bypass cache">Bypass cache</option>
+                            <option value="Override">Override</option>
+                            <option value="Set if missing">Set if missing</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Cache expiration duration</td>
+                    <td>
+                        <select id="cacheExpiration">
+                            <option value="">-- Select an option --</option>
+                            <option value="1 second">1 second</option>
+                            <option value="1 minute">1 minute</option>
+                            <option value="1 hour">1 hour</option>
+                            <option value="1 day">1 day</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Query string caching behavior</td>
+                    <td>
+                        <select id="queryStringBehavior">
+                            <option value="">-- Select an option --</option>
+                            <option value="Ignore query strings">Ignore query strings</option>
+                            <option value="Bypass caching for query strings">Bypass caching for query strings</option>
+                            <option value="Cache every unique URL">Cache every unique URL</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button class="check-answer" onclick="showAnswer()">查看答案</button>
+
+        <div class="answer-container" id="answer">
+            <h3>正确答案:</h3>
+            <p><span class="correct">Caching behavior: Override</span></p>
+            <p><span class="correct">Cache expiration duration: 1 hour</span></p>
+            <p><span class="correct">Query string caching behavior: Cache every unique URL</span></p>
+            
+            <div class="explanation">
+                <h3>说明:</h3>
+                <p>根据Azure CDN缓存规则的最佳实践和题目要求，以下是正确的配置选项：</p>
+                
+                <h4>详细解释:</h4>
+                <p>1. <strong>Caching behavior: Override</strong></p>
+                <p>选择"Override"可以确保CDN完全按照您指定的规则缓存内容，忽略源服务器可能发送的任何缓存头。</p>
+                
+                <p>2. <strong>Cache expiration duration: 1 hour</strong></p>
+                <p>题目明确要求媒体内容必须在一小时后从缓存中过期，因此选择1小时。</p>
+                
+                <p>3. <strong>Query string caching behavior: Cache every unique URL</strong></p>
+                <p>由于视频质量参数是通过查询字符串(?quality=1)传递的，选择"Cache every unique URL"可以确保不同质量的视频被分别缓存，从而能够从最近的POP节点提供正确的质量版本。</p>
+                
+                <h4>配置建议:</h4>
+                <p>在Azure门户中配置CDN规则时：</p>
+                <ol>
+                    <li>创建新的缓存规则</li>
+                    <li>设置匹配条件（如路径模式 *.mp4）</li>
+                    <li>应用上述三个设置</li>
+                    <li>确保规则优先级正确</li>
+                </ol>
+                
+                <h4>参考文档:</h4>
+                <p><a href="https://docs.microsoft.com/en-us/azure/cdn/cdn-caching-rules" target="_blank">Azure CDN caching rules documentation</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerContainer = document.getElementById('answer');
+            answerContainer.style.display = 'block';
+            
+            // Set the correct answers in the dropdowns
+            document.getElementById('cachingBehavior').value = 'Override';
+            document.getElementById('cacheExpiration').value = '1 hour';
+            document.getElementById('queryStringBehavior').value = 'Cache every unique URL';
+            
+            // Scroll to answer
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION NO: 343 HOTSPOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question-content {
+            margin-bottom: 20px;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .config-table th, .config-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .config-table th {
+            background-color: #f2f2f2;
+        }
+        .select-container {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .check-answer {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .check-answer:hover {
+            background-color: #0069d9;
+        }
+        .answer-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .explanation {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-header">
+            <h2>QUESTION NO: 343 HOTSPOT</h2>
+        </div>
+        
+        <div class="question-content">
+            <p>You need to implement the Azure Function for delivery driver profile information.</p>
+            <p>Which configurations should you use? To answer, select the appropriate options in the answer area.</p>
+            <p>NOTE: Each correct selection is worth one point.</p>
+        </div>
+        
+        <table class="config-table">
+            <thead>
+                <tr>
+                    <th>Configuration</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Code library</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="code-library">
+                                <option value="">Select an option</option>
+                                <option value="Microsoft Authentication Library (MSAL)">Microsoft Authentication Library (MSAL)</option>
+                                <option value="Microsoft Azure Key Vault SDK">Microsoft Azure Key Vault SDK</option>
+                                <option value="Azure Identity library">Azure Identity library</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>API</td>
+                    <td>
+                        <div class="select-container">
+                            <select id="api">
+                                <option value="">Select an option</option>
+                                <option value="Microsoft Graph">Microsoft Graph</option>
+                                <option value="Azure Active Directory Graph">Azure Active Directory Graph</option>
+                                <option value="Azure Key Vault">Azure Key Vault</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-container">
+            <button class="check-answer" id="check-answer">Check Answer</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案:</h3>
+            <p class="correct-answer">Code library: Microsoft Authentication Library (MSAL)</p>
+            <p class="correct-answer">API: Microsoft Graph</p>
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>1. <strong>Microsoft Authentication Library (MSAL)</strong> 是用于实现交付司机个人信息功能的最佳代码库选择。MSAL是微软推荐的用于处理身份验证的库，支持多种身份验证流程，并专门针对Azure AD进行了优化。</p>
+                <p>2. <strong>Microsoft Graph</strong> 是访问用户个人信息的最佳API选择。它可以获取用户配置文件信息，包括司机相关的个人信息，是微软推荐的统一API端点。</p>
+                <p>这些选择是基于以下原因：</p>
+                <ul>
+                    <li>MSAL支持最新的身份验证协议和最佳实践</li>
+                    <li>Microsoft Graph提供了统一的API来访问用户数据，取代了旧的Azure AD Graph API</li>
+                    <li>MSAL与Microsoft Graph API配合使用是最佳实践</li>
+                    <li>其他选项如Key Vault SDK/API更适合机密管理而非用户数据访问</li>
+                    <li>Azure Identity library更适合服务到服务的身份验证场景</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                
+                // Scroll to answer section
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

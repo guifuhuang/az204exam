@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB Always Encrypted 配置测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+            border-color: #0078d4;
+        }
+        .option.selected {
+            background-color: #e1f0ff;
+            border-color: #0078d4;
+        }
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+        .answer-btn:hover {
+            background-color: #005a9e;
+        }
+        .explanation {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e1f0ff;
+            border-radius: 4px;
+            border-left: 4px solid #0078d4;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #107c10;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1>Azure Cosmos DB Always Encrypted 配置测试</h1>
+        
+        <div class="question">
+            QUESTION NO: 381<br><br>
+            您正在开发一个将部署在 Azure 中的 Java 应用程序。该应用程序在 Azure Cosmos DB 中存储敏感数据。
+            您需要配置 Always Encrypted 以在应用程序内部加密敏感数据。首先应该做什么？
+        </div>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">A. 创建客户管理的密钥 (CMK) 并将其存储在新的 Azure Key Vault 实例中</div>
+            <div class="option" onclick="selectOption(this)">B. 创建 Azure AD 托管标识并将其分配给新的 Azure Key Vault 实例</div>
+            <div class="option" onclick="selectOption(this)">C. 使用 Azure Cosmos DB SDK 创建数据加密密钥 (DEK) 并将密钥存储在 Azure Cosmos DB 中</div>
+            <div class="option" onclick="selectOption(this)">D. 创建一个新容器，其中包含一个加密策略，指定要加密的 JSON 属性</div>
+        </div>
+        
+        <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+        
+        <div id="explanation" class="explanation">
+            <div class="correct-answer">正确答案: A</div>
+            <div><strong>说明:</strong></div>
+            <p>在 Azure Cosmos DB 中实现 Always Encrypted（客户端加密）需要以下步骤：</p>
+            <ol>
+                <li>创建客户管理的密钥 (CMK) 并存储在 Azure Key Vault 中（这是第一步）</li>
+                <li>配置应用程序在写入数据前使用该密钥进行加密</li>
+                <li>配置应用程序在读取数据时使用该密钥进行解密</li>
+            </ol>
+            <p>选项 B 错误：托管标识用于安全访问 Key Vault，但应在创建密钥之后配置</p>
+            <p>选项 C 错误：数据加密密钥 (DEK) 通常由客户端生成，但不应存储在 Cosmos DB 中</p>
+            <p>选项 D 错误：容器级别的加密策略用于服务端加密，而 Always Encrypted 要求客户端加密</p>
+            <p>因此，首先需要创建客户管理的密钥并存储在 Key Vault 中，为加密操作提供基础。</p>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // 移除之前的选择
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 添加当前选择
+            element.classList.add('selected');
+        }
+        
+        function showAnswer() {
+            const explanation = document.getElementById('explanation');
+            explanation.style.display = 'block';
+            
+            // 滚动到解释部分
+            explanation.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

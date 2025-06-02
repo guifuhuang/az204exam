@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Identity Platform - Token Request</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #005a9e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #004578;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin: 15px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .option input {
+            margin-right: 12px;
+            margin-top: 5px;
+        }
+        .option label {
+            cursor: pointer;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .answer {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-left: 4px solid #0078d4;
+            border-radius: 4px;
+        }
+        .answer h3 {
+            color: #0078d4;
+            margin-top: 0;
+        }
+        .correct-answer {
+            color: #107c10;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Microsoft Identity Platform - Token Request</h1>
+        
+        <div class="question">
+            QUESTION NO: 357<br>
+            You are developing a web application that uses the Microsoft identity platform to authenticate users and resources. 
+            The web application calls several REST APIs. The APIs require an access token from the Microsoft identity platform. 
+            You need to request a token. Which three properties should you use? Each correct answer presents part of the solution.
+            <div class="note">NOTE: Each correct selection is worth one point.</div>
+        </div>
+        
+        <div class="options">
+            <div class="option">
+                <input type="checkbox" id="optionA" name="options">
+                <label for="optionA">A. Application name</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionB" name="options">
+                <label for="optionB">B. Application secret</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionC" name="options">
+                <label for="optionC">C. Application ID</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionD" name="options">
+                <label for="optionD">D. Supported account type</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="optionE" name="options">
+                <label for="optionE">E. Redirect URI/URL</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div class="answer" id="answerSection">
+            <h3>答案及说明</h3>
+            <p>正确答案: <span class="correct-answer">B, C, E</span> (Application secret, Application ID, Redirect URI/URL)</p>
+            
+            <div class="explanation">
+                <p><strong>说明:</strong></p>
+                <p>根据文档内容，在请求访问令牌时需要以下三个属性：</p>
+                <ol>
+                    <li><strong>Application secret (B)</strong>：客户端密码，用于验证应用程序的身份（文档中多次提到在令牌请求中使用client_secret）。</li>
+                    <li><strong>Application ID (C)</strong>：应用程序的唯一标识符，在注册应用程序时分配（文档中称为"应用程序ID"或"client_id"）。</li>
+                    <li><strong>Redirect URI/URL (E)</strong>：授权服务器完成身份验证后重定向用户的终结点（文档中明确说明重定向URI是必需配置项）。</li>
+                </ol>
+                <p>其他选项不正确的原因：</p>
+                <ul>
+                    <li><strong>Application name (A)</strong>：应用程序名称是描述性信息，在令牌请求中不需要。</li>
+                    <li><strong>Supported account type (D)</strong>：支持的帐户类型是在应用程序注册时配置的，但不用于令牌请求过程。</li>
+                </ul>
+                <p>文档参考：在《azure-active-directory-b2c.pdf》中明确说明了注册Web应用程序时需要配置Application ID和Redirect URI，并在获取令牌时需要提供Application secret。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

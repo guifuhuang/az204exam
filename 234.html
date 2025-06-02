@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Function App Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .correct {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 234</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing an Azure Function App that processes images that are uploaded to an Azure Blob container.</p>
+        
+        <p><strong>Requirements:</strong></p>
+        <ul>
+            <li>Images must be processed as quickly as possible after they are uploaded</li>
+            <li>The solution must minimize latency</li>
+        </ul>
+        
+        <p><strong>Task:</strong></p>
+        <p>You create code to process images when the Function App is triggered. You need to configure the Function App.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Use an App Service plan. Configure the Function App to use an Azure Blob Storage input trigger.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. Use a Consumption plan. Configure the Function App to use an Azure Blob Storage trigger.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionC" name="answer" value="C">
+                <label for="optionC">C. Use a Consumption plan. Configure the Function App to use a Timer trigger.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionD" name="answer" value="D">
+                <label for="optionD">D. Use an App Service plan. Configure the Function App to use an Azure Blob Storage trigger.</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionE" name="answer" value="E">
+                <label for="optionE">E. Use a Consumption plan. Configure the Function App to use an Azure Blob Storage input trigger.</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p class="correct">D. Use an App Service plan. Configure the Function App to use an Azure Blob Storage trigger.</p>
+            
+            <p><strong>Explanation:</strong></p>
+            <ol>
+                <li><strong>选择App Service计划的原因</strong>：
+                    <ul>
+                        <li>App Service计划提供始终在线的实例，消除了冷启动延迟[2](@ref)[5](@ref)</li>
+                        <li>消费计划可能有几分钟的延迟，不适合需要低延迟的场景[2](@ref)</li>
+                        <li>可以配置Always On选项确保函数随时可用[5](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>选择Blob Storage触发器的原因</strong>：
+                    <ul>
+                        <li>Blob触发器在文件上传到容器时立即触发函数[3](@ref)</li>
+                        <li>相比Timer触发器（轮询机制）响应更快[3](@ref)</li>
+                        <li>输入触发器不会自动触发函数执行[6](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>参考答案B的问题</strong>：
+                    <ul>
+                        <li>消费计划虽然成本低，但可能有冷启动延迟[2](@ref)</li>
+                        <li>不满足"最小化延迟"的关键需求[2](@ref)</li>
+                    </ul>
+                </li>
+                <li><strong>最佳实践建议</strong>：
+                    <ul>
+                        <li>对于生产环境关键任务，App Service计划比消费计划更可靠[5](@ref)</li>
+                        <li>可以配置EventGrid作为触发器源，进一步减少延迟[6](@ref)</li>
+                        <li>考虑使用Premium计划平衡成本和性能[5](@ref)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>配置示例（function.json）：</strong></p>
+            <pre>
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "images/{name}",
+      "connection": "AzureWebJobsStorage",
+      "source": "EventGrid" // 使用EventGrid减少延迟[6](@ref)
+    }
+  ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

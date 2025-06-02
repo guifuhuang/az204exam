@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKS Deployment YAML Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        .code-segments {
+            width: 30%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .code-segments h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        .segment {
+            background-color: #e7f3fe;
+            border: 1px solid #2196F3;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+        }
+        .segment.dragging {
+            opacity: 0.5;
+        }
+        .yaml-editor {
+            width: 70%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+        .yaml-editor h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        .yaml-code {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .drop-target {
+            display: inline-block;
+            min-width: 150px;
+            min-height: 20px;
+            border: 1px dashed #4CAF50;
+            background-color: #e8f5e9;
+            padding: 2px 5px;
+            vertical-align: middle;
+        }
+        .drop-target.highlight {
+            background-color: #c8e6c9;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 187 DRAG DROP</h2>
+        <p>You are preparing to deploy an application to an Azure Kubernetes Service (AKS) cluster.</p>
+        <p>The application must only be available from within the VNet that includes the cluster.</p>
+        <p>You need to deploy the application.</p>
+        <p>How should you complete the deployment YAML? To answer, drag the appropriate YAML segments to the correct locations. Each YAML segment may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content.</p>
+        <p><em>NOTE: Each correct selection is worth one point.</em></p>
+    </div>
+
+    <div class="container">
+        <div class="code-segments">
+            <h3>Code segments</h3>
+            <div class="segment" draggable="true" data-value="Service">Service</div>
+            <div class="segment" draggable="true" data-value="LoadBalancer">LoadBalancer</div>
+            <div class="segment" draggable="true" data-value="Deployment">Deployment</div>
+            <div class="segment" draggable="true" data-value="ingress class">ingress class</div>
+            <div class="segment" draggable="true" data-value="azure-load-balancer-internal">azure-load-balancer-internal</div>
+        </div>
+
+        <div class="yaml-editor">
+            <h3>Answer Area</h3>
+            <div class="yaml-code">
+apiVersion: v1
+kind: <span class="drop-target" data-target="kind"></span>
+metadata:
+  name: web-app
+  annotations:
+    service.beta.kubernetes.<span class="drop-target" data-target="annotation"></span>: "true"
+spec:
+  type: <span class="drop-target" data-target="type"></span>
+  ports:
+    - port: 80
+  selector:
+    app: web-app
+            </div>
+        </div>
+    </div>
+
+    <button id="showAnswer">查看答案</button>
+
+    <div id="answerSection" class="answer">
+        <h3>正确答案:</h3>
+        <pre>
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+  annotations:
+    service.beta.kubernetes.azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+  selector:
+    app: web-app
+        </pre>
+
+        <h3>说明:</h3>
+        <ol>
+            <li><strong>kind: Service</strong>
+                <ul>
+                    <li>题目要求部署应用程序到AKS集群，且仅能在包含集群的VNet内访问</li>
+                    <li>需要创建Service资源来暴露应用程序</li>
+                </ul>
+            </li>
+            <li><strong>annotation: azure-load-balancer-internal</strong>
+                <ul>
+                    <li>service.beta.kubernetes.io/azure-load-balancer-internal: "true"注解</li>
+                    <li>这个注解确保负载均衡器是内部的，只能在VNet内访问</li>
+                    <li>满足"仅能在VNet内访问"的要求</li>
+                </ul>
+            </li>
+            <li><strong>type: LoadBalancer</strong>
+                <ul>
+                    <li>Service类型设置为LoadBalancer</li>
+                    <li>结合上面的internal注解，这将创建一个内部负载均衡器</li>
+                    <li>外部负载均衡器需要设置为"false"或省略，但题目明确要求内部访问</li>
+                </ul>
+            </li>
+            <li><strong>为什么不是其他选项:</strong>
+                <ul>
+                    <li>Ingress/ingress class: 题目没有提到需要入口控制器或域名路由</li>
+                    <li>Deployment: 题目要求的是暴露服务的方式，不是部署应用本身</li>
+                    <li>直接使用azure-load-balancer-internal作为kind不正确</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const segments = document.querySelectorAll('.segment');
+    const dropTargets = document.querySelectorAll('.drop-target');
+    let draggedItem = null;
+    let touchStartX = 0, touchStartY = 0;
+
+    // 桌面端拖拽事件
+    segments.forEach(segment => {
+        // 拖拽开始
+        segment.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            e.dataTransfer.setData('text/plain', this.dataset.value);
+            e.dataTransfer.effectAllowed = 'copy';
+        });
+
+        // 触摸开始（移动端）
+        segment.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            draggedItem = this;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, {passive: false});
+    });
+
+    dropTargets.forEach(target => {
+        // 桌面端事件
+        target.addEventListener('dragover', handleDragOver);
+        target.addEventListener('drop', handleDrop);
+        
+        // 移动端事件
+        target.addEventListener('touchmove', handleTouchMove, {passive: false});
+        target.addEventListener('touchend', handleTouchEnd);
+    });
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        this.classList.add('highlight');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('highlight');
+        if (draggedItem) {
+            this.textContent = draggedItem.dataset.value;
+            this.dataset.filled = "true";
+        }
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+        if (!draggedItem) return;
+        
+        const touch = e.touches[0];
+        const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        if (dropTarget.classList.contains('drop-target')) {
+            dropTarget.classList.add('highlight');
+        }
+    }
+
+    function handleTouchEnd(e) {
+        const touch = e.changedTouches[0];
+        const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        if (dropTarget.classList.contains('drop-target') && draggedItem) {
+            dropTarget.textContent = draggedItem.dataset.value;
+            dropTarget.dataset.filled = "true";
+            dropTarget.classList.remove('highlight');
+        }
+        draggedItem = null;
+    }
+
+    // 查看答案按钮
+    document.getElementById('showAnswer').addEventListener('click', function() {
+        document.getElementById('answerSection').style.display = 'block';
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Cosmos DB 测试题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2fa;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h3>QUESTION NO: 278</h3>
+        <p>You are developing a solution that will use a multi-partitioned Azure Cosmos DB database. You plan to use the latest Azure Cosmos DB SDK for development.</p>
+        <p>The solution must meet the following requirements:</p>
+        <ul>
+            <li>Send insert and update operations to an Azure Blob storage account.</li>
+            <li>Process changes to all partitions immediately.</li>
+            <li>Allow parallelization of change processing.</li>
+        </ul>
+        <p>You need to process the Azure Cosmos DB operations.</p>
+        <p>What are two possible ways to achieve this goal? Each correct answer presents a complete solution.</p>
+        <p>NOTE: Each correct selection is worth one point.</p>
+    </div>
+
+    <div class="options">
+        <div class="option">
+            <input type="checkbox" id="optionA" name="options" value="A">
+            <label for="optionA">A. Create an Azure App Service API and implement the change feed estimator of the SDK. Scale the API by using multiple Azure App Service instances.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionB" name="options" value="B">
+            <label for="optionB">B. Create a background job in an Azure Kubernetes Service and implement the change feed feature of the SDK.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionC" name="options" value="C">
+            <label for="optionC">C. Create an Azure Function to use a trigger for Azure Cosmos DB. Configure the trigger to connect to the container.</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="optionD" name="options" value="D">
+            <label for="optionD">D. Create an Azure Function that uses a FeedIterator object that processes the change feed by using the pull model on the container. Use a FeedRange object to parallelize the processing of the change feed across multiple functions.</label>
+        </div>
+    </div>
+
+    <button onclick="showAnswer()">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案：C 和 D</h3>
+        <p><strong>说明：</strong></p>
+        <p>1. <strong>选项C</strong>：使用Azure Functions的Cosmos DB触发器是实现变更订阅处理的推荐方式。触发器会自动处理多分区场景，并能并行处理变更。当配置为监听容器级别的变更时，它可以捕获所有分区的变更。</p>
+        <p>2. <strong>选项D</strong>：使用FeedIterator和FeedRange对象可以实现手动拉取变更订阅，并通过FeedRange对象实现跨多个函数的并行处理。这种方法提供了更精细的控制，适合需要自定义处理逻辑的场景。</p>
+        <p>3. <strong>选项A和B</strong>不正确的原因：</p>
+        <ul>
+            <li>选项A中的变更订阅估计器(change feed estimator)仅用于监控变更订阅的进度，不能直接用于处理变更。</li>
+            <li>选项B虽然可以实现变更订阅处理，但不是最直接和高效的解决方案，相比Azure Functions需要更多的手动配置。</li>
+        </ul>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

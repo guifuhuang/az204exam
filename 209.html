@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records Storage Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #0078d4;
+            display: none;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 209</h2>
+        
+        <p><strong>Scenario:</strong></p>
+        <p>You are developing a medical records document management website. The website is used to store scanned copies of patient intake forms. If the stored intake forms are downloaded from storage by a third party, the content of the forms must not be compromised.</p>
+        
+        <p><strong>Requirement:</strong></p>
+        <p>You need to store the intake forms according to the requirements.</p>
+        
+        <p><strong>Solution:</strong></p>
+        <p>Store the intake forms as Azure Key Vault secrets.</p>
+        
+        <p><strong>Question:</strong></p>
+        <p>Does the solution meet the goal?</p>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="optionA" name="answer" value="A">
+                <label for="optionA">A. Yes</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="optionB" name="answer" value="B">
+                <label for="optionB">B. No</label>
+            </div>
+        </div>
+        
+        <button id="showAnswer">查看答案</button>
+        
+        <div id="answerSection" class="answer">
+            <h3>Answer:</h3>
+            <p><strong>B. No</strong></p>
+            <p><strong>解释：</strong></p>
+            <p>这个解决方案不能满足需求，因为Azure Key Vault不是设计用来存储医疗记录文档的。</p>
+            
+            <p>主要原因：</p>
+            <ul>
+                <li>Azure Key Vault主要用于存储小型敏感数据，如API密钥、密码、连接字符串等，而不是大型文档或扫描件[1](@ref)[2](@ref)[3](@ref)</li>
+                <li>Key Vault有存储大小限制，单个secret最大只能存储25KB，不适合存储扫描的医疗表格[10](@ref)</li>
+                <li>Key Vault的设计目的是为服务器应用程序存储配置机密，而不是用户数据[9](@ref)</li>
+                <li>医疗记录文档应该存储在专门的医疗数据存储解决方案中，如加密的Azure Blob存储[9](@ref)</li>
+            </ul>
+            
+            <p>正确的解决方案应该是：</p>
+            <ol>
+                <li>使用Azure Blob存储来存储扫描的医疗表格</li>
+                <li>启用Azure存储服务加密(SSE)来保护静态数据</li>
+                <li>使用客户管理的密钥(CMK)进行额外保护</li>
+                <li>实施严格的访问控制和审计日志</li>
+            </ol>
+            
+            <p>补充说明：</p>
+            <p>虽然Key Vault不适合直接存储医疗文档，但它可以用来安全地存储访问这些文档所需的加密密钥或连接字符串[8](@ref)[9](@ref)。</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

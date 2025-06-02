@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            margin: 8px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>QUESTION NO: 182</h2>
+        <p><em>Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution. Determine whether the solution meets the stated goals.</em></p>
+        
+        <p>You are developing and deploying several ASP.Net web applications to Azure App Service. You plan to save session state information and HTML output. You must use a storage mechanism with the following requirements:</p>
+        
+        <ul>
+            <li>Share session state across all ASP.NET web applications</li>
+            <li>Support controlled, concurrent access to the same session state data for multiple readers and a single writer</li>
+            <li>Save full HTTP responses for concurrent requests</li>
+        </ul>
+        
+        <p>You need to store the information.</p>
+        
+        <p><strong>Proposed Solution:</strong> Deploy and configure Azure Cache for Redis. Update the web applications.</p>
+        
+        <p><strong>Does the solution meet the goal?</strong></p>
+    </div>
+    
+    <div class="options">
+        <div class="option">
+            <input type="radio" id="optionA" name="answer" value="A">
+            <label for="optionA">A. Yes</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="optionB" name="answer" value="B">
+            <label for="optionB">B. No</label>
+        </div>
+    </div>
+    
+    <button id="showAnswer">查看答案</button>
+    
+    <div id="answerSection" class="answer">
+        <h3>正确答案: A. Yes</h3>
+        <p><strong>说明:</strong> Azure Cache for Redis 满足所有要求：</p>
+        <ol>
+            <li>可以在多个ASP.NET应用程序之间共享会话状态</li>
+            <li>支持对相同会话状态数据的受控并发访问（多个读取者和单个写入者）</li>
+            <li>能够存储完整的HTTP响应以处理并发请求</li>
+        </ol>
+        <p>Redis提供了高性能、低延迟的数据存储解决方案，特别适合这种会话状态共享和输出缓存的场景。因此这个解决方案完全符合题目中提出的所有要求。</p>
+    </div>
+    
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

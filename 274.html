@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Graph API Token Acquisition Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .code-container {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dropdown {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover {
+            background-color: #005a9e;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h2>QUESTION NO: 274 HOTSPOT</h2>
+    <p>You are developing a web application that makes calls to the Microsoft Graph API. You register the application in the Azure portal and upload a valid X509 certificate.</p>
+    <p>You create an appsettings.json file containing the certificate name, client identifier for the application, and the tenant identifier of the Azure active Directory (Azure AD). You create a method named ReadCertificate to return the X509 certificate by name.</p>
+    <p>You need to implement code that acquires a token by using the certificate.</p>
+    <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
+
+    <div class="code-container">
+AuthenticationConfig config = AuthenticationConfig.ReadFromJsonFile("appsettings.json");
+X509Certificate2 certificate = ReadCertificate(config.CertificateName);
+var app = <select id="dropdown1" class="dropdown">
+        <option value="">Select an option</option>
+        <option value="ConfidentialClientApplicationBuilder">ConfidentialClientApplicationBuilder</option>
+        <option value="GetAccountAsync()">GetAccountAsync()</option>
+        <option value="GetAccountsAsync()">GetAccountsAsync()</option>
+        <option value="ConfidentialClientApplication">ConfidentialClientApplication</option>
+    </select>.Create(config.ClientId).WithCertificate(certificate).WithAuthority(new Uri(config.Authority)).Build();
+string[] scopes = new string[] { $"{config.ApiUrl}/.default" };
+AuthenticationResult result = await app.AcquireTokenForClient(<select id="dropdown2" class="dropdown">
+        <option value="">Select an option</option>
+        <option value="scopes">scopes</option>
+        <option value="app">app</option>
+        <option value="config">config</option></select>).ExecuteAsync();
+    </div>
+
+    <button id="showAnswer" class="button">查看答案</button>
+
+    <div id="answer" class="answer">
+        <h3>正确答案:</h3>
+        <p>第一个下拉框应选择: <span class="highlight">ConfidentialClientApplicationBuilder</span></p>
+        <p>第二个下拉框应选择: <span class="highlight">scopes</span></p>
+        
+        <h3>说明:</h3>
+        <p>这段代码的目的是使用证书认证方式获取Microsoft Graph API的访问令牌。</p>
+        <p>1. <strong>ConfidentialClientApplicationBuilder</strong>: 这是创建机密客户端应用程序的构建器类，用于构建能够安全存储凭据的应用程序实例。其他选项如GetAccountAsync()和GetAccountsAsync()是用于获取账户信息的方法，而ConfidentialClientApplication是构建后的结果类，不是构建器。</p>
+        <p>2. <strong>scopes</strong>: AcquireTokenForClient方法需要传入权限范围(scopes)参数，这些范围定义了应用程序请求的API访问权限。这里应该传入之前定义的scopes数组，而不是应用程序实例(app)或配置对象(config)。</p>
+        <p>完整流程是：读取配置→加载证书→使用ConfidentialClientApplicationBuilder构建机密客户端应用(使用客户端ID、证书和认证机构)→定义所需权限范围→获取令牌。</p>
+        <p>这种证书认证方式比使用客户端密钥更安全，特别适合生产环境使用。</p>
+    </div>
+
+    <script>
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answer').style.display = 'block';
+            
+            // Set the correct selections
+            document.getElementById('dropdown1').value = 'ConfidentialClientApplicationBuilder';
+            document.getElementById('dropdown2').value = 'scopes';
+        });
+    </script>
+</body>
+</html>
