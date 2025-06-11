@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic 4: Proseware, Inc - PolicyLib 测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #0f4c75, #3282b8);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #1b262c;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+        }
+        
+        .question {
+            padding: 25px;
+            background: #e3f2fd;
+            border-bottom: 2px solid #bbdefb;
+        }
+        
+        .question h2 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .question p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+            gap: 25px;
+        }
+        
+        .drag-items {
+            flex: 1;
+            min-width: 300px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .drag-items h3, .code-container h3 {
+            font-size: 1.4rem;
+            color: #0f4c75;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3282b8;
+        }
+        
+        .drag-item {
+            background: linear-gradient(90deg, #bbe1fa, #a7d7f0);
+            border: 2px solid #3282b8;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: move;
+            transition: all 0.3s ease;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .drag-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, #a7d7f0, #8fc9e8);
+        }
+        
+        .code-container {
+            flex: 2;
+            min-width: 500px;
+            background: #e6f7ff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #dcdcdc;
+            border-radius: 8px;
+            padding: 25px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            min-height: 300px;
+        }
+        
+        .code-block::before {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #9cdcfe;
+            font-size: 0.9rem;
+        }
+        
+        .drop-zone {
+            display: inline-block;
+            min-width: 200px;
+            min-height: 40px;
+            border: 2px dashed #4CAF50;
+            border-radius: 6px;
+            margin: 0 5px;
+            padding: 8px 15px;
+            background: rgba(76, 175, 80, 0.1);
+            transition: all 0.3s;
+            vertical-align: middle;
+            text-align: center;
+            color: #777;
+            font-style: italic;
+        }
+        
+        .drop-zone.highlight {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #2E7D32;
+        }
+        
+        .drop-zone.filled {
+            background: rgba(76, 175, 80, 0.2);
+            color: #fff;
+            font-style: normal;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #showAnswerBtn {
+            background: linear-gradient(90deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+        
+        #showAnswerBtn:hover {
+            background: linear-gradient(90deg, #43A047, #1B5E20);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        #resetBtn {
+            background: linear-gradient(90deg, #f44336, #c62828);
+            color: white;
+        }
+        
+        #resetBtn:hover {
+            background: linear-gradient(90deg, #e53935, #b71c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .footer {
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(90deg, #0f4c75, #3282b8);
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .result {
+            padding: 25px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            margin: 20px;
+            display: none;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .result h3 {
+            color: #2E7D32;
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            background: #c8e6c9;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 6px;
+        }
+        
+        @media (max-width: 768px) {
+            .drag-container {
+                flex-direction: column;
+            }
+            
+            .drag-items, .code-container {
+                min-width: 100%;
+            }
+        }
+        
+        /* Touch device adjustments */
+        @media (hover: none) {
+            .drag-item {
+                padding: 20px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Topic 4: Proseware, Inc 案例测试题</h1>
+            <div class="subtitle">QUESTION NO: 39 DRAG DROP</div>
+        </div>
+        
+        <div class="question">
+            <h2>问题描述</h2>
+            <p>You need to ensure that PolicyLib requirements are met</p>
+        </div>
+        
+        <div class="drag-container">
+            <div class="drag-items">
+                <h3>可拖拽的代码段</h3>
+                <div class="drag-item" draggable="true" data-value="Process">Process</div>
+                <div class="drag-item" draggable="true" data-value="Initialize">Initialize</div>
+                <div class="drag-item" draggable="true" data-value="telemetry.Sequence">telemetry.Sequence</div>
+                <div class="drag-item" draggable="true" data-value="ITelemetryProcessor">ITelemetryProcessor</div>
+                <div class="drag-item" draggable="true" data-value="ITelemetryInitializer">ITelemetryInitializer</div>
+                <div class="drag-item" draggable="true" data-value="telemetry.Context">telemetry.Context</div>
+                <div class="drag-item" draggable="true" data-value="EventGridController.EventId.value">EventGridController.EventId.value</div>
+                <div class="drag-item" draggable="true" data-value="((EventTelemetry)telemetry).Properties['EventId']">((EventTelemetry)telemetry).Properties["EventId"]</div>
+            </div>
+            
+            <div class="code-container">
+                <h3>IncludeEventId 类实现</h3>
+                <div class="code-block">
+public class IncludeEventId : <span class="drop-zone" data-target="condition1"></span><br>
+{<br>
+    public void <span class="drop-zone" data-target="condition2"></span>(ITelemetry telemetry)<br>
+    {<br>
+        <span class="drop-zone" data-target="condition3"></span>.Properties["EventId"] = 
+            <span class="drop-zone" data-target="condition4"></span>;<br>
+    }<br>
+}<br>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="showAnswerBtn">查看答案</button>
+            <button class="btn" id="resetBtn" style="background: linear-gradient(90deg, #f44336, #d32f2f); margin-left: 15px;">重置</button>
+        </div>
+        
+        <div class="result" id="result">
+            <h3>正确答案和解释</h3>
+            <div class="correct-answer">
+                <strong>condition1:</strong> ITelemetryInitializer
+            </div>
+            <div class="correct-answer">
+                <strong>condition2:</strong> Initialize
+            </div>
+            <div class="correct-answer">
+                <strong>condition3:</strong> telemetry.Context
+            </div>
+            <div class="correct-answer">
+                <strong>condition4:</strong> ((EventTelemetry)telemetry).Properties["EventId"]
+            </div>
+            
+            <div class="explanation">
+                <p><strong>解释说明:</strong></p>
+                <p>PolicyLib 要求实现一个 IncludeEventId 类来添加 EventId 属性到遥测数据中：</p>
+                <ul>
+                    <li><strong>ITelemetryInitializer</strong> - 类需要实现此接口来初始化遥测数据</li>
+                    <li><strong>Initialize</strong> - 这是接口中定义的方法名称</li>
+                    <li><strong>telemetry.Context</strong> - 正确的上下文属性位置</li>
+                    <li><strong>((EventTelemetry)telemetry).Properties["EventId"]</strong> - 正确的事件ID属性访问方式</li>
+                </ul>
+                <p>这个实现确保了PolicyLib的要求被满足，正确地添加了EventId属性到所有遥测数据中。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Topic 4: Proseware, Inc 案例测试题 | 问题39</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有可拖拽项和放置区域
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // 变量跟踪拖拽状态
+            let draggedItem = null;
+            let touchStartX, touchStartY;
+            
+            // 桌面端事件监听
+            dragItems.forEach(item => {
+                // 桌面事件
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                
+                // 移动端触摸事件
+                item.addEventListener('touchstart', handleTouchStart);
+                item.addEventListener('touchend', handleTouchEnd);
+                item.addEventListener('touchmove', handleTouchMove);
+            });
+            
+            dropZones.forEach(zone => {
+                // 桌面事件
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragenter', handleDragEnter);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+                
+                // 移动端事件
+                zone.addEventListener('touchmove', handleTouchMove, { passive: false });
+                zone.addEventListener('touchend', handleTouchDrop);
+            });
+            
+            // 重置按钮
+            document.getElementById('resetBtn').addEventListener('click', resetAnswers);
+            
+            // 查看答案按钮
+            document.getElementById('showAnswerBtn').addEventListener('click', showResults);
+            
+            // 桌面端拖拽函数
+            function handleDragStart(e) {
+                draggedItem = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.getAttribute('data-value'));
+            }
+            
+            function handleDragEnd() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                return false;
+            }
+            
+            function handleDragEnter(e) {
+                this.classList.add('highlight');
+            }
+            
+            function handleDragLeave() {
+                this.classList.remove('highlight');
+            }
+            
+            function handleDrop(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                this.classList.remove('highlight');
+                this.classList.add('filled');
+                
+                // 设置放置区域内容
+                this.textContent = draggedItem.getAttribute('data-value');
+                this.setAttribute('data-filled', draggedItem.getAttribute('data-value'));
+                
+                return false;
+            }
+            
+            // 移动端触摸函数
+            function handleTouchStart(e) {
+                draggedItem = this;
+                this.classList.add('dragging');
+                
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+            }
+            
+            function handleTouchMove(e) {
+                if (!draggedItem) return;
+                
+                e.preventDefault();
+                
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - touchStartX;
+                const deltaY = touch.clientY - touchStartY;
+                
+                // 移动拖拽项
+                draggedItem.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                
+                // 高亮放置区域
+                dropZones.forEach(zone => {
+                    const rect = zone.getBoundingClientRect();
+                    if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                        zone.classList.add('highlight');
+                    } else {
+                        zone.classList.remove('highlight');
+                    }
+                });
+            }
+            
+            function handleTouchEnd() {
+                if (draggedItem) {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem.style.transform = '';
+                    draggedItem = null;
+                }
+                
+                dropZones.forEach(zone => zone.classList.remove('highlight'));
+            }
+            
+            function handleTouchDrop(e) {
+                if (!draggedItem) return;
+                
+                e.preventDefault();
+                
+                const touch = e.changedTouches[0];
+                dropZones.forEach(zone => {
+                    const rect = zone.getBoundingClientRect();
+                    if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                        zone.classList.remove('highlight');
+                        zone.classList.add('filled');
+                        
+                        // 设置放置区域内容
+                        zone.textContent = draggedItem.getAttribute('data-value');
+                        zone.setAttribute('data-filled', draggedItem.getAttribute('data-value'));
+                    }
+                });
+                
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.transform = '';
+                draggedItem = null;
+            }
+            
+            // 重置答案
+            function resetAnswers() {
+                dropZones.forEach(zone => {
+                    zone.textContent = '';
+                    zone.classList.remove('filled');
+                    zone.classList.remove('highlight');
+                    zone.removeAttribute('data-filled');
+                });
+                
+                document.getElementById('result').style.display = 'none';
+            }
+            
+            // 显示答案
+            function showResults() {
+                document.getElementById('result').style.display = 'block';
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

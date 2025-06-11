@@ -1,124 +1,426 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Cosmos DB 配置测试题</title>
+    <title>Fourth Coffee - Azure Cosmos DB 配置测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
+            background: linear-gradient(135deg, #f5f2eb 0%, #e6dfd1 100%);
+            color: #4a3c2a;
+            padding: 20px;
+            min-height: 100vh;
         }
-        .question-container {
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .coffee-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #d4c9b4;
+        }
+        .coffee-icon {
+            font-size: 36px;
+            margin-right: 15px;
+            color: #6f4e37;
+        }
+        h1 {
+            color: #5d4037;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #8d6e63;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .question-box {
+            background-color: #f9f7f2;
+            border: 1px solid #d7ccc8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .question-box:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #8d6e63, #5d4037);
+            border-radius: 10px 0 0 10px;
+        }
+        .question-title {
+            color: #5d4037;
+            font-size: 20px;
             margin-bottom: 20px;
+            font-weight: 600;
         }
-        table {
-            border-collapse: collapse;
+        .question-text {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0d6c9;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .config-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .config-item {
+            flex: 1;
+            min-width: 300px;
+            background: #f1e8e0;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #d7ccc8;
+        }
+        .config-title {
+            color: #5d4037;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .config-title i {
+            margin-right: 10px;
+            color: #8d6e63;
+        }
+        .dropdown {
             width: 100%;
-            margin: 20px 0;
+            padding: 12px 15px;
+            border: 1px solid #d7ccc8;
+            border-radius: 6px;
+            background-color: white;
+            font-size: 16px;
+            color: #5d4037;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
+        .dropdown:hover {
+            border-color: #8d6e63;
+            box-shadow: 0 0 0 2px rgba(141, 110, 99, 0.2);
         }
-        th {
-            background-color: #f2f2f2;
+        .dropdown:focus {
+            outline: none;
+            border-color: #8d6e63;
+            box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.3);
         }
-        select {
-            padding: 8px;
-            width: 100%;
-            border-radius: 4px;
-            border: 1px solid #ddd;
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
         }
         .answer-btn {
-            background-color: #4CAF50;
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(to right, #8d6e63, #6d4c41);
             color: white;
-            padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
         }
         .answer-btn:hover {
-            background-color: #45a049;
+            background: linear-gradient(to right, #7d5e53, #5d3c31);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .answer-section {
+            background: #f1e8e0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
             display: none;
-            margin-top: 20px;
+            border-left: 4px solid #8d6e63;
+        }
+        .answer-title {
+            color: #5d4037;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-title i {
+            margin-right: 10px;
+            color: #8d6e63;
+        }
+        .correct-answer {
+            background: #e8f5e9;
             padding: 15px;
-            background-color: #f9f9f9;
-            border-left: 5px solid #4CAF50;
+            border-radius: 6px;
+            margin: 15px 0;
+            border: 1px solid #c8e6c9;
+        }
+        .correct-answer p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .explanation {
+            background: #fff;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #e0d6c9;
+        }
+        .explanation h3 {
+            color: #5d4037;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .explanation p {
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        .coffee-bean {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 80px;
+            z-index: -1;
+        }
+        .bean1 {
+            top: 20px;
+            right: 30px;
+            transform: rotate(20deg);
+        }
+        .bean2 {
+            bottom: 40px;
+            left: 40px;
+            transform: rotate(-15deg);
+        }
+        .note {
+            background: #e6dcd2;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .flow-diagram {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        .flow-step {
+            width: 150px;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0d6c9;
+            position: relative;
+        }
+        .flow-step:not(:last-child):after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8d6e63;
+            font-size: 24px;
+        }
+        .step-icon {
+            font-size: 32px;
+            color: #8d6e63;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: 600;
+            color: #5d4037;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .score {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #5d4037;
         }
     </style>
 </head>
 <body>
-    <h1>Azure Cosmos DB 配置测试题</h1>
-    
-    <div class="question-container">
-        <p><strong>QUESTION NO: 81 HOTSPOT</strong></p>
-        <p>You need to save customized items to Azure Cosmos DB.</p>
-        <p>Which Azure Cosmos DB configuration should you use? To answer, select the appropriate options in the answer area.</p>
-        <p><em>NOTE: Each correct selection is worth one point.</em></p>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Configuration option</th>
-                <th>Configuration value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>API</td>
-                <td>
-                    <select id="api-select">
-                        <option value="">-- Select an option --</option>
+    <div class="container">
+        <div class="coffee-bean bean1">☕</div>
+        <div class="coffee-bean bean2">☕</div>
+        
+        <div class="coffee-header">
+            <div class="coffee-icon">☕</div>
+            <div>
+                <h1>Fourth Coffee - Azure Cosmos DB 配置测试</h1>
+                <div class="subtitle">Topic 9 案例研究 - 保存定制化商品</div>
+            </div>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-title">QUESTION NO: 81</div>
+            <div class="question-text">
+                <p>您需要将定制化商品保存到Azure Cosmos DB。应使用哪种Azure Cosmos DB配置？</p>
+                <p class="note">注意：每个正确选择得1分</p>
+            </div>
+            
+            <div class="config-container">
+                <div class="config-item">
+                    <div class="config-title">
+                        <i class="fas fa-database"></i> API
+                    </div>
+                    <select class="dropdown" id="api-select">
+                        <option value="">请选择API类型</option>
                         <option value="NoSQL">NoSQL</option>
                         <option value="MongoDB">MongoDB</option>
                         <option value="PostgreSQL">PostgreSQL</option>
                         <option value="Apache Gremlin">Apache Gremlin</option>
                     </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Consistency level</td>
-                <td>
-                    <select id="consistency-select">
-                        <option value="">-- Select an option --</option>
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-title">
+                        <i class="fas fa-sliders-h"></i> 一致性级别
+                    </div>
+                    <select class="dropdown" id="consistency-select">
+                        <option value="">请选择一致性级别</option>
                         <option value="Strong">Strong</option>
                         <option value="Session">Session</option>
                         <option value="Eventual">Eventual</option>
                         <option value="Bounded Staleness">Bounded Staleness</option>
                     </select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <button class="answer-btn" onclick="showAnswer()">查看答案</button>
-
-    <div id="answer-section" class="answer-section">
-        <h3>答案及说明</h3>
-        <p><strong>API 选择:</strong> <span id="api-answer"></span></p>
-        <p><strong>说明:</strong> 对于自定义数据存储，NoSQL API是最灵活的选择，它提供无模式的数据模型，适合存储各种自定义数据结构。</p>
+                </div>
+            </div>
+        </div>
         
-        <p><strong>Consistency level 选择:</strong> <span id="consistency-answer"></span></p>
-        <p><strong>说明:</strong> Session一致性级别是最常用的选择，它保证单个会话内的读写一致性，同时提供良好的性能和可用性。</p>
+        <div class="note">
+            <p><i class="fas fa-info-circle"></i> 提示：根据Fourth Coffee案例研究文档，定制化商品处理流程如下：</p>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="step-title">用户定制商品</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="step-title">放入Service Bus队列</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="step-title">Azure Functions处理</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon"><i class="fas fa-save"></i></div>
+                    <div class="step-title">保存到Cosmos DB</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <button class="answer-btn" id="check-answer">
+                <i class="fas fa-key"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">
+                <i class="fas fa-lightbulb"></i> 答案与说明
+            </h2>
+            
+            <div class="correct-answer">
+                <p><strong>正确答案：</strong></p>
+                <p>API: <span class="highlight">NoSQL</span></p>
+                <p>一致性级别: <span class="highlight">Session</span></p>
+            </div>
+            
+            <div class="explanation">
+                <h3><i class="fas fa-book"></i> 详细说明：</h3>
+                
+                <p><span class="highlight">API选择：NoSQL</span></p>
+                <p>根据文档要求："Azure Cosmos DB development must use a native API that receives the latest updates and stores data in a document format"（必须使用原生API接收最新更新并以文档格式存储数据）。</p>
+                <p>NoSQL API是Azure Cosmos DB的原生API，专门为文档存储设计，支持最新功能更新，完全符合要求。</p>
+                
+                <p><span class="highlight">一致性级别：Session</span></p>
+                <p>文档要求："Customized items read from Azure Cosmos DB must maximize throughput while ensuring data accuracy for the current user"（从Cosmos DB读取定制商品时必须最大化吞吐量，同时确保当前用户的数据准确性）。</p>
+                <p>Session一致性级别：</p>
+                <ul>
+                    <li>保证单个会话内的读写一致性</li>
+                    <li>提供较低的延迟和较高的吞吐量</li>
+                    <li>确保当前用户看到自己最新的写入操作</li>
+                    <li>是平衡性能和一致性的理想选择</li>
+                </ul>
+                
+                <h3><i class="fas fa-times-circle"></i> 其他选项分析：</h3>
+                <p><span class="highlight">MongoDB API</span>：虽然支持文档存储，但它是兼容API而非原生API，无法获得最新更新。</p>
+                <p><span class="highlight">Strong一致性</span>：提供最强一致性但会降低吞吐量，不符合最大化吞吐量要求。</p>
+                <p><span class="highlight">Eventual一致性</span>：提供最高吞吐量但可能导致读取旧数据，无法确保当前用户的数据准确性。</p>
+                
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="step-title">文档格式</div>
+                        <p>NoSQL原生支持</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon"><i class="fas fa-sync-alt"></i></div>
+                        <div class="step-title">会话一致性</div>
+                        <p>用户数据准确性</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="step-title">高吞吐量</div>
+                        <p>最大化性能</p>
+                    </div>
+                </div>
+                
+                <p class="highlight">关键设计原则：使用原生NoSQL API确保最佳兼容性和功能更新，Session一致性级别平衡性能和数据准确性要求。</p>
+            </div>
+            
+            <div class="score">本题最高得分：2分</div>
+        </div>
     </div>
 
     <script>
-        function showAnswer() {
-            // 设置正确答案
-            document.getElementById('api-answer').textContent = 'NoSQL';
-            document.getElementById('consistency-answer').textContent = 'Session';
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
             
-            // 显示答案区域
-            document.getElementById('answer-section').style.display = 'block';
-        }
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
+                this.disabled = true;
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>

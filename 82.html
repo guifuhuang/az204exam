@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fourth Coffee - 照片处理解决方案评估</title>
+    <title>Fourth Coffee - 本地开发测试工具选择</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -83,52 +83,19 @@
             font-size: 16px;
             line-height: 1.6;
         }
-        .scenario-box {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #2196f3;
-        }
-        .solution-box {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #4caf50;
-        }
-        .goal-box {
-            background: #fff8e1;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #ffc107;
-        }
         .options-container {
             margin-top: 20px;
-            text-align: center;
-        }
-        .options-title {
-            color: #5d4037;
-            font-size: 18px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .options {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
         }
         .option {
             background: #f1e8e0;
             border: 1px solid #d7ccc8;
             border-radius: 8px;
-            padding: 15px 30px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 120px;
-            text-align: center;
         }
         .option:hover {
             background: #e6dcd2;
@@ -140,10 +107,20 @@
             border-color: #8d6e63;
         }
         .option-letter {
-            font-size: 20px;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #8d6e63;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
             font-weight: bold;
-            color: #5d4037;
-            margin-bottom: 5px;
+            flex-shrink: 0;
+        }
+        .option-content {
+            flex: 1;
         }
         .btn-container {
             text-align: center;
@@ -235,41 +212,49 @@
             left: 40px;
             transform: rotate(-15deg);
         }
-        .flow-diagram {
+        .note {
+            background: #e6dcd2;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .tools-diagram {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             flex-wrap: wrap;
             margin: 25px 0;
             gap: 15px;
         }
-        .flow-step {
+        .tool-card {
             width: 180px;
             text-align: center;
             padding: 15px;
             background: #fff;
             border-radius: 8px;
             border: 1px solid #e0d6c9;
-            position: relative;
+            transition: all 0.3s;
         }
-        .flow-step:not(:last-child):after {
-            content: "→";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #8d6e63;
-            font-size: 24px;
+        .tool-card.correct {
+            border: 2px solid #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
         }
-        .step-icon {
+        .tool-card.incorrect {
+            opacity: 0.7;
+        }
+        .tool-icon {
             font-size: 32px;
             color: #8d6e63;
             margin-bottom: 10px;
         }
-        .step-title {
+        .tool-name {
             font-weight: 600;
             color: #5d4037;
             margin-bottom: 8px;
-            font-size: 14px;
+        }
+        .tool-desc {
+            font-size: 13px;
+            color: #666;
         }
         .score {
             text-align: center;
@@ -277,12 +262,12 @@
             font-weight: 600;
             color: #5d4037;
         }
-        .warning {
-            background: #ffecb3;
+        .requirement-box {
+            background: #e3f2fd;
             padding: 15px;
-            border-radius: 6px;
+            border-radius: 8px;
             margin: 15px 0;
-            border-left: 4px solid #ffa000;
+            border-left: 4px solid #2196f3;
         }
     </style>
 </head>
@@ -294,70 +279,74 @@
         <div class="coffee-header">
             <div class="coffee-icon">☕</div>
             <div>
-                <h1>Fourth Coffee - 照片处理解决方案评估</h1>
-                <div class="subtitle">Topic 9 案例研究 - 照片处理流程设计</div>
+                <h1>Fourth Coffee - 本地开发测试工具选择</h1>
+                <div class="subtitle">Topic 9 案例研究 - 支持本地开发测试</div>
             </div>
         </div>
         
         <div class="question-box">
-            <div class="question-title">QUESTION NO: 83</div>
+            <div class="question-title">QUESTION NO: 82</div>
             <div class="question-text">
-                <p><strong>注意：</strong> 本题是一系列问题的一部分，这些问题都基于相同的场景。该系列中的每个问题都提供了一个可能满足目标的解决方案。有些问题集可能有多个正确解决方案，而有些可能没有正确解决方案。</p>
-                <p>回答完本题后，您将无法返回。因此，这些问题不会出现在复习屏幕上。</p>
-                
-                <div class="scenario-box">
-                    <h3><i class="fas fa-camera"></i> 场景描述：</h3>
-                    <p>您正在开发一个软件即服务(SaaS)产品，用于管理照片。用户将照片上传到Web服务，该服务随后将照片存储在Azure Storage Blob存储中。存储帐户类型为通用V2。</p>
-                    <p>照片上传后，必须进行处理以生成并保存适合移动设备查看的图像版本。生成移动友好版本图像的处理过程必须在<strong>一分钟内启动</strong>。</p>
-                </div>
-                
-                <div class="solution-box">
-                    <h3><i class="fas fa-lightbulb"></i> 解决方案：</h3>
-                    <p>将Azure存储帐户转换为BlockBlobStorage存储帐户。</p>
-                </div>
-                
-                <div class="goal-box">
-                    <h3><i class="fas fa-bullseye"></i> 目标评估：</h3>
-                    <p>该解决方案是否满足目标？</p>
-                </div>
+                <p>您需要支持开发人员的本地开发测试。应该使用哪种工具？</p>
+            </div>
+            
+            <div class="requirement-box">
+                <p><i class="fas fa-file-alt"></i> <strong>文档要求：</strong> "Developers must test Azure Blob Storage integrations locally before deployment to Azure, supporting the latest versions of Azure Storage APIs"</p>
+                <p>开发人员必须在部署到Azure之前在本地测试Azure Blob Storage集成，并支持最新版本的Azure Storage API。</p>
             </div>
             
             <div class="options-container">
-                <div class="options-title">请选择您的答案：</div>
-                <div class="options">
-                    <div class="option" data-option="A">
-                        <div class="option-letter">A</div>
-                        <div>是</div>
+                <div class="option" data-option="A">
+                    <div class="option-letter">A</div>
+                    <div class="option-content">
+                        <p>Azurite</p>
                     </div>
-                    
-                    <div class="option" data-option="B">
-                        <div class="option-letter">B</div>
-                        <div>否</div>
+                </div>
+                
+                <div class="option" data-option="B">
+                    <div class="option-letter">B</div>
+                    <div class="option-content">
+                        <p>Azure Storage Emulator</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="C">
+                    <div class="option-letter">C</div>
+                    <div class="option-content">
+                        <p>SQL Server Management Studio (SSMS)</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="D">
+                    <div class="option-letter">D</div>
+                    <div class="option-content">
+                        <p>Azure Storage Explorer</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="flow-diagram">
-            <div class="flow-step">
-                <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                <div class="step-title">用户上传照片</div>
-                <p>到通用V2存储账户</p>
+        <div class="tools-diagram">
+            <div class="tool-card" id="tool-azurite">
+                <div class="tool-icon"><i class="fas fa-laptop-code"></i></div>
+                <div class="tool-name">Azurite</div>
+                <div class="tool-desc">开源Azure存储模拟器</div>
             </div>
-            <div class="flow-step">
-                <div class="step-icon"><i class="fas fa-bolt"></i></div>
-                <div class="step-title">处理启动</div>
-                <p>需在1分钟内开始</p>
+            <div class="tool-card" id="tool-emulator">
+                <div class="tool-icon"><i class="fas fa-server"></i></div>
+                <div class="tool-name">Storage Emulator</div>
+                <div class="tool-desc">旧版存储模拟器</div>
             </div>
-            <div class="flow-step">
-                <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
-                <div class="step-title">生成移动版</div>
-                <p>优化图像处理</p>
+            <div class="tool-card" id="tool-ssms">
+                <div class="tool-icon"><i class="fas fa-database"></i></div>
+                <div class="tool-name">SSMS</div>
+                <div class="tool-desc">SQL Server管理工具</div>
             </div>
-        </div>
-        
-        <div class="warning">
-            <p><i class="fas fa-exclamation-triangle"></i> <strong>文档要求：</strong> "Costs must be minimized for all Azure services"（必须最小化所有Azure服务的成本）</p>
+            <div class="tool-card" id="tool-explorer">
+                <div class="tool-icon"><i class="fas fa-folder-open"></i></div>
+                <div class="tool-name">Storage Explorer</div>
+                <div class="tool-desc">存储资源管理工具</div>
+            </div>
         </div>
         
         <div class="btn-container">
@@ -372,64 +361,55 @@
             </h2>
             
             <div class="correct-answer">
-                <p><strong>正确答案：B. 否</strong></p>
+                <p><strong>正确答案：A. Azurite</strong></p>
             </div>
             
             <div class="explanation">
                 <h3><i class="fas fa-book"></i> 详细说明：</h3>
                 
-                <p>该解决方案<strong>不满足</strong>目标要求，原因如下：</p>
+                <p><span class="highlight">文档要求</span>明确指出：开发人员必须在部署到Azure之前在本地测试Azure Blob Storage集成，并支持最新版本的Azure Storage API。</p>
                 
-                <p><span class="highlight">1. BlockBlobStorage账户类型不会自动触发处理流程</span></p>
-                <p>将存储账户转换为BlockBlobStorage类型仅提供高性能块blob存储，但不会自动启动任何处理流程。该转换本身并不能确保在1分钟内启动照片处理。</p>
-                
-                <p><span class="highlight">2. 与Fourth Coffee文档要求不符</span></p>
-                <p>根据文档中的类似处理流程（如库存商品定制）：</p>
+                <p><span class="highlight">A. Azurite</span> 是微软官方推荐的开源Azure存储模拟器：</p>
                 <ul>
-                    <li>Fourth Coffee使用<strong>Azure Service Bus队列</strong>和<strong>Azure Functions</strong>触发处理流程</li>
-                    <li>当商品定制信息放入队列后，Azure Functions会自动触发处理</li>
-                    <li>这种模式更符合在1分钟内启动处理的要求</li>
+                    <li>支持Blob、Queue和Table服务的本地模拟</li>
+                    <li>完全兼容最新版本的Azure Storage API</li>
+                    <li>跨平台支持（Windows、macOS、Linux）</li>
+                    <li>可通过npm轻松安装和更新</li>
+                    <li>提供Docker镜像方便容器化开发</li>
                 </ul>
                 
-                <p><span class="highlight">3. 成本最小化要求</span></p>
-                <p>文档明确要求："Costs must be minimized for all Azure services"。BlockBlobStorage账户比通用V2账户成本更高，不符合成本最小化要求。</p>
+                <h3><i class="fas fa-times-circle"></i> 其他选项分析：</h3>
+                <p><span class="highlight">B. Azure Storage Emulator</span>：微软已停止更新此工具，不再支持最新API，官方推荐迁移到Azurite。</p>
+                <p><span class="highlight">C. SQL Server Management Studio (SSMS)</span>：用于管理SQL Server数据库的工具，与Azure Blob Storage测试无关。</p>
+                <p><span class="highlight">D. Azure Storage Explorer</span>：用于管理云存储资源的GUI工具，但不提供本地模拟功能。</p>
                 
-                <h3><i class="fas fa-check-circle"></i> 推荐解决方案：</h3>
-                <p>根据Fourth Coffee案例中的最佳实践：</p>
-                <ol>
-                    <li>使用<strong>Blob存储事件</strong>触发Azure Functions</li>
-                    <li>配置<strong>Azure Event Grid</strong>监听Blob创建事件</li>
-                    <li>当新照片上传时，自动触发处理函数</li>
-                    <li>处理完成后保存移动优化版本</li>
-                </ol>
-                
-                <div class="flow-diagram">
-                    <div class="flow-step">
-                        <div class="step-icon"><i class="fas fa-file-upload"></i></div>
-                        <div class="step-title">照片上传</div>
-                        <p>到Blob存储</p>
+                <div class="tools-diagram">
+                    <div class="tool-card correct">
+                        <div class="tool-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tool-name">Azurite</div>
+                        <div class="tool-desc">支持最新API<br>本地模拟存储服务</div>
                     </div>
-                    <div class="flow-step">
-                        <div class="step-icon"><i class="fas fa-bell"></i></div>
-                        <div class="step-title">事件触发</div>
-                        <p>通过Event Grid</p>
+                    <div class="tool-card incorrect">
+                        <div class="tool-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="tool-name">Storage Emulator</div>
+                        <div class="tool-desc">已停止更新<br>不支持最新API</div>
                     </div>
-                    <div class="flow-step">
-                        <div class="step-icon"><i class="fas fa-bolt"></i></div>
-                        <div class="step-title">函数处理</div>
-                        <p>自动启动</p>
+                    <div class="tool-card incorrect">
+                        <div class="tool-icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="tool-name">SSMS</div>
+                        <div class="tool-desc">数据库管理工具<br>不适用于存储测试</div>
                     </div>
-                    <div class="flow-step">
-                        <div class="step-icon"><i class="fas fa-mobile"></i></div>
-                        <div class="step-title">生成移动版</div>
-                        <p>保存结果</p>
+                    <div class="tool-card incorrect">
+                        <div class="tool-icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="tool-name">Storage Explorer</div>
+                        <div class="tool-desc">云存储管理工具<br>无本地模拟功能</div>
                     </div>
                 </div>
                 
-                <p class="highlight">关键设计原则：使用事件驱动架构（如Event Grid + Functions）可以在照片上传后立即触发处理，满足1分钟内启动的要求，同时符合Fourth Coffee文档中的成本最小化原则。</p>
+                <p class="highlight">关键开发原则：使用Azurite可以在本地完全模拟Azure存储服务，确保开发人员在部署前验证集成，同时支持最新API，符合Fourth Coffee的文档要求。</p>
             </div>
             
-            <div class="score">本题得分：1分</div>
+            <div class="score">本题最高得分：1分</div>
         </div>
     </div>
 
@@ -454,6 +434,12 @@
                 answerSection.style.display = 'block';
                 this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
                 this.disabled = true;
+                
+                // 高亮显示正确的工具
+                document.getElementById('tool-azurite').classList.add('correct');
+                document.getElementById('tool-emulator').classList.add('incorrect');
+                document.getElementById('tool-ssms').classList.add('incorrect');
+                document.getElementById('tool-explorer').classList.add('incorrect');
                 
                 // 滚动到答案区域
                 answerSection.scrollIntoView({ behavior: 'smooth' });

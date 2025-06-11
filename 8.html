@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure虚拟机问题解决工具测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d7, #00a4ef, #0078d7);
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .question-box {
+            padding: 25px 30px;
+            background: #f0f8ff;
+            border-bottom: 1px solid #d0e8ff;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #004578;
+        }
+        
+        .note {
+            background: #fff4ce;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 15px;
+            border-left: 4px solid #ffb900;
+        }
+        
+        .tool-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .tool-table th {
+            background: #0078d7;
+            color: white;
+            text-align: left;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .tool-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .issue-cell {
+            font-weight: 600;
+            color: #004578;
+            width: 30%;
+            vertical-align: top;
+        }
+        
+        .tool-cell {
+            width: 70%;
+        }
+        
+        .config-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #0078d7;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        .config-select:focus {
+            outline: none;
+            border-color: #00a4ef;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-top: 1px solid #d0e8ff;
+        }
+        
+        .control-btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+        
+        .control-btn:hover {
+            background: #0066b4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .answer-section {
+            background: #e6f7ff;
+            padding: 30px;
+            display: none;
+        }
+        
+        .answer-title {
+            color: #0078d7;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00a4ef;
+        }
+        
+        .correct-answer {
+            background: #dff6dd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #107c10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .answer-icon {
+            font-size: 28px;
+            color: #107c10;
+            flex-shrink: 0;
+        }
+        
+        .answer-content {
+            flex: 1;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .explanation h3 {
+            color: #005a9e;
+            margin-bottom: 15px;
+        }
+        
+        .explanation p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .tool-details {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tool-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #0078d7;
+        }
+        
+        .tool-card h4 {
+            color: #005a9e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tool-card ul {
+            padding-left: 20px;
+        }
+        
+        .tool-card li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .question-box {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .tool-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .tool-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure虚拟机问题解决工具测试题</h1>
+            <p>QUESTION NO: 8 (HOTSPOT)</p>
+        </header>
+        
+        <div class="question-box">
+            <div class="question-text">
+                You need to correct the VM issues.<br>
+                Which tools should you use?
+            </div>
+            
+            <div class="note">
+                <strong>说明：</strong> 每个正确选择得1分。请从下拉框中选择每个问题对应的最佳工具。
+            </div>
+            
+            <table class="tool-table">
+                <thead>
+                    <tr>
+                        <th>Issue（问题/事项）</th>
+                        <th>Tool（工具）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="issue-cell">Backup and Restore（备份和恢复）</td>
+                        <td class="tool-cell">
+                            <select class="config-select" id="backup-select">
+                                <option value="">-- 请选择工具 --</option>
+                                <option value="Azure Site Recovery">Azure Site Recovery</option>
+                                <option value="Azure Backup">Azure Backup</option>
+                                <option value="Azure Data Box">Azure Data Box</option>
+                                <option value="Azure Migrate">Azure Migrate</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="issue-cell">Performance（性能）</td>
+                        <td class="tool-cell">
+                            <select class="config-select" id="performance-select">
+                                <option value="">-- 请选择工具 --</option>
+                                <option value="Azure Network Watcher">Azure Network Watcher</option>
+                                <option value="Azure Traffic Manager">Azure Traffic Manager</option>
+                                <option value="ExpressRoute">ExpressRoute</option>
+                                <option value="Accelerated Networking">Accelerated Networking</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="show-answer-btn">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">正确答案与解析</h2>
+            
+            <div class="correct-answer">
+                <div class="answer-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="answer-content">
+                    <strong>正确配置：</strong>
+                    <ul>
+                        <li><strong>Backup and Restore（备份和恢复）</strong>: Azure Backup</li>
+                        <li><strong>Performance（性能）</strong>: Accelerated Networking</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                
+                <p>根据Azure最佳实践和工具特性，以下是每个问题的正确工具选择：</p>
+                
+                <p><strong>1. Backup and Restore（备份和恢复） - Azure Backup</strong>：</p>
+                <ul>
+                    <li>Azure Backup是专门为Azure虚拟机设计的备份解决方案</li>
+                    <li>它提供简单、安全且经济高效的备份机制，支持定期备份和按需恢复</li>
+                    <li>支持应用一致性备份，确保恢复时数据完整性</li>
+                    <li>提供长期保留选项，满足不同合规性要求</li>
+                </ul>
+                
+                <p><strong>2. Performance（性能） - Accelerated Networking</strong>：</p>
+                <ul>
+                    <li>加速网络（Accelerated Networking）是专门优化虚拟机网络性能的功能</li>
+                    <li>它通过绕过虚拟机管理程序，直接在虚拟机中提供网络接口</li>
+                    <li>可以显著降低延迟、提高吞吐量并减少CPU使用率</li>
+                    <li>特别适合需要高性能网络的应用场景，如大数据处理和高频交易</li>
+                </ul>
+                
+                <div class="tool-details">
+                    <div class="tool-card">
+                        <h4><i class="fas fa-database"></i> Azure Backup 详细说明</h4>
+                        <ul>
+                            <li><strong>备份频率</strong>: 支持每日或每周备份</li>
+                            <li><strong>保留策略</strong>: 可配置短期（天/周）和长期（月/年）保留</li>
+                            <li><strong>恢复粒度</strong>: 支持整个VM恢复或文件级恢复</li>
+                            <li><strong>加密</strong>: 使用存储服务加密(SSE)保护备份数据</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h4><i class="fas fa-bolt"></i> Accelerated Networking 详细说明</h4>
+                        <ul>
+                            <li><strong>性能提升</strong>: 可提升网络吞吐量达30Gbps</li>
+                            <li><strong>延迟降低</strong>: 显著降低网络延迟</li>
+                            <li><strong>兼容性</strong>: 支持大多数通用和计算优化VM系列</li>
+                            <li><strong>配置要求</strong>: 需要支持SR-IOV的VM系列</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 25px;">其他工具说明：</h3>
+                <ul>
+                    <li><strong>Azure Site Recovery</strong>: 主要用于灾难恢复和业务连续性，而非日常备份</li>
+                    <li><strong>Azure Data Box</strong>: 用于大规模离线数据传输，不适用于常规备份</li>
+                    <li><strong>Azure Network Watcher</strong>: 用于网络监控和诊断，不直接提升性能</li>
+                    <li><strong>ExpressRoute</strong>: 提供专用网络连接，但不直接优化VM网络性能</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Azure 解决方案架构师考试模拟题 - 基于虚拟机问题解决案例
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const answerSection = document.getElementById('answer-section');
+            const backupSelect = document.getElementById('backup-select');
+            const performanceSelect = document.getElementById('performance-select');
+            
+            // 查看答案按钮
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // 设置正确的选项
+                backupSelect.value = 'Azure Backup';
+                performanceSelect.value = 'Accelerated Networking';
+            });
+        });
+    </script>
+</body>
+</html>

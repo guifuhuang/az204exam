@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 数据库连接字符串检索测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .requirements {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .requirements ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .requirements li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #0067b8;
+        }
+        .answer-area {
+            padding: 30px;
+            background: white;
+        }
+        .answer-title {
+            font-size: 24px;
+            color: #0067b8;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #bbdefb;
+            font-weight: 600;
+        }
+        .connection-form {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #2c3e50;
+            grid-column: 1 / span 2;
+        }
+        .select-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            grid-column: 1 / span 2;
+            margin-bottom: 15px;
+        }
+        .config-select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        .config-select:hover {
+            background: #e3f2fd;
+            border-color: #0067b8;
+        }
+        .variable-section {
+            grid-column: 1 / span 2;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+        .variable-section p {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .btn-container {
+            text-align: center;
+            padding: 30px;
+        }
+        .btn {
+            background: #0067b8;
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            font-size: 19px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .answer-panel {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 6px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 6px solid #ffc107;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            font-size: 15px;
+        }
+        @media (max-width: 768px) {
+            .connection-form {
+                grid-template-columns: 1fr;
+            }
+            .select-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 数据库连接字符串检索测试题</h1>
+            <p>QUESTION NO: 25 HOTSPOT</p>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您需要检索数据库连接字符串。应该使用哪些值？</p>
+                <p>根据以下要求选择适当的选项：</p>
+                
+                <div class="requirements">
+                    <p><strong>要求：</strong></p>
+                    <ul>
+                        <li>数据库连接字符串存储在 Azure Key Vault 中</li>
+                        <li>Key Vault 名称: cpandlkeyvault</li>
+                        <li>密钥名称: PostgreSQLConn</li>
+                        <li>ID: 80df3e46ffcd4f1cb187f79905e9a1e8</li>
+                        <li>连接信息经常更新，应用程序必须始终使用最新信息连接数据库</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="answer-area">
+            <div class="answer-title">配置连接字符串检索参数</div>
+            
+            <div class="connection-form">
+                <div class="form-label">RESTAPI Endpoint:</div>
+                <div class="select-container">
+                    https://
+                    <select class="config-select" id="vault-name">
+                        <option value="">--请选择--</option>
+                        <option value="cpandlkeyvault">cpandlkeyvault</option>
+                        <option value="PostgreSQLConn">PostgreSQLConn</option>
+                        <option value="80df3e46ffcd4f1cb187f79905e9a1e8">80df3e46ffcd4f1cb187f79905e9a1e8</option>
+                    </select>
+                    .vault.azure.net/secrets/
+                    <select class="config-select" id="secret-name">
+                        <option value="">--请选择--</option>
+                        <option value="cpandlkeyvault">cpandlkeyvault</option>
+                        <option value="PostgreSQLConn">PostgreSQLConn</option>
+                        <option value="80df3e46ffcd4f1cb187f79905e9a1e8">80df3e46ffcd4f1cb187f79905e9a1e8</option>
+                    </select>
+                </div>
+                
+                <div class="variable-section">
+                    <p>Variable type to access Azure Key Vault secret values:</p>
+                    <div class="select-container">
+                        <select class="config-select" id="variable-type">
+                            <option value="">--请选择--</option>
+                            <option value="Environment">Environment</option>
+                            <option value="Session">Session</option>
+                            <option value="ViewState">ViewState</option>
+                            <option value="QueryStirng">QueryStirng</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-panel" id="answer-panel">
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案：</h3>
+                    <p><strong>Key Vault 名称:</strong> cpandlkeyvault</p>
+                    <p><strong>密钥名称:</strong> PostgreSQLConn</p>
+                    <p><strong>变量类型:</strong> Environment</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>说明：</h3>
+                    <p>根据 Azure Key Vault 的 REST API 规范：</p>
+                    <ul>
+                        <li>REST API 端点格式应为 <span class="highlight">https://{vault-name}.vault.azure.net/secrets/{secret-name}</span></li>
+                        <li>正确的 Key Vault 名称是 <span class="highlight">cpandlkeyvault</span>，密钥名称是 <span class="highlight">PostgreSQLConn</span></li>
+                        <li>虽然选项中未直接提供"cpandlkeyvault"，但根据文档要求，这是正确的Key Vault名称</li>
+                        <li>连接字符串在 Azure 中存储时始终加密（静态加密）</li>
+                    </ul>
+                    
+                    <p>在应用程序中访问连接字符串的正确方式：</p>
+                    <ul>
+                        <li>对于 PostgreSQL 数据库，连接字符串在运行时可通过环境变量 <span class="highlight">POSTGRESQLCONNSTR_</span> 前缀访问</li>
+                        <li>在 .NET 应用中，应使用 <span class="highlight">ConfigurationManager.ConnectionStrings["PostgreSQLConn"].ConnectionString</span></li>
+                        <li>由于连接信息经常更新，应直接从 Key Vault 获取最新值，而不是缓存</li>
+                        <li>使用 <span class="highlight">Environment</span> 变量类型是最安全的方式，因为它不会暴露在客户端代码中</li>
+                    </ul>
+                    
+                    <p>错误选项分析：</p>
+                    <ul>
+                        <li>第一个选项中的"cpandkewault"是拼写错误，不是正确的Key Vault名称</li>
+                        <li>使用"Session"或"ViewState"存储敏感信息不安全，因为可能暴露给客户端</li>
+                        <li>"QueryString"是最不安全的方式，因为连接字符串会直接暴露在URL中</li>
+                    </ul>
+                    
+                    <h3>City Power & Light 案例背景</h3>
+                    <p>根据文档内容：</p>
+                    <ul>
+                        <li>企业网站运行在Azure App Service on Linux上</li>
+                        <li>网站使用Azure Storage存储静态内容，并通过Azure CDN分发</li>
+                        <li>解决方案必须满足GDPR合规要求</li>
+                        <li>所有SSL证书和凭证必须存储在Azure Key Vault中</li>
+                        <li>文件访问必须限制访问权限</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure 认证考试练习题 | 连接字符串安全最佳实践 | Topic 3: City Power & Light 案例研究</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案区域
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+            
+            // 添加视觉反馈
+            this.textContent = '答案已显示';
+            this.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                this.textContent = '查看答案';
+                this.style.background = '#0067b8';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB 配置测试 - Topic 6, Coho Winery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #004578, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #0078d4, #004578);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .case-info {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-bottom: 2px dashed #0078d4;
+            font-size: 14px;
+        }
+        
+        .question-container {
+            padding: 25px;
+            background-color: #f8f9fa;
+        }
+        
+        .question-box {
+            background: white;
+            border: 2px solid #0078d4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-title {
+            color: #004578;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .question-content {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .configuration-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        
+        .config-item {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .config-label {
+            width: 200px;
+            font-weight: bold;
+            color: #004578;
+        }
+        
+        .config-select {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .config-select:focus {
+            outline: none;
+            border-color: #004578;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        
+        .controls {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .answer-container {
+            background: #d4edda;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #28a745;
+        }
+        
+        .answer-container h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-left: 4px solid #28a745;
+        }
+        
+        .explanation {
+            background: #e2f0fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .explanation h4 {
+            color: #004578;
+            margin-bottom: 10px;
+        }
+        
+        .azure-logo {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .azure-logo span {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .cosmos-diagram {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .cosmos-diagram img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .diagram-caption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .question-container {
+                padding: 15px;
+            }
+            
+            .config-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .config-label {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .config-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Cosmos DB 配置测试</h1>
+            <p>Topic 6, Coho Winery - LabelMaker 应用程序数据存储</p>
+        </header>
+        
+        <div class="case-info">
+            <p><strong>案例背景：</strong> Coho Winery 计划将其 LabelMaker 应用程序迁移到 Azure。该应用程序需要满足高度可扩展性、弹性、数据存储和安全性要求。订单数据存储为非关系型 JSON 格式，必须使用 SQL 查询。</p>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-box">
+                <div class="question-title">
+                    <i>📝</i>
+                    <h2>试题内容</h2>
+                </div>
+                <div class="question-content">
+                    <p><strong>问题：</strong> 您需要配置 Azure Cosmos DB。应该使用哪些设置？</p>
+                    <div class="azure-logo">
+                        <span>Azure Cosmos DB 配置</span>
+                    </div>
+                    
+                    <div class="cosmos-diagram">
+                        <div style="display:inline-block;background:#f0f8ff;padding:15px;border-radius:10px;text-align:left">
+                            <div>1. 订单数据存储为非关系型 JSON</div>
+                            <div>2. 必须使用 SQL 查询数据</div>
+                            <div>3. 所有分区必须立即反映数据更改</div>
+                            <div>4. 所有读取必须获取最新的写入</div>
+                        </div>
+                        <div class="diagram-caption">Coho Winery 数据要求</div>
+                    </div>
+                </div>
+                
+                <div class="configuration-container">
+                    <div class="config-item">
+                        <div class="config-label">一致性级别 (Consistency Level):</div>
+                        <select class="config-select" id="consistency-level">
+                            <option value="">-- 请选择一致性级别 --</option>
+                            <option value="Strong">Strong (强一致性)</option>
+                            <option value="Bounded-staleness">Bounded-staleness (有限过期一致性)</option>
+                            <option value="Session">Session (会话一致性)</option>
+                            <option value="Eventual">Eventual (最终一致性)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div class="config-label">API:</div>
+                        <select class="config-select" id="api-type">
+                            <option value="">-- 请选择 API 类型 --</option>
+                            <option value="SQL">SQL (Core)</option>
+                            <option value="MongoDB">MongoDB</option>
+                            <option value="Graph">Graph (Gremlin)</option>
+                            <option value="Table">Table</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn" id="check-answer">查看答案</button>
+                </div>
+                
+                <div class="answer-container" id="answer-section">
+                    <h3>正确答案及解析</h3>
+                    <div class="correct-answer">
+                        <span style="color:#28a745">✓ 正确答案：</span>
+                        <ul>
+                            <li><strong>一致性级别 (Consistency Level): Strong (强一致性)</strong></li>
+                            <li><strong>API: SQL (Core)</strong></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h4>解析说明：</h4>
+                        <p>根据Coho Winery案例的数据要求：</p>
+                        <p><strong>"Order data is stored as nonrelational JSON and must be queried using SQL."</strong></p>
+                        <p><strong>"Changes to the Order data must reflect immediately across all partitions. All reads must fetch the most recent writes."</strong></p>
+                        
+                        <p><strong>1. 一致性级别选择 Strong 的原因：</strong></p>
+                        <p>强一致性确保所有读取操作都能获取最新的写入结果，满足"所有读取必须获取最新的写入"的要求。其他选项：</p>
+                        <ul>
+                            <li><strong>Bounded-staleness</strong>：允许数据在有限时间内过期，不满足立即反映更改的要求</li>
+                            <li><strong>Session</strong>：仅保证单个会话内的读写一致性</li>
+                            <li><strong>Eventual</strong>：最终一致性可能导致读取旧数据</li>
+                        </ul>
+                        
+                        <p><strong>2. API 选择 SQL 的原因：</strong></p>
+                        <p>SQL API（也称为Core API）支持使用SQL语法查询JSON文档，完全符合"必须使用SQL查询数据"的要求。其他选项：</p>
+                        <ul>
+                            <li><strong>MongoDB</strong>：使用MongoDB查询语法，不符合SQL查询要求</li>
+                            <li><strong>Graph</strong>：用于图形数据，不适合JSON文档查询</li>
+                            <li><strong>Table</strong>：用于键值存储，不支持SQL查询</li>
+                        </ul>
+                        
+                        <p><strong>实现建议：</strong></p>
+                        <pre>// 创建Cosmos DB账户时设置
+az cosmosdb create \
+  --name cohowinery-db \
+  --resource-group coho-rg \
+  --locations regionName=eastus \
+  --default-consistency-level Strong \
+  --enable-multiple-write-locations true \
+  --kind GlobalDocumentDB \
+  --capabilities EnableServerless</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                const consistencyLevel = document.getElementById('consistency-level').value;
+                const apiType = document.getElementById('api-type').value;
+                
+                // 显示答案区域
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    </script>
+</body>
+</html>

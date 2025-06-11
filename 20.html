@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD 应用程序清单配置测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        .question-header {
+            background: #e3f2fd;
+            padding: 20px 30px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        .question-header h2 {
+            color: #0d47a1;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        .question-header h2 i {
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .content {
+            padding: 35px;
+        }
+        .question-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        .question-content p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            color: #2c3e50;
+        }
+        .requirements {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 1px solid #90caf9;
+        }
+        .requirements h4 {
+            color: #0d47a1;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .requirements h4 i {
+            margin-right: 12px;
+        }
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+        .requirement-item i {
+            color: #1a2980;
+            margin-right: 15px;
+            font-size: 24px;
+            min-width: 30px;
+        }
+        .requirement-content {
+            flex: 1;
+        }
+        .requirement-content h5 {
+            color: #1a2980;
+            margin-bottom: 8px;
+            font-size: 19px;
+        }
+        .code-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: auto;
+            font-size: 18px;
+        }
+        .code-line {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .line-number {
+            position: absolute;
+            left: 0;
+            color: #6a9955;
+            width: 40px;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .code-keyword {
+            color: #569cd6;
+        }
+        .code-string {
+            color: #ce9178;
+        }
+        .code-comment {
+            color: #6a9955;
+        }
+        .code-select {
+            background: rgba(255, 255, 255, 0.836);
+            border: 1px solid #569cd6;
+            color: #080800;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 16px;
+            width: 200px;
+            margin: 0 5px;
+        }
+        .code-select:focus {
+            outline: none;
+            border-color: #26d0ce;
+            box-shadow: 0 0 0 2px rgba(38, 208, 206, 0.3);
+        }
+        .highlight-line {
+            background: rgba(255, 215, 0, 0.15);
+            border-left: 3px solid #ffc107;
+            padding-left: 17px;
+            margin-left: -20px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(26, 41, 128, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(26, 41, 128, 0.7);
+        }
+        button:active {
+            transform: translateY(2px);
+        }
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        button:hover::after {
+            transform: rotate(30deg) translate(50%, 50%);
+        }
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+            border-left: 6px solid #4caf50;
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .answer-container h3 {
+            color: #2e7d32;
+            margin-bottom: 25px;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-container h3 i {
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        .correct-answer {
+            color: #4caf50;
+            font-weight: bold;
+            margin: 20px 0;
+            font-size: 22px;
+            padding: 15px;
+            background: rgba(76, 175, 80, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .correct-answer i {
+            margin-right: 15px;
+            font-size: 26px;
+        }
+        .explanation {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fffde7;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+        }
+        .explanation h4 {
+            color: #f57f17;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation h4 i {
+            margin-right: 12px;
+        }
+        .explanation ul {
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+        .explanation li {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 18px;
+        }
+        .explanation li strong {
+            color: #1a2980;
+        }
+        .highlight {
+            background: rgba(255, 215, 0, 0.25);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #5a6268;
+            font-size: 16px;
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+        }
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            .code-container {
+                padding: 15px;
+                font-size: 16px;
+            }
+            .code-select {
+                width: 150px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure AD 应用程序清单配置测试题</h1>
+            <p class="subtitle">QUESTION NO: 20 HOTSPOT - optionalClaims 配置</p>
+        </header>
+        
+        <div class="question-header">
+            <h2><i class="fas fa-code"></i> 问题20：配置应用程序清单以满足内容审查要求</h2>
+        </div>
+        
+        <div class="content">
+            <div class="question-content">
+                <p><i class="fas fa-info-circle"></i> 您需要在应用程序清单的第AM10行添加代码，以确保满足手动审查内容的要求。</p>
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>注意：</strong> 每个正确选择得1分。</p>
+                
+                <div class="requirements">
+                    <h4><i class="fas fa-clipboard-list"></i> 配置要求</h4>
+                    <div class="requirement-item">
+                        <i class="fas fa-user-shield"></i>
+                        <div class="requirement-content">
+                            <h5>内容审查需求</h5>
+                            <p>应用程序需要支持手动审查用户生成的内容</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-id-card"></i>
+                        <div class="requirement-content">
+                            <h5>用户标识信息</h5>
+                            <p>审查过程需要获取用户的唯一标识信息</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-lock"></i>
+                        <div class="requirement-content">
+                            <h5>安全声明</h5>
+                            <p>需要配置<span class="highlight">optionalClaims</span>字段以包含必要的用户声明</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-container">
+                <pre>
+AM01 {
+AM02   "id": "2b079f03-9b06-2d44-98bb-e9182901fc6b",
+AM03   "appId": "7118a7f0-b5c2-4c9d-833c-3d711396fe65",
+AM04   
+AM05   "createdDateTime": "2019-12-24T06:01:44Z",
+AM06   "logoUrl": null,
+AM07   "logoutUrl": null,
+AM08   "name": "ContentAnalysisservice",
+AM09   
+AM10   "optionalClaims": [
+       "<select id="claim1" class="code-select">
+                            <option value="">-- 选择声明 --</option>
+                            <option value="acct">acct</option>
+                            <option value="plattf">plattf</option>
+                            <option value="sid">sid</option>
+                            <option value="tenant_ctry">tenant_ctry</option>
+                        </select>",
+       "<select id="claim2" class="code-select">
+                            <option value="">-- 选择声明 --</option>
+                            <option value="sid">sid</option>
+                            <option value="upn">upn</option>
+                            <option value="email">email</option>
+                            <option value="enfpolids">enfpolids</option>
+                        </select>"
+       ],
+AM11   "orgRestrictions": [],
+AM12   "parentalControlSettings": {
+AM13     "countriesBlockedForMinors": [],
+AM14     "legalAgeGroupRule": "Allow"
+AM15   },
+AM16   "passwordCredentials": [],
+AM17 }</pre>
+            </div>
+                
+                <div class="requirements">
+                    <h4><i class="fas fa-lightbulb"></i> optionalClaims 声明说明</h4>
+                    <div class="requirement-item">
+                        <i class="fas fa-question-circle"></i>
+                        <div class="requirement-content">
+                            <h5>声明类型解释</h5>
+                            <p>可选声明（optionalClaims）允许应用程序在令牌中请求标准声明未包含的附加声明</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-id-badge"></i>
+                        <div class="requirement-content">
+                            <h5>常用声明</h5>
+                            <p><strong>sid</strong> - 安全标识符（Security Identifier），用户的唯一安全标识</p>
+                            <p><strong>upn</strong> - 用户主体名称（User Principal Name），用户的登录ID</p>
+                            <p><strong>email</strong> - 用户的电子邮件地址</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button id="show-answer">
+                    <i class="fas fa-key"></i> 查看答案与解析
+                </button>
+            </div>
+            
+            <div class="answer-container" id="answer-section">
+                <h3><i class="fas fa-check-circle"></i> 正确答案及解析</h3>
+                
+                <div class="answer-content">
+                    <p class="correct-answer">
+                        <i class="fas fa-check"></i> 
+                        正确配置：第一个声明 - <strong>sid</strong>, 第二个声明 - <strong>email</strong>
+                    </p>
+                    
+                    <div class="explanation">
+                        <h4><i class="fas fa-lightbulb"></i> 解析：</h4>
+                        <p>为了满足手动审查内容的需求，应用程序需要获取能够唯一标识用户的声明：</p>
+                        
+                        <ul>
+                            <li>
+                                <strong>sid (安全标识符)</strong>
+                                <ul>
+                                    <li>唯一标识用户的身份</li>
+                                    <li>在Azure AD中保持不变，即使用户更改了用户名或电子邮件</li>
+                                    <li>提供可靠的用户追踪能力</li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <strong>email (电子邮件)</strong>
+                                <ul>
+                                    <li>通常是用户的电子邮件地址格式</li>
+                                    <li>提供人类可读的用户标识</li>
+                                    <li>便于管理员识别用户</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>upn (用户主体名称)</strong>
+                                <ul>
+                                    <li>直接满足审计要求："All completed reviews must include the reviewer’s email address"</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                        <p>这两个声明组合使用可以：</p>
+                        <ul>
+                            <li>在审查系统中准确关联内容与用户</li>
+                            <li>提供技术标识(sid)和可读标识(upn)</li>
+                            <li>满足安全审计要求</li>
+                        </ul>
+                        
+                        <h4><i class="fas fa-times-circle"></i> 其他选项分析：</h4>
+                        <ul>
+                            <li><strong>acct</strong> - 账户状态信息，不直接标识用户</li>
+                            <li><strong>plattf</strong> - 平台信息，与用户标识无关</li>
+                            <li><strong>tenant_ctry</strong> - 租户国家/地区信息</li>
+                            <li><strong>email</strong> - 直接满足审计要求："All completed reviews must include the reviewer’s email address"</li>
+                            <li><strong>enfpolids</strong> - 强制执行策略ID，与用户标识无关</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="explanation" style="background: #e3f2fd; border-left: 5px solid #2196f3;">
+                        <h4><i class="fas fa-code"></i> 完整配置示例</h4>
+                        <div class="code-container">
+                            <div class="code-line">
+                                <span class="line-number">AM10</span>
+                                &nbsp;&nbsp;<span class="code-string">"optionalClaims"</span>: <span class="code-keyword">[</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">AM11</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"sid"</span>,
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">AM12</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"upn"</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">AM13</span>
+                                &nbsp;&nbsp;<span class="code-keyword">]</span>,
+                            </div>
+                        </div>
+                        <p>此配置确保在访问令牌中包含用户的SID和UPN声明，使内容审查系统能够准确识别内容创建者。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Azure AD 应用程序清单配置测试题 | 基于AZ-203学习知识库 | 版权所有 © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const showAnswerButton = document.getElementById('show-answer');
+            const answerSection = document.getElementById('answer-section');
+            const claim1Select = document.getElementById('claim1');
+            const claim2Select = document.getElementById('claim2');
+            
+            // 显示答案按钮
+            showAnswerButton.addEventListener('click', function() {
+                // 设置正确答案
+                claim1Select.value = 'sid';
+                claim2Select.value = 'email';
+                
+                // 显示答案区域
+                answerSection.style.display = 'block';
+                
+                // 添加动画效果
+                this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
+                this.style.background = 'linear-gradient(135deg, #4caf50, #2e7d32)';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

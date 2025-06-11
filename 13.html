@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 测试题 - 函数绑定配置</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            background: #004080;
+            padding: 12px 20px;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #222;
+            font-weight: 600;
+        }
+        
+        .code-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .code-line {
+            display: flex;
+            margin: 10px 0;
+        }
+        
+        .line-number {
+            color: #3498db;
+            min-width: 50px;
+            font-weight: bold;
+            user-select: none;
+        }
+        
+        .code-select {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .dropdown-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .dropdown-box {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .dropdown-box h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+        
+        .dropdown {
+            width: 50%;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:hover {
+            border-color: #1a5276;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .dropdown:focus {
+            outline: none;
+            border-color: #1a5276;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .requirements {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 5px solid #0dcaf0;
+        }
+        
+        .requirements h3 {
+            color: #005a9e;
+            margin-bottom: 15px;
+        }
+        
+        .requirements ul {
+            padding-left: 25px;
+        }
+        
+        .requirements li {
+            margin-bottom: 10px;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+        
+        .btn {
+            background: #005a9e;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 90, 158, 0.3);
+        }
+        
+        .btn:hover {
+            background: #004080;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 90, 158, 0.4);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #0dcaf0;
+            display: none;
+        }
+        
+        .answer-title {
+            color: #005a9e;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .answer-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .explanation h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        
+        .conclusion {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question {
+                font-size: 18px;
+            }
+            
+            .dropdown-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AZ-204 认证考试练习题</h1>
+            <div class="question-info">
+                <span>题目编号: 13</span>
+                <span>分值: 1 分</span>
+                <span>主题: Azure Functions 绑定配置</span>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="question">
+                QUESTION NO: 13<br>
+                You need to implement the bindings for the CheckUserContent function.<br>
+                How should you complete the code segment?
+            </div>
+            
+            <div class="requirements">
+                <h3>需求背景</h3>
+                <ul>
+                    <li>用户上传内容到Blob存储后需要触发内容检查</li>
+                    <li>必须创建名为CheckUserContent的Azure函数</li>
+                    <li>函数需要访问上传的内容进行分析</li>
+                    <li>分析结果需要持久化存储</li>
+                    <li>必须最小化Azure服务成本</li>
+                    <li>所有服务调用必须使用Azure AD认证</li>
+                </ul>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-line"><span class="line-number">01</span>public static class CheckUserContent</div>
+                <div class="code-line"><span class="line-number">02</span>{</div>
+                <div class="code-line"><span class="line-number">03</span>    [FunctionName("CheckUserContent")]</div>
+                <div class="code-line"><span class="line-number">04</span>    public static void Run(</div>
+                <div class="code-line"><span class="line-number">05</span>        <select id="binding1" class="dropdown">
+                        <option value="">-- 选择绑定类型 --</option>
+                        <option value="queuetrigger">[QueueTrigger("userContent")]</option>
+                        <option value="blobtrigger">[BlobTrigger("userContent/{name}")]</option>
+                        <option value="cosmosdbtrigger">[CosmosDBTrigger("content","userContent")]</option>
+                        <option value="table">[Table("content","userContent","{name}")]</option>
+                    </select> string content,</div>
+                <div class="code-line"><span class="line-number">06</span>        <select id="binding2" class="dropdown">
+                        <option value="">-- 选择绑定类型 --</option>
+                        <option value="queue">[Queue("userContent")]</option>
+                        <option value="cosmos">[CosmosDB("content", "userContent")]</option>
+                        <option value="table">[Table("content","userContent","{name}")]</option>
+                        <option value="blob">[Blob("userContent/{name}", FileAccess.Write)]</option>
+                    </select> Stream output)</div>
+                <div class="code-line"><span class="line-number">07</span>    {</div>
+                <div class="code-line"><span class="line-number">08</span>        // 内容分析逻辑</div>
+                <div class="code-line"><span class="line-number">09</span>    }</div>
+                <div class="code-line"><span class="line-number">10</span>}</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" onclick="showAnswer()">查看答案</button>
+            </div>
+            
+            <div class="answer-section" id="answerSection">
+                <div class="answer-title">
+                    <span>答案与解析</span>
+                </div>
+                
+                <div class="correct-answer">正确答案: 
+                    <br>绑定1: [BlobTrigger("userContent/{name}")] string content
+                    <br>绑定2: [Blob("userContent/{name}", FileAccess.Write)] Stream output
+                </div>
+                
+                <div class="explanation">
+                    <h3>详细解析:</h3>
+                    
+                    <p><strong>完整代码实现：</strong></p>
+                    <pre>public static class CheckUserContent
+{
+    [FunctionName("CheckUserContent")]
+    public static void Run(
+        [BlobTrigger("userContent/{name}")] string content,
+        [Blob("userContent/{name}", FileAccess.Write)] Stream output,
+        ILogger log)
+    {
+        // 1. 分析内容
+        var analysisResult = ContentAnalysisService.Analyze(content);
+        
+        // 2. 如果内容不合适，写入拒绝消息
+        if (analysisResult.NeedsReview)
+        {
+            using (var writer = new StreamWriter(output))
+            {
+                writer.Write("此内容已被标记为需要审核");
+            }
+        }
+    }
+}</pre>
+                    
+                    <p><strong>绑定配置原理：</strong></p>
+                    
+                    <p><strong>1. BlobTrigger绑定：</strong></p>
+                    <ul>
+                        <li>当用户上传新内容到"userContent"容器时自动触发函数</li>
+                        <li>使用{name}通配符捕获文件名</li>
+                        <li>绑定到string content参数获取文件内容</li>
+                        <li>符合"上传后立即触发检查"的需求</li>
+                        <li>成本最低的触发方式（无额外服务）</li>
+                    </ul>
+                    
+                    <p><strong>2. Blob输出绑定：</strong></p>
+                    <ul>
+                        <li>允许函数修改原始Blob内容</li>
+                        <li>当内容需要审核时，替换为拒绝消息</li>
+                        <li>使用Stream参数提供高效写入能力</li>
+                        <li>满足"分析结果需要持久化存储"的要求</li>
+                    </ul>
+                    
+                    <p><strong>为什么不是其他选项？</strong></p>
+                    
+                    <p><strong>QueueTrigger：</strong></p>
+                    <ul>
+                        <li>需要额外步骤将上传事件加入队列</li>
+                        <li>增加系统复杂性和成本（需要队列服务）</li>
+                        <li>BlobTrigger更直接高效</li>
+                    </ul>
+                    
+                    <p><strong>CosmosDBTrigger：</strong></p>
+                    <ul>
+                        <li>适用于文档数据库变更</li>
+                        <li>但用户内容存储在Blob中，不是CosmosDB</li>
+                        <li>增加不必要的数据库成本</li>
+                    </ul>
+                    
+                    <p><strong>Table绑定：</strong></p>
+                    <ul>
+                        <li>适合结构化数据存储</li>
+                        <li>但无法直接修改原始Blob内容</li>
+                        <li>不符合"替换内容"的需求</li>
+                    </ul>
+                    
+                    <div class="conclusion">
+                        结论：BlobTrigger + Blob输出绑定是最佳组合，直接响应上传事件并修改内容，满足所有业务需求且成本最低。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>AZ-204 认证考试练习题 &copy; 2023 | 基于Topic2文档内容</p>
+        </footer>
+    </div>
+
+    <script>
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+            
+            // 设置正确答案
+            document.getElementById('binding1').value = 'blobtrigger';
+            document.getElementById('binding2').value = 'blob';
+            
+            // 滚动到答案部分
+            document.getElementById('answerSection').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

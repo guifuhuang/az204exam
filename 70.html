@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 网站配置测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #005a9e;
+        }
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-left: 5px solid #0078d4;
+            padding-left: 15px;
+        }
+        .scenario {
+            background: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .scenario h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        .requirements {
+            background: #fff8e6;
+            border-left: 4px solid #ffb900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirements h3 {
+            color: #d68500;
+            margin-bottom: 10px;
+        }
+        .problem {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .problem h3 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+        .options-section {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .options-section h2 {
+            color: #0078d4;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            border-color: #0078d4;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        .option.selected {
+            border-color: #0078d4;
+            background-color: #e3f2fd;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .option-content {
+            flex-grow: 1;
+        }
+        .button-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .answer-section {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+            border-top: 2px dashed #0078d4;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        .answer-content h3 {
+            color: #0078d4;
+            margin: 15px 0 10px;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation {
+            background: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 网站配置测试题</h1>
+            <p>Topic 8: Munson's Pickles and Preserves Farm</p>
+        </header>
+        
+        <div class="question-section">
+            <h2>问题 70: 配置企业网站的所有站点设置</h2>
+            
+            <div class="scenario">
+                <h3>场景描述</h3>
+                <p>Munson's Pickles and Preserves Farm 正在将企业网站迁移到 Azure App Service。迁移需要满足特定的安全要求，包括集中存储和保护所有站点设置。</p>
+            </div>
+            
+            <div class="requirements">
+                <h3>配置要求</h3>
+                <ul>
+                    <li>集中存储和保护所有站点设置，不使用密钥</li>
+                    <li>静态和传输中的设置必须加密</li>
+                    <li>使用 Azure 资源的托管标识进行 Microsoft Entra 身份验证</li>
+                    <li>应用最小权限原则</li>
+                </ul>
+            </div>
+            
+            <div class="problem">
+                <h3>当前挑战</h3>
+                <p>开发人员在本地调试期间报告了 Service Bus 身份验证错误，需要确保配置的安全性和集中管理。</p>
+            </div>
+        </div>
+        
+        <div class="options-section">
+            <h2>请选择三个正确的操作（多选）</h2>
+            
+            <div class="option" data-value="A">
+                <div class="option-letter">A</div>
+                <div class="option-content">
+                    <p>创建托管标识</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="B">
+                <div class="option-letter">B</div>
+                <div class="option-content">
+                    <p>更新 Azure App Configuration 存储的角色分配</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="C">
+                <div class="option-letter">C</div>
+                <div class="option-content">
+                    <p>创建 Azure Key Vault</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="D">
+                <div class="option-letter">D</div>
+                <div class="option-content">
+                    <p>创建 Azure App Configuration 存储</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="E">
+                <div class="option-letter">E</div>
+                <div class="option-content">
+                    <p>更新 Azure Key Vault 的角色分配</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2>正确答案与解析</h2>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案: A, D, B</h3>
+                    <p>创建托管标识，创建 Azure App Configuration 存储，更新 Azure App Configuration 存储的角色分配</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析:</h3>
+                    <p>此解决方案满足所有配置要求：</p>
+                    
+                    <ul>
+                        <li><span class="highlight">创建托管标识 (A)</span> 实现无密钥访问，满足"不使用密钥"的要求</li>
+                        <li><span class="highlight">创建 Azure App Configuration 存储 (D)</span> 提供集中存储设置的能力</li>
+                        <li><span class="highlight">更新 Azure App Configuration 存储的角色分配 (B)</span> 应用最小权限原则，确保安全访问</li>
+                    </ul>
+                    
+                    <p>为什么选择此方案：</p>
+                    <ul>
+                        <li>Azure App Configuration 专门设计用于集中管理应用程序设置</li>
+                        <li>托管标识提供安全的无密钥身份验证，符合"使用托管标识"的要求</li>
+                        <li>角色分配确保只有授权资源可以访问配置</li>
+                        <li>App Configuration 自动加密静态和传输中的数据</li>
+                    </ul>
+                    
+                    <p>为什么其他选项不正确：</p>
+                    <ul>
+                        <li><strong>C 和 E (Key Vault 相关)</strong>：Key Vault 用于存储密钥和密码，而文档要求"不使用密钥"存储站点设置</li>
+                        <li>Key Vault 更适合存储敏感凭证，而不是常规应用配置</li>
+                        <li>文档明确要求"集中存储和保护所有站点设置"，App Configuration 是更合适的服务</li>
+                    </ul>
+                    
+                    <p>此方案的优势：</p>
+                    <ul>
+                        <li>完全符合"集中存储和保护所有站点设置，不使用密钥"的核心要求</li>
+                        <li>解决开发人员本地调试期间的身份验证错误</li>
+                        <li>支持应用最小权限原则</li>
+                        <li>简化配置管理和部署流程</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 认证模拟测试题</p>
+        </footer>
+    </div>
+
+    <script>
+        // 选项选择逻辑
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // 查看答案逻辑
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

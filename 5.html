@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 解决方案架构师考试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d7, #00a4ef, #0078d7);
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .question-box {
+            padding: 25px 30px;
+            background: #f0f8ff;
+            border-bottom: 1px solid #d0e8ff;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #004578;
+        }
+        
+        .note {
+            background: #fff4ce;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 15px;
+            border-left: 4px solid #ffb900;
+        }
+        
+        .options-container {
+            padding: 20px 30px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .option:hover {
+            background: #e6f7ff;
+            border-color: #0078d7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option.selected {
+            background: #dff6dd;
+            border-color: #107c10;
+        }
+        
+        .option-label {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #0078d7;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-top: 1px solid #d0e8ff;
+        }
+        
+        .control-btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+        
+        .control-btn:hover {
+            background: #0066b4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .answer-section {
+            background: #e6f7ff;
+            padding: 30px;
+            display: none;
+        }
+        
+        .answer-title {
+            color: #0078d7;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00a4ef;
+        }
+        
+        .correct-answer {
+            background: #dff6dd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #107c10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .answer-icon {
+            font-size: 28px;
+            color: #107c10;
+            flex-shrink: 0;
+        }
+        
+        .answer-content {
+            flex: 1;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .explanation h3 {
+            color: #005a9e;
+            margin-bottom: 15px;
+        }
+        
+        .explanation p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .requirements {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        
+        .requirements h4 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        
+        .requirements ul {
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .question-box, .options-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .option {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 解决方案架构师考试题</h1>
+            <p>QUESTION NO: 5</p>
+        </header>
+        
+        <div class="question-box">
+            <div class="question-text">
+                您需要满足航运逻辑应用（Shipping Logic App）的要求。<br>
+                您应该使用什么？
+            </div>
+            
+            <div class="note">
+                <strong>案例背景：</strong> 将本地航运应用程序迁移到Azure，需要支持X12消息格式，保护资源到企业VNet，使用专用存储资源，并维护本地连接。
+            </div>
+        </div>
+        
+        <div class="options-container">
+            <div class="option" data-value="A">
+                <div class="option-label">A</div>
+                <div class="option-text">Azure Active Directory 应用程序代理 (Azure Active Directory Application Proxy)</div>
+            </div>
+            
+            <div class="option" data-value="B">
+                <div class="option-label">B</div>
+                <div class="option-text">点对点 (P2S) VPN 连接 (Point-to-Site (P2S) VPN connection)</div>
+            </div>
+            
+            <div class="option" data-value="C">
+                <div class="option-label">C</div>
+                <div class="option-text">站点到站点 (S2S) VPN 连接 (Site-to-Site (S2S) VPN connection)</div>
+            </div>
+            
+            <div class="option" data-value="D">
+                <div class="option-label">D</div>
+                <div class="option-text">本地数据网关 (On-premises Data Gateway)</div>
+            </div>
+        </div>
+        
+        <div class="requirements">
+            <h4>航运逻辑应用要求：</h4>
+            <ul>
+                <li>支持海洋运输和内陆运输工作流</li>
+                <li>支持行业标准协议 X12 消息格式</li>
+                <li>将资源保护到企业 VNet，使用具有固定成本模型的专用存储资源</li>
+                <li>维护本地连接以支持遗留应用程序和最终的 BizTalk 迁移</li>
+            </ul>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="show-answer-btn">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">正确答案与解析</h2>
+            
+            <div class="correct-answer">
+                <div class="answer-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="answer-content">
+                    <strong>正确答案：D. 本地数据网关 (On-premises Data Gateway)</strong>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                
+                <p>根据航运逻辑应用的要求，特别是需要维护本地连接以支持遗留应用程序和BizTalk迁移，本地数据网关是最合适的解决方案：</p>
+                
+                <p><strong>1. 本地连接需求</strong>：文档中明确要求"维护本地连接以支持遗留应用程序和最终的BizTalk迁移"。本地数据网关专门用于在Azure服务（如Logic Apps）和本地资源之间建立安全连接。</p>
+                
+                <p><strong>2. Logic Apps集成</strong>：本地数据网关是Azure Logic Apps与本地系统集成的标准解决方案，支持各种协议和数据格式，包括文档中要求的X12消息格式。</p>
+                
+                <p><strong>3. 安全连接</strong>：数据网关提供安全的连接方式，满足"将资源保护到企业VNet"的要求，同时不需要暴露本地网络到公共互联网。</p>
+                
+                <p><strong>4. 与其他选项的对比：</strong></p>
+                <ul>
+                    <li><strong>A. Azure AD应用代理</strong>：主要用于安全地发布本地Web应用程序，不适合Logic Apps与本地系统的集成。</li>
+                    <li><strong>B. P2S VPN</strong>：适用于单个客户端连接到VNet，不适合服务器/服务之间的连接。</li>
+                    <li><strong>C. S2S VPN</strong>：虽然可以建立网络级连接，但不如数据网关轻量级和专门化，且成本更高。</li>
+                </ul>
+                
+                <p><strong>5. 成本考虑</strong>：本地数据网关使用固定成本模型，符合"使用专用存储资源与固定成本模型"的要求。</p>
+                
+                <p>因此，本地数据网关(D)是满足所有要求的最佳解决方案。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Azure 解决方案架构师考试模拟题 - 基于航运逻辑应用案例
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const options = document.querySelectorAll('.option');
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 添加选项选择事件
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除之前的选择
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 设置当前选择
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 查看答案按钮
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // 自动选择正确答案
+                options.forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.dataset.value === 'D') {
+                        option.classList.add('selected');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

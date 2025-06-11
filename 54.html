@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - 案例研究</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+        }
+        
+        .case-info {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-section {
+            flex: 1;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        
+        .config-table th, .config-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .config-table th {
+            background-color: #f1f6fd;
+            color: #1e3799;
+            font-weight: 600;
+            width: 40%;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #4a69bd;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #1e3799;
+            box-shadow: 0 0 0 3px rgba(30, 55, 153, 0.2);
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        .architecture {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .architecture h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        .arch-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arch-component {
+            background: #f1f6fd;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 150px;
+            font-weight: 500;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #4a69bd;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .arch-diagram {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: 零售店位置Azure函数配置</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>案例背景</h2>
+                <p>VanArsdel Ltd.是一家全球办公用品公司，总部位于加拿大，在全球设有零售店。公司正在开发多个基于云的解决方案，以支持其商店、分销商、供应商和配送服务。</p>
+                
+                <div class="requirements">
+                    <h3>零售店位置要求：</h3>
+                    <ul>
+                        <li>当数据上传到Blob存储时，Azure Functions必须立即处理数据</li>
+                        <li>Azure Functions必须使用本机SQL语言查询更新Azure Cosmos DB</li>
+                        <li>每晚审核商店销售交易信息以验证数据、处理销售财务和核对库存</li>
+                        <li>由于意外删除数据，必须执行零售店位置数据的时点恢复</li>
+                        <li>Azure Cosmos DB查询显示出高请求单位(RU)使用率，并且包含多个复杂查询，在函数应用扩展时对大项表现出高读取延迟</li>
+                    </ul>
+                </div>
+                
+                <div class="architecture">
+                    <h3>目标架构</h3>
+                    <div class="arch-diagram">
+                        <div class="arch-component">Blob 存储</div>
+                        <div class="arrow">→</div>
+                        <div class="arch-component">Trigger</div>
+                        <div class="arrow">→</div>
+                        <div class="arch-component">Azure Function</div>
+                        <div class="arrow">→</div>
+                        <div class="arch-component">Output</div>
+                        <div class="arrow">→</div>
+                        <div class="arch-component">Cosmos DB</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-section">
+                <div class="question-box">
+                    <h2>问题 54: 零售店位置Azure函数配置</h2>
+                    <p>您需要实现零售店位置的Azure Function。应该如何配置解决方案？在下方选择适当的选项。</p>
+                    
+                    <table class="config-table">
+                        <tr>
+                            <th>配置项</th>
+                            <th>值</th>
+                        </tr>
+                        <tr>
+                            <td>Binding</td>
+                            <td>
+                                <select id="binding">
+                                    <option value="">请选择...</option>
+                                    <option value="Blob storage">Blob storage</option>
+                                    <option value="Azure Cosmos DB">Azure Cosmos DB</option>
+                                    <option value="Event Grid">Event Grid</option>
+                                    <option value="HTTP">HTTP</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Binding Direction</td>
+                            <td>
+                                <select id="direction">
+                                    <option value="">请选择...</option>
+                                    <option value="Input">Input</option>
+                                    <option value="Output">Output</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Trigger</td>
+                            <td>
+                                <select id="trigger">
+                                    <option value="">请选择...</option>
+                                    <option value="Blob storage">Blob storage</option>
+                                    <option value="Azure Cosmos DB">Azure Cosmos DB</option>
+                                    <option value="Event Grid">Event Grid</option>
+                                    <option value="HTTP">HTTP</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div class="button-container">
+                        <button class="btn" onclick="showAnswer()">查看答案</button>
+                    </div>
+                </div>
+                
+                <div id="answerSection" class="answer-section">
+                    <h3>正确答案及说明</h3>
+                    <div class="answer-content">
+                        <div class="correct-answer">✓ Binding: Blob storage</div>
+                        <div class="correct-answer">✓ Binding Direction: Input</div>
+                        <div class="correct-answer">✓ Trigger: Blob storage</div>
+                        
+                        <div class="explanation">
+                            <p><strong>说明：</strong></p>
+                            <p>根据案例要求，Azure Functions需要在数据上传到Blob存储时立即触发处理，因此Trigger选择Blob storage。</p>
+                            <p>函数需要读取Blob存储中的数据，因此需要配置一个输入绑定（Input Binding）到Blob storage，所以Binding选择Blob storage，Binding Direction选择Input。</p>
+                            <p>这种配置满足以下要求：</p>
+                            <ul>
+                                <li>当数据上传到Blob存储时立即处理（通过Blob storage触发器实现）</li>
+                                <li>读取Blob存储中的数据（通过Blob storage输入绑定实现）</li>
+                                <li>实现高效的数据处理流程，为后续的Cosmos DB更新提供基础</li>
+                            </ul>
+                            <p><strong>文档依据：</strong></p>
+                            <p>Azure Functions文档明确指出：</p>
+                            <ul>
+                                <li>Blob存储触发器用于在blob添加或更新时启动函数</li>
+                                <li>Blob输入绑定用于在函数中读取blob存储数据</li>
+                                <li>对于更新Cosmos DB的需求，应使用Cosmos DB输出绑定（但本题配置的是输入处理部分）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | 云解决方案配置</p>
+        </footer>
+    </div>
+
+    <script>
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // 设置正确答案选项
+            document.getElementById('binding').value = 'Blob storage';
+            document.getElementById('direction').value = 'Input';
+            document.getElementById('trigger').value = 'Blob storage';
+        }
+    </script>
+</body>
+</html>

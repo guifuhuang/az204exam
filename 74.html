@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munson's Pickles - 错误解决方案测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #1e5630;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #5aaf70;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .question-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c7744;
+            background: #e8f5e9;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .question-type {
+            font-size: 18px;
+            font-weight: 600;
+            color: #5aaf70;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            padding: 0 15px;
+        }
+        
+        .solution-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .issue-column {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .column-header {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .farmers-header {
+            background: #e67e22;
+        }
+        
+        .distributors-header {
+            background: #3498db;
+        }
+        
+        .issue-description {
+            background: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .solution-select {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .solution-select:focus {
+            border-color: #5aaf70;
+            box-shadow: 0 0 0 3px rgba(92, 175, 112, 0.3);
+            outline: none;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(92, 175, 112, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(92, 175, 112, 0.4);
+        }
+        
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2c7744;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .answer-title {
+            color: #2c7744;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .correct-answer {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .solution-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .solution-item.correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .solution-header {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2c7744;
+        }
+        
+        .explanation {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px dashed #a5d6a7;
+        }
+        
+        .explanation h3 {
+            color: #2c7744;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .issue-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .solution-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0dcaf0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 16px;
+            background: #f8f9fa;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            .solution-container {
+                flex-direction: column;
+            }
+            
+            .solution-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Munson's Pickles and Preserves Farm</h1>
+            <p class="subtitle">Azure迁移项目 - 错误解决方案测试题</p>
+        </header>
+        
+        <div class="content">
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number">QUESTION NO: 74</div>
+                    <div class="question-type">HOTSPOT</div>
+                </div>
+                
+                <div class="question-text">
+                    <p>You need to correct the errors for farmers and distributors.</p>
+                    <p>Which solution should you use? To answer, select the appropriate options in the answer area.</p>
+                    <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+                </div>
+                
+                <div class="solution-container">
+                    <div class="issue-column">
+                        <div class="column-header farmers-header">Farmers' Errors</div>
+                        
+                        <div class="issue-description">
+                            <p>Farmers report HTTP 503 errors during high CPU/memory usage.</p>
+                            <p>这些错误发生在高CPU/内存使用期间，表示服务不可用。</p>
+                        </div>
+                        
+                        <label for="farmers-solution">选择解决方案:</label>
+                        <select class="solution-select" id="farmers-solution">
+                            <option value="">-- 请选择解决方案 --</option>
+                            <option value="Scale up the App Service plan to Premium">升级到高级App Service计划</option>
+                            <option value="Add an App Service staging deployment slot">添加App Service暂存部署槽</option>
+                            <option value="Configure the App Service Local Cache feature">配置App Service本地缓存功能</option>
+                            <option value="Create an Azure Content Delivery Network profile and endpoint">创建Azure CDN配置文件和端点</option>
+                        </select>
+                    </div>
+                    
+                    <div class="issue-column">
+                        <div class="column-header distributors-header">Distributors' Errors</div>
+                        
+                        <div class="issue-description">
+                            <p>Distributors report HTTP 502 errors during high response times and network traffic.</p>
+                            <p>这些错误发生在高响应时间和网络流量期间，表示网关错误。</p>
+                        </div>
+                        
+                        <label for="distributors-solution">选择解决方案:</label>
+                        <select class="solution-select" id="distributors-solution">
+                            <option value="">-- 请选择解决方案 --</option>
+                            <option value="Scale up the App Service plan to Premium">升级到高级App Service计划</option>
+                            <option value="Configure the App Service Local Cache feature">配置App Service本地缓存功能</option>
+                            <option value="Restart the application from the App Service portal">从App Service门户重启应用程序</option>
+                            <option value="Create a custom autoscale rule to increase the instance count">创建自定义自动缩放规则以增加实例数量</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="showAnswerBtn">查看答案</button>
+            </div>
+            
+            <div class="answer-container" id="answerContainer">
+                <h2 class="answer-title">正确答案与解析</h2>
+                
+                <div class="correct-answer">
+                    <p>正确解决方案:</p>
+                    <div class="solution-grid">
+                        <div class="solution-item correct">
+                            <div class="solution-header">Farmers' Errors:</div>
+                            <p>升级到高级App Service计划 (Scale up the App Service plan to Premium)</p>
+                        </div>
+                        <div class="solution-item correct">
+                            <div class="solution-header">Distributors' Errors:</div>
+                            <p>创建自定义自动缩放规则以增加实例数量 (Create a custom autoscale rule to increase the instance count)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>问题背景分析</h3>
+                    
+                    <div class="issue-box">
+                        <p><strong>农民的问题 (HTTP 503):</strong></p>
+                        <ul>
+                            <li>发生在高CPU/内存使用期间</li>
+                            <li>表示服务器资源不足，无法处理请求</li>
+                            <li>根本原因是计算资源不足</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="issue-box">
+                        <p><strong>分销商的问题 (HTTP 502):</strong></p>
+                        <ul>
+                            <li>发生在高响应时间和网络流量期间</li>
+                            <li>表示网关或代理服务器从上游服务器收到无效响应</li>
+                            <li>根本原因是后端实例无法处理高并发请求</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>解决方案解析</h3>
+                    
+                    <div class="solution-box">
+                        <p><strong>农民问题的解决方案:</strong> 升级到高级App Service计划</p>
+                        <ul>
+                            <li>HTTP 503错误直接与资源不足相关</li>
+                            <li>升级到高级计划提供更强的CPU和内存资源</li>
+                            <li>符合文档中"解决高CPU/内存使用问题"的要求</li>
+                            <li>提供专用资源，确保服务在高负载下可用</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-box">
+                        <p><strong>分销商问题的解决方案:</strong> 创建自定义自动缩放规则</p>
+                        <ul>
+                            <li>HTTP 502错误与实例过载相关</li>
+                            <li>自动缩放规则可根据流量动态增加实例数量</li>
+                            <li>完全符合文档中"应用程序必须自动独立于计算资源扩展"的要求</li>
+                            <li>在高流量期间自动增加实例，处理更多请求</li>
+                            <li>在流量减少时自动缩减实例，优化成本</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>为什么其他选项不正确？</h3>
+                    
+                    <p><strong>农民问题其他选项分析:</strong></p>
+                    <ul>
+                        <li><span class="highlight">添加部署槽</span>：用于蓝绿部署，不解决资源不足问题</li>
+                        <li><span class="highlight">配置本地缓存</span>：优化磁盘I/O，但不解决CPU/内存瓶颈</li>
+                        <li><span class="highlight">创建CDN</span>：加速静态内容，但对动态API请求无效</li>
+                    </ul>
+                    
+                    <p><strong>分销商问题其他选项分析:</strong></p>
+                    <ul>
+                        <li><span class="highlight">升级到高级计划</span>：纵向扩展，但无法处理流量突发（已用于农民问题）</li>
+                        <li><span class="highlight">配置本地缓存</span>：不解决实例不足问题</li>
+                        <li><span class="highlight">重启应用程序</span>：临时措施，不解决根本问题</li>
+                    </ul>
+                    
+                    <h3>实施建议</h3>
+                    <ul>
+                        <li>为农民API实施高级App Service计划（P2v2或更高）</li>
+                        <li>为分销商API配置基于CPU使用率或请求队列的自动缩放规则</li>
+                        <li>设置最小2个、最大10个实例的缩放范围</li>
+                        <li>监控错误率并调整缩放阈值</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 迁移解决方案测试</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 查看答案按钮
+            document.getElementById('showAnswerBtn').addEventListener('click', function() {
+                const answerContainer = document.getElementById('answerContainer');
+                answerContainer.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerContainer.scrollIntoView({ behavior: 'smooth' });
+                
+                // 更新按钮文本
+                this.textContent = '答案已显示';
+                this.disabled = true;
+                this.style.background = '#6c757d';
+            });
+        });
+    </script>
+</body>
+</html>

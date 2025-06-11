@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Management 身份验证策略配置</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #005a9e, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #ffcc00;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .question-info {
+            font-size: 18px;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        .question {
+            background: #e6f2ff;
+            padding: 25px;
+            border-bottom: 2px dashed #005a9e;
+        }
+        
+        .question h2 {
+            color: #005a9e;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .question h2 i {
+            color: #ff6b00;
+        }
+        
+        .question p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .settings-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: collapse;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .settings-table th {
+            background: #005a9e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .settings-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .settings-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .settings-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-weight: 600;
+            font-size: 18px;
+            color: #005a9e;
+        }
+        
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .custom-dropdown {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-dropdown:hover {
+            border-color: #005a9e;
+            background: #f0f8ff;
+        }
+        
+        .custom-dropdown:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0078d4;
+        }
+        
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 2px solid #0078d4;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dropdown-option:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-option:hover {
+            background: #e6f2ff;
+        }
+        
+        .dropdown-option.selected {
+            background: #d1e7ff;
+            font-weight: 600;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+            background: #f0f8ff;
+            border-top: 2px solid #005a9e;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 14px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        #check-btn {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
+            color: white;
+        }
+        
+        #check-btn:hover {
+            background: linear-gradient(to right, #45a049, #2a7a4f);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        
+        #reset-btn {
+            background: linear-gradient(to right, #f44336, #c62828);
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            background: linear-gradient(to right, #d32f2f, #b71c1c);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        
+        #show-answer-btn {
+            background: linear-gradient(to right, #2196F3, #0d47a1);
+            color: white;
+        }
+        
+        #show-answer-btn:hover {
+            background: linear-gradient(to right, #0b7dda, #0a3d91);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .answer-section {
+            padding: 30px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            margin: 25px;
+            display: none;
+            border: 3px solid #4CAF50;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .answer-section h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .correct-answer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .answer-row {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .answer-icon {
+            width: 50px;
+            height: 50px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .answer-content {
+            flex: 1;
+        }
+        
+        .answer-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #005a9e;
+            font-size: 20px;
+        }
+        
+        .answer-explanation {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .summary {
+            background: #d1e7dd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .summary h4 {
+            color: #0f5132;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+        
+        .summary li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .reference {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border-left: 5px solid #2196F3;
+        }
+        
+        .reference h4 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .reference a {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .reference a:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question {
+                padding: 20px 15px;
+            }
+            
+            .settings-table th, 
+            .settings-table td {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .controls {
+                padding: 20px 10px;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .answer-section {
+                margin: 15px;
+                padding: 20px;
+            }
+        }
+        
+        .highlight {
+            background-color: #fff9c4 !important;
+            animation: highlight 1.5s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: #fff9c4; }
+            100% { background-color: white; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>API Management 身份验证策略配置</h1>
+            <div class="question-info">QUESTION NO: 27 HOTSPOT</div>
+        </header>
+        
+        <div class="question">
+            <h2><i class="fas fa-lock"></i> 问题描述</h2>
+            <p>您需要为API Management配置身份验证策略。请选择适当的策略值。要回答问题，请在答案区域选择适当的选项。</p>
+            <p><strong>注意：</strong>每个正确选项得1分。</p>
+            
+            <table class="settings-table">
+                <thead>
+                    <tr>
+                        <th>设置 (Setting)</th>
+                        <th>值 (Value)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="setting-label">策略 (Policy)</td>
+                        <td>
+                            <div class="dropdown-container">
+                                <div class="custom-dropdown" id="policy-dropdown">请选择策略</div>
+                                <div class="dropdown-options" id="policy-options">
+                                    <div class="dropdown-option" data-value="check-header">Check HTTP header</div>
+                                    <div class="dropdown-option" data-value="restrict-ip">Restrict caller IPs</div>
+                                    <div class="dropdown-option" data-value="limit-rate">Limit call rate by key</div>
+                                    <div class="dropdown-option" data-value="validate-jwt">Validate JWT</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="setting-label">策略部分 (Policy section)</td>
+                        <td>
+                            <div class="dropdown-container">
+                                <div class="custom-dropdown" id="section-dropdown">请选择策略部分</div>
+                                <div class="dropdown-options" id="section-options">
+                                    <div class="dropdown-option" data-value="inbound">Inbound</div>
+                                    <div class="dropdown-option" data-value="outbound">Outbound</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="controls">
+            <button id="check-btn">
+                <i class="fas fa-check-circle"></i> 检查答案
+            </button>
+            <button id="reset-btn">
+                <i class="fas fa-redo"></i> 重置选择
+            </button>
+            <button id="show-answer-btn">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3><i class="fas fa-star"></i> 正确答案与解析</h3>
+            
+            <div class="correct-answer">
+                <div class="answer-row">
+                    <div class="answer-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="answer-content">
+                        <div class="answer-title">策略 (Policy): Validate JWT</div>
+                        <div class="answer-explanation">
+                            <p>对于身份验证，Validate JWT策略是最合适的选择。该策略用于验证传入请求中的JSON Web Token (JWT)，确保其有效性、签名和声明符合要求。</p>
+                            <p>其他选项：</p>
+                            <ul>
+                                <li><strong>Check HTTP header</strong>：用于检查HTTP头信息，但不直接处理身份验证</li>
+                                <li><strong>Restrict caller IPs</strong>：用于IP地址限制，属于访问控制而非身份验证</li>
+                                <li><strong>Limit call rate by key</strong>：用于速率限制，与身份验证无关</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="answer-row">
+                    <div class="answer-icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="answer-content">
+                        <div class="answer-title">策略部分 (Policy section): Inbound</div>
+                        <div class="answer-explanation">
+                            <p>身份验证策略应应用于入站(Inbound)策略部分，因为身份验证需要在请求进入API之前进行验证。</p>
+                            <p>策略部分说明：</p>
+                            <ul>
+                                <li><strong>Inbound</strong>：处理传入请求的策略，包括身份验证、验证、转换等</li>
+                                <li><strong>Outbound</strong>：处理传出响应的策略，如日志记录、响应转换等</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary">
+                <h4><i class="fas fa-clipboard-check"></i> 配置总结</h4>
+                <p>在API Management中配置身份验证策略时：</p>
+                <ul>
+                    <li>选择<strong>Validate JWT</strong>策略来验证JSON Web Token</li>
+                    <li>将策略应用于<strong>Inbound</strong>部分，确保在请求处理前完成身份验证</li>
+                    <li>配置JWT验证参数，包括颁发者(issuer)、受众(audience)、签名密钥等</li>
+                    <li>确保令牌包含必要的声明(claims)以进行授权决策</li>
+                    <li>正确处理验证失败的情况，返回适当的HTTP 401错误</li>
+                </ul>
+            </div>
+            
+            <div class="reference">
+                <h4><i class="fas fa-book"></i> 参考文档</h4>
+                <p><a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-access-restriction-policies#validate-jwt" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Microsoft文档 - 验证JWT策略
+                </a></p>
+                <p><a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> 使用Azure AD保护后端服务
+                </a></p>
+                <p><a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-policies" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> API Management策略参考
+                </a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取下拉元素
+            const policyDropdown = document.getElementById('policy-dropdown');
+            const policyOptions = document.getElementById('policy-options');
+            const policyOptionItems = policyOptions.querySelectorAll('.dropdown-option');
+            
+            const sectionDropdown = document.getElementById('section-dropdown');
+            const sectionOptions = document.getElementById('section-options');
+            const sectionOptionItems = sectionOptions.querySelectorAll('.dropdown-option');
+            
+            // 获取按钮
+            const checkBtn = document.getElementById('check-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 存储当前选择
+            let selectedPolicy = null;
+            let selectedSection = null;
+            
+            // 策略下拉框事件
+            policyDropdown.addEventListener('click', function() {
+                policyOptions.style.display = policyOptions.style.display === 'block' ? 'none' : 'block';
+                sectionOptions.style.display = 'none';
+            });
+            
+            // 策略部分下拉框事件
+            sectionDropdown.addEventListener('click', function() {
+                sectionOptions.style.display = sectionOptions.style.display === 'block' ? 'none' : 'block';
+                policyOptions.style.display = 'none';
+            });
+            
+            // 策略选项点击事件
+            policyOptionItems.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectedPolicy = this.getAttribute('data-value');
+                    policyDropdown.textContent = this.textContent;
+                    
+                    // 更新UI
+                    policyOptionItems.forEach(item => item.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    policyOptions.style.display = 'none';
+                });
+            });
+            
+            // 策略部分选项点击事件
+            sectionOptionItems.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectedSection = this.getAttribute('data-value');
+                    sectionDropdown.textContent = this.textContent;
+                    
+                    // 更新UI
+                    sectionOptionItems.forEach(item => item.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    sectionOptions.style.display = 'none';
+                });
+            });
+            
+            // 点击页面其他位置关闭下拉框
+            document.addEventListener('click', function(e) {
+                if (!policyDropdown.contains(e.target) && !policyOptions.contains(e.target)) {
+                    policyOptions.style.display = 'none';
+                }
+                
+                if (!sectionDropdown.contains(e.target) && !sectionOptions.contains(e.target)) {
+                    sectionOptions.style.display = 'none';
+                }
+            });
+            
+            // 检查答案按钮事件
+            checkBtn.addEventListener('click', function() {
+                if (!selectedPolicy || !selectedSection) {
+                    alert('请先选择策略和策略部分！');
+                    return;
+                }
+                
+                // 正确答案
+                const correctPolicy = 'validate-jwt';
+                const correctSection = 'inbound';
+                
+                // 检查答案
+                const isPolicyCorrect = selectedPolicy === correctPolicy;
+                const isSectionCorrect = selectedSection === correctSection;
+                
+                // 更新UI反馈
+                policyOptionItems.forEach(item => {
+                    item.classList.remove('highlight');
+                    if (item.getAttribute('data-value') === correctPolicy) {
+                        item.classList.add('highlight');
+                    }
+                });
+                
+                sectionOptionItems.forEach(item => {
+                    item.classList.remove('highlight');
+                    if (item.getAttribute('data-value') === correctSection) {
+                        item.classList.add('highlight');
+                    }
+                });
+                
+                // 显示结果
+                if (isPolicyCorrect && isSectionCorrect) {
+                    alert('恭喜！您的答案完全正确：身份验证策略配置正确。');
+                } else if (isPolicyCorrect && !isSectionCorrect) {
+                    alert('策略选择正确，但策略部分不正确。身份验证策略应应用于入站(Inbound)部分。');
+                } else if (!isPolicyCorrect && isSectionCorrect) {
+                    alert('策略部分选择正确，但策略不正确。身份验证应使用Validate JWT策略。');
+                } else {
+                    alert('答案不正确。请参考：身份验证应使用Validate JWT策略并应用于Inbound部分。');
+                }
+            });
+            
+            // 重置按钮事件
+            resetBtn.addEventListener('click', function() {
+                // 重置选择
+                selectedPolicy = null;
+                selectedSection = null;
+                
+                // 重置UI
+                policyDropdown.textContent = '请选择策略';
+                sectionDropdown.textContent = '请选择策略部分';
+                
+                policyOptionItems.forEach(item => {
+                    item.classList.remove('selected');
+                    item.classList.remove('highlight');
+                });
+                
+                sectionOptionItems.forEach(item => {
+                    item.classList.remove('selected');
+                    item.classList.remove('highlight');
+                });
+                
+                // 隐藏答案区域
+                answerSection.style.display = 'none';
+            });
+            
+            // 查看答案按钮事件
+            showAnswerBtn.addEventListener('click', function() {
+                // 显示答案区域
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({behavior: 'smooth'});
+                
+                // 自动选择正确答案
+                selectedPolicy = 'validate-jwt';
+                selectedSection = 'inbound';
+                
+                policyDropdown.textContent = 'Validate JWT';
+                sectionDropdown.textContent = 'Inbound';
+                
+                // 更新UI
+                policyOptionItems.forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.getAttribute('data-value') === 'validate-jwt') {
+                        item.classList.add('selected');
+                    }
+                });
+                
+                sectionOptionItems.forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.getAttribute('data-value') === 'inbound') {
+                        item.classList.add('selected');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

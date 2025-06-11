@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic 1: Windows Server 2016 虚拟机案例研究</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 20, 40, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid #4a69bd;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        .exam-info {
+            background: rgba(0, 40, 80, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px auto;
+            max-width: 800px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4a69bd;
+        }
+        h2 {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            font-size: 24px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #34495e;
+        }
+        h3 {
+            color: #78c0e0;
+            margin: 15px 0 10px;
+            font-size: 20px;
+        }
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        ul {
+            margin: 10px 0 15px 25px;
+        }
+        li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: rgba(30, 50, 80, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #3498db;
+        }
+        .card h3 {
+            color: #4fc3f7;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .highlight {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #e74c3c;
+        }
+        .api-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .api-item {
+            background: rgba(40, 60, 100, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #4a69bd;
+        }
+        .api-item h4 {
+            color: #78c0e0;
+            margin-bottom: 8px;
+        }
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .requirement {
+            background: rgba(30, 60, 90, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #3498db;
+        }
+        .requirement h4 {
+            color: #4fc3f7;
+            margin-bottom: 10px;
+        }
+        .issue-box {
+            background: rgba(100, 30, 30, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        .error-message {
+            font-family: 'Consolas', monospace;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #ff6b6b;
+            border: 1px solid #e74c3c;
+        }
+        .architecture-diagram {
+            background: #1e2a38;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .diagram-placeholder {
+            background: linear-gradient(135deg, #2c3e50, #1a2a6c);
+            height: 300px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 800px;
+            border: 2px dashed #4a69bd;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+        @media (max-width: 768px) {
+            .card {
+                min-width: 100%;
+            }
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Topic 1: Windows Server 2016 虚拟机案例研究</h1>
+            <p class="subtitle">将本地运输应用程序迁移到Azure的解决方案</p>
+            <div class="exam-info">
+                <p>案例研究不计时。您可以使用任意时间完成每个案例，但本考试可能包含其他案例研究和部分。您必须管理时间以确保在提供的时间内完成考试中的所有问题。</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2>当前环境</h2>
+                
+                <div class="card-container">
+                    <div class="card">
+                        <h3>Windows Server 2016 虚拟机</h3>
+                        <p>虚拟机(VM)运行BizTalk Server 2016，支持以下工作流：</p>
+                        <ul>
+                            <li><strong>海洋运输</strong> - 收集和验证集装箱信息，包括集装箱内容和各港口的到港通知</li>
+                            <li><strong>内陆运输</strong> - 收集和验证卡车运输信息，包括燃料使用、停靠点和路线</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>REST API</h3>
+                        <p>VM支持以下REST API调用：</p>
+                        <div class="api-list">
+                            <div class="api-item">
+                                <h4>Container API</h4>
+                                <p>提供集装箱信息，包括重量、内容和其他属性</p>
+                            </div>
+                            <div class="api-item">
+                                <h4>Location API</h4>
+                                <p>提供有关航运港口和跟踪站点的位置信息</p>
+                            </div>
+                            <div class="api-item">
+                                <h4>Shipping REST API</h4>
+                                <p>为航运网站提供航运信息</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>运输数据</h3>
+                <p>应用程序使用MongoDB JSON文档存储数据库存储所有集装箱和运输信息。</p>
+                
+                <h3>运输网站</h3>
+                <p>网站显示航运集装箱跟踪信息和集装箱内容，位于：<br>
+                <strong>http://shipping.wideworldimporters.com/</strong></p>
+            </div>
+            
+            <div class="section">
+                <h2>建议的解决方案</h2>
+                <p>本地运输应用程序必须迁移到Azure。VM已使用Azure Site Recovery迁移到新的Standard_D16s_v3 Azure VM，并且必须继续在Azure中运行以完成BizTalk组件迁移。</p>
+                
+                <div class="architecture-diagram">
+                    <h3>Azure架构图</h3>
+                    <div class="diagram-placeholder">
+                        <p>Azure解决方案架构图将显示在此处</p>
+                    </div>
+                </div>
+                
+                <div class="requirements-grid">
+                    <div class="requirement">
+                        <h4>运输逻辑应用要求</h4>
+                        <ul>
+                            <li>使用逻辑应用支持海洋运输和内陆运输工作流</li>
+                            <li>支持行业标准协议X12消息格式</li>
+                            <li>将资源保护到企业VNet</li>
+                            <li>使用具有固定成本模型的专用存储资源</li>
+                            <li>维护本地连接以支持旧版应用程序</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="requirement">
+                        <h4>运输功能应用要求</h4>
+                        <ul>
+                            <li>使用应用程序级安全性实现安全功能端点</li>
+                            <li>包含Azure Active Directory (Azure AD)集成</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="requirement">
+                        <h4>REST API要求</h4>
+                        <ul>
+                            <li>将资源保护到企业VNet</li>
+                            <li>允许部署到Azure中的测试位置而不产生额外成本</li>
+                            <li>在高峰运输时间自动扩展到双倍容量而不导致应用程序停机</li>
+                            <li>选择Azure支付模型时最小化成本</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="requirement">
+                        <h4>运输数据要求</h4>
+                        <ul>
+                            <li>从本地迁移到Azure的数据必须最小化成本和停机时间</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="requirement">
+                        <h4>运输网站要求</h4>
+                        <ul>
+                            <li>使用Azure内容分发网络(CDN)</li>
+                            <li>确保动态内容的最大性能</li>
+                            <li>最小化延迟和成本</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>问题</h2>
+                
+                <div class="issue-box">
+                    <h3>Windows Server 2016 VM问题</h3>
+                    <ul>
+                        <li>VM显示高网络延迟、抖动和高CPU利用率</li>
+                        <li>VM至关重要且过去未备份</li>
+                        <li>VM必须能够从7天快照快速恢复，包括在故障时进行磁盘就地恢复</li>
+                    </ul>
+                </div>
+                
+                <div class="issue-box">
+                    <h3>运输网站和REST API问题</h3>
+                    <p>测试网站时显示以下错误消息：</p>
+                    <div class="error-message">
+                        Failed to load http://test-shippingapi.wideworldimporters.com/:<br>
+                        No 'Access-Control-Allow-Origin' header is present on the requested resource.<br>
+                        Origin 'http://test.wideworldimporters.com/' is therefore not allowed access.
+                    </div>
+                    <p>此错误表明存在跨域资源共享(CORS)问题，需要配置API以允许来自测试网站的请求。</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>迁移挑战与解决方案</h2>
+                
+                <div class="card-container">
+                    <div class="card">
+                        <h3>数据迁移策略</h3>
+                        <ul>
+                            <li>使用Azure Database Migration Service进行MongoDB迁移</li>
+                            <li>实施分阶段迁移以减少停机时间</li>
+                            <li>使用Azure Cosmos DB的MongoDB API实现兼容性</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>性能优化</h3>
+                        <ul>
+                            <li>将VM升级到Standard_D16s_v4以获得更好性能</li>
+                            <li>使用Azure Premium SSD存储提高I/O性能</li>
+                            <li>配置Azure负载均衡器分配流量</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>成本控制</h3>
+                        <ul>
+                            <li>使用Azure预留实例节省VM成本</li>
+                            <li>为开发/测试环境使用Azure开发测试定价</li>
+                            <li>实施自动缩放以在非高峰时段缩减资源</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 1 案例研究 - Windows Server 2016 虚拟机 | Azure 解决方案</p>
+        </footer>
+    </div>
+</body>
+</html>

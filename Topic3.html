@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Topic 3: City Power & Light Case Study</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h1, h2, h3 { color: #2c3e50; }
+        .section { margin-bottom: 30px; }
+        .requirements, .issues { padding-left: 20px; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-bottom: 10px; }
+        .note { background-color: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; }
+        .code-block { 
+            background-color: #f5f5f5; 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 4px; 
+            overflow: auto; 
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+        }
+        .code-title { 
+            font-weight: bold; 
+            margin-bottom: 5px; 
+            color: #2c3e50;
+        }
+        .code-comment { color: #6a737d; }
+        .code-keyword { color: #d73a49; }
+        .code-type { color: #6f42c1; }
+        .code-string { color: #032f62; }
+    </style>
+</head>
+<body>
+    <h1>Topic 3: City Power & Light</h1>
+    
+    <div class="section">
+        <h2>Case Study</h2>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <div class="note">
+            <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Background</h2>
+        <p>City Power & Light company provides electrical infrastructure monitoring solutions for homes and businesses. The company is migrating solutions to Azure.</p>
+    </div>
+
+    <div class="section">
+        <h2>Current Environment</h2>
+        <h3>Architecture Overview</h3>
+        <ul>
+            <li>Public website: <code>http://www.cpandl.com/</code> (Single-page web app in Azure App Service on Linux)</li>
+            <li>Static content served via Azure Storage + Azure CDN</li>
+            <li>API Management + Azure Function App process/store data in Azure Database for PostgreSQL</li>
+            <li>Logic Apps for orchestration, Service Bus + Event Grid for messaging/events</li>
+            <li>Monitoring: Application Insights, Azure Monitor, Azure Key Vault</li>
+        </ul>
+        <p>The company plans to implement serverless computing where possible.</p>
+        
+        <h3>User Authentication Process</h3>
+        <ol>
+            <li>User selects "Sign in" on website</li>
+            <li>Browser redirects to Azure AD sign-in page</li>
+            <li>User signs in</li>
+            <li>Azure AD redirects session back to web app with access token in URL</li>
+            <li>Web app calls API with access token in authentication header</li>
+            <li>Back-end API validates access token</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        <div class="requirements">
+            <h3>Corporate Website</h3>
+            <ul>
+                <li>Communications/content secured with SSL</li>
+                <li>HTTPS required for communications</li>
+                <li>Data replicated to secondary region + three availability zones</li>
+                <li>Minimize data storage costs</li>
+            </ul>
+            
+            <h3>Azure Database for PostgreSQL</h3>
+            <ul>
+                <li>Connection string stored in Azure Key Vault:
+                    <ul>
+                        <li>Vault name: <code>cpandlkeyvault</code></li>
+                        <li>Secret name: <code>PostgreSQLConn</code></li>
+                        <li>ID: <code>80df3e46ffcd4f1cb187f79905e9a1e8</code></li>
+                    </ul>
+                </li>
+                <li>Application must always use latest connection info</li>
+            </ul>
+            
+            <h3>Azure Service Bus and Event Grid</h3>
+            <ul>
+                <li>Event Grid must use Service Bus for queue-based load leveling</li>
+                <li>Events routed directly to Service Bus queues for buffering</li>
+                <li>Events from Service Bus/other services routed to Event Grid</li>
+            </ul>
+            
+            <h3>Security</h3>
+            <ul>
+                <li>All SSL certificates/credentials stored in Azure Key Vault</li>
+                <li>File access restricted by IP, protocol, and Azure AD rights</li>
+                <li>Principle of least privilege for all accounts/processes</li>
+            </ul>
+            
+            <h3>Compliance</h3>
+            <ul>
+                <li>GDPR-compliant auditing for file updates/transfers</li>
+                <li>Audit logs must:
+                    <ul>
+                        <li>Be read-only</li>
+                        <li>Store operations in chronological order</li>
+                        <li>Include create/update/delete/copy operations</li>
+                        <li>Be retained for compliance</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Issues</h2>
+        <div class="issues">
+            <h3>Corporate Website</h3>
+            <p>Error during testing: <code>CryptographicException: The system cannot find the file specified.</code></p>
+            
+            <h3>Function App</h3>
+            <p>Error during local testing: <code>'Timeout value of 00:10:00 exceeded by function: RequestUserApproval'</code><br>
+            Same error in Azure environment confirmed via Kusto query: <code>FunctionAppLogs | where FunctionName == "RequestUserApproval"</code></p>
+            
+            <h3>Logic App</h3>
+            <p>Error in development environment: <code>'400 Bad Request'</code><br>
+            Troubleshooting indicates issue with HttpTrigger action calling <code>RequestUserApproval</code> function</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Code References</h2>
+        <ul>
+            <li>Corporate website: <code>Security.cs</code></li>
+        </ul>
+        
+        <!-- Security.cs Code -->
+        <div class="code-container">
+            <div class="code-title">Security.cs</div>
+            <div class="code-block">
+<pre> 
+SC01   <span class="code-keyword">public</span> <span class="code-keyword">class</span> <span class="code-type">Security</span>
+SC02   {
+SC03       <span class="code-keyword">var</span> bytes = <span class="code-type">System</span>.IO.File.ReadAllBytes(<span class="code-string">"/var/ssl/private"</span>);
+SC04       <span class="code-keyword">var</span> cert = <span class="code-keyword">new</span> <span class="code-type">System</span>.Security.Cryptography.X509Certificate2(bytes);
+SC05       <span class="code-keyword">var</span> certName = cert.FriendlyName;
+SC06   }
+</pre>
+            </div>
+        </div>
+        
+        <ul>
+            <li>Function app: <code>RequestUserApproval.cs</code></li>
+        </ul>
+        <!-- RequestUserApproval.cs Code -->
+        <div class="code-container">
+            <div class="code-title">RequestUserApproval.cs</div>
+            <div class="code-block"><pre> 
+RA01   <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-keyword">class</span> <span class="code-type">RequestUseApproval</span>
+RA02   {
+RA03       [<span class="code-type">FunctionName</span>(<span class="code-string">"RequestUserApproval"</span>)]
+RA04       <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-keyword">async</span> <span class="code-type">Task</span>&lt;<span class="code-type">ActionResult</span>&gt; Run(
+RA05           [<span class="code-type">HttpTrigger</span>(<span class="code-type">AuthorizationLevel</span>.Function, <span class="code-string">"get"</span>, <span class="code-string">"post"</span>, <span class="code-type">Route</span> = <span class="code-keyword">null</span>)] <span class="code-type">HttpRequest</span> req)
+RA06       {
+RA07           log.LogInformation(<span class="code-string">"RequestUserApproval function processed a request."</span>);
+RA08           <span class="code-comment">...</span>
+RA09           <span class="code-keyword">return await</span> ProcessRequest(req)
+RA10           ?(<span class="code-keyword">ActionResult</span>) new OkObjectResult(<span class="code-keyword">$"User approval processed"</span>)
+RA11           :new BadRequestObjectResult(<span class="code-keyword">"Failed to process user approval"</span>);
+RA12       }
+RA13       <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">bool</span> ProcessRequest(<span class="code-type">HttpRequest</span> req)
+RA14       {
+RA15           ...
+RA16       }
+RA17   }
+</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

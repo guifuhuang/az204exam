@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - Azure Functions安全配置</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .case-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .options-container {
+            margin: 25px 0;
+        }
+        
+        .option {
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .option:hover {
+            background-color: #f1f6fd;
+            border-color: #4a69bd;
+        }
+        
+        .option.selected {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+        }
+        
+        .option input {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            margin-right: 10px;
+            color: #1e3799;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .option {
+                padding: 12px 12px 12px 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: Azure Functions安全配置</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>案例背景</h2>
+                <p>VanArsdel Ltd.是一家全球办公用品公司，总部位于加拿大，在全球设有零售店。公司正在开发多个基于云的解决方案，以支持其商店、分销商、供应商和配送服务。</p>
+                
+                <div class="requirements">
+                    <h3>安全要求：</h3>
+                    <ul>
+                        <li>集中管理和分发所有Azure Functions的配置数据（跨环境和地域）</li>
+                        <li>使用公司提供的RSA-HSM密钥加密配置数据</li>
+                        <li>使用Azure AD进行身份验证和授权</li>
+                        <li>在可能的情况下使用托管身份</li>
+                    </ul>
+                </div>
+                
+                <div class="note">
+                    <p><strong>注意：</strong> 本题为多选题，需要选择两个正确答案。每个正确答案得1分。</p>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 55: Azure Functions安全配置</h2>
+                <p>您需要保护Azure Functions以满足安全要求。应该执行哪两个操作？（每个正确答案都是解决方案的一部分）</p>
+                
+                <div class="options-container">
+                    <div class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" id="optionA">
+                        <label for="optionA"><span class="option-label">A.</span> 将RSA-HSM密钥存储在Azure Cosmos DB中。应用客户管理密钥和允许位置的内置策略。</label>
+                    </div>
+                    
+                    <div class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" id="optionB">
+                        <label for="optionB"><span class="option-label">B.</span> 创建一个免费层的Azure App Configuration实例，并使用新的Azure AD服务主体。</label>
+                    </div>
+                    
+                    <div class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" id="optionC">
+                        <label for="optionC"><span class="option-label">C.</span> 将RSA-HSM密钥存储在启用了软删除和清除保护功能的Azure Key Vault中。</label>
+                    </div>
+                    
+                    <div class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" id="optionD">
+                        <label for="optionD"><span class="option-label">D.</span> 将RSA-HSM密钥存储在应用了不可变策略的Azure Blob存储容器中。</label>
+                    </div>
+                    
+                    <div class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" id="optionE">
+                        <label for="optionE"><span class="option-label">E.</span> 创建一个标准层的Azure App Configuration实例，并分配一个Azure AD托管标识。</label>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" onclick="showAnswer()">查看答案</button>
+                </div>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <h3>正确答案及说明</h3>
+                <div class="answer-content">
+                    <div class="correct-answer">✓ C. 将RSA-HSM密钥存储在启用了软删除和清除保护功能的Azure Key Vault中</div>
+                    <div class="correct-answer">✓ E. 创建一个标准层的Azure App Configuration实例，并分配一个Azure AD托管标识</div>
+                    
+                    <div class="explanation">
+                        <p><strong>说明：</strong></p>
+                        <p>根据案例的安全要求：</p>
+                        <ul>
+                            <li><strong>选项C正确</strong>：Key Vault是存储加密密钥的安全服务，软删除和清除保护功能可以防止意外或恶意删除密钥，符合安全最佳实践。</li>
+                            <li><strong>选项E正确</strong>：标准层的Azure App Configuration支持集中管理配置数据，托管标识可以安全地访问Key Vault中的密钥，满足跨环境和地域管理的要求。</li>
+                            <li><strong>选项A错误</strong>：Azure Cosmos DB不是设计用于存储加密密钥的服务，且不提供密钥管理功能。</li>
+                            <li><strong>选项B错误</strong>：免费层的App Configuration不支持与Key Vault集成，无法使用RSA-HSM密钥加密配置数据。</li>
+                            <li><strong>选项D错误</strong>：Blob存储不适合存储加密密钥，尽管不可变策略提供数据保护，但不是密钥管理的正确解决方案。</li>
+                        </ul>
+                        <p>这种配置满足以下安全要求：</p>
+                        <ul>
+                            <li>使用Key Vault安全存储和管理RSA-HSM密钥</li>
+                            <li>通过App Configuration集中管理所有Azure Functions的配置</li>
+                            <li>使用托管身份安全访问Key Vault</li>
+                            <li>实现配置数据的加密保护</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | 云安全配置</p>
+        </footer>
+    </div>
+
+    <script>
+        // 限制最多选择两个选项
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            const selectedOptions = document.querySelectorAll('.option.selected');
+            
+            // 如果当前选项未被选中且已选中的选项少于两个
+            if (!checkbox.checked && selectedOptions.length < 2) {
+                checkbox.checked = true;
+                element.classList.add('selected');
+            } 
+            // 如果当前选项已被选中
+            else if (checkbox.checked) {
+                checkbox.checked = false;
+                element.classList.remove('selected');
+            }
+        }
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // 设置正确答案选项
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+                option.querySelector('input').checked = false;
+            });
+            
+            // 选中正确答案C和E
+            document.querySelectorAll('.option')[2].classList.add('selected');
+            document.querySelectorAll('.option')[4].classList.add('selected');
+            document.getElementById('optionC').checked = true;
+            document.getElementById('optionE').checked = true;
+        }
+    </script>
+</body>
+</html>

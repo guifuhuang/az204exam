@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 测试题 - ContentUploadService 部署配置</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            background: #004080;
+            padding: 12px 20px;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #222;
+            font-weight: 600;
+        }
+        
+        .code-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: flex;
+            margin: 5px 0;
+        }
+        
+        .line-number {
+            color: #3498db;
+            min-width: 50px;
+            font-weight: bold;
+        }
+        
+        .options {
+            margin: 30px 0;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background: #d1ecf1;
+            border-color: #0dcaf0;
+            box-shadow: 0 0 0 3px rgba(13, 202, 240, 0.2);
+        }
+        
+        .option input {
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 17px;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+        
+        .btn {
+            background: #005a9e;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 90, 158, 0.3);
+        }
+        
+        .btn:hover {
+            background: #004080;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 90, 158, 0.4);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #0dcaf0;
+            display: none;
+        }
+        
+        .answer-title {
+            color: #005a9e;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .answer-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .explanation h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AZ-204 认证考试练习题</h1>
+            <div class="question-info">
+                <span>题目编号: 11</span>
+                <span>分值: 2 分</span>
+                <span>主题: Azure 容器部署</span>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="question">
+                QUESTION NO: 11<br>
+                您需要配置 ContentUploadService 部署。应该执行哪两项操作？<br>
+                每个正确答案都提供了部分解决方案。<br>
+                注意：每个正确选择得 1 分。
+            </div>
+            
+            <pre> 
+CS01   apiVersion: '2018-10-01',
+CS02   type: Microsoft.ContainerInstance/containerGroups,
+CS03   location: westus,
+CS04   name: contentUploadService,
+CS05   properties: 
+CS06     containers: 
+CS05     - name: service
+CS06         properties: 
+CS09         image: contoso/contentUploadService:latest
+CS10         ports: 
+CS11           - port: 80,
+CS12             protocol: TCP
+CS13         resources: 
+CS14           requests: 
+CS15             cpu: 1.0,
+CS16             memoryInGB: 1.5
+CS17           
+CS18   ipAddress: 
+CS19       ip: 10.23.121.112
+CS20       ports: 
+CS21         - port: 80,
+CS22           protocol: TCP
+CS23         
+CS24       
+CS25   newworkProfile:
+CS26     id: /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/ContosoGroup/providers/Microsoft.Network/virtualNetworks/ContosoVNet/subnets/ContentUploadSubnet
+</pre>
+            
+            <div class="options">
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionA">
+                    <label for="optionA">A. 在 CS23 行添加以下标记: <code>types: Private</code></label>
+                </div>
+                
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionB">
+                    <label for="optionB">B. 在 CS24 行添加以下标记: <code>osType: Windows</code></label>
+                </div>
+                
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionC">
+                    <label for="optionC">C. 在 CS24 行添加以下标记: <code>osType: Linux</code></label>
+                </div>
+                
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionD">
+                    <label for="optionD">D. 在 CS23 行添加以下标记: <code>types: Public</code></label>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" onclick="showAnswer()">查看答案</button>
+            </div>
+            
+            <div class="answer-section" id="answerSection">
+                <div class="answer-title">
+                    <span>答案与解析</span>
+                </div>
+                
+                <div class="correct-answer">正确答案: A 和 C</div>
+                
+                <div class="explanation">
+                    <h3>解析:</h3>
+                    <p>根据Topic2文档中的安全要求和背景信息：</p>
+                    
+                    <p><strong>选项A正确：</strong></p>
+                    <ul>
+                        <li>文档中的安全要求明确指出："所有内部服务必须只能从内部虚拟网络(VNets)访问"</li>
+                        <li>当前配置(CS26行)中IP地址类型为"Public"，这违反了安全要求</li>
+                        <li>将IP地址类型改为"Private"可确保服务仅通过内部网络访问</li>
+                        <li>虽然选项A提到在CS23行添加，但实际应在ipAddress部分的type属性修改</li>
+                    </ul>
+                    
+                    <p><strong>选项C正确：</strong></p>
+                    <ul>
+                        <li>文档背景提到："ContentAnalysisService从私有Azure容器注册表部署"</li>
+                        <li>Azure容器注册表通常管理Linux容器镜像，因此应明确指定osType为Linux</li>
+                        <li>当前配置(CS24行)已设置为Linux，但明确指定可避免兼容性问题</li>
+                    </ul>
+                    
+                    <p><strong>选项B错误：</strong></p>
+                    <ul>
+                        <li>设置为Windows与容器镜像不兼容，可能导致部署失败</li>
+                        <li>文档中无使用Windows容器的依据</li>
+                    </ul>
+                    
+                    <p><strong>选项D错误：</strong></p>
+                    <ul>
+                        <li>设置为Public违反安全要求</li>
+                        <li>当前配置已经是Public，无需重复设置</li>
+                    </ul>
+                    
+                    <p>综上所述，正确操作是修改IP地址类型为Private并确保操作系统类型为Linux。</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>AZ-204 认证考试练习题 &copy; 2023 | 基于Topic2文档内容</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('selected');
+            } else {
+                element.classList.remove('selected');
+            }
+        }
+        
+        function showAnswer() {
+            document.getElementById('answerSection').style.display = 'block';
+            
+            // 滚动到答案部分
+            document.getElementById('answerSection').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

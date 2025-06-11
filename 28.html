@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD认证测试题 - 问题28</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            position: relative;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+            position: relative;
+        }
+        .question-container {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .question-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0078d4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .question-content {
+            background: #f8f9fa;
+            border-left: 4px solid #0078d4;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .option:hover {
+            background: #f0f7ff;
+            border-color: #a0c8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.1);
+        }
+        .option:hover::before {
+            background: #0078d4;
+        }
+        .option.selected {
+            background: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .option.selected::before {
+            background: #0078d4;
+            width: 8px;
+        }
+        .option input {
+            margin-right: 15px;
+            margin-top: 3px;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 15px;
+            border-left: 4px solid #ffc107;
+            display: flex;
+            gap: 10px;
+        }
+        .note i {
+            color: #ff9800;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+        .button-container {
+            padding: 25px 30px;
+            text-align: center;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 120, 212, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 120, 212, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.check {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
+        }
+        .btn.reset {
+            background: linear-gradient(to right, #f44336, #c62828);
+        }
+        .answer-container {
+            padding: 0 30px 30px;
+            display: none;
+        }
+        .answer-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .answer-content {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            position: relative;
+            overflow: hidden;
+        }
+        .answer-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #28a745, #4CAF50);
+        }
+        .answer-content p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .correct-answers {
+            margin: 20px 0;
+            padding: 20px;
+            background: #d4edda;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #155724;
+            border: 2px dashed #28a745;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .answer-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        .answer-icon {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .explanation {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #c8e6c9;
+        }
+        .explanation h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+            font-size: 19px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .explanation p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .reference {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 4px solid #2196F3;
+        }
+        .reference h4 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            font-size: 19px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .reference a {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .reference a:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+        .token-visual {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+        .token-part {
+            padding: 15px;
+            background: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .token-part-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+        @media (max-width: 600px) {
+            .header {
+                padding: 20px;
+            }
+            .question-container, .answer-container {
+                padding: 20px;
+            }
+            .question-title {
+                font-size: 20px;
+            }
+            .btn {
+                width: 100%;
+                padding: 15px;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .token-visual {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Azure AD认证测试题</h1>
+            <p>QUESTION NO: 28 - 企业网站用户认证</p>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-title">
+                <i class="fas fa-lock"></i> 问题描述
+            </div>
+            <div class="question-content">
+                <p>您需要根据架构图对企业网站进行用户认证。</p>
+                <p>应该使用哪两个值？每个正确答案都提供了解决方案的一部分。</p>
+                <p><strong>注意：</strong>每个正确选项值1分。</p>
+            </div>
+            
+            <div class="options">
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionA">
+                    <label for="optionA">A. ID token signature</label>
+                </div>
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionB">
+                    <label for="optionB">B. ID token claims</label>
+                </div>
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionC">
+                    <label for="optionC">C. HTTP response code</label>
+                </div>
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionD">
+                    <label for="optionD">D. Azure AD endpoint URI</label>
+                </div>
+                <div class="option" onclick="toggleOption(this)">
+                    <input type="checkbox" id="optionE">
+                    <label for="optionE">E. Azure AD tenant ID</label>
+                </div>
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>提示：</strong>本题为多选题，请选择两个正确答案。根据Azure AD认证流程，用户认证需要特定的标识和终结点信息。
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn check" onclick="checkAnswers()">
+                <i class="fas fa-check-circle"></i> 检查答案
+            </button>
+            <button class="btn reset" onclick="resetSelection()">
+                <i class="fas fa-redo"></i> 重置选择
+            </button>
+            <button class="btn" onclick="showAnswer()">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-container" id="answerContainer">
+            <div class="answer-title">
+                <i class="fas fa-star"></i> 正确答案与解析
+            </div>
+            <div class="answer-content">
+                <p><strong>正确答案：A 和 D</strong></p>
+                
+                <div class="correct-answers">
+                    <div class="answer-item">
+                        <div class="answer-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <strong>A. ID token signature</strong> (ID令牌签名)
+                        </div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <strong>D. Azure AD endpoint URI</strong> (Azure AD终结点URI)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-book"></i> 解析说明：</h3>
+                    <p>根据Azure AD认证架构和文档内容：</p>
+                    
+                    <div class="token-visual">
+                        <div class="token-part">
+                            <div class="token-part-header">Header</div>
+                            <div>算法和令牌类型</div>
+                        </div>
+                        <div class="token-part">
+                            <div class="token-part-header">Payload</div>
+                            <div>声明(Claims)</div>
+                        </div>
+                        <div class="token-part">
+                            <div class="token-part-header">Signature</div>
+                            <div>验证令牌</div>
+                        </div>
+                    </div>
+                    
+                    <p>1. <strong>ID token signature (ID令牌签名)</strong>：</p>
+                    <ul>
+                        <li>用于验证令牌的完整性和真实性</li>
+                        <li>确保令牌未被篡改</li>
+                        <li>是JWT(JSON Web Tokens)的三个组成部分之一</li>
+                    </ul>
+                    
+                    <p>2. <strong>Azure AD endpoint URI (Azure AD终结点URI)</strong>：</p>
+                    <ul>
+                        <li>是用户进行认证的入口点</li>
+                        <li>客户端可以从v1.0或v2.0端点获取访问令牌</li>
+                        <li>浏览器将用户重定向到此终结点进行登录</li>
+                    </ul>
+                    
+                    <p><strong>其他选项分析：</strong></p>
+                    <ul>
+                        <li><strong>B. ID token claims</strong>：包含用户身份信息，但签名用于验证这些信息的真实性</li>
+                        <li><strong>C. HTTP response code</strong>：表示请求状态，不用于认证本身</li>
+                        <li><strong>E. Azure AD tenant ID</strong>：是租户标识符，已包含在终结点URI中</li>
+                    </ul>
+                    
+                    <div class="reference">
+                        <h4><i class="fas fa-link"></i> 参考文档</h4>
+                        <p><a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-access-restriction-policies" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Microsoft文档 - API管理访问限制策略
+                        </a></p>
+                        <p><a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Microsoft文档 - Azure AD访问令牌
+                        </a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 存储用户选择
+        let selectedOptions = [];
+        
+        function toggleOption(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            const optionId = checkbox.id.replace('option', '');
+            
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+            
+            // 更新选择数组
+            if (checkbox.checked) {
+                if (!selectedOptions.includes(optionId)) {
+                    selectedOptions.push(optionId);
+                }
+            } else {
+                selectedOptions = selectedOptions.filter(id => id !== optionId);
+            }
+            
+            // 最多只能选择两个
+            if (selectedOptions.length > 2) {
+                const firstSelected = selectedOptions.shift();
+                document.querySelector(`#option${firstSelected}`).checked = false;
+                document.querySelector(`#option${firstSelected}`).closest('.option').classList.remove('selected');
+            }
+        }
+        
+        function checkAnswers() {
+            if (selectedOptions.length < 2) {
+                alert('请选择两个答案！');
+                return;
+            }
+            
+            const isCorrect = selectedOptions.includes('A') && selectedOptions.includes('D');
+            
+            if (isCorrect) {
+                alert('恭喜！您的答案正确：A 和 D 是正确答案。');
+            } else {
+                alert('答案不正确。请查看答案解析了解正确选项。');
+                showAnswer();
+            }
+        }
+        
+        function resetSelection() {
+            // 重置所有选择
+            selectedOptions = [];
+            document.querySelectorAll('.option').forEach(option => {
+                const checkbox = option.querySelector('input[type="checkbox"]');
+                checkbox.checked = false;
+                option.classList.remove('selected');
+            });
+            
+            // 隐藏答案区域
+            document.getElementById('answerContainer').style.display = 'none';
+        }
+        
+        function showAnswer() {
+            // 显示答案区域
+            document.getElementById('answerContainer').style.display = 'block';
+            
+            // 自动滚动到答案区域
+            document.getElementById('answerContainer').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // 自动选择正确答案
+            // resetSelection();
+            document.querySelector('#optionA').checked = true;
+            document.querySelector('#optionA').closest('.option').classList.add('selected');
+            document.querySelector('#optionD').checked = true;
+            document.querySelector('#optionD').closest('.option').classList.add('selected');
+            selectedOptions = ['A', 'D'];
+        }
+    </script>
+</body>
+</html>

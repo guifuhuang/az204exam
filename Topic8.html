@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topic 8: Munson's Pickles and Preserves Farm</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            margin: 20px;
+            color: #333;
+        }
+        h1, h2, h3 { 
+            color: #2c3e50; 
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .section { 
+            margin-bottom: 30px; 
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .requirements { 
+            background-color: #e8f4fc; 
+            padding: 15px; 
+            border-left: 4px solid #3498db; 
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .issue { 
+            background-color: #fde8e8; 
+            padding: 15px; 
+            border-left: 4px solid #e74c3c; 
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            background-color: #fff9db;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic 8: Munson's Pickles and Preserves Farm</h1>
+    
+    <div class="section">
+        <h2>Background</h2>
+        <p>Munson's Pickles and Preserves Farm is an agricultural cooperative corporation based in Washington, US, with farms located across the United States. The company supports agricultural production resources by distributing seeds, fertilizers, chemicals, fuel, and farm machinery to the farms.</p>
+        <p>The company is migrating all applications from an on-premises datacenter to Microsoft Azure. Applications support distributors, farmers, and internal company staff.</p>
+    </div>
+
+    <div class="section">
+        <h2>Current Environment</h2>
+        
+        <div class="requirements">
+            <h3>Corporate Website</h3>
+            <ul>
+                <li>Hosted at <span class="highlight">http://www.munsonspicklesandpreservesfarm.com</span></li>
+                <li>Supports farmers and distributors requesting agricultural production resources</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Farms</h3>
+            <ul>
+                <li>New customer tenant created in Microsoft Entra admin center for authentication/authorization</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Distributors</h3>
+            <ul>
+                <li>Integrate applications with APIs hosted at <span class="highlight">http://www.munsonspicklesandpreservesfarm.com/api</span></li>
+                <li>APIs used to receive and update resource data</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Application Requirements</h2>
+        
+        <div class="requirements">
+            <h3>Corporate Website</h3>
+            <ul>
+                <li>Migrate to Azure App Service</li>
+                <li>Minimize Azure hosting costs</li>
+                <li>Applications must automatically scale independent of compute resources</li>
+                <li>All code changes must be validated by internal staff before production release</li>
+                <li>Improve file transfer speeds and webpage-load performance</li>
+                <li>Centrally store and secure all site settings without using secrets</li>
+                <li>Encrypt settings at rest and in transit</li>
+                <li>Implement queue-based load leveling using Azure Service Bus queues</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Farms</h3>
+            <ul>
+                <li>Farmers must authenticate using Microsoft Entra ID</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Distributors</h3>
+            <ul>
+                <li>Track custom telemetry value with each API call</li>
+                <li>Monitor performance of all APIs</li>
+                <li>Chart telemetry values to evaluate variations and trends</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Internal Staff</h3>
+            <ul>
+                <li>Validate app/API updates before production release</li>
+                <li>Provide direct link back to production app during validation</li>
+                <li>Display staff profile photos and email on website after Microsoft Entra authentication</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Security</h3>
+            <ul>
+                <li>Secure all web communications using TLS/HTTPS</li>
+                <li>Restrict web content by country/region for compliance</li>
+                <li>Apply principle of least privilege for all user/process rights</li>
+                <li>Use managed identities for Azure resources with Microsoft Entra authentication</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Reported Issues</h2>
+        
+        <div class="issue">
+            <h3>Corporate Website Issues</h3>
+            <ul>
+                <li>Farmers report HTTP 503 errors during high CPU/memory usage</li>
+                <li>Distributors report HTTP 502 errors during high response times and network traffic</li>
+                <li>Internal staff report large webpage sizes and slow load times</li>
+                <li>Developers receive authentication errors to Service Bus during local debugging</li>
+            </ul>
+        </div>
+
+        <div class="issue">
+            <h3>Distributors Issues</h3>
+            <ul>
+                <li>High volume of API telemetry values sent in short periods</li>
+                <li>Need to reduce telemetry traffic, data costs, and storage costs</li>
+                <li>Must preserve statistically correct analysis of data points</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

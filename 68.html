@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure App Service配置测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #005a9e;
+        }
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-left: 5px solid #0078d4;
+            padding-left: 15px;
+        }
+        .scenario {
+            background: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .scenario h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        .requirements {
+            background: #fff8e6;
+            border-left: 4px solid #ffb900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirements h3 {
+            color: #d68500;
+            margin-bottom: 10px;
+        }
+        .problem {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .problem h3 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+        .config-section {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .config-section h2 {
+            color: #0078d4;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .config-options {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .config-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        .config-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #005a9e;
+            font-size: 18px;
+        }
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        select:focus {
+            outline: none;
+            border-color: #005a9e;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        .button-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .answer-section {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+            border-top: 2px dashed #0078d4;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        .answer-content h3 {
+            color: #0078d4;
+            margin: 15px 0 10px;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation {
+            background: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 768px) {
+            .config-options {
+                flex-direction: column;
+            }
+            .config-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure App Service 配置测试题</h1>
+            <p>Topic 8: Munson's Pickles and Preserves Farm</p>
+        </header>
+        
+        <div class="question-section">
+            <h2>问题 68: 配置App Service以支持企业网站迁移</h2>
+            
+            <div class="scenario">
+                <h3>场景描述</h3>
+                <p>Munson's Pickles and Preserves Farm 正在将企业网站迁移到 Azure App Service。迁移需要满足特定的业务和安全要求，包括成本优化、自动扩展和代码验证流程。</p>
+            </div>
+            
+            <div class="requirements">
+                <h3>相关要求</h3>
+                <ul>
+                    <li>最小化 Azure 托管成本</li>
+                    <li>应用程序必须独立于计算资源自动扩展</li>
+                    <li>所有代码更改必须由内部人员在发布到生产环境之前进行验证</li>
+                    <li>在验证期间提供直接链接回生产应用程序</li>
+                    <li>集中存储和保护所有站点设置，不使用密钥</li>
+                </ul>
+            </div>
+            
+            <div class="problem">
+                <h3>当前挑战</h3>
+                <p>农民报告在高CPU/内存使用期间出现HTTP 503错误，分销商报告在高响应时间和网络流量期间出现HTTP 502错误。</p>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <h2>App Service 配置选项</h2>
+            <div class="config-options">
+                <div class="config-group">
+                    <label for="app-plan">App Service 计划:</label>
+                    <select id="app-plan">
+                        <option value="">请选择计划</option>
+                        <option value="Basic">Basic</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Isolated">Isolated</option>
+                    </select>
+                </div>
+                
+                <div class="config-group">
+                    <label for="validation-feature">代码更改验证功能:</label>
+                    <select id="validation-feature">
+                        <option value="">请选择功能</option>
+                        <option value="Deployment slot">部署槽位</option>
+                        <option value="Custom container">自定义容器</option>
+                        <option value="Domain certificate">域名证书</option>
+                        <option value="Deployment credentials">部署凭据</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2>正确答案与解析</h2>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确配置:</h3>
+                    <p><strong>App Service 计划:</strong> Standard</p>
+                    <p><strong>代码更改验证功能:</strong> 部署槽位</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析:</h3>
+                    <p>此配置满足所有迁移要求：</p>
+                    
+                    <ul>
+                        <li><span class="highlight">Standard 计划</span> 提供自动扩展能力（解决HTTP 503/502错误），同时保持成本优化（满足"Minimize Azure hosting costs"要求）</li>
+                        <li><span class="highlight">部署槽位</span> 允许内部人员在发布到生产环境前验证代码更改（满足"Validate app/API updates before production release"要求）</li>
+                        <li>部署槽位提供直接链接到暂存环境的功能（满足"Provide direct link back to production app during validation"要求）</li>
+                        <li>App Service支持集中存储站点设置（应用设置）并通过托管标识保护访问（满足"Centrally store and secure all site settings without using secrets"要求）</li>
+                    </ul>
+                    
+                    <p>其他选项分析：</p>
+                    <ul>
+                        <li><strong>Basic计划</strong>：不支持自动扩展，无法解决高负载问题</li>
+                        <li><strong>Premium/Isolated计划</strong>：成本过高，不符合成本优化要求</li>
+                        <li><strong>自定义容器</strong>：与代码验证流程无关</li>
+                        <li><strong>域名证书</strong>：用于TLS配置，不解决验证需求</li>
+                        <li><strong>部署凭据</strong>：用于FTP部署，不提供验证环境</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 认证模拟测试题</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

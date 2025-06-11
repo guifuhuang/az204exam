@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Logic App 安全配置测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d7, #00a4ef, #0078d7);
+        }
+        h1 {
+            color: #005a9e;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .question-box {
+            background-color: #f0f8ff;
+            border-left: 5px solid #0078d7;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #004578;
+        }
+        .note {
+            background-color: #fff4ce;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 15px;
+            border-left: 4px solid #ffb900;
+        }
+        .options-container {
+            margin: 25px 0;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f0f8ff;
+            border-color: #0078d7;
+        }
+        .option.selected {
+            background-color: #e6f7ff;
+            border-color: #00a4ef;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+        }
+        .option input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+        .option-label {
+            font-weight: 600;
+            margin-right: 10px;
+            color: #0078d7;
+            min-width: 30px;
+        }
+        .option-content {
+            flex: 1;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+        .answer-button {
+            background: linear-gradient(to right, #0078d7, #00a4ef);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 120, 215, 0.3);
+        }
+        .answer-button:hover {
+            background: linear-gradient(to right, #0066b4, #0089d1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 120, 215, 0.4);
+        }
+        .answer-button:active {
+            transform: translateY(0);
+        }
+        .answer-section {
+            background-color: #e6f7ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid #00a4ef;
+            display: none;
+        }
+        .answer-title {
+            color: #0078d7;
+            font-size: 22px;
+            margin-top: 0;
+            border-bottom: 2px solid #00a4ef;
+            padding-bottom: 10px;
+        }
+        .correct-answer {
+            background-color: #dff6dd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #107c10;
+        }
+        .answer-item {
+            margin: 12px 0;
+            font-size: 17px;
+        }
+        .explanation {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #666;
+        }
+        .explanation h3 {
+            color: #004578;
+            margin-top: 0;
+        }
+        .explanation p {
+            line-height: 1.6;
+        }
+        .azure-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #0078d7;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        .case-info {
+            background-color: #eef7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .case-info h3 {
+            color: #004578;
+            margin-top: 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            .option {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="azure-badge">安全配置</div>
+        <h1>Azure Logic App 安全配置测试题</h1>
+        
+        <div class="case-info">
+            <h3>案例背景</h3>
+            <p>您需要为运输应用程序的 Azure Logic App 配置安全设置。该Logic App处理海洋运输和内陆运输工作流，需要支持X12消息格式，并确保资源安全连接到公司VNet。</p>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-text">
+                QUESTION NO: 3<br>
+                您需要保护 Shipping Logic App。<br>
+                应该使用什么？
+            </div>
+            
+            <div class="note">
+                <strong>安全要求：</strong> 需要将资源安全连接到公司VNet，使用专用存储资源，并维护本地连接以支持遗留应用程序。
+            </div>
+            
+            <div class="options-container">
+                <div class="option" onclick="selectOption(this)">
+                    <input type="radio" name="logic-app-option" id="optionA">
+                    <div class="option-label">A</div>
+                    <div class="option-content">
+                        <strong>Azure App Service Environment (ASE)</strong>
+                        <p>提供隔离环境运行App Service应用，但并非专门为Logic App设计</p>
+                    </div>
+                </div>
+                
+                <div class="option" onclick="selectOption(this)">
+                    <input type="radio" name="logic-app-option" id="optionB">
+                    <div class="option-label">B</div>
+                    <div class="option-content">
+                        <strong>Azure AD B2B integration</strong>
+                        <p>用于企业间协作的身份验证解决方案，不提供网络隔离</p>
+                    </div>
+                </div>
+                
+                <div class="option" onclick="selectOption(this)">
+                    <input type="radio" name="logic-app-option" id="optionC">
+                    <div class="option-label">C</div>
+                    <div class="option-content">
+                        <strong>Integration Service Environment (ISE)</strong>
+                        <p>为Logic App提供专用环境，可直接部署到VNet中</p>
+                    </div>
+                </div>
+                
+                <div class="option" onclick="selectOption(this)">
+                    <input type="radio" name="logic-app-option" id="optionD">
+                    <div class="option-label">D</div>
+                    <div class="option-content">
+                        <strong>VNet service endpoint</strong>
+                        <p>用于将Azure服务安全连接到VNet，但不提供专用环境</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="answer-button" id="show-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">正确答案与解析</h2>
+            
+            <div class="correct-answer">
+                <div class="answer-item"><strong>正确答案：C. Integration Service Environment (ISE)</strong></div>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                <p>根据文档中的要求，Shipping Logic App需要满足以下安全要求：</p>
+                <ul>
+                    <li>将资源安全连接到公司VNet</li>
+                    <li>使用专用存储资源</li>
+                    <li>维护本地连接以支持遗留应用程序</li>
+                </ul>
+                
+                <p><strong>Integration Service Environment (ISE)</strong> 是专门为Logic App设计的解决方案：</p>
+                <ul>
+                    <li>提供专用环境运行Logic App，与多租户环境隔离</li>
+                    <li>可以直接部署到Azure虚拟网络(VNet)中</li>
+                    <li>支持固定成本模型，满足专用资源需求</li>
+                    <li>提供与本地系统的连接能力，支持混合环境</li>
+                    <li>满足X12消息格式支持要求</li>
+                </ul>
+                
+                <p>其他选项分析：</p>
+                <ul>
+                    <li><strong>A. Azure App Service Environment (ASE)</strong>：主要用于Web应用，不是Logic App的最佳选择</li>
+                    <li><strong>B. Azure AD B2B integration</strong>：解决身份验证问题，但不提供网络隔离或VNet集成</li>
+                    <li><strong>D. VNet service endpoint</strong>：提供网络级安全，但不提供专用环境或本地连接支持</li>
+                </ul>
+                
+                <p>因此，ISE是满足所有要求的最佳解决方案。</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Azure 解决方案架构师考试模拟题 - 基于运输应用程序安全配置案例
+    </div>
+
+    <script>
+        // 选项选择功能
+        function selectOption(element) {
+            // 移除之前的选择
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 添加当前选择
+            element.classList.add('selected');
+            
+            // 选中对应的单选按钮
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+        }
+        
+        // 查看答案功能
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 平滑滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // 自动选择正确答案
+            document.getElementById('optionC').checked = true;
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+                if(opt.querySelector('#optionC')) {
+                    opt.classList.add('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

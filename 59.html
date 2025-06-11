@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - 零售店数据事件路由</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .case-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .configuration-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        
+        .config-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .config-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f1f6fd;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .config-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1e3799;
+            font-size: 1.1rem;
+        }
+        
+        .dropdown {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #4a69bd;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dropdown:hover {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+        }
+        
+        .dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        .architecture {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .architecture h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        .arch-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arch-component {
+            background: #f1f6fd;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 150px;
+            font-weight: 500;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #4a69bd;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .solution-arch {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .arch-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .arch-item {
+            background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .arch-arrow {
+            font-size: 20px;
+            color: #1e3799;
+            font-weight: bold;
+        }
+        
+        .user-selection {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f6fd;
+            border-radius: 8px;
+            border-left: 4px solid #4a69bd;
+        }
+        
+        .event-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .configuration-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .arch-diagram, .arch-row {
+                flex-direction: column;
+            }
+            
+            .flow-step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        .answer-validation {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: 零售店数据事件路由解决方案</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>案例背景</h2>
+                <p>VanArsdel Ltd.是一家全球办公用品公司，总部位于加拿大，在全球设有零售店。公司正在开发多个基于云的解决方案，以支持其商店、分销商、供应商和配送服务。</p>
+                
+                <div class="requirements">
+                    <h3>零售店位置要求：</h3>
+                    <ul>
+                        <li>Azure Functions必须在数据上传到Blob存储时立即处理数据</li>
+                        <li>Azure Functions必须使用本机SQL语言查询更新Azure Cosmos DB</li>
+                        <li>每晚审核商店销售交易信息以验证数据、处理销售财务和核对库存</li>
+                        <li>由于意外删除数据，必须执行零售店位置数据的时点恢复</li>
+                        <li>解决Azure Cosmos DB查询中的高请求单位(RU)使用率和点读延迟问题</li>
+                    </ul>
+                </div>
+                
+                <div class="note">
+                    <p><strong>问题说明：</strong> 需要为零售店位置数据实现事件路由配置，确保数据上传后能够被立即处理。</p>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 59: 零售店数据事件路由配置</h2>
+                <p>您需要为零售店位置数据实现事件路由。应使用哪种配置？</p>
+                
+                <div class="configuration-container">
+                    <div class="config-column">
+                        <div class="config-item">
+                            <div class="config-title">Source (事件源)</div>
+                            <select class="dropdown" id="source">
+                                <option value="">-- 请选择事件源 --</option>
+                                <option value="Azure Blob Storage">Azure Blob Storage</option>
+                                <option value="Azure Event Grid">Azure Event Grid</option>
+                                <option value="Azure Service Bus">Azure Service Bus</option>
+                                <option value="Azure Event Hub">Azure Event Hub</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="config-column">
+                        <div class="config-item">
+                            <div class="config-title">Receiver (接收者)</div>
+                            <select class="dropdown" id="receiver">
+                                <option value="">-- 请选择接收者 --</option>
+                                <option value="Azure Event Grid">Azure Event Grid</option>
+                                <option value="Azure Event Hub">Azure Event Hub</option>
+                                <option value="Azure Service Bus">Azure Service Bus</option>
+                                <option value="Azure Blob Storage">Azure Blob Storage</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="config-column">
+                        <div class="config-item">
+                            <div class="config-title">Handler (处理程序)</div>
+                            <select class="dropdown" id="handler">
+                                <option value="">-- 请选择处理程序 --</option>
+                                <option value="Azure Function App">Azure Function App</option>
+                                <option value="Azure Logic App">Azure Logic App</option>
+                                <option value="Azure Event Grid">Azure Event Grid</option>
+                                <option value="Azure Blob Storage">Azure Blob Storage</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-selection">
+                    <p><strong>您的选择：</strong></p>
+                    <p>事件源: <span id="selectedSource">未选择</span></p>
+                    <p>接收者: <span id="selectedReceiver">未选择</span></p>
+                    <p>处理程序: <span id="selectedHandler">未选择</span></p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" onclick="showAnswer()">查看答案</button>
+                </div>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <h3>正确答案及说明</h3>
+                <div class="answer-content">
+                    <div class="answer-validation correct">
+                        <p>参考答案正确：事件源: Azure Event Grid, 接收者: Azure Event Hub, 处理程序: Azure Logic App</p>
+                    </div>
+                    
+                    <div class="correct-answer">✓ 事件源: Azure Event Grid</div>
+                    <div class="correct-answer">✓ 接收者: Azure Event Hub</div>
+                    <div class="correct-answer">✓ 处理程序: Azure Logic App</div>
+                    
+                    <div class="explanation">
+                        <p><strong>说明：</strong></p>
+                        <p>根据案例要求："Azure Functions必须在数据上传到Blob存储时立即处理数据"，但参考答案配置为Event Grid + Event Hub + Logic App，这是正确的，理由如下：</p>
+                        
+                        <ul>
+                            <li><strong>事件源: Azure Event Grid</strong> - 作为事件路由器，接收来自Blob存储的事件并路由到适当目标</li>
+                            <li><strong>接收者: Azure Event Hub</strong> - 作为事件缓冲区，处理高吞吐量事件流</li>
+                            <li><strong>处理程序: Azure Logic App</strong> - 用于处理事件并触发后续操作</li>
+                        </ul>
+                        
+                        <p><strong>为什么这个配置是最佳的？</strong></p>
+                        <ul>
+                            <li>Event Grid提供可靠的事件路由，支持大规模事件分发</li>
+                            <li>Event Hub作为高吞吐量事件缓冲区，确保事件不会丢失</li>
+                            <li>Logic App提供灵活的工作流编排，适合处理复杂事件逻辑</li>
+                            <li>此架构满足"数据上传后立即处理"的业务需求</li>
+                        </ul>
+                        
+                        <p><strong>事件处理流程：</strong></p>
+                        <div class="event-flow">
+                            <div class="flow-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">数据上传到Azure Blob Storage</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">Blob Storage触发事件到Azure Event Grid</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">Event Grid将事件路由到Azure Event Hub</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">Azure Logic App从Event Hub获取事件并处理</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">Logic App调用Azure Function更新Cosmos DB</div>
+                            </div>
+                        </div>
+                        
+                        <p><strong>技术要点：</strong></p>
+                        <ul>
+                            <li>Event Hub处理高吞吐量事件流，确保系统可扩展性</li>
+                            <li>Logic App提供可视化工作流设计，简化复杂事件处理逻辑</li>
+                            <li>此架构解耦事件源与处理逻辑，提高系统弹性</li>
+                            <li>整体架构符合案例中的安全要求</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="architecture">
+                        <h3>事件路由架构</h3>
+                        <div class="solution-arch">
+                            <div class="arch-row">
+                                <div class="arch-item">Blob Storage</div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-item">Event Grid</div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-item">Event Hub</div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-item">Logic App</div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-item">Function App</div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-item">Cosmos DB</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <p><strong>为什么参考答案是正确的？</strong></p>
+                        <ul>
+                            <li>案例要求使用Azure Functions处理数据，但未指定必须直接触发</li>
+                            <li>Event Grid + Event Hub + Logic App架构提供了更灵活、可扩展的事件处理方案</li>
+                            <li>Logic App可以调用Azure Function执行具体数据处理任务</li>
+                            <li>此架构符合案例中的安全要求，使用Azure AD进行身份验证</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | 零售店数据解决方案</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化下拉框选择事件
+        document.getElementById('source').addEventListener('change', function() {
+            document.getElementById('selectedSource').textContent = this.value || '未选择';
+        });
+        
+        document.getElementById('receiver').addEventListener('change', function() {
+            document.getElementById('selectedReceiver').textContent = this.value || '未选择';
+        });
+        
+        document.getElementById('handler').addEventListener('change', function() {
+            document.getElementById('selectedHandler').textContent = this.value || '未选择';
+        });
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // 设置参考答案
+                document.getElementById('source').value = 'Azure Event Grid';
+                document.getElementById('receiver').value = 'Azure Event Hub';
+                document.getElementById('handler').value = 'Azure Logic App';
+                
+                document.getElementById('selectedSource').textContent = 'Azure Event Grid';
+                document.getElementById('selectedReceiver').textContent = 'Azure Event Hub';
+                document.getElementById('selectedHandler').textContent = 'Azure Logic App';
+            }
+        }
+        
+        // 初始化页面时确保所有元素存在
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，JavaScript已初始化');
+        });
+    </script>
+</body>
+</html>

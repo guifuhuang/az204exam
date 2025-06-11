@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Table Storage CORS配置测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0078d7, #00a4ef, #0078d7);
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .question-box {
+            padding: 25px 30px;
+            background: #f0f8ff;
+            border-bottom: 1px solid #d0e8ff;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #004578;
+        }
+        
+        .note {
+            background: #fff4ce;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 15px;
+            border-left: 4px solid #ffb900;
+        }
+        
+        .code-preview {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .tag { color: #f92672; }
+        .attr { color: #a6e22e; }
+        .value { color: #e6db74; }
+        .comment { color: #75715e; }
+        .dropdown-placeholder { 
+            background: #ffb900;
+            color: #333;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .config-section {
+            padding: 20px 30px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .config-title {
+            color: #005a9e;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00a4ef;
+        }
+        
+        .config-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .config-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .config-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #004578;
+        }
+        
+        .config-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #0078d7;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        .config-select:focus {
+            outline: none;
+            border-color: #00a4ef;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-top: 1px solid #d0e8ff;
+        }
+        
+        .control-btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+        
+        .control-btn:hover {
+            background: #0066b4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .answer-section {
+            background: #e6f7ff;
+            padding: 30px;
+            display: none;
+        }
+        
+        .answer-title {
+            color: #0078d7;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00a4ef;
+        }
+        
+        .correct-answer {
+            background: #dff6dd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #107c10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .answer-icon {
+            font-size: 28px;
+            color: #107c10;
+            flex-shrink: 0;
+        }
+        
+        .answer-content {
+            flex: 1;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .explanation h3 {
+            color: #005a9e;
+            margin-bottom: 15px;
+        }
+        
+        .explanation p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .requirements {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        
+        .requirements h4 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        
+        .requirements ul {
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .question-box, .config-section {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .config-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Table Storage CORS配置测试题</h1>
+            <p>QUESTION NO: 7 (HOTSPOT)</p>
+        </header>
+        
+        <div class="question-box">
+            <div class="question-text">
+                您需要解决航运网站的错误。<br>
+                应该如何配置 Azure Table Storage 服务？
+            </div>
+            
+            <div class="note">
+                <strong>案例背景：</strong> 航运网站报告了跨域资源共享(CORS)错误，需要正确配置Azure Table Storage服务以解决此问题。
+            </div>
+            
+            <div class="code-preview">
+                <span class="code-line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+                <span class="code-line">&lt;<span class="tag">StorageServiceProperties</span>&gt;</span>
+                <span class="code-line">  &lt;<span class="tag">Cors</span>&gt;</span>
+                <span class="code-line">    &lt;<span class="tag">CorsRule</span>&gt;</span>
+                <span class="code-line">      &lt;<span class="tag"><span class="dropdown-placeholder">【下拉框1】</span></span>&gt;</span>
+                <span class="code-line">        <span class="dropdown-placeholder">【下拉框2】</span></span>
+                <span class="code-line">      &lt;/<span class="tag"><span class="dropdown-placeholder">【下拉框3】</span></span>&gt;</span>
+                <span class="code-line">      &lt;<span class="tag">AllowedMethods</span>&gt;</span>
+                <span class="code-line">        <span class="dropdown-placeholder">【下拉框4】</span></span>
+                <span class="code-line">      &lt;/<span class="tag">AllowedMethods</span>&gt;</span>
+                <span class="code-line">      &lt;<span class="tag">ExposedHeaders</span>&gt;&lt;/<span class="tag">ExposedHeaders</span>&gt;</span>
+                <span class="code-line">      &lt;<span class="tag">AllowedHeaders</span>&gt;&lt;/<span class="tag">AllowedHeaders</span>&gt;</span>
+                <span class="code-line">    &lt;/<span class="tag">CorsRule</span>&gt;</span>
+                <span class="code-line">  &lt;/<span class="tag">Cors</span>&gt;</span>
+                <span class="code-line">&lt;/<span class="tag">StorageServiceProperties</span>&gt;</span>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <h2 class="config-title">CORS 配置设置</h2>
+            
+            <div class="config-group">
+                <div class="config-item">
+                    <label class="config-label">【下拉框1】</label>
+                    <select class="config-select" id="select1">
+                        <option value="">-- 请选择配置 --</option>
+                        <option value="AllowedHeaders">AllowedHeaders</option>
+                        <option value="ExposedHeaders">ExposedHeaders</option>
+                        <option value="AllowedMethods">AllowedMethods</option>
+                        <option value="AllowedOrigins">AllowedOrigins</option>
+                    </select>
+                </div>
+                
+                <div class="config-item">
+                    <label class="config-label">【下拉框2】</label>
+                    <select class="config-select" id="select2">
+                        <option value="">-- 请选择配置 --</option>
+                        <option value="wildcard">http://*.worldimporters.com</option>
+                        <option value="test">http://test.wideworldimporters.com</option>
+                        <option value="test-shippingapi">http://test-shippingapi.wideworldimporters.com</option>
+                        <option value="www">http://www.wideworldimporters.com</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="config-group">
+                <div class="config-item">
+                    <label class="config-label">【下拉框3】</label>
+                    <select class="config-select" id="select3">
+                        <option value="">-- 请选择配置 --</option>
+                        <option value="AllowedHeaders">AllowedHeaders</option>
+                        <option value="ExposedHeaders">ExposedHeaders</option>
+                        <option value="AllowedMethods">AllowedMethods</option>
+                        <option value="AllowedOrigins">AllowedOrigins</option>
+                    </select>
+                </div>
+                
+                <div class="config-item">
+                    <label class="config-label">【下拉框4】</label>
+                    <select class="config-select" id="select4">
+                        <option value="">-- 请选择配置 --</option>
+                        <option value="get-put">GET, PUT</option>
+                        <option value="get-only">仅 GET</option>
+                        <option value="post-only">仅 POST</option>
+                        <option value="get-head">GET, HEAD</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="requirements">
+            <h4>错误信息：</h4>
+            <p>Failed to load http://test-shippingapi.wideworldimporters.com/: No 'Access-Control-Allow-Origin'
+            header is present on the requested resource. Origin 'http://test.wideworldimporters.com/' is
+            therefore not allowed access.</p>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="show-answer-btn">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">正确答案与解析</h2>
+            
+            <div class="correct-answer">
+                <div class="answer-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="answer-content">
+                    <strong>正确配置：</strong>
+                    <ul>
+                        <li><strong>【下拉框1】</strong>: AllowedOrigins</li>
+                        <li><strong>【下拉框2】</strong>: http://test.wideworldimporters.com</li>
+                        <li><strong>【下拉框3】</strong>: AllowedOrigins</li>
+                        <li><strong>【下拉框4】</strong>: POST</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                
+                <p>根据航运网站的错误信息和 Azure Table Storage 服务的 CORS 配置规范，以下是正确的配置方案：</p>
+                
+                <p><strong>1. 【下拉框1】和【下拉框3】应为 AllowedOrigins</strong>：</p>
+                <ul>
+                    <li>错误信息显示缺少 'Access-Control-Allow-Origin' 标头，这是 CORS 配置中的核心元素</li>
+                    <li>AllowedOrigins 指定允许访问资源的源（域名）</li>
+                    <li>错误中 Origin 'http://test.wideworldimporters.com/' 被拒绝，因此需要添加此源</li>
+                </ul>
+                
+                <p><strong>2. 【下拉框2】应为 http://test.wideworldimporters.com</strong>：</p>
+                <ul>
+                    <li>错误信息明确指出被拒绝的源是 'http://test.wideworldimporters.com/'</li>
+                    <li>添加此源后，浏览器将允许来自该域的跨域请求</li>
+                    <li>在实际环境中，可能需要添加多个源（如正式环境 www.wideworldimporters.com），但根据当前错误只需添加测试环境</li>
+                </ul>
+                
+                <p><strong>3. 【下拉框4】应为 POST</strong>：</p>
+                <ul>
+                    <li>航运网站需要 POST 方法提交容器跟踪信息和更新状态</li>
+                    <li>根据文档要求，API 需要支持 POST 方法进行数据提交</li>
+                    <li>GET 方法用于获取数据，但错误信息中请求使用的是 POST 方法</li>
+                    <li>配置中应明确允许 POST 方法以解决跨域问题</li>
+                </ul>
+                
+                <p><strong>配置注意事项：</strong></p>
+                <ul>
+                    <li>ExposedHeaders 和 AllowedHeaders 保持为空，因为航运网站没有特殊标头要求</li>
+                    <li>在生产环境中，应添加所有需要访问的源（包括正式环境）</li>
+                    <li>通配符(*)虽然方便但会带来安全风险，不推荐在生产环境使用</li>
+                </ul>
+                
+                <p>正确配置后，航运网站将能够安全地与 Azure Table Storage 交互，解决跨域资源共享(CORS)错误。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Azure 解决方案架构师考试模拟题 - 基于航运网站案例
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 获取所有下拉框
+            const select1 = document.getElementById('select1');
+            const select2 = document.getElementById('select2');
+            const select3 = document.getElementById('select3');
+            const select4 = document.getElementById('select4');
+            
+            // 查看答案按钮
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // 设置正确的选项
+                select1.value = 'AllowedOrigins';
+                select2.value = 'test';
+                select3.value = 'AllowedOrigins';
+                select4.value = 'post-only';
+            });
+        });
+    </script>
+</body>
+</html>

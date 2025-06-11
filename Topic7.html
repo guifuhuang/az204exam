@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topic 7: VanArsdel Ltd Case Study</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .requirements { background-color: #f8f9fa; padding: 15px; border-left: 4px solid #3498db; margin: 15px 0; }
+        .module { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .module-title { color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Topic 7: VanArsdel Ltd Case Study</h1>
+    
+    <div class="section">
+        <h2>Case Study Instructions</h2>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        <p><strong>To start the case study:</strong> To display the first question, click the Next button. Use the buttons in the left pane to explore the content before answering. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. When ready to answer, click the Question button.</p>
+    </div>
+
+    <div class="section">
+        <h2>Background</h2>
+        <p>VanArsdel Ltd. is a global office supply company. The company is based in Canada and has retail store locations across the world. The company is developing several cloud-based solutions to support their stores, distributors, suppliers, and delivery services.</p>
+    </div>
+
+    <div class="section">
+        <h2>Current Environment</h2>
+        
+        <div class="module">
+            <h3 class="module-title">Corporate Website</h3>
+            <p>The company provides a public website located at http://www.vanaisdelttd.com. The website consists of a React JavaScript user interface, HTML, CSS, image assets, and several APIs hosted in Azure functions.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        
+        <div class="requirements">
+            <h3>Corporate Website Requirements</h3>
+            <ul>
+                <li>Secure the website by using SSL</li>
+                <li>Minimize costs for data storage and hosting</li>
+                <li>Implement native GitHub workflows for continuous integration and continuous deployment (CI/CD)</li>
+                <li>Distribute the website content globally for local use</li>
+                <li>Implement monitoring using Application Insights and availability web tests including SSL certificate validity and custom header value verification</li>
+                <li>The website must have 99.95 percent uptime</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Retail Store Locations Requirements</h3>
+            <ul>
+                <li>Azure Functions must process data immediately when data is uploaded to Blob storage</li>
+                <li>Azure Functions must update Azure Cosmos DB using native SQL language queries</li>
+                <li>Audit store sale transaction information nightly to validate data, process sales financials, and reconcile inventory</li>
+                <li>Perform point-in-time restoration of retail store location data due to unexpected data deletion</li>
+                <li>Address high Request Unit (RU) usage and point read latency issues in Azure Cosmos DB queries</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Delivery Services Requirements</h3>
+            <ul>
+                <li>Store service telemetry data in Azure Cosmos DB using an Azure Function</li>
+                <li>Data must include: item ID, delivery vehicle license plate, vehicle package capacity, and current vehicle location coordinates</li>
+                <li>Store delivery driver profile information in Azure Active Directory (Azure AD) using an Azure Function called from the corporate website</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Inventory Services Requirements</h3>
+            <ul>
+                <li>Provide third-party API access to a specific blob within retail store storage account for three months</li>
+                <li>Access must be read-only</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Security Requirements</h3>
+            <ul>
+                <li>Centralize management and distribution of configuration data for all Azure Functions across environments and geographies</li>
+                <li>Encrypt configuration data using company-provided RSA-HSM key</li>
+                <li>Use Azure AD for authentication and authorization</li>
+                <li>Use managed identities for services where possible</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

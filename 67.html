@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 安全配置测试题 - Munson's Pickles and Preserves Farm</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #005a9e;
+        }
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-left: 5px solid #0078d4;
+            padding-left: 15px;
+        }
+        .scenario {
+            background: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .scenario h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        .requirements {
+            background: #fff8e6;
+            border-left: 4px solid #ffb900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirements h3 {
+            color: #d68500;
+            margin-bottom: 10px;
+        }
+        .problem {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .problem h3 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+        .options-section {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .options-section h2 {
+            color: #0078d4;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            border-color: #0078d4;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        .option.selected {
+            border-color: #0078d4;
+            background-color: #e3f2fd;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        .option-letter {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .option-content {
+            flex-grow: 1;
+        }
+        .button-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .answer-section {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+            border-top: 2px dashed #0078d4;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        .answer-content h3 {
+            color: #0078d4;
+            margin: 15px 0 10px;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation {
+            background: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 安全配置测试题</h1>
+            <p>Topic 8: Munson's Pickles and Preserves Farm</p>
+        </header>
+        
+        <div class="question-section">
+            <h2>问题 67: 保护企业网站以满足安全要求</h2>
+            
+            <div class="scenario">
+                <h3>场景描述</h3>
+                <p>Munson's Pickles and Preserves Farm 正在将企业网站从本地数据中心迁移到 Microsoft Azure。迁移需要满足特定的安全要求，包括保护通信安全、限制内容访问以及应用最小权限原则。</p>
+            </div>
+            
+            <div class="requirements">
+                <h3>安全要求</h3>
+                <ul>
+                    <li>使用 TLS/HTTPS 保护所有 Web 通信</li>
+                    <li>根据国家/地区限制 Web 内容以满足合规要求</li>
+                    <li>对所有用户权限和进程访问权限应用最小权限原则</li>
+                    <li>使用 Azure 资源的托管标识进行 Microsoft Entra ID 身份验证</li>
+                </ul>
+            </div>
+            
+            <div class="problem">
+                <h3>当前问题</h3>
+                <p>企业网站需要安全加固以满足上述要求，同时解决农民报告的 HTTP 503 错误和分销商报告的 HTTP 502 错误。</p>
+            </div>
+        </div>
+        
+        <div class="options-section">
+            <h2>请选择正确的解决方案</h2>
+            
+            <div class="option" data-value="A">
+                <div class="option-letter">A</div>
+                <div class="option-content">
+                    <p>创建具有标准计划的 App Service 实例。使用 TLS/SSL 证书配置自定义域。</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="B">
+                <div class="option-letter">B</div>
+                <div class="option-content">
+                    <p>创建带有 Web 应用程序防火墙 (WAF) 的 Azure 应用程序网关。配置端到端 TLS 加密和 WAF。</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="C">
+                <div class="option-letter">C</div>
+                <div class="option-content">
+                    <p>创建 Azure Cache for Redis 实例。更新代码以支持缓存。</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="D">
+                <div class="option-letter">D</div>
+                <div class="option-content">
+                    <p>创建 Azure 内容分发网络配置文件和端点。配置该端点。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2>正确答案与解析</h2>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案: B</h3>
+                    <p>创建带有 Web 应用程序防火墙 (WAF) 的 Azure 应用程序网关。配置端到端 TLS 加密和 WAF。</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析:</h3>
+                    <p>此解决方案满足所有安全要求：</p>
+                    
+                    <ul>
+                        <li><span class="highlight">端到端 TLS 加密</span> 满足使用 TLS/HTTPS 保护所有 Web 通信的要求</li>
+                        <li><span class="highlight">Web 应用程序防火墙 (WAF)</span> 提供基于国家/地区的内容限制功能，满足合规要求</li>
+                        <li>应用程序网关可以与 Azure 资源的托管标识集成，支持 Microsoft Entra ID 身份验证</li>
+                        <li>此方案同时有助于解决 HTTP 502/503 错误，提供负载均衡和自动扩展能力</li>
+                    </ul>
+                    
+                    <p>其他选项分析：</p>
+                    <ul>
+                        <li><strong>A</strong>：仅解决 TLS 要求，但无法满足国家/地区限制内容的要求</li>
+                        <li><strong>C</strong>：缓存方案主要优化性能，与安全要求无直接关系</li>
+                        <li><strong>D</strong>：CDN 可提升性能但不提供 WAF 的安全功能，无法满足国家/地区限制要求</li>
+                    </ul>
+                    
+                    <p>文档中明确要求："Secure all web communications using TLS/HTTPS" 和 "Restrict web content by country/region for compliance"，选项B是唯一同时满足这两项关键安全要求的解决方案。</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 认证模拟测试题</p>
+        </footer>
+    </div>
+
+    <script>
+        // 选项选择逻辑
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除之前的选择
+                options.forEach(opt => opt.classList.remove('selected'));
+                // 添加当前选择
+                this.classList.add('selected');
+            });
+        });
+
+        // 查看答案逻辑
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

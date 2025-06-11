@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 电子商务应用用户声明访问 - Topic 6, Coho Winery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #004578, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #0078d4, #004578);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .case-info {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-bottom: 2px dashed #0078d4;
+            font-size: 14px;
+        }
+        
+        .question-container {
+            padding: 25px;
+            background-color: #f8f9fa;
+        }
+        
+        .question-box {
+            background: white;
+            border: 2px solid #0078d4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-title {
+            color: #004578;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .question-content {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .options-container {
+            margin: 20px 0;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .option:hover {
+            background: #d1e9ff;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #cce5ff;
+            border-color: #004578;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        
+        .option::before {
+            content: "A";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .option:nth-child(2)::before { content: "B"; }
+        .option:nth-child(3)::before { content: "C"; }
+        .option:nth-child(4)::before { content: "D"; }
+        
+        .controls {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .answer-container {
+            background: #d4edda;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #28a745;
+        }
+        
+        .answer-container h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-left: 4px solid #28a745;
+        }
+        
+        .explanation {
+            background: #e2f0fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .explanation h4 {
+            color: #004578;
+            margin-bottom: 10px;
+        }
+        
+        .azure-logo {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .azure-logo span {
+            background: #0078d4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .security-diagram {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .security-diagram img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .diagram-caption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .question-container {
+                padding: 15px;
+            }
+            
+            .option {
+                padding: 12px 12px 12px 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 电子商务应用用户声明访问</h1>
+            <p>Topic 6, Coho Winery - 安全声明处理</p>
+        </header>
+        
+        <div class="case-info">
+            <p><strong>案例背景：</strong> Coho Winery 正在迁移其电子商务系统到 Azure。该应用使用 Azure App Service 身份验证和 Azure AD 保护登录过程，需要访问用户声明对象中的数据。</p>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-box">
+                <div class="question-title">
+                    <i>📝</i>
+                    <h2>试题内容</h2>
+                </div>
+                <div class="question-content">
+                    <p><strong>问题：</strong> 您需要在电子商务Web应用程序中访问用户声明对象的数据。首先应该做什么？</p>
+                    <div class="azure-logo">
+                        <span>Azure App Service Authentication & Azure AD</span>
+                    </div>
+                    
+                    <div class="security-diagram">
+                        <div style="display:inline-block;background:#f0f8ff;padding:15px;border-radius:10px;text-align:left">
+                            <div>1. 用户登录 → Azure AD认证</div>
+                            <div>2. 认证通过 → 生成包含声明的令牌</div>
+                            <div>3. 令牌传递 → 电子商务Web应用</div>
+                            <div>4. 应用解析令牌 → 访问用户声明</div>
+                        </div>
+                        <div class="diagram-caption">用户声明访问流程示意图</div>
+                    </div>
+                </div>
+                
+                <div class="options-container">
+                    <div class="option" data-value="A">
+                        <strong>A.</strong> 编写自定义代码，从电子商务Web应用程序调用Microsoft Graph API。
+                    </div>
+                    <div class="option" data-value="B">
+                        <strong>B.</strong> 使用Resource Manager创建角色分配API，将Contributor RBAC角色分配给电子商务Web应用程序。
+                    </div>
+                    <div class="option" data-value="C">
+                        <strong>C.</strong> 更新电子商务Web应用程序以读取HTTP请求头值。
+                    </div>
+                    <div class="option" data-value="D">
+                        <strong>D.</strong> 使用Azure CLI，从电子商务结账API到电子商务Web应用程序启用跨域资源共享（CORS）。
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn" id="check-answer" disabled>查看答案</button>
+                </div>
+                
+                <div class="answer-container" id="answer-section">
+                    <h3>正确答案及解析</h3>
+                    <div class="correct-answer">
+                        <span style="color:#28a745">✓ 正确答案：C. 更新电子商务Web应用程序以读取HTTP请求头值</span>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h4>解析说明：</h4>
+                        <p>根据Coho Winery案例的安全要求：</p>
+                        <p><strong>"E-commerce application sign-ins must be secured using Azure App Service authentication and Azure Active Directory (AAD)."</strong></p>
+                        
+                        <p>1. 当使用Azure App Service身份验证时，用户认证后，用户声明信息会包含在HTTP请求头中（如<code>X-MS-CLIENT-PRINCIPAL</code>和<code>X-MS-CLIENT-PRINCIPAL-ID</code>）</p>
+                        <p>2. 最直接有效的方式是更新Web应用程序代码，直接从这些请求头中读取用户声明信息</p>
+                        <p>3. 这种方法不需要额外的API调用或复杂的配置，符合最小权限原则</p>
+                        
+                        <p><strong>为什么其他选项不正确？</strong></p>
+                        <p><strong>A.</strong> 调用Microsoft Graph API需要额外权限且增加延迟，不是访问基本用户声明的首选方法</p>
+                        <p><strong>B.</strong> 分配Contributor RBAC角色会授予过多权限（包括管理资源），存在安全风险</p>
+                        <p><strong>D.</strong> CORS解决的是跨域问题，与访问用户声明无关</p>
+                        
+                        <p><strong>实现建议：</strong></p>
+                        <pre>// 示例代码：从请求头获取用户声明
+var claims = context.Request.Headers["X-MS-CLIENT-PRINCIPAL"];
+if (!string.IsNullOrEmpty(claims))
+{
+    var userClaims = JsonConvert.DeserializeObject&lt;ClientPrincipal&gt;(claims);
+    // 使用userClaims.UserDetails和userClaims.Claims
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 选项选择事件
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除之前的选择
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 选中当前选项
+                    this.classList.add('selected');
+                    
+                    // 启用查看答案按钮
+                    checkAnswerBtn.disabled = false;
+                });
+            });
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                this.textContent = '答案已显示';
+                this.disabled = true;
+                this.style.backgroundColor = '#28a745';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    </script>
+</body>
+</html>

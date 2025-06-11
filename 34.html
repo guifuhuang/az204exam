@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Grid消息处理 - 测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #005eb8;
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 5px solid #ffb900;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .question {
+            background: #f0f7ff;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #004578;
+        }
+        .options {
+            margin: 25px 0;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .option:hover {
+            border-color: #0078d4;
+            background: #e6f7ff;
+        }
+        .option.selected {
+            border-color: #0078d4;
+            background: #e6f7ff;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        .option input {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option label {
+            font-size: 18px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 14px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        #check-answer {
+            background: #107c10;
+            color: white;
+        }
+        #check-answer:hover {
+            background: #0e6b0e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        #reset {
+            background: #d83b01;
+            color: white;
+        }
+        #reset:hover {
+            background: #b33101;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .answer-section {
+            background: #e6f7ff;
+            border: 1px solid #0078d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0078d4;
+        }
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .correct-answer {
+            font-weight: 600;
+            color: #107c10;
+            margin: 15px 0;
+            font-size: 22px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .explanation {
+            line-height: 1.8;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #0078d4;
+            border-radius: 0 8px 8px 0;
+        }
+        .reference {
+            margin-top: 25px;
+            padding: 15px;
+            background: #fff4ce;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .reference h3 {
+            color: #d83b01;
+            margin-bottom: 10px;
+        }
+        .requirements {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .requirements h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Event Grid消息处理</h1>
+            <div class="subtitle">City Power & Light案例 - 消息处理配置</div>
+        </header>
+        
+        <div class="content">
+            <div class="question">
+                <div class="question-text">
+                    <p><strong>QUESTION NO: 34</strong></p>
+                    <p>您需要确保处理所有来自Azure Event Grid的消息。</p>
+                    <p>根据City Power & Light案例中的要求，您应该使用什么？</p>
+                </div>
+                
+                <div class="requirements">
+                    <h3>文档要求摘要</h3>
+                    <ul>
+                        <li>Azure Event Grid必须使用Azure Service Bus进行基于队列的负载均衡</li>
+                        <li>Azure Event Grid中的事件必须直接路由到Service Bus队列以用于缓冲</li>
+                        <li>来自Azure Service Bus和其他Azure服务的事件必须继续路由到Azure Event Grid进行处理</li>
+                    </ul>
+                </div>
+                
+                <div class="options">
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="answer" id="optionA">
+                        <label for="optionA">A. Azure Event Grid topic</label>
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="answer" id="optionB">
+                        <label for="optionB">B. Azure Service Bus topic</label>
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="answer" id="optionC">
+                        <label for="optionC">C. Azure Service Bus queue</label>
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="answer" id="optionD">
+                        <label for="optionD">D. Azure Storage queue</label>
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="answer" id="optionE">
+                        <label for="optionE">E. Azure Logic App custom connector</label>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button id="check-answer">查看答案</button>
+                    <button id="reset">重置选择</button>
+                </div>
+                
+                <div class="answer-section" id="answer-section">
+                    <h2>正确答案与解析</h2>
+                    <div class="answer-content">
+                        <div class="correct-answer">✓ 正确答案：C. Azure Service Bus queue</div>
+                        
+                        <div class="explanation">
+                            <p><strong>解析说明：</strong></p>
+                            <p>根据City Power & Light案例文档中的要求：</p>
+                            
+                            <ul>
+                                <li><span class="highlight">Azure Event Grid必须使用Azure Service Bus进行基于队列的负载均衡</span></li>
+                                <li><span class="highlight">Azure Event Grid中的事件必须直接路由到Service Bus队列以用于缓冲</span></li>
+                            </ul>
+                            
+                            <p>因此，为了确保处理所有来自Azure Event Grid的消息，应使用：</p>
+                            
+                            <p><strong>Azure Service Bus queue (Service Bus队列)</strong></p>
+                            
+                            <p>原因：</p>
+                            <ul>
+                                <li>Service Bus队列提供可靠的异步消息传递机制</li>
+                                <li>支持基于队列的负载均衡，确保消息不会丢失</li>
+                                <li>提供消息缓冲能力，处理突发流量</li>
+                                <li>与Event Grid无缝集成，确保事件可靠传递</li>
+                            </ul>
+                            
+                            <p>其他选项分析：</p>
+                            <ul>
+                                <li><strong>A. Azure Event Grid topic</strong>：用于事件发布，但不直接提供消息处理保证</li>
+                                <li><strong>B. Azure Service Bus topic</strong>：适用于发布/订阅场景，但文档明确要求使用队列</li>
+                                <li><strong>D. Azure Storage queue</strong>：功能有限，不支持高级消息处理功能</li>
+                                <li><strong>E. Azure Logic App custom connector</strong>：用于连接服务，不直接解决消息处理问题</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="reference">
+                            <h3>参考文档要点 (Topic3.docx)</h3>
+                            <p>• Azure Event Grid必须使用Azure Service Bus进行基于队列的负载均衡</p>
+                            <p>• Azure Event Grid中的事件必须直接路由到Service Bus队列以用于缓冲</p>
+                            <p>• 来自Azure Service Bus和其他Azure服务的事件必须继续路由到Azure Event Grid进行处理</p>
+                            <p>• 公司架构使用Service Bus和Event Grid处理消息和事件</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Azure认证考试模拟题 | City Power & Light案例研究 | 消息处理配置</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const resetBtn = document.getElementById('reset');
+            const answerSection = document.getElementById('answer-section');
+            const options = document.querySelectorAll('.option');
+            
+            function selectOption(element) {
+                options.forEach(opt => opt.classList.remove('selected'));
+                element.classList.add('selected');
+                const radio = element.querySelector('input[type="radio"]');
+                radio.checked = true;
+            }
+            
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            });
+            
+            resetBtn.addEventListener('click', function() {
+                options.forEach(opt => {
+                    opt.classList.remove('selected');
+                    const radio = opt.querySelector('input[type="radio"]');
+                    radio.checked = false;
+                });
+                answerSection.style.display = 'none';
+            });
+            
+            // 为每个选项添加点击事件
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

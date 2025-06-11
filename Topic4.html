@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Topic 4: Proseware, Inc Case Study</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .requirements, .issues { padding-left: 20px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        .note { 
+            background-color: #f9f9f9; 
+            padding: 15px; 
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .code-block { 
+            background-color: #f5f5f5; 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            overflow: auto;
+        }
+        .code-title { 
+            font-weight: bold; 
+            margin: 15px 0 5px 0;
+            color: #2c3e50;
+        }
+        .highlight { background-color: #fffacd; padding: 2px; }
+        .code-comment { color: #6a737d; }
+        .code-keyword { color: #d73a49; }
+        .code-type { color: #6f42c1; }
+        .code-string { color: #032f62; }
+    </style>
+</head>
+<body>
+    <h1>Topic 4: Proseware, Inc</h1>
+    
+    <div class="section">
+        <h2>Case Study</h2>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <div class="note">
+            <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        </div>
+        <p><strong>To start the case study:</strong> To display the first question, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. When you are ready to answer a question, click the Question button to return to the question.</p>
+    </div>
+
+    <div class="section">
+        <h2>Background</h2>
+        <p>You are a developer for Proseware, Inc. You are developing an application that applies a set of governance policies for Proseware's internal services, external services, and applications. The application will also provide a shared library for common functionality.</p>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        <div class="requirements">
+            <h3>Policy service</h3>
+            <ul>
+                <li>Develop and deploy a stateful ASP.NET Core 2.1 web application named Policy service to Azure App Service Web App</li>
+                <li>Reacts to events from Azure Event Grid and performs policy actions</li>
+                <li>Must include Event Grid Event ID field in all Application Insights telemetry</li>
+                <li>Must use Application Insights to automatically scale with the number of policy actions</li>
+            </ul>
+            
+            <h3>Policies</h3>
+            <ul>
+                <li><strong>Log policy:</strong>
+                    <ul>
+                        <li>All Azure App Service Web Apps must write logs to Azure Blob storage</li>
+                        <li>All log files saved to container named <span class="highlight">logdrop</span></li>
+                        <li>Logs must remain in container for <span class="highlight">15 days</span></li>
+                    </ul>
+                </li>
+                <li><strong>Authentication events:</strong>
+                    <ul>
+                        <li>All authentication events must be processed by Policy service</li>
+                        <li>Sign outs must be processed as quickly as possible</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>PolicyLib</h3>
+            <ul>
+                <li>Shared library containing common functionality for ASP.NET Core services/applications</li>
+                <li>Must:
+                    <ul>
+                        <li>Exclude non-user actions from Application Insights telemetry</li>
+                        <li>Provide methods that allow web services to scale themselves</li>
+                        <li>Ensure scaling actions do not disrupt application usage</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>Other Requirements</h3>
+            <ul>
+                <li><strong>Anomaly detection service:</strong>
+                    <ul>
+                        <li>Azure Machine Learning model deployed as web service</li>
+                        <li>If anomaly detected, calls Azure Function via HTTP WebHook to email administrators</li>
+                    </ul>
+                </li>
+                <li><strong>Health monitoring:</strong>
+                    <ul>
+                        <li>All web applications/services have health monitoring at <span class="highlight">/health</span> endpoint</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Issues</h2>
+        <div class="issues">
+            <ul>
+                <li><strong>Policy loss:</strong>
+                    <p>When deploying Policy service, policies may not be applied if they were in process during deployment</p>
+                </li>
+                <li><strong>Performance issue:</strong>
+                    <p>Under heavy load, anomaly detection service undergoes slowdowns and rejects connections</p>
+                </li>
+                <li><strong>Notification latency:</strong>
+                    <p>Anomaly detection emails sometimes arrive several minutes after detection</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>App Code</h2>
+        <p>Relevant portions of the app files are shown below. Line numbers are included for reference only and include a two-character prefix that denotes the specific file to which they belong.</p>
+        
+        <div class="code-title">EventGridController.cs</div>
+        <div class="code-block"><pre>
+
+EG01    <span class="code-keyword">public</span> <span class="code-keyword">class</span> <span class="code-type">EventgridController</span> : <span class="code-type">Controller</span>
+EG02    {
+EG03        <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-type">AsyncLocal</span>&lt;<span class="code-keyword">string</span>&gt; EventId = <span class="code-keyword">new</span> <span class="code-type">AsyncLocal</span>&lt;<span class="code-keyword">string</span>&gt;();
+EG04        <span class="code-keyword">public</span> <span class="code-type">IActionResult</span> Process(<span class="code-keyword">string</span> eventsJson)
+EG05        {
+EG06            <span class="code-keyword">var</span> events = <span class="code-type">JArray</span>.Parse(eventsJson);
+EG07    
+EG08            <span class="code-keyword">foreach</span> (<span class="code-keyword">var</span> @event <span class="code-keyword">in</span> events)
+EG09            {
+EG10                EventId.Value = @event[<span class="code-string">"id"</span>].ToString();
+EG11                <span class="code-keyword">if</span> (@event[<span class="code-string">"topic"</span>].ToString().Contains(<span class="code-string">"providers/Microsoft.Storage"</span>))
+EG12                {
+EG13                    SendToAnomalyDetectionService(@event[<span class="code-string">"data"</span>][<span class="code-string">"url"</span>].ToString());
+EG14                }
+EG15                
+EG16                {
+EG17                    EnsureLogging(@event[<span class="code-string">"subject"</span>].ToString());
+EG18                }
+EG19            }
+EG20            <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+EG21        }
+EG22        <span class="code-keyword">private</span> <span class="code-keyword">void</span> EnsureLogging(<span class="code-keyword">string</span> resource)
+EG23        {
+EG24            <span class="code-comment">...</span>
+EG25        }
+EG26        <span class="code-keyword">private</span> <span class="code-keyword">async</span> <span class="code-type">Task</span> SendToAnomalyDetectionService(<span class="code-keyword">string</span> url)
+EG27        {
+EG28            <span class="code-keyword">var</span> content = GetData(url);
+EG29            <span class="code-keyword">var</span> scoreRequest = <span class="code-keyword">new</span>
+EG30            {
+EG31                Inputs = <span class="code-keyword">new</span> <span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-type">List</span>&lt;<span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">string</span>&gt;&gt;&gt;
+EG32                {
+EG33                    {
+EG34                        <span class="code-string">"input1"</span>,
+EG35                        <span class="code-keyword">new</span> <span class="code-type">List</span>&lt;<span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">string</span>&gt;&gt;()
+EG36                        {
+EG37                            <span class="code-keyword">new</span> <span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">string</span>&gt;()
+EG38                            {
+EG39                                { 
+EG40                                    <span class="code-string">"logcontent"</span>, content 
+EG41                                }
+EG42                            }
+EG43                        }
+EG44                    },
+EG45                },
+EG46                GlobalParameters = <span class="code-keyword">new</span> <span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">string</span>&gt;() { }
+EG47            };
+EG48            <span class="code-keyword">var</span> result = <span class="code-keyword">await</span> <span class="code-keyword">new</span> <span class="code-type">HttpClient</span>().PostAsJsonAsync&lt;<span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">object</span>&gt;&gt;(<span class="code-string">"..."</span>, scoreRequest);
+EG49            <span class="code-keyword">var</span> rawModelResult = <span class="code-keyword">await</span> result.Content.ReadAsStringAsync();
+EG50            <span class="code-keyword">var</span> modelResult = <span class="code-type">JsonConvert</span>.DeserializeObject&lt;<span class="code-keyword">dynamic</span>&gt;(rawModelResult);
+EG51            <span class="code-keyword">if</span> (modelResult!= <span class="code-keyword">null</span> && modelResult[<span class="code-string">"modelResult"</span>]!= <span class="code-keyword">null</span> && modelResult[<span class="code-string">"modelResult"</span>][<span class="code-string">"notify"</span>]!= <span class="code-keyword">null</span>)
+EG52            {
+EG53                <span class="code-comment">...// 处理模型结果</span>
+EG54            }
+EG55        }
+EG56        <span class="code-keyword">private</span> (<span class="code-keyword">string</span> name, <span class="code-keyword">string</span> resourceGroup) ParseResourceId(<span class="code-keyword">string</span> resourceId)
+EG57        {
+EG58            <span class="code-comment">...// 解析资源ID的具体实现</span>
+EG59        }
+EG60        <span class="code-keyword">private</span> <span class="code-keyword">string</span> GetData(<span class="code-keyword">string</span> url)
+EG61        {
+EG62            <span class="code-comment">...// 获取数据的具体实现</span>
+EG63        }
+EG64        <span class="code-keyword">static</span> <span class="code-keyword">string</span> BlobStoreAccountSAS(<span class="code-keyword">string</span> containerName)
+EG65        {
+EG66            <span class="code-comment">...// 获取Blob存储账户SAS令牌的具体实现</span>
+EG67        }
+EG68    }
+        </pre></div>
+        
+        <div class="code-title">LoginEvent.cs</div>
+        <div class="code-block"><pre>
+LE01    <span class="code-keyword">public</span> <span class="code-keyword">class</span> <span class="code-type">LoginEvent</span>
+LE02    {
+LE03        
+LE04        <span class="code-keyword">public</span> <span class="code-keyword">string</span> subject { <span class="code-keyword">get</span>; <span class="code-keyword">set</span>; }
+LE05        <span class="code-keyword">public</span> <span class="code-type">DateTime</span> eventTime { <span class="code-keyword">get</span>; <span class="code-keyword">set</span>; }
+LE06        <span class="code-keyword">public</span> <span class="code-type">Dictionary</span>&lt;<span class="code-keyword">string</span>, <span class="code-keyword">string</span>&gt; data { <span class="code-keyword">get</span>; <span class="code-keyword">set</span>; }
+LE07        <span class="code-keyword">public</span> <span class="code-keyword">string</span> Serialize()
+LE08        {
+LE09            <span class="code-keyword">return</span> <span class="code-type">JsonConvert</span>.SerializeObject(<span class="code-keyword">this</span>);
+LE10        }
+LE11    }
+        </pre></div>
+    </div>
+</body>
+</html>

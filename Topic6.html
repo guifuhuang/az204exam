@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topic 6: Coho Winery Case Study</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h1, h2, h3 { color: #2c3e50; }
+        .section { margin-bottom: 30px; }
+        .requirements { background-color: #f8f9fa; padding: 15px; border-left: 4px solid #3498db; }
+        .code { 
+            background-color: #eee; 
+            padding: 15px; 
+            font-family: monospace; 
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+        .line-number {
+            color: #666;
+            display: inline-block;
+            width: 40px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic 6: Coho Winery Case Study</h1>
+    
+    <div class="section">
+        <h2>Case Study Instructions</h2>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        <p><strong>To start the case study:</strong> To display the first question, click the Next button. Use the buttons in the left pane to explore the content before answering. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. When ready to answer, click the Question button.</p>
+    </div>
+
+    <div class="section">
+        <h2>LabelMaker Application</h2>
+        <p>Coho Winery produces, bottles, and distributes a variety of wines globally. You are a developer implementing highly scalable and resilient applications to support online order processing by using Azure solutions.</p>
+        <p>The LabelMaker application prints labels for wine bottles. The application sends data to several printers and consists of five modules that run independently on virtual machines (VMs). Coho Winery plans to move the application to Azure and continue to support label creation.</p>
+        <p>External partners send data to the LabelMaker application to include artwork and text for custom label designs.</p>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        
+        <div class="requirements">
+            <h3>Data Requirements</h3>
+            <ul>
+                <li>Order data is stored as nonrelational JSON and must be queried using SQL.</li>
+                <li>Changes to the Order data must reflect immediately across all partitions. All reads must fetch the most recent writes.</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Security Requirements</h3>
+            <ul>
+                <li>Users must be able to provide access to documents, resources, and applications to external partners.</li>
+                <li>External partners must use their own credentials and authenticate with their organization’s identity management solution.</li>
+                <li>External partner logins must be audited monthly by a user account administrator for compliance.</li>
+                <li>Storage of e-commerce application settings must be maintained in Azure Key Vault.</li>
+                <li>E-commerce application sign-ins must be secured using Azure App Service authentication and Azure Active Directory (AAD).</li>
+                <li>Conditional access policies must be applied at the application level to protect company content.</li>
+                <li>The LabelMaker application must be secured using an AAD account with full access to all namespaces of the Azure Kubernetes Service (AKS) cluster.</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>LabelMaker App Requirements</h3>
+            <ul>
+                <li>Use Azure Monitor Container Health to monitor performance of workloads deployed to Kubernetes environments hosted on AKS.</li>
+                <li>Use Azure Container Registry to publish images supporting AKS deployment.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Architecture Issues</h2>
+        <ul>
+            <li>Calls to the Printer API App fail periodically due to printer communication timeouts.</li>
+            <li>Printer communication timeouts occur after 10 seconds. The label printer must only receive up to 5 attempts within one minute.</li>
+            <li>The order workflow fails to run upon initial deployment to Azure.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Order.json</h2>
+        <p>Relevant portions of the app files are shown below. Line numbers are included for reference only. This JSON file contains a representation of the data for an order that includes a single item.</p>
+        <div class="code">
+<span class="line-number">01:</span> {
+<span class="line-number">02:</span>   "id": 1,
+<span class="line-number">03:</span>   "customers": [
+<span class="line-number">04:</span>     {
+<span class="line-number">05:</span>       "familyName": "Doe",
+<span class="line-number">06:</span>       "givenName": "John",
+<span class="line-number">07:</span>       "customerid": 5
+<span class="line-number">08:</span>     }
+<span class="line-number">09:</span>   ],
+<span class="line-number">10:</span>   "line_items": [
+<span class="line-number">11:</span>     {
+<span class="line-number">12:</span>       "fulfillable_quantity": 1,
+<span class="line-number">13:</span>       "id": 6,
+<span class="line-number">14:</span>       "price": "199.99",
+<span class="line-number">15:</span>       "product_id": 7513594,
+<span class="line-number">16:</span>       "quantity": 1,
+<span class="line-number">17:</span>       "requires_shipping": true,
+<span class="line-number">18:</span>       "sku": "SFC-342-N",
+<span class="line-number">19:</span>       "title": "Surface Go",
+<span class="line-number">20:</span>       "vendor": "Microsoft",
+<span class="line-number">21:</span>       "name": "Surface Go - 8GB",
+<span class="line-number">22:</span>       "taxable": true,
+<span class="line-number">23:</span>       "tax_lines": [
+<span class="line-number">24:</span>         {
+<span class="line-number">25:</span>           "title": "State Tax",
+<span class="line-number">26:</span>           "price": "3.98",
+<span class="line-number">27:</span>           "rate": 0.06
+<span class="line-number">28:</span>         }
+<span class="line-number">29:</span>       ],
+<span class="line-number">30:</span>       "total_discount": "5.00",
+<span class="line-number">31:</span>       "discount_allocations": [
+<span class="line-number">32:</span>         {
+<span class="line-number">33:</span>           "amount": "5.00",
+<span class="line-number">34:</span>           "discount_application_index": 2
+<span class="line-number">35:</span>         }
+<span class="line-number">36:</span>       ]
+<span class="line-number">37:</span>     }
+<span class="line-number">38:</span>   ],
+<span class="line-number">39:</span>   "address": {
+<span class="line-number">40:</span>     "state": "NY"
+<span class="line-number">41:</span>   }
+<span class="line-number">42:</span> }
+        </div>
+    </div>
+</body>
+</html>

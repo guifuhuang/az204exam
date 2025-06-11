@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proseware案例测试题 - 问题35</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        .header h1 {
+            color: #182848;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            color: #4b6cb7;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .question {
+            background-color: #f8f9fa;
+            border-left: 5px solid #4b6cb7;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .question h2 {
+            color: #182848;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .question p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .option:hover {
+            border-color: #4b6cb7;
+            background-color: #f0f5ff;
+            transform: translateY(-2px);
+        }
+        .option input {
+            margin-right: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(90deg, #182848, #4b6cb7);
+        }
+        .answer {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2196f3;
+        }
+        .answer h3 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .answer h3::before {
+            content: "✓";
+            background-color: #4caf50;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .answer-content {
+            margin-top: 15px;
+        }
+        .answer-content p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .correct-options {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        .correct-options div {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .correct-options div::before {
+            content: "•";
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .explanation {
+            background-color: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .explanation h4 {
+            color: #f57f17;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation h4::before {
+            content: "!";
+            background-color: #ffc107;
+            color: #333;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+                width: 95%;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .question h2 {
+                font-size: 20px;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Topic 4: Proseware, Inc 案例测试题</h1>
+            <div class="subtitle">问题35 - 解决通知延迟问题</div>
+        </div>
+        
+        <div class="question">
+            <h2>问题描述</h2>
+            <p>用户报告异常检测邮件有时在检测到异常后几分钟才到达（通知延迟问题）。您需要解决此通知延迟问题。</p>
+            <p>请选择两个正确的操作（每个正确选项得1分）：</p>
+            
+            <div class="options">
+                <div class="option">
+                    <input type="checkbox" id="optionA">
+                    <label for="optionA">A. 将"始终开启"设置为true</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionB">
+                    <label for="optionB">B. 确保Azure Function使用应用服务计划</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionC">
+                    <label for="optionC">C. 将"始终开启"设置为false</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="optionD">
+                    <label for="optionD">D. 确保Azure Function设置为使用消费计划</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="showAnswerBtn">查看答案</button>
+        </div>
+        
+        <div class="answer" id="answerSection">
+            <h3>正确答案</h3>
+            <div class="answer-content">
+                <div class="correct-options">
+                    <div>A. 将"始终开启"设置为true</div>
+                    <div>B. 确保Azure Function使用应用服务计划</div>
+                </div>
+                
+                <div class="explanation">
+                    <h4>解释说明</h4>
+                    <p>通知延迟问题是由Azure Function的冷启动引起的：</p>
+                    <p>1. 在消费计划（Consumption Plan）下，Azure Function在不活动时会进入休眠状态，当检测到异常需要发送邮件时，Function需要重新启动（冷启动），导致延迟</p>
+                    <p>2. 解决方案是使用应用服务计划（App Service Plan）并启用"始终开启"（Always On）功能：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>选项B确保Function使用应用服务计划（支持Always On）</li>
+                        <li>选项A设置Always On为true，防止Function进入休眠状态</li>
+                    </ul>
+                    <p>3. 选项C（设置Always On为false）会加剧延迟问题，选项D（使用消费计划）无法解决冷启动问题，因此不正确</p>
+                    <p>4. 此解决方案确保Azure Function随时准备处理异常检测请求，从而减少邮件通知延迟</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Topic 4: Proseware, Inc 案例测试题 | 问题35</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showAnswerBtn').addEventListener('click', function() {
+            const answerSection = document.getElementById('answerSection');
+            answerSection.style.display = 'block';
+            this.textContent = '答案已显示';
+            this.disabled = true;
+            this.style.opacity = '0.7';
+        });
+    </script>
+</body>
+</html>

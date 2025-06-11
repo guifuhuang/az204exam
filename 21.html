@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 问题21 - HTTP 502 错误排查</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .question-container {
+            padding: 25px;
+            background: #f0f7ff;
+            border-bottom: 2px solid #d0e8ff;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .scenario {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            padding: 15px;
+            margin: 12px 0;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            background: #e9ecef;
+            border-color: #0078d7;
+        }
+        .option.selected {
+            background: #d1e7ff;
+            border-color: #0078d7;
+            box-shadow: 0 0 0 2px rgba(0,120,215,0.3);
+        }
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .controls {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .answer-panel {
+            padding: 25px;
+            background: #e3f2fd;
+            display: none;
+        }
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #4caf50;
+        }
+        .explanation {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 5px solid #ffc107;
+        }
+        .code {
+            font-family: 'Consolas', monospace;
+            background: #2c3e50;
+            color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: block;
+        }
+        .reference {
+            color: #0078d7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-size: 14px;
+        }
+        .note {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AZ-204 认证考试 - 问题21</h1>
+            <div class="subtitle">HTTP 502 错误排查</div>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <h2>问题描述</h2>
+                <div class="scenario">
+                    <p><strong>场景：</strong>ContentUploadService 用户报告偶尔在特定页面看到 HTTP 502 响应。</p>
+                    <p>"502 bad gateway" 和 "503 service unavailable" 是 Azure App Service 托管应用中常见的错误。</p>
+                </div>
+                <p><strong>问题：</strong>您需要调查 HTTP 服务器日志输出来解决 ContentUploadService 的问题，应首先使用哪个命令？</p>
+                
+                <div class="options">
+                    <div class="option" data-value="A">
+                        <span class="option-letter">A</span>
+                        az webapp log
+                    </div>
+                    <div class="option" data-value="B">
+                        <span class="option-letter">B</span>
+                        az ams live-output
+                    </div>
+                    <div class="option" data-value="C">
+                        <span class="option-letter">C</span>
+                        az monitor activity-log
+                    </div>
+                    <div class="option" data-value="D">
+                        <span class="option-letter">D</span>
+                        az container attach
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="show-answer" class="btn">查看答案</button>
+            </div>
+            
+            <div id="answer-panel" class="answer-panel">
+                <div class="answer-content">
+                    <div class="correct-answer">
+                        <h3>正确答案：C. az monitor activity-log</h3>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h3>解析：</h3>
+                        <p>根据文档内容和Azure最佳实践：</p>
+                        
+                        <h4>为什么选择 az monitor activity-log？</h4>
+                        <ol>
+                            <li><strong>排查顺序要求</strong>：
+                                <p>文档明确说明故障排除需按顺序执行三个任务，第一步应检查平台级问题</p>
+                            </li>
+                            <li><strong>服务状态确认</strong>：
+                                <p>Microsoft Azure会在服务中断或性能下降时公开通知（文档原文）</p>
+                                <p><span class="code">az monitor activity-log</span> 可快速确认是否为Azure平台问题</p>
+                            </li>
+                            <li><strong>错误类型匹配</strong>：
+                                <p>HTTP 502/503错误通常是网关或服务不可用问题，首先需要排除平台级故障</p>
+                            </li>
+                        </ol>
+                        
+                        <h4>排除其他选项的原因：</h4>
+                        <ul>
+                            <li><strong>A. az webapp log</strong>：
+                                <p>用于查看应用日志，应在确认非平台问题后使用（排查顺序的后续步骤）</p>
+                            </li>
+                            <li><strong>B. az ams live-output</strong>：
+                                <p>仅适用于Azure媒体服务，与ContentUploadService无关</p>
+                            </li>
+                            <li><strong>D. az container attach</strong>：
+                                <p>适用于容器实例，但文档未提及ContentUploadService使用容器部署</p>
+                            </li>
+                        </ul>
+                        
+                        <h4>参考命令示例：</h4>
+                        <div class="code">
+                            # 查看最近1小时的活动日志<br>
+                            az monitor activity-log list --offset 1h
+                        </div>
+                        
+                        <p class="note">官方参考文档：<br>
+                        <a class="reference" href="https://docs.microsoft.com/en-us/cli/azure/monitor/activity-log" target="_blank">
+                            Azure活动日志官方文档
+                        </a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            AZ-204 认证考试练习题 | 基于官方文档内容
+        </div>
+    </div>
+
+    <script>
+        // 选项选择逻辑
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+
+        // 查看答案逻辑
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const answerPanel = document.getElementById('answer-panel');
+            if (answerPanel.style.display === 'block') {
+                answerPanel.style.display = 'none';
+                this.textContent = '查看答案';
+            } else {
+                answerPanel.style.display = 'block';
+                this.textContent = '隐藏答案';
+            }
+        });
+    </script>
+</body>
+</html>

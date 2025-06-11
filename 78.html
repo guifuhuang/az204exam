@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Blob Storage 功能拖拽测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+        h1 {
+            color: #005a9e;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        .question {
+            background: #f8f9fa;
+            border-left: 4px solid #0078d4;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .drag-container {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .features, .requirements {
+            flex: 1;
+            min-width: 300px;
+        }
+        .features {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .requirements {
+            background: #e8f5e9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #005a9e;
+            font-size: 18px;
+        }
+        .feature-item {
+            background: white;
+            border: 2px dashed #64b5f6;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .feature-item:hover {
+            background: #bbdefb;
+            transform: translateY(-2px);
+        }
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .req-text {
+            flex: 1;
+            font-weight: 500;
+        }
+        .drop-zone {
+            min-height: 50px;
+            min-width: 200px;
+            border: 2px dashed #4caf50;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(76, 175, 80, 0.05);
+            transition: all 0.3s;
+        }
+        .drop-zone.active {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #2e7d32;
+        }
+        .dropped-item {
+            background: #c8e6c9;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 3px;
+            display: inline-block;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        .btn:hover {
+            background: #005a9e;
+        }
+        .answer {
+            background: #fffde7;
+            border-left: 4px solid #ffd600;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        .answer-title {
+            color: #f57f17;
+            margin-top: 0;
+        }
+        .correct-answer {
+            color: #2e7d32;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+        .explanation {
+            line-height: 1.6;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .drag-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Azure Blob Storage 功能拖拽测试题</h1>
+        
+        <div class="question">
+            <p><strong>QUESTION NO: 78 DRAG DROP</strong></p>
+            <p>你需要存储库存项图像。应该使用哪个 Azure Blob Storage 功能？</p>
+            <p>将适当的 Azure Blob Storage 功能拖到对应的需求上。每个功能可以使用一次、多次或完全不使用。</p>
+            <p>注意：每个正确选择得1分</p>
+        </div>
+        
+        <div class="drag-container">
+            <div class="features">
+                <div class="section-title">Azure Blob Storage 功能</div>
+                <div class="feature-item" draggable="true" data-feature="Index tags">Index tags</div>
+                <div class="feature-item" draggable="true" data-feature="Change feed">Change feed</div>
+                <div class="feature-item" draggable="true" data-feature="System properties">System properties</div>
+                <div class="feature-item" draggable="true" data-feature="User-defined metadata">User-defined metadata</div>
+            </div>
+            
+            <div class="requirements">
+                <div class="section-title">需求</div>
+                <div class="requirement-item">
+                    <div class="req-text">1. Store images in native format.</div>
+                    <div class="drop-zone" data-requirement="1"></div>
+                </div>
+                <div class="requirement-item">
+                    <div class="req-text">2. Store images Exif data.</div>
+                    <div class="drop-zone" data-requirement="2"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p>提示：根据 Fourth Coffee 案例研究文档，库存项图像要求为："Inventory item images must be stored as JPEG files in their native format with exchangeable image file format (Exif) data preserved"</p>
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer" id="answer-section">
+            <h2 class="answer-title">答案与说明</h2>
+            <div class="correct-answer">正确答案：</div>
+            <p>1. Store images in native format. → <strong>System properties</strong></p>
+            <p>2. Store images Exif data. → <strong>User-defined metadata</strong></p>
+            
+            <div class="correct-answer">说明：</div>
+            <div class="explanation">
+                <p>根据 Fourth Coffee 案例研究文档中的要求：</p>
+                <p><strong>System properties</strong>：用于存储图像的原生格式（JPEG文件）。系统属性包含文件类型、大小等基本信息，确保图像以其原始格式存储。</p>
+                <p><strong>User-defined metadata</strong>：用于存储图像的 Exif 数据。用户定义的元数据允许存储自定义键值对，适合保存 Exif 元数据（如相机型号、拍摄时间等）。</p>
+                <p>Index tags 用于索引和搜索，Change feed 用于跟踪更改历史，这两个功能不适用于题目中的具体要求。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有可拖拽元素
+            const draggableItems = document.querySelectorAll('.feature-item');
+            // 获取所有放置区域
+            const dropZones = document.querySelectorAll('.drop-zone');
+            // 获取查看答案按钮
+            const checkAnswerBtn = document.getElementById('check-answer');
+            // 获取答案区域
+            const answerSection = document.getElementById('answer-section');
+            
+            // 当前被拖拽的元素
+            let draggedItem = null;
+            
+            // 为每个可拖拽元素添加事件监听器
+            draggableItems.forEach(item => {
+                // 桌面端事件
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragend', dragEnd);
+                
+                // 移动端事件
+                item.addEventListener('touchstart', touchStart, {passive: false});
+                item.addEventListener('touchmove', touchMove, {passive: false});
+                item.addEventListener('touchend', touchEnd);
+            });
+            
+            // 为每个放置区域添加事件监听器
+            dropZones.forEach(zone => {
+                // 桌面端事件
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+                
+                // 移动端事件
+                zone.addEventListener('touchmove', preventScroll, {passive: false});
+                zone.addEventListener('touchend', touchDrop);
+            });
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                this.textContent = '答案已显示';
+                this.disabled = true;
+            });
+            
+            // 桌面端拖拽函数
+            function dragStart(e) {
+                draggedItem = this;
+                setTimeout(() => this.style.opacity = '0.4', 0);
+                e.dataTransfer.effectAllowed = 'move';
+            }
+            
+            function dragEnd() {
+                this.style.opacity = '1';
+                draggedItem = null;
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+                return false;
+            }
+            
+            function dragEnter(e) {
+                this.classList.add('active');
+                e.preventDefault();
+            }
+            
+            function dragLeave() {
+                this.classList.remove('active');
+            }
+            
+            function drop(e) {
+                e.preventDefault();
+                this.classList.remove('active');
+                
+                if (draggedItem) {
+                    // 复制被拖拽的元素
+                    const clonedItem = draggedItem.cloneNode(true);
+                    clonedItem.classList.add('dropped-item');
+                    clonedItem.style.opacity = '1';
+                    clonedItem.draggable = false;
+                    
+                    // 添加到放置区域
+                    this.innerHTML = '';
+                    this.appendChild(clonedItem);
+                }
+                
+                return false;
+            }
+            
+            // 移动端触摸函数
+            let touchStartX, touchStartY;
+            let touchDraggedItem = null;
+            let touchDropZone = null;
+            
+            function touchStart(e) {
+                touchDraggedItem = this;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                touchDraggedItem.style.transition = 'none';
+                touchDraggedItem.style.position = 'relative';
+                touchDraggedItem.style.zIndex = '1000';
+                e.preventDefault();
+            }
+            
+            function touchMove(e) {
+                if (!touchDraggedItem) return;
+                
+                e.preventDefault();
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - touchStartX;
+                const deltaY = touch.clientY - touchStartY;
+                
+                touchDraggedItem.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                
+                // 检查是否在放置区域上方
+                const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+                const dropZone = elements.find(el => el.classList.contains('drop-zone'));
+                
+                if (dropZone) {
+                    dropZones.forEach(zone => zone.classList.remove('active'));
+                    dropZone.classList.add('active');
+                    touchDropZone = dropZone;
+                } else {
+                    dropZones.forEach(zone => zone.classList.remove('active'));
+                    touchDropZone = null;
+                }
+            }
+            
+            function touchEnd() {
+                if (!touchDraggedItem) return;
+                
+                if (touchDropZone) {
+                    // 复制被拖拽的元素
+                    const clonedItem = touchDraggedItem.cloneNode(true);
+                    clonedItem.classList.add('dropped-item');
+                    clonedItem.style.transform = 'none';
+                    clonedItem.style.position = 'static';
+                    clonedItem.style.zIndex = 'auto';
+                    
+                    // 添加到放置区域
+                    touchDropZone.innerHTML = '';
+                    touchDropZone.appendChild(clonedItem);
+                    touchDropZone.classList.remove('active');
+                }
+                
+                // 重置被拖拽元素
+                touchDraggedItem.style.transform = 'none';
+                touchDraggedItem.style.position = 'static';
+                touchDraggedItem.style.zIndex = 'auto';
+                touchDraggedItem.style.transition = '';
+                touchDraggedItem = null;
+                touchDropZone = null;
+                
+                // 移除所有放置区域的高亮
+                dropZones.forEach(zone => zone.classList.remove('active'));
+            }
+            
+            function touchDrop(e) {
+                if (touchDropZone) {
+                    e.preventDefault();
+                }
+            }
+            
+            function preventScroll(e) {
+                if (touchDraggedItem) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

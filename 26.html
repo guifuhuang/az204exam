@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业网站错误修复步骤排序</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #005a9e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #ffcc00;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            background: #e6f2ff;
+            padding: 20px;
+            border-bottom: 2px dashed #005a9e;
+        }
+        
+        .question h2 {
+            color: #005a9e;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .question p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .content-area {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .actions-panel, .answer-panel {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .panel-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #005a9e;
+            color: #005a9e;
+            font-size: 20px;
+        }
+        
+        .action-item {
+            background: white;
+            border: 2px solid #005a9e;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-item:hover {
+            background: #e6f2ff;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .action-item:active {
+            cursor: grabbing;
+        }
+        
+        .action-item::before {
+            content: "≡";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #005a9e;
+            font-size: 20px;
+        }
+        
+        .drop-zone {
+            min-height: 150px;
+            background: #e6f7ff;
+            border: 2px dashed #0088cc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.highlight {
+            background: #b3e0ff;
+            border-color: #005a9e;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #005a9e;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-top: 2px solid #005a9e;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 180px;
+        }
+        
+        #check-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        #check-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        #reset-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
+        }
+        
+        #show-answer-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        #show-answer-btn:hover {
+            background: #0b7dda;
+            transform: scale(1.05);
+        }
+        
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .mobile-instruction {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #ffcc00;
+            color: #333;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .mobile-instruction {
+                display: block;
+            }
+            
+            .action-item {
+                padding: 12px 12px 12px 35px;
+                font-size: 15px;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        .hint {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffcc00;
+        }
+        
+        .hint h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .answer-section {
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            margin: 20px;
+            display: none;
+            border: 2px solid #4CAF50;
+        }
+        
+        .answer-section h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .correct-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .step-index {
+            width: 40px;
+            height: 40px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #005a9e;
+        }
+        
+        .step-explanation {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .summary {
+            background: #d1e7dd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .summary h4 {
+            color: #0f5132;
+            margin-bottom: 10px;
+        }
+        
+        .error-details {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .error-details h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>企业网站错误修复步骤排序</h1>
+            <p>QUESTION NO: 26 DRAG DROP</p>
+        </header>
+        
+        <div class="question">
+            <h2>问题描述</h2>
+            <p>您需要纠正企业网站错误。请按正确顺序推荐四个操作步骤。将适当的操作从操作列表中拖动到答案区域，并按正确顺序排列。</p>
+            
+            <div class="error-details">
+                <h4>错误信息：</h4>
+                <p>CryptographicException: The system cannot find the file specified.</p>
+                <p>测试网站时显示此错误消息，表明系统无法找到指定的证书文件。</p>
+            </div>
+            
+            <div class="hint">
+                <h3>提示：</h3>
+                <p>所有SSL证书和凭证必须存储在Azure Key Vault中。正确的流程应该遵循证书管理的最佳实践：先生成证书，然后安全存储，配置应用服务，最后更新代码。</p>
+            </div>
+        </div>
+        
+        <div class="mobile-instruction">
+            提示：在移动设备上，长按项目然后拖动到目标位置
+        </div>
+        
+        <div class="content-area">
+            <div class="actions-panel">
+                <h3 class="panel-title">可用的操作</h3>
+                <div class="action-item" draggable="true" data-id="1">Upload the certificate to Azure Key Vault. (将证书上传到Azure密钥保管库。)</div>
+                <div class="action-item" draggable="true" data-id="2">Update line SC05 of Security.cs to include error handling and then redeploy the code. (更新Security.cs文件的第SC05行以包含错误处理，然后重新部署代码。)</div>
+                <div class="action-item" draggable="true" data-id="3">Update line SC03 of Security.cs to include a using statement and then re-deploy the code. (更新Security.cs文件的第SC03行以包含一个using语句，然后重新部署代码。)</div>
+                <div class="action-item" draggable="true" data-id="4">Add the certificate thumbprint to the WEBSITE_LOAD_CERTIFICATES app setting. (将证书指纹添加到WEBSITE_LOAD_CERTIFICATES应用程序设置中。)</div>
+                <div class="action-item" draggable="true" data-id="5">Upload the certificate to source control. (将证书上传到源代码控制。)</div>
+                <div class="action-item" draggable="true" data-id="6">Import the certificate to Azure App Service. (将证书导入Azure应用服务。)</div>
+                <div class="action-item" draggable="true" data-id="7">Generate a certificate. (生成一个证书。)</div>
+            </div>
+            
+            <div class="answer-panel">
+                <h3 class="panel-title">正确的操作顺序 (拖动到此处)</h3>
+                <div class="drop-zone" data-step="1">
+                    <span class="step-number">1</span> 第一步
+                </div>
+                <div class="drop-zone" data-step="2">
+                    <span class="step-number">2</span> 第二步
+                </div>
+                <div class="drop-zone" data-step="3">
+                    <span class="step-number">3</span> 第三步
+                </div>
+                <div class="drop-zone" data-step="4">
+                    <span class="step-number">4</span> 第四步
+                </div>
+            </div>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <div class="controls">
+            <button id="check-btn">检查答案</button>
+            <button id="reset-btn">重置</button>
+            <button id="show-answer-btn">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h3>正确答案与解析</h3>
+            
+            <div class="correct-steps">
+                <div class="step-card">
+                    <div class="step-index">1</div>
+                    <div class="step-content">
+                        <div class="step-title">生成一个证书 (Generate a certificate)</div>
+                        <div class="step-explanation">首先需要创建一个有效的证书，这是整个流程的基础。证书可以通过OpenSSL、Azure Key Vault或证书颁发机构(CA)生成。</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-index">2</div>
+                    <div class="step-content">
+                        <div class="step-title">将证书上传到Azure密钥保管库 (Upload the certificate to Azure Key Vault)</div>
+                        <div class="step-explanation">将生成的证书安全地存储在Azure Key Vault中，确保私钥的安全性并实现集中管理。这是Azure推荐的安全证书管理方式。</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-index">3</div>
+                    <div class="step-content">
+                        <div class="step-title">将证书导入Azure应用服务 (Import the certificate to Azure App Service)</div>
+                        <div class="step-explanation">从Key Vault导入证书到应用服务，使应用程序能够使用该证书。这一步建立了应用服务与Key Vault之间的安全连接。</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-index">4</div>
+                    <div class="step-content">
+                        <div class="step-title">更新Security.cs文件的第SC05行以包含错误处理 (Update line SC05 of Security.cs to include error handling)</div>
+                        <div class="step-explanation">在代码中添加适当的错误处理逻辑，以捕获并处理证书相关的异常，防止应用程序因证书问题而崩溃。</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary">
+                <h4>错误修复流程总结</h4>
+                <p>这个流程遵循了Azure证书管理的最佳实践并解决了具体错误：</p>
+                <ol>
+                    <li>首先创建证书（步骤1）</li>
+                    <li>然后安全存储在Key Vault中（步骤2）</li>
+                    <li>接着配置应用服务使用证书（步骤3）</li>
+                    <li>最后在代码中添加错误处理逻辑（步骤4）</li>
+                </ol>
+                <p>关键注意事项：</p>
+                <ul>
+                    <li>切勿将证书上传到源代码控制（选项5），这会暴露私钥导致安全风险</li>
+                    <li>WEBSITE_LOAD_CERTIFICATES设置（选项4）在导入证书后会自动处理</li>
+                    <li>添加using语句（选项3）不是解决此错误所必需的</li>
+                    <li>错误处理（步骤4）可以防止应用程序因证书问题而崩溃</li>
+                </ul>
+            </div>
+            
+            <div class="reference">
+                <h4>参考文档</h4>
+                <p><a href="https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate" target="_blank">Azure App Service SSL证书配置指南</a></p>
+                <p><a href="https://docs.microsoft.com/en-us/azure/key-vault/certificates/quick-create-portal" target="_blank">Azure Key Vault证书管理</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有可拖拽元素
+            const draggableItems = document.querySelectorAll('.action-item');
+            // 获取所有放置区域
+            const dropZones = document.querySelectorAll('.drop-zone');
+            // 获取反馈区域
+            const feedback = document.getElementById('feedback');
+            // 获取按钮
+            const checkBtn = document.getElementById('check-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 当前被拖动的元素
+            let draggedItem = null;
+            
+            // 为每个可拖拽元素添加事件监听器
+            draggableItems.forEach(item => {
+                // 桌面端事件
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragend', dragEnd);
+                
+                // 移动端事件
+                item.addEventListener('touchstart', touchStart, {passive: false});
+                item.addEventListener('touchmove', touchMove, {passive: false});
+                item.addEventListener('touchend', touchEnd);
+            });
+            
+            // 为每个放置区域添加事件监听器
+            dropZones.forEach(zone => {
+                // 桌面端事件
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+                
+                // 移动端事件
+                zone.addEventListener('touchmove', handleTouchMove, {passive: false});
+                zone.addEventListener('touchend', handleTouchEnd);
+            });
+            
+            // 检查答案按钮事件
+            checkBtn.addEventListener('click', checkAnswer);
+            
+            // 重置按钮事件
+            resetBtn.addEventListener('click', resetAll);
+            
+            // 查看答案按钮事件
+            showAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                // 滚动到答案区域
+                answerSection.scrollIntoView({behavior: 'smooth'});
+            });
+            
+            // 桌面端拖拽函数
+            function dragStart() {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.4';
+                }, 0);
+            }
+            
+            function dragEnd() {
+                this.style.opacity = '1';
+                draggedItem = null;
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+            }
+            
+            function dragEnter(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            }
+            
+            function dragLeave() {
+                this.classList.remove('highlight');
+            }
+            
+            function drop() {
+                this.classList.remove('highlight');
+                
+                // 如果放置区域已有内容，则将其移回操作面板
+                if (this.children.length > 1) {
+                    const existingItem = this.querySelector('.action-item');
+                    document.querySelector('.actions-panel').appendChild(existingItem);
+                }
+                
+                // 添加被拖动的元素到放置区域
+                this.appendChild(draggedItem);
+                
+                // 重置样式
+                draggedItem.style.opacity = '1';
+            }
+            
+            // 移动端触摸事件变量
+            let touchStartY = 0;
+            let touchStartX = 0;
+            let touchDraggedItem = null;
+            
+            // 移动端触摸函数
+            function touchStart(e) {
+                touchDraggedItem = this;
+                const touch = e.touches[0];
+                touchStartY = touch.clientY;
+                touchStartX = touch.clientX;
+                
+                // 创建元素的克隆用于拖动效果
+                const clone = this.cloneNode(true);
+                clone.id = 'dragging-clone';
+                clone.style.position = 'absolute';
+                clone.style.top = `${touch.clientY - this.offsetHeight / 2}px`;
+                clone.style.left = `${touch.clientX - this.offsetWidth / 2}px`;
+                clone.style.zIndex = '1000';
+                clone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+                clone.style.opacity = '0.9';
+                clone.style.width = `${this.offsetWidth}px`;
+                document.body.appendChild(clone);
+                
+                // 隐藏原始元素
+                this.style.visibility = 'hidden';
+                
+                e.preventDefault();
+            }
+            
+            function touchMove(e) {
+                if (!touchDraggedItem) return;
+                
+                const touch = e.touches[0];
+                const clone = document.getElementById('dragging-clone');
+                if (clone) {
+                    clone.style.top = `${touch.clientY - clone.offsetHeight / 2}px`;
+                    clone.style.left = `${touch.clientX - clone.offsetWidth / 2}px`;
+                }
+                
+                e.preventDefault();
+            }
+            
+            function touchEnd(e) {
+                if (!touchDraggedItem) return;
+                
+                const clone = document.getElementById('dragging-clone');
+                if (clone) {
+                    // 查找最近的放置区域
+                    const touch = e.changedTouches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropZone = element.closest('.drop-zone');
+                    
+                    if (dropZone) {
+                        // 如果放置区域已有内容，则将其移回操作面板
+                        if (dropZone.querySelector('.action-item')) {
+                            const existingItem = dropZone.querySelector('.action-item');
+                            document.querySelector('.actions-panel').appendChild(existingItem);
+                        }
+                        
+                        // 添加被拖动的元素到放置区域
+                        dropZone.appendChild(touchDraggedItem);
+                    }
+                    
+                    // 移除克隆元素并恢复原始元素
+                    clone.remove();
+                    touchDraggedItem.style.visibility = 'visible';
+                }
+                
+                touchDraggedItem = null;
+            }
+            
+            function handleTouchMove(e) {
+                e.preventDefault();
+            }
+            
+            function handleTouchEnd() {
+                // 放置区域不需要特殊处理
+            }
+            
+            // 检查答案函数
+            function checkAnswer() {
+                const steps = [];
+                let allFilled = true;
+                
+                // 收集放置区域中的步骤
+                dropZones.forEach(zone => {
+                    const actionItem = zone.querySelector('.action-item');
+                    if (actionItem) {
+                        steps.push(parseInt(actionItem.dataset.id));
+                    } else {
+                        allFilled = false;
+                    }
+                });
+                
+                if (!allFilled) {
+                    showFeedback('请将四个步骤全部拖放到右侧区域', false);
+                    return;
+                }
+                
+                // 正确答案顺序 (根据题目要求)
+                const correctOrder = [7, 1, 6, 2];
+                
+                // 检查答案是否正确
+                const isCorrect = steps.every((step, index) => step === correctOrder[index]);
+                
+                if (isCorrect) {
+                    showFeedback('恭喜！您的答案正确：证书管理流程顺序正确。', true);
+                } else {
+                    showFeedback('答案不正确。请参考正确顺序：1. 生成证书 2. 上传到密钥保管库 3. 导入应用服务 4. 更新SC05行代码', false);
+                }
+            }
+            
+            // 显示反馈信息
+            function showFeedback(message, isCorrect) {
+                feedback.textContent = message;
+                feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+                feedback.style.display = 'block';
+                
+                // 5秒后自动隐藏反馈
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 5000);
+            }
+            
+            // 重置所有
+            function resetAll() {
+                // 清空所有放置区域
+                dropZones.forEach(zone => {
+                    const actionItem = zone.querySelector('.action-item');
+                    if (actionItem) {
+                        document.querySelector('.actions-panel').appendChild(actionItem);
+                    }
+                });
+                
+                // 重置所有元素的样式
+                draggableItems.forEach(item => {
+                    item.style.opacity = '1';
+                    item.style.visibility = 'visible';
+                });
+                
+                // 隐藏反馈
+                feedback.style.display = 'none';
+                
+                // 隐藏答案区域
+                answerSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

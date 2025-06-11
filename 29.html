@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Function App 错误调查测试题</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7f9;
+        }
+        .question-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .question-header {
+            font-size: 1.4rem;
+            color: #005a9e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f7ff;
+            border-color: #c7e0ff;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .answer-btn {
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background-color: #0b7dda;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .answer-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .explanation {
+            background-color: #f1f8e9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <div class="question-header">QUESTION NO: 29</div>
+        <p>You need to investigate the Azure Function app error message in the development environment.</p>
+        <p>What should you do?</p>
+        
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">
+                <input type="radio" name="answer" value="A"> 
+                A. Connect Live Metrics Stream from Application Insights to the Azure Function app and filter the metrics.
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <input type="radio" name="answer" value="B"> 
+                B. Create a new Azure Log Analytics workspace and instrument the Azure Function app with Application Insights.
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <input type="radio" name="answer" value="C"> 
+                C. Update the Azure Function app with extension methods from Microsoft.Extensions.Logging to log events by using the log instance.
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <input type="radio" name="answer" value="D"> 
+                D. Add a new diagnostic setting to the Azure Function app to send logs to Log Analytics.
+            </div>
+        </div>
+        
+        <button class="answer-btn" onclick="showAnswer()">查看答案</button>
+        
+        <div id="answerContainer" class="answer-container">
+            <div class="answer-title">正确答案: <span id="correctAnswer"></span></div>
+            <div class="explanation">
+                <strong>说明:</strong>
+                <p>根据文档内容，正确答案是 A。</p>
+                <p>文档中明确指出：Azure Functions 提供了与 Application Insights 的内置集成来监控函数。在评估函数的行为、性能和错误时，Application Insights 的以下功能特别有用：实时指标流（Live Metrics）可以近乎实时地查看指标数据。</p>
+                <p>对于开发环境中出现的函数超时错误（'Timeout value of 00:10:00 exceeded by function: RequestUserApproval'），使用实时指标流可以立即查看函数执行情况，快速诊断问题，而无需等待日志收集和处理。</p>
+                <p>其他选项虽然也是有效的监控方法，但不如实时指标流能够提供即时反馈，适合快速诊断开发环境中的问题。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // 移除所有选项的选中状态
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 添加当前选项的选中状态
+            element.classList.add('selected');
+            
+            // 选中对应的单选按钮
+            const radio = element.querySelector('input');
+            radio.checked = true;
+        }
+        
+        function showAnswer() {
+            const answerContainer = document.getElementById('answerContainer');
+            const correctAnswer = document.getElementById('correctAnswer');
+            
+            correctAnswer.textContent = 'A';
+            answerContainer.style.display = 'block';
+            
+            // 滚动到答案位置
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

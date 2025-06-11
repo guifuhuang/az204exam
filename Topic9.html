@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topic 9: Fourth Coffee Case Study</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 20px;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #3E2723;
+            border-bottom: 2px solid #D7CCC8;
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #FFF8F0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .process-steps {
+            background-color: #F5F5F5;
+            padding: 20px;
+            border-left: 4px solid #5D4037;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .requirements {
+            background-color: #E8F5E9;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .issues {
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-left: 4px solid #F44336;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        ul {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+        .highlight {
+            background-color: #FFF9C4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .component {
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic 9: Fourth Coffee Case Study</h1>
+    
+    <div class="section">
+        <h2>Background</h2>
+        <p>Fourth Coffee is a global coffeehouse chain and coffee company recognized as one of the world's most influential coffee brands. The company is renowned for its specialty coffee beverages, including a wide range of espresso-based drinks, teas, and other beverages. Fourth Coffee operates thousands of stores worldwide.</p>
+        <p>The company is developing cloud-native applications hosted in Azure.</p>
+    </div>
+
+    <div class="section">
+        <h2>Current Environment</h2>
+        
+        <div class="component">
+            <h3>Corporate Website</h3>
+            <ul>
+                <li>Hosted at <span class="highlight">http://www.fourthcoffee.com/</span></li>
+                <li>Used to place orders as well as view and update inventory items</li>
+            </ul>
+        </div>
+
+        <div class="component">
+            <h3>Inventory Items</h3>
+            <ul>
+                <li>Includes lunch items, snacks, and merchandise in addition to core coffee offerings</li>
+                <li>Corporate team members constantly update inventory</li>
+                <li>Users can customize items</li>
+                <li>Team members configure inventory items and associated images on the website</li>
+            </ul>
+        </div>
+
+        <div class="component">
+            <h3>Orders</h3>
+            <ul>
+                <li>Associates in stores serve customized beverages and items to customers</li>
+                <li>Orders are placed on the website for pickup</li>
+            </ul>
+        </div>
+
+        <div class="process-steps">
+            <h3>Application Processing Flow</h3>
+            <ol>
+                <li>Azure Traffic Manager routes user order requests to the corporate website hosted in Azure App Service</li>
+                <li>Azure Content Delivery Network serves static images and content to users</li>
+                <li>Users sign in through a Microsoft Entra ID for customers tenant</li>
+                <li>Users search for items and place orders while item images are pulled from Azure Blob Storage</li>
+                <li>Item customizations are placed in an Azure Service Bus queue message</li>
+                <li>Azure Functions processes item customizations and saves customized items to Azure Cosmos DB</li>
+                <li>The website saves order details to Azure SQL Database</li>
+                <li>SQL Database query results are cached in Azure Cache for Redis to improve performance</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        
+        <div class="requirements">
+            <h3>General Requirements</h3>
+            <ul>
+                <li>Azure Cosmos DB development must use a native API that receives the latest updates and stores data in a document format</li>
+                <li>Costs must be minimized for all Azure services</li>
+                <li>Developers must test Azure Blob Storage integrations locally before deployment to Azure, supporting the latest versions of Azure Storage APIs</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Corporate Website Requirements</h3>
+            <ul>
+                <li>User authentication must allow one-time passcode sign-in methods and social identity providers (Google or Facebook)</li>
+                <li>Static web content must be stored closest to end users to reduce network latency</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Inventory Items Requirements</h3>
+            <ul>
+                <li>Customized items read from Azure Cosmos DB must maximize throughput while ensuring data accuracy for the current user</li>
+                <li>Processing of inventory item updates must automatically scale and enable updates across an entire Azure Cosmos DB container</li>
+                <li>Inventory items must be processed in the order they were placed in the queue</li>
+                <li>Inventory item images must be stored as JPEG files in their native format with exchangeable image file format (Exif) data preserved</li>
+                <li>The Inventory Items API must securely access Azure Cosmos DB data</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Orders Requirements</h3>
+            <ul>
+                <li>Orders must automatically receive inventory item changes after updates are saved</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Reported Issues</h2>
+        
+        <div class="issues">
+            <ul>
+                <li>Developers are storing Azure Cosmos DB credentials in clear text within the Inventory Items API code</li>
+                <li>Production Azure Cache for Redis maintenance has negatively affected application performance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

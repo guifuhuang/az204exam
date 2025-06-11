@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munson's Pickles and Preserves Farm - 访问控制测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #5aaf70;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .question-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c7744;
+            background: #e8f5e9;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .question-type {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5aaf70;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .code-container {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .code-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #5aaf70;
+        }
+        
+        .dropdown-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 20px;
+            background: #edf7f0;
+            border-radius: 8px;
+        }
+        
+        .dropdown-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        select {
+            padding: 12px 15px;
+            border: 2px solid #5aaf70;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            min-width: 250px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(92, 175, 112, 0.3);
+            border-color: #2c7744;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(92, 175, 112, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(92, 175, 112, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2c7744;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .answer-title {
+            color: #2c7744;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-title svg {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .correct-answer {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #a5d6a7;
+        }
+        
+        .explanation h3 {
+            color: #2c7744;
+            margin-bottom: 15px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eaeaea;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .dropdown-area {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .dropdown-group {
+                width: 100%;
+            }
+            
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Munson's Pickles and Preserves Farm</h1>
+            <p class="subtitle">Azure迁移项目 - 内部员工访问控制测试题</p>
+        </header>
+        
+        <div class="content">
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number">QUESTION NO: 71</div>
+                    <div class="question-type">HOTSPOT</div>
+                </div>
+                
+                <div class="question-text">
+                    <p>You need to provide internal staff access to the production site after a validation.</p>
+                    <p>How should you complete the code segment? To answer, select the appropriate options in the answer area.</p>
+                    <p><strong>NOTE:</strong> Each correct selection is worth one point.</p>
+                </div>
+                
+                <div class="code-container">
+                    &lt;a href="https://www.munsonspicklesandpreservesfarm.com/?<span class="dropdown-placeholder" id="placeholder1">______</span>=<span class="dropdown-placeholder" id="placeholder2">______</span>"&gt;Go back to production app&lt;/a&gt;
+                </div>
+                
+                <div class="dropdown-area">
+                    <div class="dropdown-group">
+                        <label for="dropdown1">下拉框1:</label>
+                        <select id="dropdown1">
+                            <option value="">请选择选项</option>
+                            <option value="x-ms-app">x-ms-app</option>
+                            <option value="x-ms-user">x-ms-user</option>
+                            <option value="x-ms-routing-name">x-ms-routing-name</option>
+                            <option value="x-ms-client-request-id">x-ms-client-request-id</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-group">
+                        <label for="dropdown2">下拉框2:</label>
+                        <select id="dropdown2">
+                            <option value="">请选择选项</option>
+                            <option value="self">self</option>
+                            <option value="staging">staging</option>
+                            <option value="production">production</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="showAnswerBtn">查看答案</button>
+            </div>
+            
+            <div class="answer-container" id="answerContainer">
+                <h2 class="answer-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2c7744">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    正确答案与解析
+                </h2>
+                
+                <div class="correct-answer">
+                    正确选项: <br>
+                    下拉框1: <strong>x-ms-routing-name</strong><br>
+                    下拉框2: <strong>production</strong>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析说明</h3>
+                    <p>在Azure部署环境中，<span class="highlight">x-ms-routing-name</span>是一个特殊的查询参数，用于控制请求路由到哪个部署槽(slot)。</p>
+                    
+                    <p>根据Munson's Pickles and Preserves Farm的需求：</p>
+                    
+                    <ul>
+                        <li>内部员工在验证后需要访问<span class="highlight">生产环境(production)</span></li>
+                        <li>文档要求"提供直接链接回到生产应用"</li>
+                        <li>使用<strong>x-ms-routing-name=production</strong>明确指定路由到生产槽</li>
+                    </ul>
+                    
+                    <p>其他选项解析：</p>
+                    <ul>
+                        <li><strong>x-ms-app</strong>: 用于标识应用程序，不控制路由</li>
+                        <li><strong>x-ms-user</strong>: 用于传递用户信息，与路由无关</li>
+                        <li><strong>self</strong>: 表示当前槽位，在验证环境中可能指向临时槽</li>
+                        <li><strong>staging</strong>: 表示过渡环境，不符合要求</li>
+                    </ul>
+                    
+                    <p>因此，正确的代码应该是：</p>
+                    <p class="highlight">&lt;a href="https://www.munsonspicklesandpreservesfarm.com/?x-ms-routing-name=production"&gt;Go back to production app&lt;/a&gt;</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Munson's Pickles and Preserves Farm Azure迁移项目 | 内部访问控制测试</p>
+            <p>© 2023 IT部门 - 所有题目基于实际迁移需求设计</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('showAnswerBtn').addEventListener('click', function() {
+            const answerContainer = document.getElementById('answerContainer');
+            answerContainer.style.display = 'block';
+            
+            // 滚动到答案区域
+            answerContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // 更新按钮文本
+            this.textContent = '答案已显示';
+            this.disabled = true;
+            this.style.background = '#6c757d';
+        });
+        
+        // 当下拉框变化时更新代码预览
+        const dropdown1 = document.getElementById('dropdown1');
+        const dropdown2 = document.getElementById('dropdown2');
+        const placeholder1 = document.getElementById('placeholder1');
+        const placeholder2 = document.getElementById('placeholder2');
+        
+        dropdown1.addEventListener('change', updateCodePreview);
+        dropdown2.addEventListener('change', updateCodePreview);
+        
+        function updateCodePreview() {
+            placeholder1.textContent = dropdown1.value || '______';
+            placeholder2.textContent = dropdown2.value || '______';
+        }
+    </script>
+</body>
+</html>

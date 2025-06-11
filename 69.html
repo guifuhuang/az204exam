@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 身份验证实现测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #005a9e;
+        }
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-left: 5px solid #0078d4;
+            padding-left: 15px;
+        }
+        .scenario {
+            background: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .scenario h3 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        .requirements {
+            background: #fff8e6;
+            border-left: 4px solid #ffb900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirements h3 {
+            color: #d68500;
+            margin-bottom: 10px;
+        }
+        .problem {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .problem h3 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+        .options-section {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .options-section h2 {
+            color: #0078d4;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            border-color: #0078d4;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        .option.selected {
+            border-color: #0078d4;
+            background-color: #e3f2fd;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .option-content {
+            flex-grow: 1;
+        }
+        .button-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .answer-section {
+            padding: 30px;
+            background: #e3f2fd;
+            display: none;
+            border-top: 2px dashed #0078d4;
+        }
+        .answer-section h2 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        .answer-content h3 {
+            color: #0078d4;
+            margin: 15px 0 10px;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        .explanation {
+            background: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 身份验证实现测试题</h1>
+            <p>Topic 8: Munson's Pickles and Preserves Farm</p>
+        </header>
+        
+        <div class="question-section">
+            <h2>问题 69: 实现农民身份验证</h2>
+            
+            <div class="scenario">
+                <h3>场景描述</h3>
+                <p>Munson's Pickles and Preserves Farm 正在迁移其应用程序到 Microsoft Azure。公司已为农民身份验证在 Microsoft Entra 管理中心创建了新的客户租户。</p>
+            </div>
+            
+            <div class="requirements">
+                <h3>安全要求</h3>
+                <ul>
+                    <li>农民必须使用 Microsoft Entra ID 进行身份验证</li>
+                    <li>应用最小权限原则</li>
+                    <li>使用 Azure 资源的托管标识进行身份验证</li>
+                    <li>集中存储和保护所有站点设置，不使用密钥</li>
+                </ul>
+            </div>
+            
+            <div class="problem">
+                <h3>当前挑战</h3>
+                <p>需要为农民用户实现安全、可扩展的身份验证解决方案，同时满足公司的安全合规要求。</p>
+            </div>
+        </div>
+        
+        <div class="options-section">
+            <h2>请选择三个正确的操作（多选）</h2>
+            
+            <div class="option" data-value="A">
+                <div class="option-letter">A</div>
+                <div class="option-content">
+                    <p>将共享访问签名 (SAS) 令牌添加到应用程序</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="B">
+                <div class="option-letter">B</div>
+                <div class="option-content">
+                    <p>创建共享访问签名 (SAS) 令牌</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="C">
+                <div class="option-letter">C</div>
+                <div class="option-content">
+                    <p>在 Microsoft Entra ID 中注册应用程序</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="D">
+                <div class="option-letter">D</div>
+                <div class="option-content">
+                    <p>创建用户流</p>
+                </div>
+            </div>
+            
+            <div class="option" data-value="E">
+                <div class="option-letter">E</div>
+                <div class="option-content">
+                    <p>将应用程序添加到用户流</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="check-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2>正确答案与解析</h2>
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3>正确答案: C, D, E</h3>
+                    <p>在 Microsoft Entra ID 中注册应用程序，创建用户流，将应用程序添加到用户流</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析:</h3>
+                    <p>此解决方案满足所有农民身份验证要求：</p>
+                    
+                    <ul>
+                        <li><span class="highlight">在 Microsoft Entra ID 中注册应用程序 (C)</span> 是启用身份验证的第一步，使应用程序能够与 Microsoft Entra ID 集成</li>
+                        <li><span class="highlight">创建用户流 (D)</span> 定义了农民用户的身份验证体验（注册、登录、密码重置等）</li>
+                        <li><span class="highlight">将应用程序添加到用户流 (E)</span> 将注册的应用程序与定义的用户流关联，完成身份验证集成</li>
+                    </ul>
+                    
+                    <p>为什么其他选项不正确：</p>
+                    <ul>
+                        <li><strong>A 和 B (SAS 令牌相关)</strong>：SAS 令牌用于临时资源访问授权，不适用于用户身份验证场景，且不符合"不使用密钥"的安全要求</li>
+                        <li>文档明确要求使用 Microsoft Entra ID 进行农民身份验证，SAS 令牌方案无法满足此要求</li>
+                    </ul>
+                    
+                    <p>此方案的优势：</p>
+                    <ul>
+                        <li>完全符合"农民必须使用 Microsoft Entra ID 进行身份验证"的核心要求</li>
+                        <li>通过用户流实现可定制的身份验证体验</li>
+                        <li>支持应用最小权限原则，精细控制用户访问权限</li>
+                        <li>无需管理密钥或凭据，符合安全最佳实践</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 认证模拟测试题</p>
+        </footer>
+    </div>
+
+    <script>
+        // 选项选择逻辑
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // 查看答案逻辑
+        document.getElementById('check-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案部分
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure开发考试题 - 日志策略实现</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a3f7c, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0066cc, #0099ff);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: #e3f2fd;
+            padding: 15px 30px;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #bbdefb;
+        }
+        
+        .question-container {
+            padding: 30px;
+        }
+        
+        .question {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            padding: 25px;
+            border-left: 5px solid #2196f3;
+            transition: transform 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-title {
+            font-size: 1.4rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title::before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .question-content {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #42a5f5;
+        }
+        
+        .code-container {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.5;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .line-number {
+            display: inline-block;
+            width: 40px;
+            color: #75715e;
+            text-align: right;
+            margin-right: 15px;
+            user-select: none;
+        }
+        
+        .dropdown-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .dropdown-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+        }
+        
+        .dropdown-label {
+            min-width: 120px;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+        
+        .dropdown-select {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #42a5f5;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-select:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .submit-container {
+            text-align: center;
+            padding: 30px;
+            border-top: 2px solid #e3f2fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .submit-btn, .view-answer-btn {
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+        }
+        
+        .view-answer-btn {
+            background: linear-gradient(135deg, #2196F3, #0d47a1);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+        }
+        
+        .view-answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #0d47a1, #082c6e);
+        }
+        
+        .submit-btn:active, .view-answer-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 8px;
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .answer-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            color: #546e7a;
+            line-height: 1.7;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .answer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .answer-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .answer-item-title {
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 5px;
+        }
+        
+        .answer-item-value {
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            color: #2e7d32;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .submit-btn, .view-answer-btn {
+                width: 100%;
+            }
+            
+            .dropdown-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 开发考试题集</h1>
+            <p class="subtitle">AZ-204 认证考试模拟题 - 日志策略实现</p>
+        </header>
+        
+        <div class="exam-info">
+            <div>考试: AZ-204 Microsoft Azure Developer Associate</div>
+            <div>题目: 42</div>
+            <div>类型: 热点题</div>
+        </div>
+        
+        <div class="question-container">
+            <div class="question">
+                <div class="question-title">EventGridController.cs 代码实现</div>
+                
+                <div class="question-content">
+                    <p>您需要实现日志策略（Log policy）。</p>
+                    <p>如何完成EventGridController.cs中的EnsureLogging方法？请在下拉框中选择正确的选项。</p>
+                    <p><strong>注意：</strong>每个正确选项得1分。</p>
+                </div>
+                
+                <div class="code-container">
+                    <span class="line-number">01</span>private void EnsureLogging(string resource)<br>
+                    <span class="line-number">02</span>{<br>
+                    <span class="line-number">03</span>    var client = new WebSiteManagementClient(...);<br>
+                    <span class="line-number">04</span>    var id = ParseResourceID(resource);<br>
+                    <span class="line-number">05</span>    var appSettings = new StringDictionary(name: "properties",<br>
+                    <span class="line-number">06</span>        properties: new Dictionary&lt;string, string&gt;<br>
+                    <span class="line-number">07</span>        {<br>
+                    <span class="line-number">08</span>            {"DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", BlobStoreAccountSAS(<select class="dropdown-select" id="dropdown1">
+                        <option value="">请选择</option>
+                        <option value="logs">logs</option>
+                        <option value="logdrop">logdrop</option>
+                    </select>)},<br>
+                    <span class="line-number">09</span>            {"DIAGNOSTICS_AZUREBLOBRETENTIONINDAYS", "<select class="dropdown-select" id="dropdown2">
+                        <option value="">请选择</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>"}<br>
+                    <span class="line-number">10</span>        });<br>
+                    <span class="line-number">11</span><br>
+                    <span class="line-number">12</span>    client.WebApps.<select class="dropdown-select" id="dropdown3">
+                        <option value="">请选择</option>
+                        <option value="UploadLoggingSettings">UploadLoggingSettings</option>
+                        <option value="UpdateApplicationSetting">UpdateApplicationSetting</option>
+                    </select>(<br>
+                    <span class="line-number">13</span>        id.resourceGroup,<br>
+                    <span class="line-number">14</span>        id.name, appSettings);<br>
+                    <span class="line-number">15</span>}
+                </div>
+                
+                <div class="dropdown-container">
+                    <div class="dropdown-row">
+                        <div class="dropdown-label">下拉框1:</div>
+                        <select class="dropdown-select" id="dd1">
+                            <option value="">请选择</option>
+                            <option value="logs">logs</option>
+                            <option value="logdrop">logdrop</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-row">
+                        <div class="dropdown-label">下拉框2:</div>
+                        <select class="dropdown-select" id="dd2">
+                            <option value="">请选择</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-row">
+                        <div class="dropdown-label">下拉框3:</div>
+                        <select class="dropdown-select" id="dd3">
+                            <option value="">请选择</option>
+                            <option value="UploadLoggingSettings">UploadLoggingSettings</option>
+                            <option value="UpdateApplicationSetting">UpdateApplicationSetting</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="submit-container">
+            <div class="btn-container">
+                <button class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> 提交答案
+                </button>
+                <button class="view-answer-btn" id="viewAnswerBtn">
+                    <i class="fas fa-eye"></i> 查看答案
+                </button>
+            </div>
+            
+            <div class="feedback" id="feedback">
+                <div class="answer-title">
+                    <i class="fas fa-check-circle"></i>
+                    <span>正确答案：</span>
+                </div>
+                <div class="answer-content">
+                    <div class="answer-item">
+                        <div class="answer-item-title">下拉框1</div>
+                        <div class="answer-item-value">logdrop</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-item-title">下拉框2</div>
+                        <div class="answer-item-value">15</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-item-title">下拉框3</div>
+                        <div class="answer-item-value">UpdateApplicationSetting</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <p><strong>中文说明：</strong></p>
+                    <p>根据日志策略要求：</p>
+                    
+                    <ul>
+                        <li><strong>下拉框1：logdrop</strong> - 所有日志文件必须保存到名为"logdrop"的容器中</li>
+                        <li><strong>下拉框2：15</strong> - 日志必须在容器中保留15天</li>
+                        <li><strong>下拉框3：UpdateApplicationSetting</strong> - 在Azure SDK中，更新应用设置的正确方法是UpdateApplicationSetting</li>
+                    </ul>
+                    
+                    <p><strong>代码实现分析：</strong></p>
+                    <p>在EnsureLogging方法中：</p>
+                    <ol>
+                        <li>DIAGNOSTICS_AZUREBLOBCONTAINERSASURL需要指定容器名称，根据策略要求应为"logdrop"</li>
+                        <li>DIAGNOSTICS_AZUREBLOBRETENTIONINDAYS设置日志保留天数，策略要求15天</li>
+                        <li>WebApps.UpdateApplicationSetting是更新应用设置的标准方法，而不是UploadLoggingSettings</li>
+                    </ol>
+                    
+                    <p><strong>业务背景：</strong></p>
+                    <p>在Proseware案例中，所有Azure App Service Web Apps必须将日志写入Azure Blob存储。此代码确保符合公司的日志策略要求。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewAnswerBtn = document.getElementById('viewAnswerBtn');
+            const feedback = document.getElementById('feedback');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 同步代码内和下拉框区域的选择
+            const dropdowns = document.querySelectorAll('.dropdown-select');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('change', function() {
+                    const id = this.id;
+                    const value = this.value;
+                    
+                    if (id === 'dropdown1') {
+                        document.getElementById('dd1').value = value;
+                    } else if (id === 'dropdown2') {
+                        document.getElementById('dd2').value = value;
+                    } else if (id === 'dropdown3') {
+                        document.getElementById('dd3').value = value;
+                    }
+                });
+            });
+            
+            // 同步下拉框区域和代码内的选择
+            const ddSelects = document.querySelectorAll('#dd1, #dd2, #dd3');
+            ddSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const id = this.id;
+                    const value = this.value;
+                    
+                    if (id === 'dd1') {
+                        document.getElementById('dropdown1').value = value;
+                    } else if (id === 'dd2') {
+                        document.getElementById('dropdown2').value = value;
+                    } else if (id === 'dd3') {
+                        document.getElementById('dropdown3').value = value;
+                    }
+                });
+            });
+            
+            // 查看答案按钮事件
+            viewAnswerBtn.addEventListener('click', function() {
+                // 显示正确答案
+                feedback.style.display = 'block';
+                feedback.className = 'feedback correct';
+                feedback.querySelector('.answer-title span').textContent = "正确答案及说明";
+                feedback.querySelector('.answer-title i').className = "fas fa-lightbulb";
+                
+                // 设置正确选项
+                document.getElementById('dropdown1').value = 'logdrop';
+                document.getElementById('dropdown2').value = '15';
+                document.getElementById('dropdown3').value = 'UpdateApplicationSetting';
+                document.getElementById('dd1').value = 'logdrop';
+                document.getElementById('dd2').value = '15';
+                document.getElementById('dd3').value = 'UpdateApplicationSetting';
+                
+                // 滚动到反馈区域
+                feedback.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 提交按钮事件
+            submitBtn.addEventListener('click', function() {
+                // 获取用户选择
+                const dd1 = document.getElementById('dd1').value;
+                const dd2 = document.getElementById('dd2').value;
+                const dd3 = document.getElementById('dd3').value;
+                
+                // 检查答案
+                const isCorrect = dd1 === 'logdrop' && dd2 === '15' && dd3 === 'UpdateApplicationSetting';
+                
+                // 显示反馈
+                feedback.style.display = 'block';
+                feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+                
+                if (isCorrect) {
+                    feedback.querySelector('.answer-title span').textContent = "恭喜！答案正确！";
+                    feedback.querySelector('.answer-title i').className = "fas fa-check-circle";
+                } else {
+                    feedback.querySelector('.answer-title span').textContent = "答案不正确，请再试一次";
+                    feedback.querySelector('.answer-title i').className = "fas fa-exclamation-circle";
+                }
+                
+                // 滚动到反馈区域
+                feedback.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

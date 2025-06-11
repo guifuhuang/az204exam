@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic 3: City Power & Light - 问题23</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298, #3a7bd5);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #005a9e;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-box {
+            background: #f0f8ff;
+            border-left: 5px solid #005a9e;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .question-box h2 {
+            color: #005a9e;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .options {
+            margin: 25px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border-color: #4dabf7;
+        }
+        
+        .option.selected {
+            border-color: #228be6;
+            background: #e7f5ff;
+        }
+        
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: #228be6;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .option-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .code-snippet {
+            background: #2b2b2b;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            color: #a9b7c6;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .code-line {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .line-number {
+            color: #6a9955;
+            width: 40px;
+            text-align: right;
+            padding-right: 10px;
+            user-select: none;
+        }
+        
+        .code-content {
+            flex: 1;
+        }
+        
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .show-answer {
+            background: #228be6;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .show-answer:hover {
+            background: #1971c2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .show-answer:active {
+            transform: translateY(0);
+        }
+        
+        .answer-explanation {
+            display: none;
+            background: #e7f5ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid #228be6;
+        }
+        
+        .answer-explanation h3 {
+            color: #005a9e;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1971c2;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        .explanation {
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+        }
+        
+        .solution {
+            background: #d3e9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .solution h4 {
+            color: #005a9e;
+            margin-bottom: 10px;
+        }
+        
+        .solution-steps {
+            padding-left: 20px;
+        }
+        
+        .solution-steps li {
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .option-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>City Power & Light - Azure 迁移案例研究</h1>
+            <p>问题 23: RequestUserApproval Function App 错误修复</p>
+        </div>
+        
+        <div class="content">
+            <div class="question-box">
+                <h2>问题描述</h2>
+                <p>在测试 RequestUserApproval 函数时，出现以下错误：</p>
+                <p><strong>'Timeout value of 00:10:00 exceeded by function: RequestUserApproval'</strong></p>
+                <p>该错误在本地环境和 Azure 开发环境中均出现。同时，在测试调用此函数的 Logic App 时，出现 '400 Bad Request' 错误。</p>
+                
+                <div class="code-snippet">
+                    <div class="code-header">RequestUserApproval.cs</div>
+                    <div class="code-line">
+                        <div class="line-number">RA13</div>
+                        <div class="code-content"><span class="highlight">private static bool ProcessRequest(HttpRequest req)</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">RA14</div>
+                        <div class="code-content">{</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">RA15</div>
+                        <div class="code-content">...</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">RA16</div>
+                        <div class="code-content">}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 23: 您需要纠正 RequestUserApproval Function App 错误。应该怎么做？</h2>
+                
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, 'A')">
+                        <div class="option-letter">A</div>
+                        <div class="option-text">更新 RA13 行，使用 async 关键字并返回 HttpRequest 对象值。</div>
+                    </div>
+                    
+                    <div class="option" onclick="selectOption(this, 'B')">
+                        <div class="option-letter">B</div>
+                        <div class="option-text">将 Function App 配置为使用应用服务托管计划。启用托管计划的"始终可用"设置。</div>
+                    </div>
+                    
+                    <div class="option" onclick="selectOption(this, 'C')">
+                        <div class="option-letter">C</div>
+                        <div class="option-text">通过使用 Durable Functions 处理请求负载，将函数更新为有状态函数。</div>
+                    </div>
+                    
+                    <div class="option" onclick="selectOption(this, 'D')">
+                        <div class="option-letter">D</div>
+                        <div class="option-text">将 host.json 项目文件的 functionTimeout 属性更新为 15 分钟。</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button class="show-answer" onclick="showAnswer()">查看答案与解析</button>
+            </div>
+            
+            <div id="answerExplanation" class="answer-explanation">
+                <h3>答案与详细解析</h3>
+                <div class="answer">正确答案: C</div>
+                
+                <div class="explanation">
+                    <p><strong>问题分析：</strong></p>
+                    <p>根据 City Power & Light 案例研究中的信息：</p>
+                    <ul>
+                        <li>RequestUserApproval 函数在测试时出现超时错误（00:10:00 exceeded）</li>
+                        <li>该函数在消耗计划（Consumption Plan）下运行，最大执行时间为 10 分钟</li>
+                        <li>用户审批流程可能需要等待人工操作，容易超过时间限制</li>
+                        <li>Logic App 调用此函数时出现 400 Bad Request 错误</li>
+                    </ul>
+                    
+                    <p><strong>选项分析：</strong></p>
+                    <p>❌ <strong>A</strong>：将 RA13 行改为异步方法无法解决长时间运行的问题，因为消耗计划下的 10 分钟超时限制仍然存在。</p>
+                    <p>❌ <strong>B</strong>：虽然应用服务计划支持更长的超时时间，但文档要求尽可能使用无服务器计算（serverless computing），且此方案会增加成本。</p>
+                    <p>✅ <strong>C</strong>：Durable Functions 是解决长时间运行流程的理想方案：
+                        <ul>
+                            <li>支持有状态工作流，可分解长时间任务</li>
+                            <li>允许暂停执行等待外部事件（如用户审批）</li>
+                            <li>符合无服务器计算要求</li>
+                            <li>支持长达数天的执行时间</li>
+                        </ul>
+                    </p>
+                    <p>❌ <strong>D</strong>：在消耗计划中，函数超时时间最大为 10 分钟，无法设置为 15 分钟。</p>
+                    
+                    <div class="solution">
+                        <h4>推荐的 Durable Functions 解决方案：</h4>
+                        <ol class="solution-steps">
+                            <li>创建编排器函数管理审批工作流</li>
+                            <li>使用活动函数处理具体任务</li>
+                            <li>通过 WaitForExternalEvent 等待用户审批事件</li>
+                            <li>根据审批结果执行后续操作</li>
+                        </ol>
+                        
+                        <div class="code-snippet">
+                            <div class="code-header">Durable Functions 实现示例</div>
+                            <pre>[FunctionName("ApprovalWorkflow")]
+public static async Task RunOrchestrator(
+    [OrchestrationTrigger] IDurableOrchestrationContext context)
+{
+    // 1. 发起审批请求
+    await context.CallActivityAsync("RequestApproval", context.GetInput<ApprovalData>());
+    
+    // 2. 等待外部审批事件（可暂停执行）
+    bool isApproved = await context.WaitForExternalEvent&lt;bool&gt;("ApprovalEvent");
+    
+    // 3. 根据审批结果处理
+    if (isApproved) 
+    {
+        await context.CallActivityAsync("ProcessApproval", context.InstanceId);
+    }
+    else
+    {
+        await context.CallActivityAsync("RejectApproval", context.InstanceId);
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Topic 3: City Power & Light 案例研究 | Azure 迁移问题解决</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        
+        function selectOption(element, option) {
+            // Remove selected class from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            selectedOption = option;
+        }
+        
+        function showAnswer() {
+            const explanation = document.getElementById('answerExplanation');
+            explanation.style.display = 'block';
+            
+            // Scroll to explanation
+            explanation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

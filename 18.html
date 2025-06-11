@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件触发验证测试题</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        .question-header {
+            background: #e3f2fd;
+            padding: 20px 30px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        .question-header h2 {
+            color: #0d47a1;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        .question-header h2 i {
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .content {
+            padding: 35px;
+        }
+        .question-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        .question-content p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            color: #2c3e50;
+        }
+        .code-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: auto;
+        }
+        .code-line {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .line-number {
+            color: #6a9955;
+            min-width: 30px;
+            user-select: none;
+        }
+        .code-keyword {
+            color: #569cd6;
+        }
+        .code-string {
+            color: #ce9178;
+        }
+        .code-comment {
+            color: #6a9955;
+        }
+        .code-operator {
+            color: #d4d4d4;
+        }
+        .dropdown-container {
+            display: inline-block;
+            margin: 0 5px;
+            position: relative;
+            min-width: 150px;
+        }
+        .dropdown-container select {
+            padding: 8px 15px;
+            border: 2px solid #1a2980;
+            border-radius: 6px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(45deg, transparent 50%, #1a2980 50%),
+                              linear-gradient(135deg, #1a2980 50%, transparent 50%);
+            background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+        }
+        .dropdown-container select:focus {
+            outline: none;
+            border-color: #26d0ce;
+            box-shadow: 0 0 0 3px rgba(38, 208, 206, 0.3);
+        }
+        .requirements {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 1px solid #90caf9;
+        }
+        .requirements h4 {
+            color: #0d47a1;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .requirements h4 i {
+            margin-right: 12px;
+        }
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+        .requirement-item i {
+            color: #1a2980;
+            margin-right: 15px;
+            font-size: 24px;
+            min-width: 30px;
+        }
+        .requirement-content {
+            flex: 1;
+        }
+        .requirement-content h5 {
+            color: #1a2980;
+            margin-bottom: 8px;
+            font-size: 19px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(26, 41, 128, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(26, 41, 128, 0.7);
+        }
+        button:active {
+            transform: translateY(2px);
+        }
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        button:hover::after {
+            transform: rotate(30deg) translate(50%, 50%);
+        }
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+            border-left: 6px solid #4caf50;
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .answer-container h3 {
+            color: #2e7d32;
+            margin-bottom: 25px;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-container h3 i {
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .answer-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        .correct-answer {
+            color: #4caf50;
+            font-weight: bold;
+            margin: 20px 0;
+            font-size: 22px;
+            padding: 15px;
+            background: rgba(76, 175, 80, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .correct-answer i {
+            margin-right: 15px;
+            font-size: 26px;
+        }
+        .explanation {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fffde7;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+        }
+        .explanation h4 {
+            color: #f57f17;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation h4 i {
+            margin-right: 12px;
+        }
+        .explanation ul {
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+        .explanation li {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 18px;
+        }
+        .explanation li strong {
+            color: #1a2980;
+        }
+        .highlight {
+            background: rgba(255, 215, 0, 0.25);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #5a6268;
+            font-size: 16px;
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>事件触发验证测试题</h1>
+            <p class="subtitle">QUESTION NO: 18 HOTSPOT - 验证测试触发配置</p>
+        </header>
+        
+        <div class="question-header">
+            <h2><i class="fas fa-code"></i> 问题18：验证测试触发配置</h2>
+        </div>
+        
+        <div class="content">
+            <div class="question-content">
+                <p><i class="fas fa-info-circle"></i> 您需要确保根据要求触发验证测试。应该如何完成代码段？选择答案区域中的适当值。</p>
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>注意：</strong> 每个正确选择得1分。</p>
+                
+                <div class="requirements">
+                    <h4><i class="fas fa-clipboard-list"></i> 验证测试要求</h4>
+                    <div class="requirement-item">
+                        <i class="fas fa-sync-alt"></i>
+                        <div class="requirement-content">
+                            <h5>触发条件</h5>
+                            <p>当容器镜像被推送到仓库或部署到生产环境时，应触发验证测试</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-filter"></i>
+                        <div class="requirement-content">
+                            <h5>服务过滤</h5>
+                            <p>仅当事件涉及<span class="highlight">内容分析服务</span>时才应触发</p>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-project-diagram"></i>
+                        <div class="requirement-content">
+                            <h5>仓库过滤</h5>
+                            <p>仅当事件发生在<span class="highlight">contosoimages</span>仓库时才应触发</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-line">
+                        <span class="line-number">1</span>
+                        <span class="code-keyword">var</span> event = getEvent();
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">2</span>
+                        <span class="code-keyword">if</span> (event.eventType === 
+                        <div class="dropdown-container">
+                            <select id="eventType-select">
+                                <option value="">--选择--</option>
+                                <option value="ImagePushed">ImagePushed</option>
+                                <option value="RepositoryItem">RepositoryItem</option>
+                                <option value="ImageDeployed">ImageDeployed</option>
+                                <option value="RepositoryUpdated">RepositoryUpdated</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">3</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&& event.data.target.
+                        <div class="dropdown-container">
+                            <select id="target-select">
+                                <option value="">--选择--</option>
+                                <option value="aci">aci</option>
+                                <option value="image">image</option>
+                                <option value="service">service</option>
+                                <option value="repository">repository</option>
+                            </select>
+                        </div> === 'contentanalysisservice'
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">4</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&& event.
+                        <div class="dropdown-container">
+                            <select id="property-select">
+                                <option value="">--选择--</option>
+                                <option value="topic">topic</option>
+                                <option value="service">service</option>
+                                <option value="repository">repository</option>
+                                <option value="imageCollection">imageCollection</option>
+                            </select>
+                        </div>
+                        .contains('contosoimages'))
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">5</span>
+                        {
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">6</span>
+                        &nbsp;&nbsp;startValidationTesting();
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">7</span>
+                        }
+                    </div>
+                </div>
+                
+                <div class="requirements">
+                    <h4><i class="fas fa-lightbulb"></i> 代码说明</h4>
+                    <div class="requirement-item">
+                        <i class="fas fa-question-circle"></i>
+                        <div class="requirement-content">
+                            <h5>代码功能</h5>
+                            <p>此代码段用于在特定事件发生时触发验证测试。需要根据要求配置三个关键条件：事件类型、目标服务和仓库属性。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button id="show-answer">
+                    <i class="fas fa-key"></i> 查看答案与解析
+                </button>
+            </div>
+            
+            <div class="answer-container" id="answer-section">
+                <h3><i class="fas fa-check-circle"></i> 正确答案及解析</h3>
+                
+                <div class="answer-content">
+                    <p class="correct-answer">
+                        <i class="fas fa-check"></i> 
+                        正确配置：事件类型 - <strong>'ImagePushed'</strong>，目标服务 - <strong>'service'</strong>，属性 - <strong>'repository'</strong>
+                    </p>
+                    
+                    <div class="explanation">
+                        <h4><i class="fas fa-lightbulb"></i> 解析：</h4>
+                        <p>根据验证测试要求，我们需要选择最符合要求的配置：</p>
+                        
+                        <ul>
+                            <li>
+                                <strong>事件类型选择：'ImagePushed'</strong>
+                                <ul>
+                                    <li>此事件表示容器镜像被推送到仓库，符合触发条件要求</li>
+                                    <li>其他选项如'RepositoryItem'、'ImageDeployed'和'RepositoryUpdated'不符合核心触发条件</li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <strong>目标服务选择：'service'</strong>
+                                <ul>
+                                    <li>要求仅当事件涉及<span class="highlight">内容分析服务</span>时才触发</li>
+                                    <li>在事件对象中，服务信息存储在<code>event.data.target.service</code>属性中</li>
+                                    <li>选择'service'表示我们检查目标服务是否为'contentanalysisservice'</li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <strong>属性选择：'repository'</strong>
+                                <ul>
+                                    <li>要求仅当事件发生在<span class="highlight">contosoimages</span>仓库时才触发</li>
+                                    <li>在事件对象中，仓库信息存储在<code>event.repository</code>属性中</li>
+                                    <li>使用<code>.contains('contosoimages')</code>检查仓库名称是否包含指定字符串</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                        <p>此配置满足以下要求：</p>
+                        <ul>
+                            <li><span class="highlight">触发条件</span>：当镜像被推送时触发（ImagePushed）</li>
+                            <li><span class="highlight">服务过滤</span>：仅当目标服务为'contentanalysisservice'时触发（service）</li>
+                            <li><span class="highlight">仓库过滤</span>：仅当仓库包含'contosoimages'时触发（repository.contains）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="explanation" style="background: #e3f2fd; border-left: 5px solid #2196f3;">
+                        <h4><i class="fas fa-code"></i> 完整代码示例</h4>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto;">
+var event = getEvent();
+if (event.eventType === 'ImagePushed'
+    && event.data.target.service === 'contentanalysisservice'
+    && event.repository.contains('contosoimages'))
+{
+  startValidationTesting();
+}</pre>
+                        <p>此代码确保在镜像推送事件发生时，且目标服务为'contentanalysisservice'且仓库包含"contosoimages"时，触发验证测试。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>事件触发验证测试题 | 基于AZ-203学习知识库 | 版权所有 © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 设置正确选项
+            document.getElementById('eventType-select').value = 'ImagePushed';
+            document.getElementById('target-select').value = 'service';
+            document.getElementById('property-select').value = 'repository';
+            
+            // 滚动到答案区域
+            answerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // 添加动画效果
+            this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
+            this.style.background = 'linear-gradient(135deg, #4caf50, #2e7d32)';
+        });
+    </script>
+</body>
+</html>

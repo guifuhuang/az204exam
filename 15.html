@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AD应用程序配置分析题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #005a9e, #0078d4);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .question-header {
+            background: #e3f2fd;
+            padding: 18px 25px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        .question-header h2 {
+            color: #0d47a1;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .question-header h2 i {
+            margin-right: 12px;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .code-container {
+            background: #1e1e1e;
+            color: #dcdcdc;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.8;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .code-line {
+            display: flex;
+            align-items: flex-start;
+            padding: 4px 0;
+            transition: background 0.3s;
+        }
+        .code-line:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .line-number {
+            width: 50px;
+            color: #6a9955;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .code {
+            flex: 1;
+            white-space: pre-wrap;
+        }
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        .dropdown-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .dropdown-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 250px;
+        }
+        .dropdown-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #005a9e;
+            font-size: 15px;
+        }
+        select {
+            padding: 12px 15px;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-image: linear-gradient(45deg, transparent 50%, #0078d4 50%),
+                              linear-gradient(135deg, #0078d4 50%, transparent 50%);
+            background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+            appearance: none;
+        }
+        select:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #2196f3, #0d47a1);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: all 0.5s;
+        }
+        button:hover::after {
+            transform: rotate(30deg) translate(50%, 50%);
+        }
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #4caf50;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .answer-container h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-container h3 i {
+            margin-right: 10px;
+        }
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        .correct-answer {
+            color: #4caf50;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 18px;
+            padding: 12px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+        }
+        .explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fffde7;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .explanation h4 {
+            color: #f57f17;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .note {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 15px;
+            border-left: 4px solid #ff9800;
+        }
+        .note h4 {
+            color: #ef6c00;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #b0bec5;
+            font-size: 14px;
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+        }
+        .highlight-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #90caf9;
+        }
+        .highlight-section h4 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .requirement-item i {
+            color: #0078d4;
+            margin-right: 10px;
+            font-size: 18px;
+            min-width: 24px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure AD应用程序配置分析题</h1>
+            <p class="subtitle">根据Contoso案例文档内容完成代码配置</p>
+        </header>
+        
+        <div class="question-header">
+            <h2><i class="fas fa-question-circle"></i>问题15：配置应用程序权限</h2>
+        </div>
+        
+        <div class="content">
+            <div class="highlight-section">
+                <h4><i class="fas fa-file-alt"></i> 题目要求</h4>
+                <p>您需要在第AM09行添加代码，以确保用户可以使用ContentAnalysisService审查内容。</p>
+                <div class="requirement-item">
+                    <i class="fas fa-lock"></i>
+                    <div><strong>安全要求：</strong> 所有服务调用必须使用Azure AD进行身份验证</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-user-check"></i>
+                    <div><strong>权限要求：</strong> 用户必须属于ContentReviewer角色才能审查内容</div>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div><strong>成本要求：</strong> 必须最小化所有Azure服务的成本</div>
+                </div>
+            </div>
+            
+            <p>请完成以下代码：</p>
+            
+            <div class="code-container">
+                <div class="code-line">
+                    <div class="line-number">AM01</div>
+                    <div class="code">{</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM02</div>
+                    <div class="code">"id": "2b079f03-9b06-2d44-98bb-e9182901fc6b",</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM03</div>
+                    <div class="code">"appId": "7118a7f0-b5c2-4c9d-833c-3d711396fe65",</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM04</div>
+                    <div class="code"></div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM05</div>
+                    <div class="code">"createdDateTime": "2019-12-24T06:01:44Z",</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM06</div>
+                    <div class="code">"logoUrl": null,</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM07</div>
+                    <div class="code">"logoutUrl": null,</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM08</div>
+                    <div class="code">"name": "ContentAnalysisService",</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM09</div>
+                    <div class="code">
+                        <div class="dropdown-container">
+                            <div class="dropdown-group">
+                                <label for="property-select">选择属性：</label>
+                                <select id="property-select">
+                                    <option value="">请选择属性</option>
+                                    <option value="allowPublicClient">"allowPublicClient":true</option>
+                                    <option value="oauth2Permissions">"oauth2Permissions":["login"]</option>
+                                    <option value="oauth2AllowUrlPathMatching">"oauth2AllowUrlPathMatching":true</option>
+                                    <option value="oauth2AllowIdTokenImplicitFlow">"oauth2AllowIdTokenImplicitFlow":true</option>
+                                </select>
+                            </div>
+                            <div class="dropdown-group">
+                                <label for="value-select">选择值：</label>
+                                <select id="value-select">
+                                    <option value="">请选择值</option>
+                                    <option value='oauth2AllowImplicitFlow'>"oauth2AllowImplicitFlow": true</option>
+                                    <option value='oauth2RequiredPostResponse'>"oauth2RequiredPostResponse": true</option>
+                                    <option value='preAuthorizedApplications'>"preAuthorizedApplications":["SPA"]</option>
+                                    <option value='knownClientApplications'>"knownClientApplications":["ContentAnalysisService"]</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM10</div>
+                    <div class="code"></div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM11</div>
+                    <div class="code">"orgRestrictions": [],</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM12</div>
+                    <div class="code">"parentalControlSettings": {</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM13</div>
+                    <div class="code">"countriesBlockedForMinors": [],</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM14</div>
+                    <div class="code">"legalAgeGroupRule": "Allow"</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM15</div>
+                    <div class="code">},</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM16</div>
+                    <div class="code">"passwordCredentials": [],</div>
+                </div>
+                <div class="code-line">
+                    <div class="line-number">AM17</div>
+                    <div class="code">}</div>
+                </div>
+            </div>
+            
+            <div class="note">
+                <h4><i class="fas fa-info-circle"></i> 题目说明：</h4>
+                <p>根据案例文档要求，用户必须通过Azure AD进行身份验证，并且必须属于ContentReviewer角色才能审查内容。您需要添加适当的配置来实现此要求。</p>
+            </div>
+            
+            <div class="button-container">
+                <button id="show-answer">
+                    <i class="fas fa-key"></i> 查看答案
+                </button>
+            </div>
+            
+            <div class="answer-container" id="answer-section">
+                <h3><i class="fas fa-check-circle"></i> 正确答案及解析</h3>
+                
+                <div class="answer-content">
+                    <p class="correct-answer">
+                        <i class="fas fa-check"></i> 
+                        正确配置：oauth2Permissions 和 oauth2AllowImplicitFlow
+                    </p>
+                    
+                    <div class="explanation">
+                        <h4><i class="fas fa-lightbulb"></i> 解析：</h4>
+                        <p>根据案例文档中的要求：</p>
+                        <ul>
+                            <li>用户必须通过Azure AD进行身份验证</li>
+                            <li>用户必须属于ContentReviewer角色才能审查内容</li>
+                            <li>所有服务调用必须使用Azure AD进行身份验证</li>
+                            <li>必须最小化所有Azure服务的成本</li>
+                        </ul>
+                        
+                        <p>在Azure AD应用程序配置中：</p>
+                        <ol>
+                            <li><strong>oauth2Permissions</strong> 属性用于定义应用程序公开的OAuth 2.0权限范围（作用域）[18](@ref)[19](@ref)</li>
+                            <li>设置值为<code>["login"]</code>表示定义了一个名为"login"的权限范围，允许用户登录应用程序</li>
+                            <li><strong>oauth2AllowImplicitFlow</strong> 属性设置为true，允许使用OAuth 2.0隐式授权流[15](@ref)[16](@ref)</li>
+                            <li>这对于单页面应用(SPA)是必要的，因为SPA通常使用隐式流来获取访问令牌</li>
+                        </ol>
+                        
+                        <p>因此，在AM09行添加以下配置：</p>
+                        <pre>"oauth2Permissions": ["login"],
+"oauth2AllowImplicitFlow": true</pre>
+                        
+                        <p>此配置满足以下要求：</p>
+                        <ul>
+                            <li>启用隐式流以支持SPA应用的身份验证</li>
+                            <li>定义必要的权限范围允许用户登录</li>
+                            <li>遵循最小权限原则，提高安全性</li>
+                            <li>不需要额外付费服务，满足成本最小化要求</li>
+                        </ul>
+                        
+                        <p><strong>注意：</strong> 虽然微软现在推荐使用授权码流（带PKCE）替代隐式流[15](@ref)，但根据案例文档中的选项和要求，oauth2AllowImplicitFlow: true是最合适的配置。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Contoso Ltd. Azure 应用程序配置测试题 | 基于实际案例场景 | 版权所有 © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 设置正确选项
+            document.getElementById('property-select').value = 'oauth2Permissions';
+            document.getElementById('value-select').value = 'oauth2AllowImplicitFlow';
+            
+            // 滚动到答案区域
+            answerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // 添加动画效果
+            this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
+            this.style.background = 'linear-gradient(135deg, #4caf50, #2e7d32)';
+        });
+    </script>
+</body>
+</html>

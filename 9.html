@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure CLI 命令配置：解决CORS错误</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0, 20, 40, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #4a69bd;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 25px;
+        }
+        .problem-section {
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4a69bd;
+        }
+        h2 {
+            color: #4fc3f7;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .error-box {
+            background: #2c3e50;
+            border: 1px solid #e74c3c;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Consolas', monospace;
+            color: #ff6b6b;
+        }
+        .cli-command {
+            background: #1e2a38;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .command-line {
+            font-family: 'Consolas', monospace;
+            font-size: 18px;
+            background: #0d1b2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .select-container {
+            display: inline-block;
+            position: relative;
+            margin: 0 5px;
+        }
+        select {
+            background: #4a69bd;
+            color: white;
+            border: 2px solid #1e3799;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            min-width: 180px;
+            appearance: none;
+            transition: all 0.3s;
+        }
+        select:hover {
+            background: #1e3799;
+            border-color: #0c2461;
+        }
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #78c0e0;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        button {
+            background: linear-gradient(90deg, #1e3799, #4a69bd);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+        }
+        #showAnswer {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+        }
+        #showAnswer:hover {
+            background: linear-gradient(90deg, #219653, #27ae60);
+        }
+        .answer-section {
+            background: rgba(30, 60, 30, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            display: none;
+            border-left: 4px solid #27ae60;
+        }
+        .answer-content {
+            line-height: 1.6;
+        }
+        .correct-command {
+            font-family: 'Consolas', monospace;
+            background: #1a3a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #6eff6e;
+            border: 1px solid #27ae60;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(40, 40, 40, 0.6);
+            border-radius: 8px;
+        }
+        .highlight {
+            color: #78c0e0;
+            font-weight: bold;
+        }
+        .url-list {
+            background: #0d1b2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Consolas', monospace;
+        }
+        .url-list li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .url-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #4fc3f7;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .command-line {
+                font-size: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            select {
+                min-width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure CLI 命令配置：解决CORS错误</h1>
+            <p class="subtitle">Topic 1: Windows Server 2016 虚拟机案例研究</p>
+        </header>
+        
+        <div class="content">
+            <div class="problem-section">
+                <h2>问题描述</h2>
+                <p>在测试网站时出现以下错误：</p>
+                <div class="error-box">
+                    Failed to load http://test-shippingapi.wideworldimporters.com/: <br>
+                    No 'Access-Control-Allow-Origin' header is present on the requested resource. <br>
+                    Origin 'http://test.wideworldimporters.com/' is therefore not allowed access.
+                </div>
+                <p>您需要使用 Azure CLI 命令更新 API 以解决此跨域资源共享 (CORS) 错误。</p>
+                
+                <div class="url-list">
+                    <p>当前允许的来源列表：</p>
+                    <ul>
+                        <li>http://www.wideworldimporters.com</li>
+                        <li>http://test-shippingapiwideworldimporters.com</li>
+                        <li>http://test.wideworldimporters.com</li>
+                        <li>http://www.wideworldimporters.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="cli-command">
+                <h2>完成 Azure CLI 命令</h2>
+                <div class="command-line">
+                    az webapp  
+                    <div class="select-container">
+                        <select id="option1">
+                            <option value="">-- 请选择 --</option>
+                            <option value="cors">cors</option>
+                            <option value="config">config</option>
+                            <option value="deployment">deployment</option>
+                        </select>
+                    </div>
+                    <div class="select-container">
+                        <select id="option2">
+                            <option value="">-- 请选择 --</option>
+                            <option value="add">add</option>
+                            <option value="up">up</option>
+                            <option value="remove">remove</option>
+                        </select>
+                    </div> -g shipping-apis-test-rg -n web  
+                    --slot 
+                    <div class="select-container">
+                        <select id="option3">
+                            <option value="">-- 请选择 --</option>
+                            <option value="slot">slot</option>
+                            <option value="allowed-origins">allowed-origins</option>
+                            <option value="name">name</option>
+                        </select>
+                    </div>
+                    <div class="select-container">
+                        <select id="option4">
+                            <option value="">-- 请选择 --</option>
+                            <option value="*">http://*.wideworldimporters.com</option>
+                            <option value="http://test-shipping.wideworldimporters.com">http://test-shipping.wideworldimporters.com</option>
+                            <option value="http://test.wideworldimporters.com">http://test.wideworldimporters.com</option>
+                            <option value="http://www.wideworldimporters.com">http://www.wideworldimporters.com</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button id="checkAnswer">检查答案</button>
+                    <button id="showAnswer">查看答案与说明</button>
+                </div>
+                
+                <div class="answer-section" id="answerSection">
+                    <h2>正确答案与说明</h2>
+                    <div class="answer-content">
+                        <p>正确的 Azure CLI 命令是：</p>
+                        <div class="correct-command">
+                            az webapp cors add -g shipping-apis-test-rg -n web --slot allowed-origins http://test.wideworldimporters.com
+                        </div>
+                        
+                        <div class="explanation">
+                            <h3>说明：</h3>
+                            <p>此错误是由于 <span class="highlight">CORS（跨域资源共享）</span>策略配置不当造成的。</p>
+                            
+                            <p><span class="highlight">问题分析：</span></p>
+                            <ul>
+                                <li>网站 <code>http://test.wideworldimporters.com</code> 尝试访问位于 <code>http://test-shippingapi.wideworldimporters.com</code> 的 API</li>
+                                <li>虽然<code>http://test.wideworldimporters.com</code>已在允许列表中，但<code>http://test-shippingapi.wideworldimporters.com</code>的域名拼写有误（缺少点号）</li>
+                                <li>API 响应头中缺少 <code>Access-Control-Allow-Origin</code> 字段</li>
+                            </ul>
+                            
+                            <p><span class="highlight">解决方案：</span></p>
+                            <ul>
+                                <li>使用 <code>az webapp cors add</code> 命令添加新的CORS规则</li>
+                                <li><code>-g shipping-apis-test-rg</code>：指定资源组名称</li>
+                                <li><code>-n web</code>：指定 Web App 名称（从错误信息中的API地址推断）</li>
+                                <li><code>--slot allowed-origins</code>：指定要配置的参数为允许的来源</li>
+                                <li><code>http://test.wideworldimporters.com</code>：明确添加测试网站到允许来源</li>
+                            </ul>
+                            
+                            <p><span class="highlight">注意事项：</span></p>
+                            <ul>
+                                <li>在生产环境中，应避免使用通配符(*)允许所有来源，而应明确指定允许的域名</li>
+                                <li>应修正现有列表中的错误域名：<code>http://test-shippingapiwideworldimporters.com</code> → <code>http://test-shippingapi.wideworldimporters.com</code></li>
+                                <li>配置后可能需要重启应用服务使更改生效</li>
+                                <li>建议同时添加测试和生产环境的域名到允许列表</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 1 案例研究 - Windows Server 2016 虚拟机 | Azure 解决方案</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('checkAnswer').addEventListener('click', function() {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const option3 = document.getElementById('option3').value;
+            const option4 = document.getElementById('option4').value;
+            
+            if (option1 === 'cors' && 
+                option2 === 'add' && 
+                option3 === 'allowed-origins' && 
+                option4 === 'http://test.wideworldimporters.com') {
+                alert('✅ 答案正确！您已成功配置CORS规则。');
+            } else {
+                alert('❌ 答案不正确，请重新选择或查看答案说明。');
+            }
+        });
+        
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            document.getElementById('answerSection').style.display = 'block';
+            // 自动滚动到答案部分
+            document.getElementById('answerSection').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

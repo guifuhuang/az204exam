@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munson's Pickles - CDN配置顺序测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid #1e5630;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #5aaf70;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .question-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c7744;
+            background: #e8f5e9;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .question-type {
+            font-size: 18px;
+            font-weight: 600;
+            color: #5aaf70;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            padding: 0 15px;
+        }
+        
+        .drag-drop-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .actions-column, .answer-column {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .column-header {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .actions-header {
+            background: #3498db;
+        }
+        
+        .answer-header {
+            background: #2ecc71;
+        }
+        
+        .drag-item {
+            background: #f1f8ff;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            cursor: move;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .drag-item:hover {
+            background: #e3f2fd;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .drop-area {
+            min-height: 80px;
+            background: #edfff4;
+            border: 2px dashed #2ecc71;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .drop-area.highlight {
+            background: #d1f7e5;
+            border-color: #27ae60;
+        }
+        
+        .drop-area.occupied {
+            background: #d1f7e5;
+            border-style: solid;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(92, 175, 112, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(92, 175, 112, 0.4);
+        }
+        
+        .answer-container {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2c7744;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .answer-title {
+            color: #2c7744;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .correct-answer {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .correct-steps {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .correct-steps li {
+            margin: 10px 0;
+            padding: 10px;
+            background: #edfff4;
+            border-radius: 6px;
+        }
+        
+        .explanation {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px dashed #a5d6a7;
+        }
+        
+        .explanation h3 {
+            color: #2c7744;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 16px;
+            background: #f8f9fa;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            .drag-drop-container {
+                flex-direction: column;
+            }
+            
+            .drag-item, .drop-area {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Munson's Pickles and Preserves Farm</h1>
+            <p class="subtitle">Azure迁移项目 - CDN配置顺序测试题</p>
+        </header>
+        
+        <div class="content">
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number">QUESTION NO: 72</div>
+                    <div class="question-type">DRAG DROP</div>
+                </div>
+                
+                <div class="question-text">
+                    <p>You need to correct the internal staff issue with webpages.</p>
+                    <p>Which three actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.</p>
+                </div>
+                
+                <div class="drag-drop-container">
+                    <div class="actions-column">
+                        <div class="column-header actions-header">可拖动的操作项</div>
+                        <div class="drag-item" draggable="true" data-value="Create an Azure Content Delivery Network profile.">
+                            创建 Azure 内容分发网络配置文件
+                        </div>
+                        <div class="drag-item" draggable="true" data-value="Create an Azure Content Delivery Network endpoint.">
+                            创建 Azure 内容分发网络端点
+                        </div>
+                        <div class="drag-item" draggable="true" data-value="Configure Azure Content Delivery Network compression.">
+                            配置 Azure 内容分发网络压缩
+                        </div>
+                        <div class="drag-item" draggable="true" data-value="Add the Azure Content Delivery Network origin to the origin group.">
+                            将 Azure CDN 源添加到源组
+                        </div>
+                        <div class="drag-item" draggable="true" data-value="Create an Azure Content Delivery Network origin group.">
+                            创建 Azure CDN 源组
+                        </div>
+                        <div class="drag-item" draggable="true" data-value="Configure a new Azure Content Delivery Network origin.">
+                            配置新的 Azure CDN 源
+                        </div>
+                    </div>
+                    
+                    <div class="answer-column">
+                        <div class="column-header answer-header">正确顺序放置区</div>
+                        <div class="drop-area" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-content">第一步操作</div>
+                        </div>
+                        <div class="drop-area" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-content">第二步操作</div>
+                        </div>
+                        <div class="drop-area" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-content">第三步操作</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="showAnswerBtn">查看答案</button>
+            </div>
+            
+            <div class="answer-container" id="answerContainer">
+                <h2 class="answer-title">正确答案与解析</h2>
+                
+                <div class="correct-answer">
+                    <p>正确顺序:</p>
+                    <ol class="correct-steps">
+                        <li>创建 Azure 内容分发网络配置文件 (Create an Azure Content Delivery Network profile)</li>
+                        <li>创建 Azure 内容分发网络端点 (Create an Azure Content Delivery Network endpoint)</li>
+                        <li>配置 Azure 内容分发网络压缩 (Configure Azure Content Delivery Network compression)</li>
+                    </ol>
+                </div>
+                
+                <div class="explanation">
+                    <h3>解析说明</h3>
+                    <p>此解决方案针对内部员工报告的网页加载缓慢和大文件问题：</p>
+                    
+                    <p><span class="highlight">正确配置顺序的理由：</span></p>
+                    <ol>
+                        <li>首先需要创建CDN配置文件，这是设置CDN服务的基础框架</li>
+                        <li>然后创建端点，指定要加速的内容来源和分发设置</li>
+                        <li>最后配置压缩，这是优化网页加载速度的关键步骤</li>
+                    </ol>
+                    
+                    <p><span class="highlight">为什么这个顺序是正确的？</span></p>
+                    <ul>
+                        <li>CDN配置文件是顶层资源，必须先创建才能进行其他配置</li>
+                        <li>端点是实际分发内容的核心组件，必须在配置文件下创建</li>
+                        <li>压缩是性能优化功能，必须在端点创建后才能配置</li>
+                    </ul>
+                    
+                    <p><span class="highlight">其他选项为什么不正确？</span></p>
+                    <ul>
+                        <li>源组和源配置是可选步骤，不是解决网页性能问题的核心操作</li>
+                        <li>文档中明确要求解决"内部员工报告的大网页大小和慢加载时间"问题，压缩是关键</li>
+                        <li>标准CDN配置流程中，配置文件和端点是必要基础</li>
+                    </ul>
+                    
+                    <p><span class="highlight">此方案如何解决问题？</span></p>
+                    <ul>
+                        <li>CDN通过边缘节点缓存内容，减少源服务器负载</li>
+                        <li>压缩显著减小网页资源大小，加快传输速度</li>
+                        <li>全球分发网络优化了不同地理位置的访问速度</li>
+                        <li>完全符合文档中"改善文件传输速度和网页加载性能"的要求</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Topic 8: Munson's Pickles and Preserves Farm | Azure 迁移解决方案测试</p>
+        </footer>
+    </div>
+
+    <script>
+        // 拖放功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropAreas = document.querySelectorAll('.drop-area');
+            let draggedItem = null;
+            
+            // 桌面端拖拽事件
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropAreas.forEach(area => {
+                area.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                
+                area.addEventListener('dragleave', function() {
+                    this.classList.remove('highlight');
+                });
+                
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('highlight');
+                    
+                    if (draggedItem) {
+                        // 移除之前的内容
+                        this.innerHTML = `<div class="step-number">${this.dataset.step}</div>`;
+                        
+                        // 克隆拖拽的项目并添加到放置区
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.opacity = '1';
+                        clonedItem.style.border = 'none';
+                        clonedItem.style.background = '#d1f7e5';
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                        clonedItem.draggable = false;
+                        
+                        // 添加移除按钮
+                        const removeBtn = document.createElement('span');
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.style.cssText = `
+                            position: absolute;
+                            top: 5px;
+                            right: 5px;
+                            cursor: pointer;
+                            font-size: 20px;
+                            color: #e74c3c;
+                        `;
+                        removeBtn.addEventListener('click', function() {
+                            area.innerHTML = `
+                                <div class="step-number">${area.dataset.step}</div>
+                                <div class="step-content">第${area.dataset.step}步操作</div>
+                            `;
+                            area.classList.remove('occupied');
+                        });
+                        
+                        clonedItem.appendChild(removeBtn);
+                        this.appendChild(clonedItem);
+                        this.classList.add('occupied');
+                        
+                        draggedItem = null;
+                    }
+                });
+            });
+            
+            // 移动端触摸事件
+            dragItems.forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    draggedItem = this;
+                    this.style.opacity = '0.7';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            dropAreas.forEach(area => {
+                area.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                });
+                
+                area.addEventListener('touchend', function(e) {
+                    if (draggedItem) {
+                        // 移除之前的内容
+                        this.innerHTML = `<div class="step-number">${this.dataset.step}</div>`;
+                        
+                        // 克隆拖拽的项目并添加到放置区
+                        const clonedItem = draggedItem.cloneNode(true);
+                        clonedItem.style.opacity = '1';
+                        clonedItem.style.border = 'none';
+                        clonedItem.style.background = '#d1f7e5';
+                        clonedItem.style.cursor = 'default';
+                        clonedItem.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                        clonedItem.draggable = false;
+                        
+                        // 添加移除按钮
+                        const removeBtn = document.createElement('span');
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.style.cssText = `
+                            position: absolute;
+                            top: 5px;
+                            right: 5px;
+                            cursor: pointer;
+                            font-size: 20px;
+                            color: #e74c3c;
+                        `;
+                        removeBtn.addEventListener('click', function() {
+                            area.innerHTML = `
+                                <div class="step-number">${area.dataset.step}</div>
+                                <div class="step-content">第${area.dataset.step}步操作</div>
+                            `;
+                            area.classList.remove('occupied');
+                        });
+                        
+                        clonedItem.appendChild(removeBtn);
+                        this.appendChild(clonedItem);
+                        this.classList.add('occupied');
+                        
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    }
+                });
+            });
+            
+            // 查看答案按钮
+            document.getElementById('showAnswerBtn').addEventListener('click', function() {
+                const answerContainer = document.getElementById('answerContainer');
+                answerContainer.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerContainer.scrollIntoView({ behavior: 'smooth' });
+                
+                // 更新按钮文本
+                this.textContent = '答案已显示';
+                this.disabled = true;
+                this.style.background = '#6c757d';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Topic 5: Litware Inc Case Study</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        .note { 
+            background-color: #f9f9f9; 
+            padding: 15px; 
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .code-block { 
+            background-color: #f5f5f5; 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+        }
+        .code-title { 
+            font-weight: bold; 
+            margin: 15px 0 5px 0;
+            color: #2c3e50;
+        }
+        .highlight { background-color: #fffacd; padding: 2px; }
+        .requirements-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .requirement-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .issue-card {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        .line-number {
+            color: #6c757d;
+            padding-right: 15px;
+            text-align: right;
+            user-select: none;
+        }
+        .code-line {
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic 5: Litware Inc</h1>
+    
+    <div class="section">
+        <h2>Case Study</h2>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <div class="note">
+            <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        </div>
+        <p><strong>To start the case study:</strong> To display the first question, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. When you are ready to answer a question, click the Question button to return to the question.</p>
+    </div>
+
+    <div class="section">
+        <h2>Background</h2>
+        <p>You are a developer for Litware Inc., a SaaS company that provides a solution for managing employee expenses. The solution consists of an ASP.NET Core Web API project that is deployed as an Azure Web App.</p>
+    </div>
+
+    <div class="section">
+        <h2>Overall Architecture</h2>
+        <h3>Receipt Processing</h3>
+        <p>Employees upload receipts for the system to process. When processing is complete, the employee receives a summary report email that details the processing results. Employees then use a web application to manage their receipts and perform any additional tasks needed for reimbursement.</p>
+        
+        <h3>Receipt Upload Methods</h3>
+        <ul>
+            <li>Uploading using an Azure Files mounted folder</li>
+            <li>Uploading using the web application</li>
+        </ul>
+        
+        <h3>Data Storage</h3>
+        <p>Receipt and employee information is stored in an Azure SQL database.</p>
+        
+        <h3>Documentation</h3>
+        <p>Employees are provided with a getting started document when they first use the solution. The documentation includes details on supported operating systems for Azure File upload, and instructions on how to configure the mounted folder.</p>
+    </div>
+
+    <div class="section">
+        <h2>Solution Details</h2>
+        <h3>Users Table</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>UserId</td>
+                    <td>是员工和员工的唯一标识符</td>
+                </tr>
+                <tr>
+                    <td>ExpenseAccount</td>
+                    <td>允许报销的员工账号号码，格式为1234-123-1234</td>
+                </tr>
+                <tr>
+                    <td>AllowanceLimit</td>
+                    <td>员工在需要主管批准之前允许报销的金额</td>
+                </tr>
+                <tr>
+                    <td>SupervisorId</td>
+                    <td>员工主管的唯一标识符</td>
+                </tr>
+                <tr>
+                    <td>SecurityPin</td>
+                    <td>用于验证用户身份的唯一代码</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Web Application</h3>
+        <ul>
+            <li>MSI enabled for the Web App</li>
+            <li>Configured to use security principal name: <span class="highlight">WebAppIdentity</span></li>
+        </ul>
+        
+        <h3>Processing</h3>
+        <ul>
+            <li>Performed by Azure Function using version 2 of Azure Function runtime</li>
+            <li>Processing results stored in Azure Blob Storage and Azure SQL database</li>
+            <li>Email summary sent to user with link to processing report</li>
+            <li>Report links must remain valid if email is forwarded</li>
+        </ul>
+        
+        <h3>Logging</h3>
+        <ul>
+            <li>Azure Application Insights used for telemetry and logging</li>
+            <li>Processor has TraceWriter logging enabled</li>
+            <li>Application Insights must always contain all log messages</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Requirements</h2>
+        <div class="requirements-grid">
+            <div class="requirement-card">
+                <h3>Receipt Processing</h3>
+                <ul>
+                    <li>Concurrent processing of a receipt must be prevented</li>
+                </ul>
+            </div>
+            
+            <div class="requirement-card">
+                <h3>Disaster Recovery</h3>
+                <ul>
+                    <li>Regional outage must not impact application availability</li>
+                    <li>All DR operations must not be dependent on application running</li>
+                    <li>Must ensure data in DR region is up to date</li>
+                </ul>
+            </div>
+            
+            <div class="requirement-card">
+                <h3>Security</h3>
+                <ul>
+                    <li>SecurityPins must not be viewable via database access</li>
+                    <li>Web application is the only system with access to SecurityPins</li>
+                    <li>All certificates/secrets stored in Azure Key Vault</li>
+                    <li>Adhere to principle of least privilege</li>
+                    <li>Azure Storage/SQL access must use MSI</li>
+                    <li>Receipt data always encrypted at rest</li>
+                    <li>All data protected in transit</li>
+                    <li>Expense account numbers partially obscured for non-owners</li>
+                    <li>Revoke access to summary reports without system impact</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Issues</h2>
+        <div class="issue-card">
+            <h3>Upload Format Issue</h3>
+            <p>Employees report that when uploading receipts using Azure File Share:</p>
+            <ul>
+                <li>Receipt does not appear in their profile</li>
+                <li>Deleting file and using web app returns <code>500 Internal Server Error</code></li>
+            </ul>
+        </div>
+        
+        <div class="issue-card">
+            <h3>Capacity Issue</h3>
+            <p>During busy periods:</p>
+            <ul>
+                <li>Long delays between receipt upload and appearance in web app</li>
+            </ul>
+        </div>
+        
+        <div class="issue-card">
+            <h3>Log Capacity Issue</h3>
+            <p>Developers report:</p>
+            <ul>
+                <li>Excessive log messages in processor trace output</li>
+                <li>Resulting in lost log messages</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Application Code</h2>
+        
+        <div class="code-title">Processing.cs</div>
+        <div class="code-block">
+            <pre>
+PC01	public static class Processing
+PC02	{
+PC03	    public static class Function
+PC04	    {
+PC05	        [FunctionName("IssueWork")]
+PC06	        public static async Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo timer, ILogger log)
+PC07	        {
+PC08	            var container = await GetCloudBlobContainer();
+PC09	            foreach (var fileItem in await ListFiles())
+PC10	            {
+PC11	                var file = new CloudFile(fileItem.StorageUrl.PrimaryUri);
+PC12	                var ms = new MemoryStream();
+PC13	                await file.DownloadToStreamAsync(ms);
+PC14	                var blob = container.GetBlockBlobReference(fileItem.Url.ToString());
+PC15	                await blob.UploadFromStreamAsync(ms);
+PC16	            }
+PC17	        }
+PC18	
+PC19	        private static CloudBlockBlob GetDRDBlob(CloudBlockBlob sourceBlob)
+PC20	        {
+PC21	            // 省略具体实现
+PC22	        }
+PC23	        private static async Task<CloudBlobContainer> GetCloudBlobContainer()
+PC24	        {
+PC25	            var cloudBlobClient = new CloudBlobClient(new Uri("..."), await GetCredentials());
+PC26	            
+PC27	            await cloudBlobClient.GetRootContainerReference().CreateIfNotExistsAsync();
+PC28	            return cloudBlobClient.GetRootContainerReference();
+PC29	        }
+PC30	        private static async Task<StorageCredentials> GetCredentials()
+PC31	        {
+PC32	            // 省略具体实现
+PC33	        }
+PC34	        private static async Task<List<CloudFileItem>> ListFiles()
+PC35	        {
+PC36	            // 省略具体实现
+PC37	        }
+PC38	        private KeyVaultClient _keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetToken));
+PC39	    }
+PC40	}
+            </pre>
+        </div>
+<div class="code-title">Database.cs</div>
+        <div class="code-block">
+<pre>
+DB01	public class Database
+DB02	{
+DB03	    private string ConnectionString = "...";
+DB04	
+DB05	    public async Task<object> LoadUserDetails(string userId)
+DB06	    {
+DB07	        
+DB08	        return await policy.ExecuteAsync(async () =>
+DB09	        {
+DB10	            using (var connection = new SqlConnection(ConnectionString))
+DB11	            {
+DB12	                await connection.OpenAsync();
+DB13	                using (var command = new SqlCommand("...", connection))
+DB14	                using (var reader = command.ExecuteReader())
+DB15	                {
+DB16	                    // 省略具体实现
+DB17	                }
+DB18	            }
+DB19	        });
+DB20	    }
+DB21	}
+</pre>
+        </div>
+<div class="code-title">ReceiptUploader.cs</div>
+        <div class="code-block">
+<pre>
+RU01	public class ReceiptUploader
+RU02	{
+RU03	    public async Task UploadFile(string file, byte[] binary)
+RU04	    {
+RU05	        var httpClient = new HttpClient();
+RU06	        var response = await httpClient.PutAsync("...", new ByteArrayContent(binary));
+RU07	        while (ShouldRetry(response))
+RU08	        {
+RU09	            response = await httpClient.PutAsync("...", new ByteArrayContent(binary));
+RU10	        }
+RU11	    }
+RU12	    private bool ShouldRetry(HttpResponseMessage response)
+RU13	    {
+RU14	        // 省略具体实现
+RU15	    }
+RU16	}
+</pre>
+        </div>
+<div class="code-title">ConfigureSSE.ps1</div>
+        <div class="code-block">
+<pre>
+CS01:	$storageAccount = Get-AzureRmStorageAccount -ResourceGroupName "" -AccountName ""
+CS02:	$keyVault = Get-AzureRmKeyVault -VaultName ""
+CS03:	$key = Get-AzureKeyVaultKey -VaultName $keyVault.VaultName -Name ""
+CS04:	Set-AzureRmKeyVaultAccessPolicy \
+CS05:	    -VaultName $keyVault.VaultName \
+CS06:	    -ObjectId $storageAccount.Identity.PrincipalId \
+CS07:	    
+CS08:	    
+CS09:	Set-AzureRmStorageAccount \
+CS10:	    -ResourceGroupName $storageAccount.ResourceGroupName \
+CS11:	    -AccountName $storageAccount.StorageAccountName \
+CS12:	    -EnableEncryptionService File \
+CS13:	    -KeyvaultEncryption \
+CS14:	    -KeyName $key.Name \
+CS15:	    -KeyVersion $key.Version \
+CS16:	    -KeyVaultUri $keyVault.VaultUri
+        </pre>
+        </div>
+    </div>
+</body>
+</html>

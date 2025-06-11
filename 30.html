@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Bus 与 Event Grid 集成测试题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .question-type {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .question-content {
+            padding: 25px;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+        
+        .question-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+            font-size: 15px;
+        }
+        
+        .code-snippet {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .code-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        select {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            appearance: none;
+            min-width: 180px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        select:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+        }
+        
+        .button-container {
+            text-align: center;
+            padding: 25px;
+        }
+        
+        #show-answer {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        #show-answer:hover {
+            background: #2ecc71;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+        
+        #show-answer:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px;
+            display: none;
+            border-left: 5px solid #4caf50;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .answer-title {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-title i {
+            font-size: 28px;
+        }
+        
+        .correct-answer {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 18px;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .explanation h3 {
+            color: #388e3c;
+            margin-bottom: 10px;
+        }
+        
+        .explanation p {
+            line-height: 1.7;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            .code-snippet {
+                font-size: 16px;
+                padding: 15px;
+            }
+            
+            select {
+                min-width: 140px;
+                font-size: 14px;
+            }
+            
+            .question-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QUESTION NO: 30 HOTSPOT</h1>
+            <div class="question-type">Azure Service Bus 与 Event Grid 集成配置</div>
+        </header>
+        
+        <div class="question-content">
+            <div class="question-text">
+                <p>您需要配置 Azure Service Bus 和 Azure Event Grid 的集成。</p>
+                <p>应该如何完成 CLI 语句？请从答案区域选择适当的选项。</p>
+            </div>
+            
+            <div class="note">
+                <strong>注意：</strong>每个正确选择得 1 分。
+            </div>
+            
+            <div class="code-snippet">
+                <div class="code-line">
+                    az 
+                    <div class="dropdown-container">
+                        <select id="dropdown1">
+                            <option value="">请选择</option>
+                            <option value="eventgrid">eventgrid</option>
+                            <option value="servicebus">servicebus</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-container">
+                        <select id="dropdown2">
+                            <option value="">请选择</option>
+                            <option value="event-subscription">event-subscription</option>
+                            <option value="topic">topic</option>
+                            <option value="queue">queue</option>
+                        </select>
+                    </div>
+                    
+                    create --source-resource-id $topicid --name $name --endpoint-type
+                    
+                    <div class="dropdown-container">
+                        <select id="dropdown3">
+                            <option value="">请选择</option>
+                            <option value="webhook">webhook</option>
+                            <option value="eventhub">eventhub</option>
+                            <option value="servicebusqueue">servicebusqueue</option>
+                        </select>
+                    </div>
+                    
+                    --endpoint $endpoint
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button id="show-answer">查看答案</button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <div class="answer-title">
+                <span>✅ 正确答案与解析</span>
+            </div>
+            
+            <div class="correct-answer">
+                az eventgrid event-subscription create --source-resource-id $topicid --name $name --endpoint-type servicebusqueue --endpoint $endpoint
+            </div>
+            
+            <div class="explanation">
+                <h3>解析说明：</h3>
+                <p>根据 Azure 文档中关于 Service Bus 和 Event Grid 集成的内容：</p>
+                
+                <p><strong>下拉框1：eventgrid</strong> - 因为我们要创建的是 Event Grid 的事件订阅，而不是直接操作 Service Bus。</p>
+                
+                <p><strong>下拉框2：event-subscription</strong> - 这是创建事件订阅的正确子命令，用于定义事件源和事件处理程序之间的关联。</p>
+                
+                <p><strong>下拉框3：servicebusqueue</strong> - 当目标端点是 Service Bus 队列时，必须指定 endpoint-type 为 servicebusqueue。这是 Azure 文档中明确要求的配置。</p>
+                
+                <p>该命令的作用是创建一个 Event Grid 订阅，将来自指定资源 ($topicid) 的事件路由到 Service Bus 队列 ($endpoint)。这种集成模式常用于解耦系统组件，实现可靠的事件传递。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Azure 认证考试模拟题 | 根据 AZ-204 考试要求设计</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.style.display = 'block';
+            
+            // 滚动到答案区域
+            answerSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 设置正确答案选择（仅演示，实际考试中不应自动选择）
+            document.getElementById('dropdown1').value = 'eventgrid';
+            document.getElementById('dropdown2').value = 'event-subscription';
+            document.getElementById('dropdown3').value = 'servicebusqueue';
+        });
+    </script>
+</body>
+</html>

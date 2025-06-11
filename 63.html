@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - 公司网站可用性测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .case-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .options-container {
+            margin: 25px 0;
+        }
+        
+        .option {
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option:hover {
+            background-color: #f1f6fd;
+            border-color: #4a69bd;
+        }
+        
+        .option.selected {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .option-label {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
+            background-color: #4a69bd;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #e3f2fd;
+            font-weight: 600;
+        }
+        
+        .user-selection {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f6fd;
+            border-radius: 8px;
+            border-left: 4px solid #4a69bd;
+        }
+        
+        .answer-validation {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .test-comparison {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .test-card {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #3498db;
+        }
+        
+        .test-card h4 {
+            color: #1e3799;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .test-card ul {
+            padding-left: 20px;
+        }
+        
+        .test-card li {
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .test-comparison {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: 公司网站可用性测试</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>公司网站监控要求</h2>
+                <p>VanArsdel Ltd.需要确保其公司网站满足99.95%的正常运行时间要求。</p>
+                
+                <div class="requirements">
+                    <h3>具体要求：</h3>
+                    <ul>
+                        <li>使用Application Insights进行监控</li>
+                        <li>实施可用性Web测试</li>
+                        <li>包括SSL证书有效性验证</li>
+                        <li>包括自定义标头值验证</li>
+                        <li>确保99.95%的正常运行时间</li>
+                    </ul>
+                </div>
+                
+                <div class="requirements">
+                    <h3>当前环境：</h3>
+                    <ul>
+                        <li>公司网站使用React前端和Azure Functions API</li>
+                        <li>网站托管在Azure应用服务上</li>
+                        <li>使用Azure Blob存储处理静态资源</li>
+                        <li>已配置Application Insights进行监控</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 63: 公司网站可用性测试</h2>
+                <p>您需要测试公司网站的可用性。可以使用哪两种测试类型？</p>
+                <p><strong>注意：</strong>每个正确选项值1分。</p>
+                
+                <div class="options-container">
+                    <div class="option" data-option="A">
+                        <div class="option-label">A</div>
+                        <div class="option-text">
+                            使用TrackAvailability API方法进行自定义测试
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="B">
+                        <div class="option-label">B</div>
+                        <div class="option-text">
+                            标准测试
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="C">
+                        <div class="option-label">C</div>
+                        <div class="option-text">
+                            URL Ping测试
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="D">
+                        <div class="option-label">D</div>
+                        <div class="option-text">
+                            多步骤测试
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-selection">
+                    <p><strong>您的选择：</strong></p>
+                    <p id="selectedOptions">未选择任何选项</p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" onclick="showAnswer()">查看答案</button>
+                </div>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <h3>正确答案及说明</h3>
+                <div class="answer-content">
+                    <div class="answer-validation correct">
+                        <p>正确答案：C 和 D</p>
+                    </div>
+                    
+                    <div class="correct-answer">✓ C. URL Ping测试</div>
+                    <div class="correct-answer">✓ D. 多步骤测试</div>
+                    
+                    <div class="explanation">
+                        <p><strong>详细说明：</strong></p>
+                        
+                        <h4>为什么选择C和D？</h4>
+                        
+                        <div class="test-comparison">
+                            <div class="test-card">
+                                <h4>URL Ping测试</h4>
+                                <ul>
+                                    <li>通过向URL发送HTTP请求测试网站可用性</li>
+                                    <li>验证SSL证书有效性</li>
+                                    <li>检查自定义标头值</li>
+                                    <li>验证HTTP响应状态码</li>
+                                    <li>检查响应内容是否包含特定文本</li>
+                                    <li>配置简单，成本低</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="test-card">
+                                <h4>多步骤测试</h4>
+                                <ul>
+                                    <li>模拟用户与网站的多步交互</li>
+                                    <li>测试复杂业务流程的端到端可用性</li>
+                                    <li>验证多个页面或API的交互</li>
+                                    <li>支持JavaScript渲染页面</li>
+                                    <li>捕获整个用户会话的屏幕截图</li>
+                                    <li>提供更全面的用户体验测试</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h4>其他选项分析：</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>选项</th>
+                                    <th>分析</th>
+                                    <th>是否适合</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A. 自定义测试</td>
+                                    <td>使用TrackAvailability API需要编写自定义代码，不符合文档中提到的"availability web tests"要求</td>
+                                    <td>❌ 不适合</td>
+                                </tr>
+                                <tr>
+                                    <td>B. 标准测试</td>
+                                    <td>Application Insights中没有"标准测试"这种分类，这是一个干扰项</td>
+                                    <td>❌ 无效</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>实施建议：</h4>
+                        <ol>
+                            <li><strong>URL Ping测试配置</strong>：
+                                <ul>
+                                    <li>在Application Insights中创建URL Ping测试</li>
+                                    <li>设置测试URL为网站主页和关键API端点</li>
+                                    <li>配置SSL证书验证和自定义标头检查</li>
+                                    <li>设置测试频率为5分钟</li>
+                                    <li>配置警报规则，当成功率低于99.95%时通知</li>
+                                </ul>
+                            </li>
+                            <li><strong>多步骤测试配置</strong>：
+                                <ul>
+                                    <li>使用Visual Studio Enterprise创建多步骤测试</li>
+                                    <li>模拟关键业务流程（如用户登录、产品浏览、结账流程）</li>
+                                    <li>设置测试频率为15分钟</li>
+                                    <li>配置测试从多个Azure区域运行</li>
+                                    <li>设置警报规则，当测试失败时通知运维团队</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        
+                        <h4>可用性测试最佳实践：</h4>
+                        <ul>
+                            <li><strong>测试位置</strong>：从多个地理区域运行测试，确保全球可用性</li>
+                            <li><strong>测试频率</strong>：关键页面每5分钟测试一次，次要页面每15分钟测试一次</li>
+                            <li><strong>警报策略</strong>：设置阶梯式警报，当连续2次测试失败时发出警告，连续5次失败时发出严重警报</li>
+                            <li><strong>测试内容</strong>：验证关键页面元素是否存在，确保网站功能正常</li>
+                            <li><strong>性能基准</strong>：记录正常响应时间，当响应时间超过基准20%时发出警告</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | 公司网站可用性测试解决方案</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化选项选择
+        const options = document.querySelectorAll('.option');
+        let selectedOptions = [];
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const optionValue = this.getAttribute('data-option');
+                
+                // 切换选择状态
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedOptions = selectedOptions.filter(opt => opt !== optionValue);
+                } else {
+                    // 最多选择两个选项
+                    if (selectedOptions.length < 2) {
+                        this.classList.add('selected');
+                        selectedOptions.push(optionValue);
+                    }
+                }
+                
+                // 更新显示的选择
+                updateSelectedOptionsDisplay();
+            });
+        });
+        
+        function updateSelectedOptionsDisplay() {
+            const displayElement = document.getElementById('selectedOptions');
+            if (selectedOptions.length === 0) {
+                displayElement.textContent = '未选择任何选项';
+            } else {
+                displayElement.textContent = `已选择: ${selectedOptions.sort().join(', ')}`;
+            }
+        }
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSelectedOptionsDisplay();
+        });
+    </script>
+</body>
+</html>

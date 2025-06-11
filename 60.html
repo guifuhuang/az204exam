@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - 配送服务遥测数据配置</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .case-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        
+        .config-table th, .config-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .config-table th {
+            background-color: #f1f6fd;
+            font-weight: 600;
+            color: #1e3799;
+        }
+        
+        .dropdown {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #4a69bd;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dropdown:hover {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+        }
+        
+        .dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #e3f2fd;
+            font-weight: 600;
+        }
+        
+        .user-selection {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f6fd;
+            border-radius: 8px;
+            border-left: 4px solid #4a69bd;
+        }
+        
+        .answer-validation {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: 配送服务遥测数据配置</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>配送服务要求</h2>
+                <p>VanArsdel Ltd.需要实现配送服务的遥测数据存储解决方案。</p>
+                
+                <div class="requirements">
+                    <h3>具体要求：</h3>
+                    <ul>
+                        <li>使用Azure Function将服务遥测数据存储在Azure Cosmos DB中</li>
+                        <li>数据必须包含：物品ID、配送车辆牌照、车辆包裹容量、当前车辆位置坐标</li>
+                        <li>存储配送司机配置文件信息到Azure Active Directory</li>
+                        <li>使用Azure AD进行身份验证和授权</li>
+                        <li>尽可能使用托管身份</li>
+                    </ul>
+                </div>
+                
+                <div class="requirements">
+                    <h3>遥测数据结构：</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>字段名称</th>
+                                <th>数据类型</th>
+                                <th>描述</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Item ID</td>
+                                <td>字符串</td>
+                                <td>物品的唯一标识符</td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle license plate</td>
+                                <td>字符串</td>
+                                <td>配送车辆牌照号码</td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle package capacity</td>
+                                <td>整数</td>
+                                <td>车辆最大包裹容量</td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle location coordinates</td>
+                                <td>地理坐标</td>
+                                <td>车辆当前位置的经纬度</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 60: 配送服务遥测数据配置</h2>
+                <p>您需要实现配送服务遥测数据。应如何配置解决方案？</p>
+                <p><strong>注意：</strong>每个正确选项值1分。</p>
+                
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Azure Cosmos DB 配置项</th>
+                            <th>值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>API</td>
+                            <td>
+                                <select class="dropdown" id="apiSelect">
+                                    <option value="">-- 请选择 API --</option>
+                                    <option value="Core (SQL)">Core (SQL)</option>
+                                    <option value="Gremlin">Gremlin</option>
+                                    <option value="Table">Table</option>
+                                    <option value="MongoDB">MongoDB</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Partition Key</td>
+                            <td>
+                                <select class="dropdown" id="partitionKeySelect">
+                                    <option value="">-- 请选择分区键 --</option>
+                                    <option value="Item id">Item id</option>
+                                    <option value="Vehicle license plate">Vehicle license plate</option>
+                                    <option value="Vehicle package capacity">Vehicle package capacity</option>
+                                    <option value="Vehicle location coordinates">Vehicle location coordinates</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="user-selection">
+                    <p><strong>您的选择：</strong></p>
+                    <p>API: <span id="selectedApi">未选择</span></p>
+                    <p>分区键: <span id="selectedPartitionKey">未选择</span></p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" onclick="showAnswer()">查看答案</button>
+                </div>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <h3>正确答案及说明</h3>
+                <div class="answer-content">
+                    <div class="answer-validation correct">
+                        <p>参考答案正确：API: Core (SQL), 分区键: Vehicle license plate</p>
+                    </div>
+                    
+                    <div class="correct-answer">✓ API: Core (SQL)</div>
+                    <div class="correct-answer">✓ 分区键: Vehicle license plate</div>
+                    
+                    <div class="explanation">
+                        <p><strong>说明：</strong></p>
+                        <p>根据案例要求和Azure最佳实践，以下是配置选择的理由：</p>
+                        
+                        <h4>API选择：Core (SQL)</h4>
+                        <ul>
+                            <li>Core (SQL) API是Azure Cosmos DB的默认API，提供最全面的功能和最佳性能</li>
+                            <li>支持SQL查询语法，适合结构化数据查询</li>
+                            <li>提供丰富的索引功能，可以优化查询性能</li>
+                            <li>与其他API相比，Core (SQL) API在功能和生态系统支持方面最为成熟</li>
+                        </ul>
+                        
+                        <h4>分区键选择：Vehicle license plate</h4>
+                        <ul>
+                            <li>车辆牌照具有较高的基数（不同值的数量），有助于数据均匀分布</li>
+                            <li>大多数查询可能基于特定车辆，因此按车辆分区可以提高查询效率</li>
+                            <li>车辆位置坐标变化过于频繁，不适合作为分区键</li>
+                            <li>车辆包裹容量值范围有限，可能导致分区热点问题</li>
+                            <li>物品ID虽然唯一，但可能导致分区过多，且与查询模式不匹配</li>
+                        </ul>
+                        
+                        <p><strong>数据模型设计建议：</strong></p>
+                        <pre>
+{
+  "id": "unique-id",
+  "itemId": "item-12345",
+  "vehicle": {
+    "licensePlate": "ABC123",
+    "packageCapacity": 200,
+    "location": {
+      "type": "Point",
+      "coordinates": [47.6062, -122.3321]
+    }
+  },
+  "timestamp": "2023-08-15T12:34:56Z"
+}
+                        </pre>
+                        
+                        <p><strong>为什么这个配置是最佳的？</strong></p>
+                        <ul>
+                            <li>满足案例中"使用Azure Function存储数据"的要求</li>
+                            <li>Core (SQL) API支持地理空间查询，适合位置坐标数据</li>
+                            <li>车辆牌照作为分区键可以确保数据均匀分布</li>
+                            <li>此配置提供良好的可扩展性和查询性能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | 配送服务数据解决方案</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化下拉框选择事件
+        document.getElementById('apiSelect').addEventListener('change', function() {
+            document.getElementById('selectedApi').textContent = this.value || '未选择';
+        });
+        
+        document.getElementById('partitionKeySelect').addEventListener('change', function() {
+            document.getElementById('selectedPartitionKey').textContent = this.value || '未选择';
+        });
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // 设置参考答案
+                document.getElementById('apiSelect').value = 'Core (SQL)';
+                document.getElementById('partitionKeySelect').value = 'Vehicle license plate';
+                
+                document.getElementById('selectedApi').textContent = 'Core (SQL)';
+                document.getElementById('selectedPartitionKey').textContent = 'Vehicle license plate';
+            }
+        }
+        
+        // 初始化页面时确保所有元素存在
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，JavaScript已初始化');
+        });
+    </script>
+</body>
+</html>

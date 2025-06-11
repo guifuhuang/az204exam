@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Cosmos DB SQL 查询测试 - Topic 6, Coho Winery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #004578, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #0078d4, #004578);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .case-info {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-bottom: 2px dashed #0078d4;
+            font-size: 14px;
+        }
+        
+        .question-container {
+            padding: 25px;
+            background-color: #f8f9fa;
+        }
+        
+        .question-box {
+            background: white;
+            border: 2px solid #0078d4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-title {
+            color: #004578;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .question-content {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .code-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .code-line {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .line-number {
+            width: 30px;
+            text-align: right;
+            padding-right: 15px;
+            color: #6a9955;
+            user-select: none;
+        }
+        
+        .code-content {
+            flex: 1;
+        }
+        
+        .code-select {
+            background: #3e3e42;
+            color: #dcdcdc;
+            border: 1px solid #0078d4;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            margin: 0 5px;
+            min-width: 150px;
+            cursor: pointer;
+        }
+        
+        .code-select:focus {
+            outline: none;
+            border-color: #4ec9b0;
+            box-shadow: 0 0 0 2px rgba(78, 201, 176, 0.3);
+        }
+        
+        .controls {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .answer-container {
+            background: #d4edda;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #28a745;
+        }
+        
+        .answer-container h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-left: 4px solid #28a745;
+        }
+        
+        .explanation {
+            background: #e2f0fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .explanation h4 {
+            color: #004578;
+            margin-bottom: 10px;
+        }
+        
+        .json-structure {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .question-container {
+                padding: 15px;
+            }
+            
+            .code-select {
+                min-width: 120px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure Cosmos DB SQL 查询测试</h1>
+            <p>Topic 6, Coho Winery - Order.json 数据处理</p>
+        </header>
+        
+        <div class="case-info">
+            <p><strong>案例背景：</strong> Coho Winery 的订单数据存储为非关系型 JSON 格式，必须使用 SQL 查询。您需要从 Order.json 中检索所有订单行项目并按城市排序。</p>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-box">
+                <div class="question-title">
+                    <i>📝</i>
+                    <h2>试题内容</h2>
+                </div>
+                <div class="question-content">
+                    <p><strong>问题：</strong> 您需要从 Order.json 中检索所有订单行项目并按城市排序。如何完成以下代码？</p>
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-line">
+                        <div class="line-number">1</div>
+                        <div class="code-content">SELECT Li.id AS Lineitemid, li.price</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">2</div>
+                        <div class="code-content">FROM 
+                            <select class="code-select" id="select1">
+                                <option value="">-- 选择选项 --</option>
+                                <option value="Orders o">Orders o</option>
+                                <option value="LineItems li">LineItems li</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">3</div>
+                        <div class="code-content">JOIN 
+                            <select class="code-select" id="select2">
+                                <option value="">-- 选择选项 --</option>
+                                <option value="li">li</option>
+                                <option value="o">o</option>
+                            </select>
+                            IN 
+                            <select class="code-select" id="select3">
+                                <option value="">-- 选择选项 --</option>
+                                <option value="o.line_items">o.line_items</option>
+                                <option value="li.line_items">li.line_items</option>
+                                <option value="o.address">o.address</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">4</div>
+                        <div class="code-content">ORDER BY 
+                            <select class="code-select" id="select4">
+                                <option value="">-- 选择选项 --</option>
+                                <option value="o.address.city">o.address.city</option>
+                                <option value="li.address.city">li.address.city</option>
+                                <option value="o.city">o.city</option>
+                                <option value="li.city">li.city</option>
+                            </select>
+                            ASC
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="json-structure">
+                    <h4>Order.json 结构示例：</h4>
+                    <pre>{
+  "id": 1,
+  "customers": [
+    {
+      "familyName": "Doe",
+      "givenName": "John",
+      "customerid": 5
+    }
+  ],
+  "line_items": [
+    {
+      "fulfillable_quantity": 1,
+      "id": 6,
+      "price": "199.99",
+      "product_id": 7513594,
+      "quantity": 1,
+      "requires_shipping": true,
+      "sku": "SFC-342-N",
+      "title": "Surface Go",
+      "vendor": "Microsoft",
+      "name": "Surface Go - 8GB",
+      "taxable": true,
+      "tax_lines": [
+        {
+          "title": "State Tax",
+          "price": "3.98",
+          "rate": 0.06
+        }
+      ],
+      "total_discount": "5.00",
+      "discount_allocations": [
+        {
+          "amount": "5.00",
+          "discount_application_index": 2
+        }
+      ]
+    }
+  ],
+  "address": {
+    "state": "NY",
+    "city": "New York"  // 假设存在city字段
+  }
+}</pre>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn" id="check-answer">查看答案</button>
+                </div>
+                
+                <div class="answer-container" id="answer-section">
+                    <h3>正确答案及解析</h3>
+                    <div class="correct-answer">
+                        <span style="color:#28a745">✓ 正确答案：</span>
+                        <ul>
+                            <li><strong>FROM: Orders o</strong></li>
+                            <li><strong>JOIN: li IN o.line_items</strong></li>
+                            <li><strong>ORDER BY: o.address.city</strong></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h4>解析说明：</h4>
+                        <p>根据Coho Winery案例的Order.json数据结构：</p>
+                        <p><strong>1. FROM Orders o</strong>：订单数据存储在Orders容器中，使用别名'o'表示订单对象</p>
+                        <p><strong>2. JOIN li IN o.line_items</strong>：订单中的行项目存储在line_items数组中，使用JOIN展开数组元素</p>
+                        <p><strong>3. ORDER BY o.address.city</strong>：城市信息存储在订单的address对象中，而不是行项目中</p>
+                        
+                        <p><strong>为什么这样选择？</strong></p>
+                        <p>在Azure Cosmos DB中处理JSON文档时：</p>
+                        <ul>
+                            <li>FROM子句指定主文档容器（Orders）</li>
+                            <li>JOIN用于展开数组元素（line_items数组中的每个行项目）</li>
+                            <li>城市信息属于订单级别（address.city），而不是行项目级别</li>
+                        </ul>
+                        
+                        <p><strong>完整SQL查询：</strong></p>
+                        <pre>SELECT Li.id AS Lineitemid, li.price
+FROM Orders o 
+JOIN li IN o.line_items 
+ORDER BY o.address.city ASC</pre>
+                        
+                        <p><strong>结果说明：</strong></p>
+                        <p>此查询将返回所有订单的行项目ID和价格，并按订单地址中的城市名称排序</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                const select1 = document.getElementById('select1').value;
+                const select2 = document.getElementById('select2').value;
+                const select3 = document.getElementById('select3').value;
+                const select4 = document.getElementById('select4').value;
+                
+                // 显示答案区域
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    </script>
+</body>
+</html>

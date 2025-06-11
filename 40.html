@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure 开发考试题集 - 拖拽题实现</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0066cc, #0099ff);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: #e3f2fd;
+            padding: 15px 30px;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #bbdefb;
+        }
+        
+        .question-container {
+            padding: 30px;
+        }
+        
+        .question {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            padding: 25px;
+            border-left: 5px solid #2196f3;
+            transition: transform 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-title {
+            font-size: 1.4rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title::before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .drag-container {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .drag-items, .code-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f5f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #bbdefb;
+        }
+        
+        .drag-items h3, .code-container h3 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        
+        .drag-item {
+            background: linear-gradient(135deg, #42a5f5, #1976d2);
+            color: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            cursor: move;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .drag-item:hover {
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            transform: translateX(5px);
+        }
+        
+        .drag-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .line-number {
+            display: inline-block;
+            width: 40px;
+            color: #75715e;
+            text-align: right;
+            margin-right: 15px;
+            user-select: none;
+        }
+        
+        .drop-zone {
+            display: inline-block;
+            min-width: 100px;
+            min-height: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px dashed #42a5f5;
+            border-radius: 4px;
+            padding: 0 5px;
+            margin: 0 3px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+        
+        .drop-zone.highlight {
+            background-color: rgba(66, 165, 245, 0.3);
+            border-color: #ff9800;
+        }
+        
+        .drop-zone.filled {
+            background-color: rgba(76, 175, 80, 0.3);
+            border-style: solid;
+        }
+        
+        .submit-container {
+            text-align: center;
+            padding: 30px;
+            border-top: 2px solid #e3f2fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .submit-btn, .view-answer-btn {
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+        }
+        
+        .view-answer-btn {
+            background: linear-gradient(135deg, #2196F3, #0d47a1);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+        }
+        
+        .view-answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #0d47a1, #082c6e);
+        }
+        
+        .submit-btn:active, .view-answer-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 8px;
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+        }
+        
+        .answer-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            color: #546e7a;
+            line-height: 1.7;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .answer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .answer-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .answer-item-title {
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 5px;
+        }
+        
+        .answer-item-value {
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            color: #2e7d32;
+        }
+        
+        @media (max-width: 768px) {
+            .drag-container {
+                flex-direction: column;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .submit-btn, .view-answer-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Azure 开发考试题集</h1>
+            <p class="subtitle">AZ-204 认证考试模拟题 - Proseware案例</p>
+        </header>
+        
+        <div class="exam-info">
+            <div>考试: AZ-204 Microsoft Azure Developer Associate</div>
+            <div>案例: Proseware, Inc</div>
+            <div>时间: 120分钟</div>
+        </div>
+        
+        <div class="question-container">
+            <!-- 案例背景 -->
+            <div class="question">
+                <div class="question-title">案例背景：Proseware, Inc</div>
+                <p>您正在为Proseware开发一个治理策略应用程序，该程序对内部服务、外部服务和应用程序应用治理策略。应用程序还提供共享库用于通用功能。</p>
+                
+                <div class="explanation">
+                    <p><strong>关键需求：</strong></p>
+                    <ul>
+                        <li>策略服务：部署在Azure应用服务的ASP.NET Core 2.1状态化Web应用</li>
+                        <li>日志策略：所有Azure应用服务Web应用必须将日志写入Azure Blob存储</li>
+                        <li>身份验证事件：所有身份验证事件必须由策略服务处理，特别是注销事件需要尽快处理</li>
+                        <li>异常检测服务：使用Azure机器学习模型分析日志，检测到异常时通过HTTP WebHook调用Azure函数</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 拖拽题 -->
+            <div class="question">
+                <div class="question-title">拖拽题：EventGridController.cs 代码补全</div>
+                <p>请将右侧的代码段拖拽到左侧代码中的正确位置，完成代码逻辑。</p>
+                
+                <div class="drag-container">
+                    <div class="drag-items">
+                        <h3>可拖拽的代码段</h3>
+                        <div class="drag-item" draggable="true" data-value="topic">topic</div>
+                        <div class="drag-item" draggable="true" data-value="status">status</div>
+                        <div class="drag-item" draggable="true" data-value="eventType">eventType</div>
+                        <div class="drag-item" draggable="true" data-value="Succeeded">Succeeded</div>
+                        <div class="drag-item" draggable="true" data-value="operationName">operationName</div>
+                        <div class="drag-item" draggable="true" data-value="resourceProvider">resourceProvider</div>
+                    </div>
+                    
+                    <div class="code-container">
+                        <h3>EventGridController.cs (部分代码)</h3>
+                        <div class="code-block">
+                            <span class="line-number">EG01</span>public class EventgridController : Controller<br>
+                            <span class="line-number">EG02</span>{<br>
+                            <span class="line-number">EG03</span>    public static AsyncLocal&lt;string&gt; EventId = new AsyncLocal&lt;string&gt;();<br>
+                            <span class="line-number">EG04</span>    public IActionResult Process(string eventsJson)<br>
+                            <span class="line-number">EG05</span>    {<br>
+                            <span class="line-number">EG06</span>        var events = JArray.Parse(eventsJson);<br>
+                            <span class="line-number">EG07</span>        <br>
+                            <span class="line-number">EG08</span>        foreach (var @event in events)<br>
+                            <span class="line-number">EG09</span>        {<br>
+                            <span class="line-number">EG10</span>            EventId.Value = @event["id"].ToString();<br>
+                            <span class="line-number">EG11</span>            if (@event["topic"].ToString().Contains("providers/Microsoft.Storage"))<br>
+                            <span class="line-number">EG12</span>            {<br>
+                            <span class="line-number">EG13</span>                SendToAnomalyDetectionService(@event["data"]["url"].ToString());<br>
+                            <span class="line-number">EG14</span>            }<br>
+                            <span class="line-number">EG15</span>            if(@event["data"]["<span class="drop-zone" data-target="condition1"></span>"].ToString() == "<span class="drop-zone" data-target="condition2"></span>"<br>
+                            <span class="line-number"></span>                &&<br>
+                            <span class="line-number"></span>                @event["data"]["<span class="drop-zone" data-target="condition3"></span>"].ToString() == "Microsoft.Web/sites/write"<br>
+                            <span class="line-number">EG16</span>            {<br>
+                            <span class="line-number">EG17</span>                EnsureLogging(@event["subject"].ToString());<br>
+                            <span class="line-number">EG18</span>            }<br>
+                            <span class="line-number">EG19</span>        }<br>
+                            <span class="line-number">EG20</span>        return null;<br>
+                            <span class="line-number">EG21</span>    }<br>
+                            <span class="line-number">EG22</span>    private void EnsureLogging(string resource)<br>
+                            <span class="line-number">EG23</span>    {<br>
+                            <span class="line-number">EG24</span>        ...<br>
+                            <span class="line-number">EG25</span>    }<br>
+                            <span class="line-number">EG26</span>    private async Task SendToAnomalyDetectionService(string url)<br>
+                            <span class="line-number">EG27</span>    {<br>
+                            <span class="line-number">EG28</span>        var content = GetData(url);<br>
+                            <span class="line-number">EG29</span>        var scoreRequest = new<br>
+                            <span class="line-number">EG30</span>        {<br>
+                            <span class="line-number">EG31</span>            Inputs = new Dictionary&lt;string, List&lt;Dictionary&lt;string, string&gt;&gt;&gt;<br>
+                            <span class="line-number">EG32</span>            {<br>
+                            <span class="line-number">EG33</span>                .....<br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="submit-container">
+            <div class="btn-container">
+                <button class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> 提交答案
+                </button>
+                <button class="view-answer-btn" id="viewAnswerBtn">
+                    <i class="fas fa-eye"></i> 查看答案
+                </button>
+            </div>
+            
+            <div class="feedback" id="feedback">
+                <div class="answer-title">
+                    <i class="fas fa-check-circle"></i>
+                    <span>正确答案：</span>
+                </div>
+                <div class="answer-content">
+                    <div class="answer-item">
+                        <div class="answer-item-title">条件1</div>
+                        <div class="answer-item-value">status</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-item-title">条件2</div>
+                        <div class="answer-item-value">Succeeded</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-item-title">条件3</div>
+                        <div class="answer-item-value">operationName</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <p><strong>中文说明：</strong></p>
+                    <p>在EventGridController.cs代码中，需要检查事件状态(status)是否为"Succeeded"，操作名称(operationName)是否为"Microsoft.Web/sites/write"，以确保在创建或更新网站时启用日志记录功能。</p>
+                    
+                    <p><strong>业务背景：</strong></p>
+                    <p>根据Proseware公司的需求，所有Azure应用服务Web应用必须将日志写入Azure Blob存储。这段代码实现了在特定操作成功时确保日志记录的功能。</p>
+                    
+                    <p><strong>代码逻辑：</strong></p>
+                    <ul>
+                        <li>条件1：检查事件状态字段，需要拖入"status"</li>
+                        <li>条件2：检查状态值是否为成功，需要拖入"Succeeded"</li>
+                        <li>条件3：检查操作名称字段，需要拖入"operationName"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 拖拽功能实现
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const viewAnswerBtn = document.getElementById('viewAnswerBtn');
+            const feedback = document.getElementById('feedback');
+            
+            // 设置拖拽项目
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragend', dragEnd);
+            });
+            
+            // 设置放置区域
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+            });
+            
+            // 提交按钮事件
+            const submitBtn = document.getElementById('submitBtn');
+            
+            submitBtn.addEventListener('click', function() {
+                // 检查答案
+                const condition1 = document.querySelector('[data-target="condition1"]').textContent;
+                const condition2 = document.querySelector('[data-target="condition2"]').textContent;
+                const condition3 = document.querySelector('[data-target="condition3"]').textContent;
+                
+                const isCorrect = condition1 === 'status' && 
+                                 condition2 === 'Succeeded' && 
+                                 condition3 === 'operationName';
+                
+                // 显示反馈
+                feedback.style.display = 'block';
+                feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+                
+                if (isCorrect) {
+                    feedback.querySelector('.answer-title span').textContent = "恭喜！答案正确！";
+                    feedback.querySelector('.answer-title i').className = "fas fa-check-circle";
+                } else {
+                    feedback.querySelector('.answer-title span').textContent = "答案不正确，请再试一次";
+                    feedback.querySelector('.answer-title i').className = "fas fa-exclamation-circle";
+                }
+                
+                // 滚动到反馈区域
+                feedback.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 查看答案按钮事件
+            viewAnswerBtn.addEventListener('click', function() {
+                // 显示正确答案
+                feedback.style.display = 'block';
+                feedback.className = 'feedback correct';
+                feedback.querySelector('.answer-title span').textContent = "正确答案及说明";
+                feedback.querySelector('.answer-title i').className = "fas fa-lightbulb";
+                
+                // 滚动到反馈区域
+                feedback.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 拖拽功能函数
+            let draggedItem = null;
+            
+            function dragStart(e) {
+                this.classList.add('dragging');
+                draggedItem = this;
+                e.dataTransfer.setData('text/plain', this.getAttribute('data-value'));
+            }
+            
+            function dragEnd() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+            }
+            
+            function dragEnter(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            }
+            
+            function dragLeave() {
+                this.classList.remove('highlight');
+            }
+            
+            function drop(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                // 获取拖拽的数据
+                const data = e.dataTransfer.getData('text/plain');
+                
+                // 更新放置区域内容
+                this.textContent = data;
+                this.classList.add('filled');
+                
+                // 重置拖拽项目
+                if (draggedItem) {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

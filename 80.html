@@ -1,108 +1,410 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>Azure Cache for Redis Test Question</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fourth Coffee - Azure Cache for Redis 性能问题解决方案</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .question { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .options { margin: 15px 0; }
-        .option { margin: 10px 0; padding: 8px; background: #fff; border-radius: 4px; }
-        button { padding: 8px 15px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .answer { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border-radius: 5px; }
-        .correct { color: green; font-weight: bold; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f8f4e9 0%, #e8e1d1 100%);
+            color: #4a3c2a;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .redis-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #d4c9b4;
+        }
+        .redis-icon {
+            font-size: 36px;
+            margin-right: 15px;
+            color: #c6302b;
+        }
+        h1 {
+            color: #5d4037;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #8d6e63;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .problem-box {
+            background-color: #f9f7f2;
+            border: 1px solid #d7ccc8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .problem-box:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #c6302b, #8a211d);
+            border-radius: 10px 0 0 10px;
+        }
+        .problem-title {
+            color: #c6302b;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .problem-text {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0d6c9;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .options-container {
+            margin-top: 20px;
+        }
+        .option {
+            background: #f1e8e0;
+            border: 1px solid #d7ccc8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            background: #e6dcd2;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        .option.selected {
+            background: #e8f5e9;
+            border-color: #c6302b;
+        }
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #c6302b;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .option-content {
+            flex: 1;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .answer-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(to right, #c6302b, #8a211d);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .answer-btn:hover {
+            background: linear-gradient(to right, #b5201b, #7a1915);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .answer-section {
+            background: #f1e8e0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 4px solid #c6302b;
+        }
+        .answer-title {
+            color: #c6302b;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .answer-title i {
+            margin-right: 10px;
+            color: #c6302b;
+        }
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border: 1px solid #c8e6c9;
+        }
+        .correct-answer p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .explanation {
+            background: #fff;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #e0d6c9;
+        }
+        .explanation h3 {
+            color: #5d4037;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .explanation p {
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #fff8e1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        .redis-diagram {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        .redis-step {
+            width: 200px;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0d6c9;
+        }
+        .step-icon {
+            font-size: 32px;
+            color: #c6302b;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: 600;
+            color: #5d4037;
+            margin-bottom: 8px;
+        }
+        .coffee-bean {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 80px;
+            z-index: -1;
+            color: #c6302b;
+        }
+        .bean1 {
+            top: 20px;
+            right: 30px;
+            transform: rotate(20deg);
+        }
+        .bean2 {
+            bottom: 40px;
+            left: 40px;
+            transform: rotate(-15deg);
+        }
+        .note {
+            background: #e6dcd2;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .score {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #5d4037;
+        }
+        .issue-highlight {
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #c6302b;
+        }
     </style>
 </head>
 <body>
-    <div class="question">
-        <h3>QUESTION NO: 80</h3>
-        <p>You need to mitigate the Azure Cache for Redis issue.</p>
-        <p>What are two possible ways to achieve this goal? Each correct answer presents part of the solution.</p>
-        <p>NOTE: Each correct selection is worth one point.</p>
+    <div class="container">
+        <div class="coffee-bean bean1">⚡</div>
+        <div class="coffee-bean bean2">⚡</div>
         
-        <div class="options">
-            <div class="option">
-                <input type="checkbox" id="optionA" name="answer" value="A">
-                <label for="optionA">A. Increase the maxmemory-reserved and maxfragmentationmemory-reserved values</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="optionB" name="answer" value="B">
-                <label for="optionB">B. Modify the maxmemory policy to evict the least frequently used keys out of all keys.</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="optionC" name="answer" value="C">
-                <label for="optionC">C. Configure client connections to retry commands with exponential backoff.</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="optionD" name="answer" value="D">
-                <label for="optionD">D. Test application code by purging the cache in the test environment.</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="optionE" name="answer" value="E">
-                <label for="optionE">E. Test application code by rebooting all nodes in the test environment.</label>
+        <div class="redis-header">
+            <div class="redis-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <h1>Fourth Coffee - Azure Cache for Redis 性能优化</h1>
+                <div class="subtitle">Topic 9 案例研究 - 缓解Redis维护问题</div>
             </div>
         </div>
         
-        <button onclick="showAnswer()">查看答案</button>
+        <div class="issue-highlight">
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>报告的问题：</strong> "Production Azure Cache for Redis maintenance has negatively affected application performance"</p>
+            <p>生产环境中的Azure Cache for Redis维护操作对应用程序性能产生了负面影响</p>
+        </div>
         
-        <div id="answer" class="answer">
-            <p><strong>正确答案：<span class="correct">A 和 C</span></strong></p>
+        <div class="problem-box">
+            <div class="problem-title">QUESTION NO: 80</div>
+            <div class="problem-text">
+                <p>您需要缓解Azure Cache for Redis的问题。以下哪两种方法可以实现此目标？每个正确答案都提供了解决方案的一部分。</p>
+                <p class="note">注意：每个正确选择得1分</p>
+            </div>
             
-            <p><strong>说明：</strong></p>
-            <ol>
-                <li><span class="correct">A选项</span>：
-                    <ul>
-                        <li>增加<code>maxmemory-reserved</code>和<code>maxfragmentationmemory-reserved</code>值可以改善写入密集型工作负载下的性能</li>
-                        <li>这些设置预留内存用于非缓存操作，确保在负载变化时更一致的Redis服务器体验</li>
-                        <li>对于存储大于100KB的值特别重要</li>
-                    </ul>
-                </li>
-                <li><span class="correct">C选项</span>：
-                    <ul>
-                        <li>配置客户端连接使用指数退避重试命令可以缓解临时性网络问题导致的错误</li>
-                        <li>这是处理Redis超时和延迟问题的推荐客户端策略</li>
-                        <li>特别适用于流量激增情况下的连接问题</li>
-                    </ul>
-                </li>
-                <li>其他选项分析：
-                    <ul>
-                        <li>B选项：修改逐出策略不能直接解决性能问题，且可能影响应用逻辑</li>
-                        <li>D选项：测试环境清除缓存不能解决生产环境问题</li>
-                        <li>E选项：重启节点是极端措施，不能作为常规缓解方案</li>
-                    </ul>
-                </li>
-            </ol>
+            <div class="options-container">
+                <div class="option" data-option="A">
+                    <div class="option-letter">A</div>
+                    <div class="option-content">
+                        <p>增加maxmemory-reserved和maxfragmentationmemory-reserved的值</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="B">
+                    <div class="option-letter">B</div>
+                    <div class="option-content">
+                        <p>修改maxmemory策略以驱逐所有键中最不经常使用的键</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="C">
+                    <div class="option-letter">C</div>
+                    <div class="option-content">
+                        <p>配置客户端连接以指数退避重试命令</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="D">
+                    <div class="option-letter">D</div>
+                    <div class="option-content">
+                        <p>通过在测试环境中清除缓存来测试应用程序代码</p>
+                    </div>
+                </div>
+                
+                <div class="option" data-option="E">
+                    <div class="option-letter">E</div>
+                    <div class="option-content">
+                        <p>通过在测试环境中重新启动所有节点来测试应用程序代码</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><i class="fas fa-info-circle"></i> 提示：根据Fourth Coffee案例研究文档，Redis用于缓存SQL Database查询结果以提高性能："SQL Database query results are cached in Azure Cache for Redis to improve performance"</p>
+        </div>
+        
+        <div class="btn-container">
+            <button class="answer-btn" id="check-answer">
+                <i class="fas fa-key"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-section" id="answer-section">
+            <h2 class="answer-title">
+                <i class="fas fa-lightbulb"></i> 答案与说明
+            </h2>
             
-            <p><strong>实现建议：</strong></p>
-            <ol>
-                <li>通过Azure Portal调整内存预留：
-                    <ol type="a">
-                        <li>导航到Redis资源 → 高级设置</li>
-                        <li>将<code>maxmemory-reserved</code>设置为总内存的20-30%</li>
-                        <li>将<code>maxfragmentationmemory-reserved</code>设置为10-20%</li>
-                    </ol>
-                </li>
-                <li>客户端代码配置示例（C#）：
-<pre>
-var configurationOptions = new ConfigurationOptions
-{
-    EndPoints = { "yourcache.redis.cache.windows.net" },
-    Password = "yourpassword",
-    ConnectTimeout = 5000,
-    SyncTimeout = 5000,
-    // 指数退避配置
-    ReconnectRetryPolicy = new ExponentialRetry(1000),
-    ConnectRetry = 3
-};
-</pre>
-                </li>
-            </ol>
+            <div class="correct-answer">
+                <p><strong>正确答案：A, C</strong></p>
+                <p>每个正确选项得1分</p>
+            </div>
+            
+            <div class="explanation">
+                <h3><i class="fas fa-book"></i> 详细说明：</h3>
+                
+                <p><span class="highlight">A选项：增加maxmemory-reserved和maxfragmentationmemory-reserved的值</span></p>
+                <p>增加这些预留内存值可以确保Redis在维护操作期间有足够的内存资源来处理碎片整理和系统操作，从而减少维护期间对应用程序性能的影响。</p>
+                
+                <p><span class="highlight">C选项：配置客户端连接以指数退避重试命令</span></p>
+                <p>在维护期间Redis可能暂时不可用，配置指数退避重试机制可以让应用程序在遇到临时错误时自动重试，避免应用程序完全中断，提高系统的弹性。</p>
+                
+                <h3><i class="fas fa-times-circle"></i> 错误选项分析：</h3>
+                <p><span class="highlight">B选项：</span> 修改maxmemory策略与维护期间性能问题无关，它解决的是内存满时的键驱逐问题。</p>
+                <p><span class="highlight">D选项：</span> 在测试环境中清除缓存有助于测试缓存丢失场景，但不能缓解生产环境中的维护问题。</p>
+                <p><span class="highlight">E选项：</span> 在测试环境中重启节点有助于测试节点故障恢复，但不能直接解决生产环境中的维护性能问题。</p>
+                
+                <div class="redis-diagram">
+                    <div class="redis-step">
+                        <div class="step-icon"><i class="fas fa-memory"></i></div>
+                        <div class="step-title">内存预留</div>
+                        <p>增加预留内存确保维护操作有足够资源</p>
+                    </div>
+                    <div class="redis-step">
+                        <div class="step-icon"><i class="fas fa-redo-alt"></i></div>
+                        <div class="step-title">指数退避重试</div>
+                        <p>在维护期间自动重试失败的操作</p>
+                    </div>
+                    <div class="redis-step">
+                        <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="step-title">弹性设计</div>
+                        <p>提高系统对维护操作的容忍度</p>
+                    </div>
+                </div>
+                
+                <p class="highlight">关键优化原则：通过预留资源确保Redis维护操作不会耗尽内存，同时通过指数退避重试机制提高应用程序的弹性。</p>
+            </div>
+            
+            <div class="score">本题最高得分：2分</div>
         </div>
     </div>
 
     <script>
-        function showAnswer() {
-            document.getElementById('answer').style.display = 'block';
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const answerSection = document.getElementById('answer-section');
+            
+            // 为每个选项添加点击事件
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                });
+            });
+            
+            // 查看答案按钮事件
+            checkAnswerBtn.addEventListener('click', function() {
+                answerSection.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-check"></i> 答案已显示';
+                this.disabled = true;
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>

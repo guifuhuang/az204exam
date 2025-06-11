@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 练习题 - 问题22</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .question-container {
+            padding: 30px;
+            background: #f0f7ff;
+            border-bottom: 2px solid #d0e8ff;
+        }
+        
+        .question {
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid #0078d7;
+        }
+        
+        .requirements {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        
+        .requirements h3 {
+            color: #0078d7;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .requirements ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .requirements li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .options-area {
+            padding: 25px 30px;
+            background: white;
+        }
+        
+        .options-title {
+            font-size: 22px;
+            color: #0078d7;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #bbdefb;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e0e0e0;
+            position: relative;
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .option.selected {
+            background: #e3f2fd;
+            border-color: #0078d7;
+            box-shadow: 0 5px 15px rgba(0,120,215,0.2);
+        }
+        
+        .option.selected::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: #0078d7;
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .option input {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .option label {
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+        
+        .option .letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #0078d7;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .button-container {
+            padding: 25px 30px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        
+        .btn {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .answer-panel {
+            padding: 0 30px 30px;
+            background: white;
+            display: none;
+        }
+        
+        .answer-content {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .correct-answer {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 6px solid #4caf50;
+        }
+        
+        .correct-answer h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .correct-answer h3 i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .explanation {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border-left: 6px solid #ffc107;
+        }
+        
+        .explanation h3 {
+            color: #d35400;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .explanation ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .explanation li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            background: #f5f5f5;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question-container, .options-area {
+                padding: 20px 15px;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AZ-204 认证考试练习题</h1>
+            <div class="subtitle">问题 #22 - Azure Functions 托管模型选择</div>
+        </header>
+        
+        <div class="question-container">
+            <div class="question">
+                <p>您需要部署名为 CheckUserContent 的 Azure 函数。解决方案必须满足安全性和成本要求。</p>
+                <p>应该使用哪种托管模型？</p>
+            </div>
+            
+            <div class="requirements">
+                <h3><i class="fas fa-shield-alt"></i> 安全要求</h3>
+                <ul>
+                    <li>任何可通过 Internet 访问的 Web 服务必须受到跨站点脚本攻击的保护</li>
+                    <li>所有网站和服务必须使用来自有效根证书颁发机构的 SSL</li>
+                    <li>Azure 存储访问密钥必须仅存储在内存中，并且仅对服务可用</li>
+                    <li>所有内部服务必须只能从内部虚拟网络 (VNet) 访问</li>
+                    <li>系统的所有部分都必须支持入站和出站流量限制</li>
+                    <li>所有服务调用必须使用 Azure AD 进行身份验证</li>
+                </ul>
+                
+                <h3><i class="fas fa-coins"></i> 成本要求</h3>
+                <ul>
+                    <li>必须最小化所有 Azure 服务的成本</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="options-area">
+            <div class="options-title">选择正确的托管模型</div>
+            
+            <div class="option" onclick="selectOption('A')">
+                <div class="letter">A</div>
+                <label for="optionA">消耗计划 (Consumption plan)</label>
+                <input type="radio" id="optionA" name="hostingOption" value="A">
+            </div>
+            
+            <div class="option" onclick="selectOption('B')">
+                <div class="letter">B</div>
+                <label for="optionB">高级计划 (Premium plan)</label>
+                <input type="radio" id="optionB" name="hostingOption" value="B">
+            </div>
+            
+            <div class="option" onclick="selectOption('C')">
+                <div class="letter">C</div>
+                <label for="optionC">应用服务计划 (App Service plan)</label>
+                <input type="radio" id="optionC" name="hostingOption" value="C">
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" onclick="showAnswer()">
+                <i class="fas fa-lightbulb"></i> 查看答案
+            </button>
+        </div>
+        
+        <div class="answer-panel" id="answerPanel">
+            <div class="answer-content">
+                <div class="correct-answer">
+                    <h3><i class="fas fa-check-circle"></i> 正确答案: B. 高级计划 (Premium plan)</h3>
+                    <p>高级计划是满足所有安全和成本要求的最佳选择。</p>
+                </div>
+                
+                <div class="explanation">
+                    <h3><i class="fas fa-brain"></i> 详细解析</h3>
+                    <p>选择高级计划的原因如下：</p>
+                    
+                    <ul>
+                        <li><span class="highlight">VNet 集成支持</span>：高级计划原生支持虚拟网络集成，满足"所有内部服务必须只能从内部虚拟网络访问"的安全要求</li>
+                        <li><span class="highlight">成本优化</span>：与始终运行的 App Service 计划不同，高级计划支持弹性扩展（包括缩放到零），在空闲时不会产生费用，满足最小化成本的要求</li>
+                        <li><span class="highlight">安全合规</span>：高级计划支持私有终结点、Azure AD 身份验证和内存密钥管理，满足所有安全要求</li>
+                        <li><span class="highlight">无冷启动</span>：高级计划提供预热的实例，确保内容检查函数在需要时能够快速响应</li>
+                        <li><span class="highlight">扩展能力</span>：高级计划支持自动扩展，可以处理用户生成内容的高峰负载</li>
+                    </ul>
+                    
+                    <p><strong>为什么不选择其他选项？</strong></p>
+                    <ul>
+                        <li><span class="highlight">消耗计划 (A)</span>：虽然成本最低，但不支持VNet集成，无法满足内部服务仅限内部VNet访问的安全要求</li>
+                        <li><span class="highlight">应用服务计划 (C)</span>：虽然支持VNet集成，但需要持续运行实例（即使没有流量），成本较高，不符合最小化成本的要求</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>AZ-204 认证考试练习题 | 基于真实考试场景设计</p>
+            <p>注意：在实际考试中，请仔细阅读所有要求和选项</p>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(option) {
+            // 移除所有选项的选中状态
+            document.querySelectorAll('.option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // 添加当前选项的选中状态
+            document.querySelector(`.option:nth-child(${option === 'A' ? 2 : option === 'B' ? 3 :4})`).classList.add('selected');
+            
+            // 选中对应的单选按钮
+            document.getElementById(`option${option}`).checked = true
+        }
+        
+        function showAnswer() {
+            const selectedOption = document.querySelector('input[name="hostingOption"]:checked');
+            const answerPanel = document.getElementById('answerPanel');
+            
+            if (!selectedOption) {
+                alert('请先选择一个答案！');
+                return;
+            }
+            
+            // 显示答案面板
+            answerPanel.style.display = 'block';
+            
+            // 滚动到答案位置
+            answerPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

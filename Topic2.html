@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Topic 2 - Contoso, Ltd Case Study</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            background: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            margin: 0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        h2 {
+            color: #1a2980;
+            border-bottom: 2px solid #26d0ce;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+        }
+        .section {
+            padding: 25px 40px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.5;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .requirement {
+            font-weight: bold;
+            color: #e74c3c;
+            background: #fdeded;
+            padding: 8px 12px;
+            border-left: 4px solid #e74c3c;
+            margin: 15px 0;
+        }
+        .code-section {
+            background: #1e2a38;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .code-line {
+            display: flex;
+            margin: 5px 0;
+        }
+        .line-number {
+            color: #3498db;
+            min-width: 50px;
+            font-weight: bold;
+            user-select: none;
+        }
+        .highlight {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .note {
+            background: #e1f5fe;
+            border-left: 4px solid #039be5;
+            padding: 12px 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .security-list {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        .security-list li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Topic 2, Contoso, Ltd</h1>
+            <h2>Case study</h2>
+        </header>
+
+        <div class="section">
+            <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+            <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+            <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+            <p><strong>To start the case study:</strong> To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. When you are ready to answer a question, click the Question button to return to the question.</p>
+        </div>
+
+        <div class="section">
+            <h2>Background</h2>
+            <h3>Overview</h3>
+            <p>You are a developer for Contoso, Ltd. The company has a social networking website that is developed as a Single Page Application (SPA). The main web application for the social networking website loads user uploaded content from blob storage.</p>
+            <p>You are developing a solution to monitor uploaded data for inappropriate content. The following process occurs when users upload content by using the SPA:</p>
+            <ul>
+                <li>Messages are sent to ContentUploadService.</li>
+                <li>Content is processed by ContentAnalysisService.</li>
+                <li>After processing is complete, the content is posted to the social network or a rejection message is posted in its place.</li>
+            </ul>
+            <p>The ContentAnalysisService is deployed with Azure Container Instances from a private Azure Container Registry named <code>contosoimages</code>.</p>
+            <p>The solution will use eight CPU cores.</p>
+        </div>
+
+        <div class="section">
+            <h3>Azure Active Directory</h3>
+            <p>Contoso, Ltd. uses Azure Active Directory (Azure AD) for both internal and guest accounts.</p>
+        </div>
+
+        <div class="section">
+            <h2>Requirements</h2>
+            <h3>ContentAnalysisService</h3>
+            <p>The company’s data science group built ContentAnalysisService which accepts user generated content as a string and returns a probable value for inappropriate content. Any values over a specific threshold must be reviewed by an employee of Contoso, Ltd.</p>
+            <p>You must create an Azure Function named <code>CheckUserContent</code> to perform the content checks.</p>
+            
+            <h3>Costs</h3>
+            <p class="requirement">You must minimize costs for all Azure services.</p>
+            
+            <h3>Manual review</h3>
+            <p>To review content, the user must authenticate to the website portion of the ContentAnalysisService using their Azure AD credentials. The website is built using React and all pages and API endpoints require authentication. In order to review content a user must be part of a <code>ContentReviewer</code> role. All completed reviews must include the reviewer’s email address for auditing purposes.</p>
+            
+            <h3>High availability</h3>
+            <p>All services must run in multiple regions. The failure of any service in a region must not impact overall application availability.</p>
+            
+            <h3>Monitoring</h3>
+            <p>An alert must be raised if the ContentUploadService uses more than 80 percent of available CPU cores.</p>
+            
+            <h3>Security</h3>
+            <div class="security-list">
+                <p>You have the following security requirements:</p>
+                <ul>
+                    <li>Any web service accessible over the Internet must be protected from cross site scripting attacks.</li>
+                    <li>All websites and services must use SSL from a valid root certificate authority.</li>
+                    <li>Azure Storage access keys must only be stored in memory and must be available only to the service.</li>
+                    <li>All Internal services must only be accessible from internal Virtual Networks (VNets).</li>
+                    <li>All parts of the system must support inbound and outbound traffic restrictions.</li>
+                    <li>All service calls must be authenticated by using Azure AD.</li>
+                </ul>
+            </div>
+            
+            <h3>User agreements</h3>
+            <p>When a user submits content, they must agree to a user agreement. The agreement allows employees of Contoso, Ltd. to review content, store cookies on user devices, and track user’s IP addresses.</p>
+            <p>Information regarding agreements is used by multiple divisions within Contoso, Ltd.</p>
+            <p class="requirement">User responses must not be lost and must be available to all parties regardless of individual service uptime. The volume of agreements is expected to be in the millions per hour.</p>
+            
+            <h3>Validation testing</h3>
+            <p>When a new version of the ContentAnalysisService is available the previous seven days of content must be processed with the new version to verify that the new version does not significantly deviate from the old version.</p>
+        </div>
+
+        <div class="section">
+            <h2>Issues</h2>
+            <p>Users of the ContentUploadService report that they occasionally see HTTP 502 responses on specific pages.</p>
+        </div>
+
+        <div class="section">
+            <h2>Code</h2>
+            <pre>ContentUploadService</pre>
+            
+            <div class="code-section">
+                <pre> 
+CS01   apiVersion: '2018-10-01',
+CS02   type: Microsoft.ContainerInstance/containerGroups,
+CS03   location: westus,
+CS04   name: contentUploadService,
+CS05   properties: 
+CS06     containers: 
+CS05     - name: service
+CS06         properties: 
+CS09         image: contoso/contentUploadService:latest
+CS10         ports: 
+CS11           - port: 80,
+CS12             protocol: TCP
+CS13         resources: 
+CS14           requests: 
+CS15             cpu: 1.0,
+CS16             memoryInGB: 1.5
+CS17           
+CS18   ipAddress: 
+CS19       ip: 10.23.121.112
+CS20       ports: 
+CS21         - port: 80,
+CS22           protocol: TCP
+CS23         
+CS24       
+CS25   networkProfile:
+CS26     id: /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/ContosoGroup/providers/Microsoft.Network/virtualNetworks/ContosoVNet/subnets/ContentUploadSubnet
+</pre>
+            </div>
+            
+            <div class="note">
+                <strong>注意：</strong> 
+                <p>1. 代码中第CS25行存在拼写错误：<span class="highlight">neworkProfile</span> 应为 <span class="highlight">networkProfile</span></p>
+                <p>2. 第CS19行配置了静态IP地址：<span class="highlight">10.23.121.112</span></p>
+                <p>3. 第CS26行配置了虚拟网络子网，符合安全要求中的内部服务访问限制</p>
+            </div>
+            
+            <pre>AM01 {
+AM02   "id": "2b079f03-9b06-2d44-98bb-e9182901fc6b",
+AM03   "appId": "7118a7f0-b5c2-4c9d-833c-3d711396fe65",
+AM04   
+AM05   "createdDateTime": "2019-12-24T06:01:44Z",
+AM06   "logoUrl": null,
+AM07   "logoutUrl": null,
+AM08   "name": "ContentAnalysisservice",
+AM09   
+AM10   
+AM11   "orgRestrictions": [],
+AM12   "parentalControlSettings": {
+AM13     "countriesBlockedForMinors": [],
+AM14     "legalAgeGroupRule": "Allow"
+AM15   },
+AM16   "passwordCredentials": [],
+AM17 }</pre>
+        </div>
+    </div>
+</body>
+</html>

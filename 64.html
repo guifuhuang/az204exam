@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanArsdel Ltd. - Azure Functions 安全配置</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .case-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .case-info h2 {
+            color: #1e3799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a69bd;
+        }
+        
+        .requirements {
+            margin-top: 25px;
+        }
+        
+        .requirements h3 {
+            color: #1e3799;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .question-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .question-box h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .options-container {
+            margin: 25px 0;
+        }
+        
+        .option {
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option:hover {
+            background-color: #f1f6fd;
+            border-color: #4a69bd;
+        }
+        
+        .option.selected {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .option-label {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
+            background-color: #4a69bd;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .answer-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .answer-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .answer-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: 600;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #e3f2fd;
+            font-weight: 600;
+        }
+        
+        .user-selection {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f6fd;
+            border-radius: 8px;
+            border-left: 4px solid #4a69bd;
+        }
+        
+        .answer-validation {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .security-comparison {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .security-card {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #3498db;
+        }
+        
+        .security-card h4 {
+            color: #1e3799;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .security-card ul {
+            padding-left: 20px;
+        }
+        
+        .security-card li {
+            margin-bottom: 10px;
+        }
+        
+        .implementation-steps {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #1e3799;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .security-comparison {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VanArsdel Ltd. - 案例研究</h1>
+            <div class="subtitle">Topic 7: Azure Functions 安全配置</div>
+        </header>
+        
+        <div class="content">
+            <div class="case-info">
+                <h2>安全要求</h2>
+                <p>VanArsdel Ltd.需要保护其Azure Functions以满足以下安全要求：</p>
+                
+                <div class="requirements">
+                    <h3>核心安全要求：</h3>
+                    <ul>
+                        <li>集中管理和分发所有Azure Functions的配置数据</li>
+                        <li>使用公司提供的RSA-HSM密钥加密配置数据</li>
+                        <li>使用Azure AD进行身份验证和授权</li>
+                        <li>尽可能使用托管身份</li>
+                    </ul>
+                </div>
+                
+                <div class="requirements">
+                    <h3>其他相关要求：</h3>
+                    <ul>
+                        <li>为第三方提供特定Blob的只读访问权限（3个月）</li>
+                        <li>使用Azure Cosmos DB存储服务遥测数据</li>
+                        <li>在Azure AD中存储配送司机配置文件信息</li>
+                        <li>解决Azure Cosmos DB的高RU使用率和读取延迟问题</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <h2>问题 64: Azure Functions 安全配置</h2>
+                <p>您需要保护Azure Functions以满足安全要求。应执行哪两个操作？</p>
+                <p><strong>注意：</strong>每个正确选项值1分。</p>
+                
+                <div class="options-container">
+                    <div class="option" data-option="A">
+                        <div class="option-label">A</div>
+                        <div class="option-text">
+                            将RSA-HSM密钥存储在启用了软删除和清除保护功能的Azure Key Vault中
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="B">
+                        <div class="option-label">B</div>
+                        <div class="option-text">
+                            将RSA-HSM密钥存储在应用了不可变策略的Azure Blob存储容器中
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="C">
+                        <div class="option-label">C</div>
+                        <div class="option-text">
+                            将RSA-HSM密钥存储在Azure Cosmos DB中，并应用客户管理密钥和允许位置的内置策略
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="D">
+                        <div class="option-label">D</div>
+                        <div class="option-text">
+                            创建标准层Azure App Configuration实例，并分配Azure AD托管身份
+                        </div>
+                    </div>
+                    
+                    <div class="option" data-option="E">
+                        <div class="option-label">E</div>
+                        <div class="option-text">
+                            创建免费层Azure App Configuration实例，并使用新的Azure AD服务主体
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-selection">
+                    <p><strong>您的选择：</strong></p>
+                    <p id="selectedOptions">未选择任何选项</p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" onclick="showAnswer()">查看答案</button>
+                </div>
+            </div>
+            
+            <div id="answerSection" class="answer-section">
+                <h3>正确答案及说明</h3>
+                <div class="answer-content">
+                    <div class="answer-validation correct">
+                        <p>正确答案：A 和 D</p>
+                    </div>
+                    
+                    <div class="correct-answer">✓ A. 将RSA-HSM密钥存储在启用了软删除和清除保护功能的Azure Key Vault中</div>
+                    <div class="correct-answer">✓ D. 创建标准层Azure App Configuration实例，并分配Azure AD托管身份</div>
+                    
+                    <div class="explanation">
+                        <p><strong>详细说明：</strong></p>
+                        
+                        <h4>为什么选择A和D？</h4>
+                        
+                        <div class="security-comparison">
+                            <div class="security-card">
+                                <h4>Azure Key Vault (选项A)</h4>
+                                <ul>
+                                    <li>专为安全存储密钥和机密而设计</li>
+                                    <li>支持HSM保护的密钥（符合RSA-HSM要求）</li>
+                                    <li>软删除和清除保护防止意外或恶意删除</li>
+                                    <li>提供细粒度的访问控制策略</li>
+                                    <li>与Azure App Configuration无缝集成</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="security-card">
+                                <h4>Azure App Configuration (选项D)</h4>
+                                <ul>
+                                    <li>集中管理所有Azure Functions的配置数据</li>
+                                    <li>标准层支持托管身份（免费层不支持）</li>
+                                    <li>支持引用Key Vault中的密钥进行加密</li>
+                                    <li>提供地理复制和灾难恢复功能</li>
+                                    <li>与Azure Functions原生集成</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h4>其他选项分析：</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>选项</th>
+                                    <th>分析</th>
+                                    <th>是否适合</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>B. Blob存储</td>
+                                    <td>Blob存储不适合存储加密密钥，缺乏密钥管理功能和安全控制</td>
+                                    <td>❌ 不适合</td>
+                                </tr>
+                                <tr>
+                                    <td>C. Cosmos DB</td>
+                                    <td>Cosmos DB是文档数据库，不是密钥管理服务，无法满足HSM密钥安全要求</td>
+                                    <td>❌ 不适合</td>
+                                </tr>
+                                <tr>
+                                    <td>E. 免费层App Configuration</td>
+                                    <td>免费层不支持托管身份和Key Vault引用，无法满足安全要求</td>
+                                    <td>❌ 不适合</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>实施步骤：</h4>
+                        <div class="implementation-steps">
+                            <ol>
+                                <li><strong>创建Key Vault</strong>
+                                    <ul>
+                                        <li>启用软删除和清除保护</li>
+                                        <li>导入或生成RSA-HSM密钥</li>
+                                        <li>配置访问策略，限制访问权限</li>
+                                    </ul>
+                                </li>
+                                <li><strong>创建App Configuration实例</strong>
+                                    <ul>
+                                        <li>选择标准层（支持托管身份）</li>
+                                        <li>启用托管身份</li>
+                                        <li>配置Key Vault引用</li>
+                                    </ul>
+                                </li>
+                                <li><strong>配置Azure Functions</strong>
+                                    <ul>
+                                        <li>连接到App Configuration</li>
+                                        <li>使用托管身份进行身份验证</li>
+                                        <li>引用Key Vault中的加密密钥</li>
+                                    </ul>
+                                </li>
+                                <li><strong>配置Azure AD</strong>
+                                    <ul>
+                                        <li>设置角色和权限</li>
+                                        <li>配置应用程序访问策略</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <h4>安全架构优势：</h4>
+                        <ul>
+                            <li><strong>集中管理</strong>：通过App Configuration统一管理所有环境配置</li>
+                            <li><strong>安全加密</strong>：使用HSM保护的密钥确保配置数据安全</li>
+                            <li><strong>访问控制</strong>：Azure AD提供精细的身份验证和授权</li>
+                            <li><strong>零凭证管理</strong>：托管身份消除凭证管理风险</li>
+                            <li><strong>合规性</strong>：满足企业级安全标准和合规要求</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>VanArsdel Ltd. 案例研究 - Topic 7 | Azure Functions 安全配置解决方案</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化选项选择
+        const options = document.querySelectorAll('.option');
+        let selectedOptions = [];
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const optionValue = this.getAttribute('data-option');
+                
+                // 切换选择状态
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedOptions = selectedOptions.filter(opt => opt !== optionValue);
+                } else {
+                    // 最多选择两个选项
+                    if (selectedOptions.length < 2) {
+                        this.classList.add('selected');
+                        selectedOptions.push(optionValue);
+                    }
+                }
+                
+                // 更新显示的选择
+                updateSelectedOptionsDisplay();
+            });
+        });
+        
+        function updateSelectedOptionsDisplay() {
+            const displayElement = document.getElementById('selectedOptions');
+            if (selectedOptions.length === 0) {
+                displayElement.textContent = '未选择任何选项';
+            } else {
+                displayElement.textContent = `已选择: ${selectedOptions.sort().join(', ')}`;
+            }
+        }
+        
+        function showAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                
+                // 滚动到答案部分
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSelectedOptionsDisplay();
+        });
+    </script>
+</body>
+</html>

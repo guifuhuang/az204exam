@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proseware案例测试题 - 问题37</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            width: 95%;
+            max-width: 800px;
+            padding: 30px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #5c6bc0, #3949ab);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #283593;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            color: #5c6bc0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .question {
+            background-color: #f5f5f5;
+            border-left: 5px solid #5c6bc0;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .question h2 {
+            color: #283593;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .question p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .question-content {
+            background-color: #e8eaf6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .options {
+            margin: 25px 0;
+        }
+        .option {
+            background: white;
+            border: 2px solid #c5cae9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3f51b5;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .option:hover {
+            background: #f3f4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(121, 134, 203, 0.2);
+        }
+        .option.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+        }
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option-label {
+            font-weight: 600;
+            margin-right: 10px;
+            color: #3949ab;
+            min-width: 30px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            background: linear-gradient(90deg, #5c6bc0, #3949ab);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #3949ab, #5c6bc0);
+        }
+        .answer {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2196f3;
+        }
+        .answer h3 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .answer h3::before {
+            content: "✓";
+            background-color: #4caf50;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .answer-content {
+            margin-top: 15px;
+        }
+        .answer-content p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .explanation {
+            background-color: #fffde7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .explanation h4 {
+            color: #f57f17;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation h4::before {
+            content: "!";
+            background-color: #ffc107;
+            color: #333;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .question h2 {
+                font-size: 20px;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Topic 4: Proseware, Inc 案例测试题</h1>
+            <div class="subtitle">问题37 - Policy Service 缩放策略</div>
+        </div>
+        
+        <div class="question">
+            <h2>问题描述</h2>
+            <p>您需要确保解决方案能够满足 Policy Service 的缩放要求。</p>
+            
+            <div class="question-content">
+                <p><strong>QUESTION NO: 37</strong></p>
+                <p>You need to ensure that the solution can meet the scaling requirements for Policy Service.</p>
+                <p>Which Azure Application Insights data model should you use?</p>
+            </div>
+            
+            <div class="options">
+                <div class="option" data-value="A">
+                    <input type="radio" name="question37" id="optionA">
+                    <label for="optionA" class="option-label">A</label>
+                    <span>an Application Insights dependency</span>
+                </div>
+                
+                <div class="option" data-value="B">
+                    <input type="radio" name="question37" id="optionB">
+                    <label for="optionB" class="option-label">B</label>
+                    <span>an Application Insights event</span>
+                </div>
+                
+                <div class="option" data-value="C">
+                    <input type="radio" name="question37" id="optionC">
+                    <label for="optionC" class="option-label">C</label>
+                    <span>an Application Insights trace</span>
+                </div>
+                
+                <div class="option" data-value="D">
+                    <input type="radio" name="question37" id="optionD">
+                    <label for="optionD" class="option-label">D</label>
+                    <span>an Application Insights metric</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="showAnswerBtn">查看答案</button>
+        </div>
+        
+        <div class="answer" id="answerSection">
+            <h3>正确答案</h3>
+            <div class="answer-content">
+                <p>正确答案是：<strong>D. an Application Insights metric</strong></p>
+                
+                <div class="explanation">
+                    <h4>解释说明</h4>
+                    <p>根据Proseware案例文档中的要求：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Policy service要求</strong>："Must use Application Insights to automatically scale with the number of policy actions"（必须使用Application Insights根据策略操作数量自动缩放）</li>
+                        <li><strong>自动缩放机制</strong>：Azure的自动缩放功能通常基于指标（metrics）进行决策</li>
+                        <li><strong>指标特性</strong>：Application Insights metrics提供数值型数据（如请求率、CPU使用率等），最适合用于自动缩放决策</li>
+                        <li><strong>其他选项分析</strong>：
+                            <ul style="margin-left: 20px; margin-top: 5px;">
+                                <li>依赖项（dependency）：跟踪外部服务调用，不适合缩放决策</li>
+                                <li>事件（event）：记录离散事件，不提供连续数值数据</li>
+                                <li>跟踪（trace）：用于诊断日志，不适合缩放决策</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>因此，选择Application Insights metric作为缩放依据最符合Policy Service的要求，能够根据策略操作数量动态调整服务规模。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Topic 4: Proseware, Inc 案例测试题 | 问题37</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 选项选择功能
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除之前的选择
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 选中当前选项
+                    this.classList.add('selected');
+                    
+                    // 选中对应的radio按钮
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                });
+            });
+            
+            // 查看答案按钮
+            document.getElementById('showAnswerBtn').addEventListener('click', function() {
+                const answerSection = document.getElementById('answerSection');
+                answerSection.style.display = 'block';
+                this.textContent = '答案已显示';
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                
+                // 滚动到答案区域
+                answerSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
