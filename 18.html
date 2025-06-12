@@ -428,7 +428,7 @@
                 <div class="answer-content">
                     <p class="correct-answer">
                         <i class="fas fa-check"></i> 
-                        正确配置：事件类型 - <strong>'ImagePushed'</strong>，目标服务 - <strong>'service'</strong>，属性 - <strong>'repository'</strong>
+                        正确配置：事件类型 - <strong>'ImagePushed'</strong>，目标服务 - <strong>'repository'</strong>，属性 - <strong>'topic'</strong>
                     </p>
                     
                     <div class="explanation">
@@ -445,20 +445,18 @@
                             </li>
                             
                             <li>
-                                <strong>目标服务选择：'service'</strong>
+                                <strong>目标服务选择：'repository'</strong>
                                 <ul>
-                                    <li>要求仅当事件涉及<span class="highlight">内容分析服务</span>时才触发</li>
-                                    <li>在事件对象中，服务信息存储在<code>event.data.target.service</code>属性中</li>
-                                    <li>选择'service'表示我们检查目标服务是否为'contentanalysisservice'</li>
+                                    <li>选择'repository'用于检查镜像仓库名'contentanalysisservice'</li>
                                 </ul>
                             </li>
                             
                             <li>
-                                <strong>属性选择：'repository'</strong>
+                                <strong>属性选择：'topic'</strong>
                                 <ul>
                                     <li>要求仅当事件发生在<span class="highlight">contosoimages</span>仓库时才触发</li>
                                     <li>在事件对象中，仓库信息存储在<code>event.repository</code>属性中</li>
-                                    <li>使用<code>.contains('contosoimages')</code>检查仓库名称是否包含指定字符串</li>
+                                    <li>使用<code>topic.contains('contosoimages')</code>检查仓库名称是否包含指定字符串</li>
                                 </ul>
                             </li>
                         </ul>
@@ -466,8 +464,8 @@
                         <p>此配置满足以下要求：</p>
                         <ul>
                             <li><span class="highlight">触发条件</span>：当镜像被推送时触发（ImagePushed）</li>
-                            <li><span class="highlight">服务过滤</span>：仅当目标服务为'contentanalysisservice'时触发（service）</li>
-                            <li><span class="highlight">仓库过滤</span>：仅当仓库包含'contosoimages'时触发（repository.contains）</li>
+                            <li><span class="highlight">服务过滤</span>：仅当目标服务为'contentanalysisservice'repository</li>
+                            <li><span class="highlight">仓库过滤</span>：仅当仓库包含'contosoimages'topic.contains）</li>
                         </ul>
                     </div>
                     
@@ -476,8 +474,8 @@
                         <pre style="background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto;">
 var event = getEvent();
 if (event.eventType === 'ImagePushed'
-    && event.data.target.service === 'contentanalysisservice'
-    && event.repository.contains('contosoimages'))
+    && event.data.target.respository === 'contentanalysisservice'
+    && event.topic.contains('contosoimages'))
 {
   startValidationTesting();
 }</pre>
