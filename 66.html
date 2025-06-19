@@ -271,7 +271,7 @@
                 <div class="correct-answer">
                     <h3>正确配置:</h3>
                     <p><strong>RBAC 角色:</strong> Service Bus Data Owner</p>
-                    <p><strong>作用域:</strong> Queue</p>
+                    <p><strong>作用域:</strong> Namespace</p>
                 </div>
                 
                 <div class="explanation">
@@ -280,7 +280,7 @@
                     
                     <ul>
                         <li><span class="highlight">Service Bus Data Owner 角色</span> 提供对 Service Bus 资源的完全访问权限（包括发送和接收消息），这解决了开发人员在调试期间可能需要的各种操作。</li>
-                        <li>将作用域设置为 <span class="highlight">Queue</span> 遵循最小权限原则，仅授予开发人员访问特定队列的权限，而不是整个命名空间或资源组。</li>
+                        <li>将作用域设置为 <span class="highlight">Namespace</span> RBAC 权限应作用于整个 Service Bus 命名空间，这样开发者可以访问其中的队列或主题。</li>
                         <li>此配置允许开发人员在本地使用 Azure AD 凭据进行身份验证，同时满足公司安全要求（不使用密钥、应用最小权限原则）。</li>
                         <li>使用托管标识在生产环境中运行的服务上进行身份验证，但开发人员本地调试时需要使用 Azure AD 用户账户进行身份验证。</li>
                     </ul>
@@ -289,7 +289,8 @@
                     <ul>
                         <li><strong>Owner/Contributor</strong>：权限过大，包含管理操作权限，不符合最小权限原则</li>
                         <li><strong>Service Bus Data Sender</strong>：仅提供发送权限，不满足调试时可能需要的接收/管理需求</li>
-                        <li><strong>Namespace/Resource group</strong>：作用域过大，不符合最小权限原则</li>
+                        <li><strong>Queue</strong>：如果仅作用于 Queue 级别，开发者可能无法访问其他资源，限制过严；而作用于 Resource Group 级别则过于宽泛。</li>
+                        <li><strong>Resource group</strong>：作用域过大，不符合最小权限原则</li>
                     </ul>
                 </div>
             </div>
