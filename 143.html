@@ -210,10 +210,10 @@ await messageTable.PullAsync(
                 optionDiv.classList.remove('selected');
                 selectedOptions = selectedOptions.filter(o => o !== option);
             } else {
-                if (selectedOptions.length >= maxSelections) {
-                    alert(`最多只能选择 ${maxSelections} 个选项`);
-                    return;
-                }
+                // if (selectedOptions.length >= maxSelections) {
+                //     alert(`最多只能选择 ${maxSelections} 个选项`);
+                //     return;
+                // }
                 optionElement.checked = true;
                 optionDiv.classList.add('selected');
                 selectedOptions.push(option);
