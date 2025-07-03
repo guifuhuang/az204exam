@@ -143,6 +143,9 @@ namespace SalesOrders
                     await container1.CreateItemAsync(salesOrder1, new PartitionKey(salesOrder1.AccountNumber));
                     await container1.CreateItemAsync(salesOrder2, new PartitionKey(salesOrder2.AccountNumber));
                     await container2.CreateItemAsync(salesOrder3, new PartitionKey(salesOrder3.AccountNumber));
+                    _ = await database.CreateUserAsync("User1");
+                    User user1 = await database.GetUser("User1");
+                    _ = await user1.ReadAsync();
                 }
             }
         }

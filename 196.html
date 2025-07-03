@@ -60,12 +60,10 @@
             <p><strong>正确答案：</strong></p>
             <div class="command">
                 az webapp log <span class="correct">tail</span>
-                --name ContosoWeb --resource-group ContosoDevRG
+                --name ContosoWeb --resource-group ContosoDevRG --<span class="correct">docker-container-logging</span> filesystem
             </div>
             <div class="command">
-                --<span class="correct">docker</span>
-                -<span class="correct">container</span>
-                -<span class="correct">logging</span>
+                az <span class="correct">webapp</span> log <span class="correct">download</span> --name ContosoWeb --resource-group ContosoDevRG
             </div>
             <p><strong>说明：</strong></p>
             <ol>
@@ -81,7 +79,9 @@
                 <li><strong>tail</strong> 是唯一支持实时日志流的子命令</li>
                 <li><strong>docker-container-logging</strong> 参数专门用于容器日志（而不是文件系统或应用日志）</li>
                 <li>完整的有效命令是：<br>
-                    <code>az webapp log tail --name ContosoWeb --resource-group ContosoDevRG --docker-container-logging</code>
+                    <code>az webapp log tail --name ContosoWeb --resource-group ContosoDevRG --docker-container-logging filesystem</code>
+                    <br>
+                    <code>az webapp log download --name ContosoWeb --resource-group ContosoDevRG</code>
                 </li>
             </ul>
         </div>
