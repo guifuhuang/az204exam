@@ -180,12 +180,12 @@
         <div class="answer-section" id="answer-section">
             <h3>正确答案:</h3>
             <p class="correct-answer">防止整批重试: Dead-letter queue</p>
-            <p class="correct-answer">监控变更处理器进度: Deployment unit</p>
+            <p class="correct-answer">监控变更处理器进度: Change feed estimator</p>
             <div class="explanation">
                 <p><strong>解释说明:</strong></p>
                 <p>1. <strong>Dead-letter queue</strong> 用于处理无法读取的文档。当单个文档读取失败时，可以将该文档移至死信队列，而不影响整个批次的处理，从而避免整批重试[1](@ref)[3](@ref)。</p>
-                <p>2. <strong>Deployment unit</strong> 是变更源处理器的部署单元概念，包含一个或多个具有相同租用容器配置的计算实例，可以监控处理进度并动态调整负载[3](@ref)[6](@ref)。每个部署单元可以独立处理变更流，并通过租用容器跟踪处理进度。</p>
-                <p>这两个功能组合使用可以满足题目中的两个要求：防止整批重试和监控处理进度。</p>
+                <p>2. <strong>Change feed estimator</strong> 作用：估算（monitor）Change Feed Processor 当前处理的进度、剩余待处理文档数量、是否滞后等。。</p>
+                <p>适用于监控 Change Feed 的实时处理状态。</p>
             </div>
         </div>
     </div>

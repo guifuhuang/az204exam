@@ -109,22 +109,16 @@
 
     <div id="answerSection">
         <h3>正确答案：</h3>
-        <p class="correct-answer">C. Cassandra</p>
+        <p class="correct-answer">D. Table API</p>
         
         <div class="explanation">
             <h4>技术说明：</h4>
-            <p>1. <strong>Cassandra API</strong> 是最佳选择的原因：</p>
+            <p>1. <strong>Table API</strong> 最适合键值对存储场景的原因：</p>
             <ul>
-                <li>原生支持键值对数据模型，同时具备宽列存储的灵活性</li>
-                <li>低成本版本可使用基本吞吐量配置（最低400 RU/s），实现"best-effort"性能</li>
-                <li>高成本版本支持：
-                    <ul>
-                        <li>预配吞吐量（可精确到RU/s级别）</li>
-                        <li>多区域写入（自动同步数据）</li>
-                        <li>性能SLA保障（99.99%可用性）</li>
-                    </ul>
-                </li>
-                <li>相比Table API，Cassandra在跨区域场景下的成本优化更好</li>
+                <li>专门为键值对数据模型设计，与题目要求完全匹配[2](@ref)</li>
+                <li>基础成本最低，适合低成本版本[7](@ref)</li>
+                <li>支持分层定价模式，可以根据不同版本需求灵活调整[9](@ref)</li>
+                <li>与Azure Table Storage兼容，迁移成本低[2](@ref)</li>
             </ul>
             
             <p>2. 成本优化实现方案：</p>
